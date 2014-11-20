@@ -15,11 +15,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-//
-// Author : Maxim Glibin
 
-#ifndef __DifferenceTimestepsFilter_h_
-#define __DifferenceTimestepsFilter_h_
+#ifndef __DifferenceTimestepsFilter_h
+#define __DifferenceTimestepsFilter_h
 
 #include <vtkMultiTimeStepAlgorithm.h>
 
@@ -145,4 +143,4 @@ private:
   bool VerifyArrays(vtkDataArray **theArrays, int theNumArrays);
 };
 
-#endif // __DifferenceTimestepsFilter_h_
+#endif // __DifferenceTimestepsFilter_h
