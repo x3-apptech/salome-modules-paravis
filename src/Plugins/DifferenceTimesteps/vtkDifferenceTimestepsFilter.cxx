@@ -15,6 +15,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+//
+// Author : Maxim Glibin
 
 #include "vtkDifferenceTimestepsFilter.h"
 
@@ -213,7 +215,14 @@ int vtkDifferenceTimestepsFilter::RequestInformation(
   // Update range of indices of the time steps
   this->RangeIndicesTimeSteps[0] = 0;
   this->RangeIndicesTimeSteps[1] = this->NumberTimeSteps - 1;
-
+  
+  /*
+   * RNV: Temporary commented:
+   *      This piece of the code removes all time steps from the output object, 
+   *      but this leads to the strange side effect in the ParaView: time steps also disappears 
+   *      from the animation scene of the input (parent) object of this filter.
+   *      Seems it is a bug of the ParaView, to be investigated ...
+   *
   // The output data of this filter has no time associated with it.
   // It is the result of computation difference between two time steps.
   // Unset the time steps
@@ -223,7 +232,7 @@ int vtkDifferenceTimestepsFilter::RequestInformation(
   // Unset the time range
   if(anOutInfo->Has(vtkStreamingDemandDrivenPipeline::TIME_RANGE()))
     anOutInfo->Remove(vtkStreamingDemandDrivenPipeline::TIME_RANGE());
-
+  */
   return 1;
 }
 
@@ -416,12 +425,13 @@ vtkDataSet* vtkDifferenceTimestepsFilter::DifferenceDataSet(vtkDataSet* theInput
 
     anOutputArray = this->DifferenceDataArray(&anArrays[0], anArrays[0]->GetNumberOfTuples());
     // Determine a field association
-    if (this->GetInputFieldAssociation() == vtkDataObject::FIELD_ASSOCIATION_POINTS)
+    int aTypeFieldAssociation = this->GetInputFieldAssociation();
+    if (aTypeFieldAssociation == vtkDataObject::FIELD_ASSOCIATION_POINTS)
     {
       // For point data
       anOutput->GetPointData()->AddArray(anOutputArray);
     }
-    else if (this->GetInputFieldAssociation() == vtkDataObject::FIELD_ASSOCIATION_CELLS)
+    else if (aTypeFieldAssociation == vtkDataObject::FIELD_ASSOCIATION_CELLS)
     {
       // For cell data
       anOutput->GetCellData()->AddArray(anOutputArray);

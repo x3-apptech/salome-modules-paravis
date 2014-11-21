@@ -75,7 +75,7 @@
         command="SetFirstTimeStepIndex"
         number_of_elements="1"
         default_values="0"
-        animateable="1"
+        animateable="0"
         information_property="RangeIndicesTimeStepsInfo">
         <IntRangeDomain name="range" default_mode="min">
           <RequiredProperties>
@@ -113,11 +113,23 @@
         command="SetArrayNamePrefix"
         number_of_elements="1"
         animateable="0"
-        default_values="diff_" >
+        default_values="diff_"
+        panel_visibility="advanced" >
         <Documentation>
           Prefix to a new array name.
         </Documentation>
       </StringVectorProperty>
+
+      <PropertyGroup label="Timing">
+        <Property name="FirstTimeStepIndex" />
+        <Property name="SecondTimeStepIndex" />
+      </PropertyGroup>
+      <PropertyGroup label="Additional attributes">
+        <Property name="ArrayNamePrefix" />
+      </PropertyGroup>
+      <Hints>
+        <Visibility replace_input="0" />
+      </Hints>
 
     </SourceProxy>
   </ProxyGroup>

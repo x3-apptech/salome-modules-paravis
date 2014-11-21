@@ -16,6 +16,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Maxim Glibin
 
 PROJECT(DifferenceTimesteps)
 
@@ -31,7 +32,6 @@ ADD_PARAVIEW_PLUGIN(DifferenceTimesteps "1.0"
   GUI_RESOURCE_FILES DifferenceTimestepsGUI.xml
   )
 
-INSTALL(
-  TARGETS DifferenceTimesteps
+INSTALL(TARGETS DifferenceTimesteps
   DESTINATION lib/paraview
 )
