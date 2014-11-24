@@ -1104,6 +1104,14 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
         {
 #ifdef MEDREADER_USE_MPI
           _ms=ParaMEDFileMeshes::New(iPart,nbOfParts,fileName);
+          int nbMeshes(_ms->getNumberOfMeshes());
+          for(int i=0;i<nbMeshes;i++)
+            {
+              ParaMEDMEM::MEDFileMesh *tmp(_ms->getMeshAtPos(i));
+              ParaMEDMEM::MEDFileUMesh *tmp2(dynamic_cast<ParaMEDMEM::MEDFileUMesh *>(tmp));
+              if(tmp2)
+                MEDCouplingAutoRefCountObjectPtr<DataArrayInt> tmp3(tmp2->zipCoords());
+            }
           _fields=MEDFileFields::LoadPartOf(fileName,false,_ms);//false is important to not read the values
 #else
           std::ostringstream oss; oss << "MEDFileFieldRepresentationTree::loadMainStructureOfFile : request for iPart/nbOfParts=" << iPart << "/" << nbOfParts << " whereas Plugin not compiled with MPI !";
