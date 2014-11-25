@@ -1,0 +1,29 @@
+<ServerManagerConfiguration>
+
+  <ProxyGroup name="sources">
+
+    <SourceProxy name="ParaSMESHCorbaSource" 
+                 class="vtkParaSMESHCorbaSource"
+                 label="Para Mesh Corba Plugin Source">
+      <Documentation
+        short_help="Fetch Mesh Data from CORBA." 
+        long_help="Fetch Mesh Data from CORBA.">
+        Source of a remote Mesh Corba reference.
+      </Documentation>
+      <StringVectorProperty
+	 name="IORCorba"
+	 animateable="0"
+	 command="SetIORCorba"
+	 number_of_elements="1"
+	 default_values="">
+        <Documentation>
+          This property specifies the IOR of a Mesh object in memory.
+        </Documentation>
+     </StringVectorProperty>
+    <!-- End ParaGEOMCorbaSource -->
+    </SourceProxy>
+
+  </ProxyGroup>
+
+</ServerManagerConfiguration>
+

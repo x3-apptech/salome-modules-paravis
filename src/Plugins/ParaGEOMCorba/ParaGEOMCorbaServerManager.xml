@@ -1,0 +1,39 @@
+<ServerManagerConfiguration>
+
+  <ProxyGroup name="sources">
+
+    <SourceProxy name="ParaGEOMCorbaSource" 
+                 class="vtkParaGEOMCorbaSource"
+                 label="Para Geometry Corba Plugin Source">
+      <Documentation
+        short_help="Fetch Geometry Data from CORBA." 
+        long_help="Fetch Geometry Data from CORBA.">
+        Source of a remote Geometry Corba reference.
+      </Documentation>
+      <StringVectorProperty
+	 name="IORCorba"
+	 animateable="0"
+	 command="SetIORCorba"
+	 number_of_elements="1"
+	 default_values="">
+        <Documentation>
+          This property specifies the IOR of a Geometry object in memory.
+        </Documentation>
+     </StringVectorProperty>
+     <DoubleVectorProperty
+	 name="Deflection"
+	 animateable="0"
+	 command="SetDeflection"
+	 number_of_elements="1"
+	 default_values="0.001">
+        <Documentation>
+          This property specifies the Deflection coefficient.
+        </Documentation>
+     </DoubleVectorProperty>
+    <!-- End ParaGEOMCorbaSource -->
+    </SourceProxy>
+
+  </ProxyGroup>
+
+</ServerManagerConfiguration>
+
