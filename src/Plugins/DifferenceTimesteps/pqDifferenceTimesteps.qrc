@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/DifferenceTimestepsIcons" >
+    <file>resources/timesteps-icon.png</file>
+  </qresource>
+</RCC>

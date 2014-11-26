@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014  CEA/DEN, EDF R&D
+# Copyright (C) 2014  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,31 +16,23 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Maxim Glibin
 
+PROJECT(DifferenceTimesteps)
+
+cmake_minimum_required(VERSION 2.8)
+
+FIND_PACKAGE(ParaView REQUIRED)
 INCLUDE(${PARAVIEW_USE_FILE})
 
-IF(WIN32)
-  REMOVE_DEFINITIONS(-D_SECURE_SCL=0 -D_SECURE_SCL_THROWS=0)
-  IF(NOT CMAKE_BUILD_TYPE STREQUAL "RELEASE" AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    REMOVE_DEFINITIONS(-D_HAS_ITERATOR_DEBUGGING=0)  
-  ENDIF() 
-ENDIF() 
-
-SET(_subdirs
-  MEDReader 
-#  TableReader  
-  ElevationSurface
-  ScaleVector
-  EllipseBuilder
-  DifferenceTimesteps
+ADD_PARAVIEW_PLUGIN(DifferenceTimesteps "1.0"
+  SERVER_MANAGER_XML DifferenceTimesteps.xml
+  SERVER_MANAGER_SOURCES vtkDifferenceTimestepsFilter.cxx
+  GUI_RESOURCES pqDifferenceTimesteps.qrc
+  GUI_RESOURCE_FILES DifferenceTimestepsGUI.xml
   )
-  
-IF(NOT SALOME_LIGHT_ONLY)
-  LIST(APPEND _subdirs
-    ParaMEDCorba 
-  )
-ENDIF()   
 
-FOREACH(_dir ${_subdirs})
-  ADD_SUBDIRECTORY(${_dir})
-ENDFOREACH()
+INSTALL(
+  TARGETS DifferenceTimesteps
+  DESTINATION lib/paraview
+)
