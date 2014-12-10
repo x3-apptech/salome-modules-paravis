@@ -39,6 +39,7 @@
 #include "vtkStringArray.h"
 #include "vtkDataSetAttributes.h"
 #include "vtkMEDReader.h"
+#include "vtkSMSourceProxy.h"
 
 #include "pqTreeWidgetItemObject.h"
 #include "pqSMAdaptor.h"
@@ -120,7 +121,7 @@ public:
   QMap<QTreeWidgetItem*, QString> TreeItemToPropMap;
 };
 
-pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_optional_widget(0)
+pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_is_fields_status_changed(false),_optional_widget(0)
 {
   initAll();
 }
@@ -217,7 +218,7 @@ void pqMEDReaderPanel::initAll()
               QString name2(QString::fromStdString((const char *)verticesNames2->GetValue(id3))); QList<QString> strs2; strs2.append(name2);
               pqTreeWidgetItemObject *item2(new pqTreeWidgetItemObject(item1,strs2));
               item2->setData(0,Qt::UserRole,name2);
-              item2->setData(0,Qt::CheckStateRole,0);
+              item2->setChecked(false);
               vtkAdjacentVertexIterator *it3(vtkAdjacentVertexIterator::New());//fields !
               g2->GetAdjacentVertices(id3,it3);
               vtkIdType id3Arrs(it3->Next());
@@ -231,28 +232,28 @@ void pqMEDReaderPanel::initAll()
                   std::string name3Only(name3CppFull.substr(0,pos)); std::string spatialDiscr(name3CppFull.substr(pos+sizeof(ZE_SEP)-1));
                   QString name3(QString::fromStdString(name3Only)); QList<QString> strs3; strs3.append(name3);
                   QString toolTipName3(name3+QString(" (")+spatialDiscr.c_str()+QString(")"));
-		  //
-		  vtkAdjacentVertexIterator *it4(vtkAdjacentVertexIterator::New());// is it a special field ? A field mesh ?
-		  g2->GetAdjacentVertices(id4,it4);
-		  bool isSpecial(it4->HasNext());
-		  it4->Delete();
-		  //
+                  //
+                  vtkAdjacentVertexIterator *it4(vtkAdjacentVertexIterator::New());// is it a special field ? A field mesh ?
+                  g2->GetAdjacentVertices(id4,it4);
+                  bool isSpecial(it4->HasNext());
+                  it4->Delete();
+                  //
                   pqTreeWidgetItemObject *item3(new pqTreeWidgetItemObject(item2,strs3));
                   _all_lev4.push_back(item3);
                   item3->setData(0,Qt::UserRole,name3);
-                  item3->setData(0,Qt::CheckStateRole,0);
-		  if(isSpecial)
-		    {
-		      QFont font; font.setItalic(true);	font.setUnderline(true);
-		      item3->setData(0,Qt::FontRole,QVariant(font));
-		      item3->setData(0,Qt::ToolTipRole,QString("Whole \"%1\" mesh").arg(name3));
-		      item3->setData(0,Qt::DecorationRole,PixSingle::GetInstance().getWholeMeshPix());
-		    }
-		  else
-		    {
-		      item3->setData(0,Qt::ToolTipRole,toolTipName3);
-		      item3->setData(0,Qt::DecorationRole,PixSingle::GetInstance().getPixFromStr(spatialDiscr));
-		    }
+                  item3->setChecked(false);
+                  if(isSpecial)
+                    {
+                      QFont font; font.setItalic(true);	font.setUnderline(true);
+                      item3->setData(0,Qt::FontRole,QVariant(font));
+                      item3->setData(0,Qt::ToolTipRole,QString("Whole \"%1\" mesh").arg(name3));
+                      item3->setData(0,Qt::DecorationRole,PixSingle::GetInstance().getWholeMeshPix());
+                    }
+                  else
+                    {
+                      item3->setData(0,Qt::ToolTipRole,toolTipName3);
+                      item3->setData(0,Qt::DecorationRole,PixSingle::GetInstance().getPixFromStr(spatialDiscr));
+                    }
                   _leaves.insert(std::pair<pqTreeWidgetItemObject *,int>(item3,ll));
                   std::ostringstream pdm; pdm << name0.toStdString() << "/" << name1.toStdString() << "/" << name2.toStdString() << "/" << name3CppFull;
                   (static_cast<vtkSMStringVectorProperty *>(SMProperty))->SetElement(2*ll,pdm.str().c_str());
@@ -262,31 +263,31 @@ void pqMEDReaderPanel::initAll()
                   //SMProperty->ResetToDefault();
                   item2->setChecked(kk==0);
                   item3->setChecked(kk==0);
-                  this->propertyManager()->registerLink(item3,"checked",SIGNAL(checkedStateChanged(bool)),this->proxy(),SMProperty,ll);
-                  connect(item2,SIGNAL(checkedStateChanged(bool)),item3,SLOT(setChecked(bool)));
+                  item3->setProperty("PosInStringVector",QVariant(ll));
                   connect(item3,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
                   ll++;
                 }
-              vtkIdType id3Gts(it3->Next());
-              vtkAdjacentVertexIterator *it3Gts(vtkAdjacentVertexIterator::New());//geo types in fields !
-              g2->GetAdjacentVertices(id3Gts,it3Gts);
-              QString toolTipName2(name2);
-              while(it3Gts->HasNext())
-                {
-                  vtkIdType idGt(it3Gts->Next());
-                  std::string gtName((const char *)verticesNames2->GetValue(idGt));
-                  toolTipName2=QString("%1\n- %2").arg(toolTipName2).arg(QString(gtName.c_str()));
-                }
-              item2->setData(0,Qt::ToolTipRole,toolTipName2);
-              it3Gts->Delete();
-              it3->Delete();
-              it3Arrs->Delete();
-              kk++;
-            }
-          it2->Delete();
-        }
-      it1->Delete();
-    }
+                connect(item2,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev3HasBeenFired(bool)));
+                vtkIdType id3Gts(it3->Next());
+                vtkAdjacentVertexIterator *it3Gts(vtkAdjacentVertexIterator::New());//geo types in fields !
+                g2->GetAdjacentVertices(id3Gts,it3Gts);
+                QString toolTipName2(name2);
+                while(it3Gts->HasNext())
+                  {
+                    vtkIdType idGt(it3Gts->Next());
+                    std::string gtName((const char *)verticesNames2->GetValue(idGt));
+                    toolTipName2=QString("%1\n- %2").arg(toolTipName2).arg(QString(gtName.c_str()));
+                  }
+                item2->setData(0,Qt::ToolTipRole,toolTipName2);
+                it3Gts->Delete();
+                it3->Delete();
+                it3Arrs->Delete();
+                kk++;
+              }
+            it2->Delete();
+          }
+        it1->Delete();
+      }
   it0->Delete();
   this->UI->Fields->header()->setStretchLastSection(true);
   this->UI->Fields->expandAll();
@@ -348,11 +349,36 @@ void pqMEDReaderPanel::updateSIL()
     }
 }
 
-void pqMEDReaderPanel::aLev4HasBeenFired()
+void pqMEDReaderPanel::aLev3HasBeenFired(bool v)
 {
   pqTreeWidgetItemObject *zeItem(qobject_cast<pqTreeWidgetItemObject *>(sender()));
   if(!zeItem)
     return;
+  for(int i=0;i<zeItem->childCount();i++)
+    {
+      QTreeWidgetItem *elt(zeItem->child(i));
+      pqTreeWidgetItemObject *eltC(dynamic_cast<pqTreeWidgetItemObject *>(elt));
+      if(eltC)
+        {
+          eltC->setChecked(v);
+          aLev4HasBeenFiredBy(eltC);
+        }
+    }
+  putLev3InOrder();
+  somethingChangedInFieldRepr();
+}
+
+void pqMEDReaderPanel::aLev4HasBeenFired()
+{
+  pqTreeWidgetItemObject *zeItem(qobject_cast<pqTreeWidgetItemObject *>(sender()));
+  if(zeItem)
+    aLev4HasBeenFiredBy(zeItem);
+  putLev3InOrder();
+  somethingChangedInFieldRepr();
+}
+
+void pqMEDReaderPanel::aLev4HasBeenFiredBy(pqTreeWidgetItemObject *zeItem)
+{
   pqTreeWidgetItemObject *father(dynamic_cast<pqTreeWidgetItemObject *>(zeItem->QTreeWidgetItem::parent()));
   QTreeWidgetItem *godFather(father->QTreeWidgetItem::parent()->parent());
   if(!father)
@@ -362,26 +388,20 @@ void pqMEDReaderPanel::aLev4HasBeenFired()
       bool isActivatedTSChanged(false);
       // This part garantees that all leaves having not the same father than zeItem are desactivated
       foreach(pqTreeWidgetItemObject* elt,this->_all_lev4)
-        {
-          QTreeWidgetItem *testFath(elt->QTreeWidgetItem::parent());
-          if(testFath!=father)
-            if(elt->isChecked())
+      {
+        QTreeWidgetItem *testFath(elt->QTreeWidgetItem::parent());
+        if(testFath!=father)
+          if(elt->isChecked())
+            {
               {
+                disconnect(elt,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
                 elt->setChecked(false);
-                if(godFather!=testFath->parent()->parent())
-                  isActivatedTSChanged=true;
+                connect(elt,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
               }
-        }
-      //If all leaves are checked the father is check too
-      bool allItemsAreChked(true);
-      for(int i=0;i<father->childCount() && allItemsAreChked;i++)
-        {
-          pqTreeWidgetItemObject *elt(dynamic_cast<pqTreeWidgetItemObject *>(father->child(i)));
-          if(elt && !elt->isChecked())
-            allItemsAreChked=false;
-        }
-      if(allItemsAreChked && !father->isChecked())
-        father->setChecked(true);
+              if(godFather!=testFath->parent()->parent())
+                isActivatedTSChanged=true;
+            }
+      }
       // the user by clicking to a new entry has changed of TimeStepSeries -> notify it to thee time step selector widget
       if(isActivatedTSChanged)
         {
@@ -400,19 +420,40 @@ void pqMEDReaderPanel::aLev4HasBeenFired()
             allItemsAreUnChked=false;
         }
       if(allItemsAreUnChked)
-        zeItem->setChecked(true);// OK zeItem was required to be unchecked but as it is the last one. Recheck it !
-      else
-        {// if all items are uncheked inside a same parent - uncheck the parent
-          allItemsAreUnChked=true;
-          for(int i=0;i<father->childCount() && allItemsAreUnChked;i++)
+        {
+          disconnect(zeItem,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
+          zeItem->setChecked(true);// OK zeItem was required to be unchecked but as it is the last one. Recheck it !
+          connect(zeItem,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
+        }
+    }
+}
+
+void pqMEDReaderPanel::putLev3InOrder()
+{
+  std::vector<pqTreeWidgetItemObject *>::iterator it0(_all_lev4.begin()),it1;
+  while(it0!=_all_lev4.end())
+    {
+      QTreeWidgetItem *curFather((*it0)->QTreeWidgetItem::parent());
+      for(it1=it0+1;it1!=_all_lev4.end() && (*it1)->QTreeWidgetItem::parent()==curFather;it1++);
+      bool isAllFalse(true),isAllTrue(true);
+      for(std::vector<pqTreeWidgetItemObject *>::iterator it=it0;it!=it1;it++)
+        {
+          if((*it)->isChecked())
+            isAllFalse=false;
+          else
+            isAllTrue=false;
+        }
+      if(isAllFalse || isAllTrue)
+        {
+          pqTreeWidgetItemObject *father(dynamic_cast<pqTreeWidgetItemObject *>(curFather));
+          if(father)
             {
-              pqTreeWidgetItemObject *elt(dynamic_cast<pqTreeWidgetItemObject *>(father->child(i)));
-              if(elt && elt->isChecked())
-            allItemsAreUnChked=false;
+              disconnect(father,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev3HasBeenFired(bool)));
+              father->setChecked(isAllTrue);
+              connect(father,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev3HasBeenFired(bool)));
             }
-          if(allItemsAreUnChked && father->isChecked())
-            father->setChecked(false);
-        } 
+        }
+      it0=it1;
     }
 }
 
@@ -479,3 +520,74 @@ int pqMEDReaderPanel::getMaxNumberOfTS() const
     }
   return ret;
 }
+
+void pqMEDReaderPanel::updateInformationAndDomains()
+{
+  pqNamedObjectPanel::updateInformationAndDomains();
+  if(_is_fields_status_changed)
+    {
+      vtkSMProxy *proxy(this->proxy());
+      vtkSMProperty *SMProperty(proxy->GetProperty("FieldsStatus"));
+      SMProperty->Modified();// agy : THE LINE FOR 7.5.1 !
+      _is_fields_status_changed=false;
+    }
+}
+
+/*!
+ * This slot is called by this->UI->Fields when one/several leaves have been modified.
+ */
+void pqMEDReaderPanel::somethingChangedInFieldRepr()
+{
+  ///
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("FieldsStatus"));
+  vtkSMStringVectorProperty *sm(dynamic_cast<vtkSMStringVectorProperty *>(SMProperty));
+  unsigned int nb(sm->GetNumberOfElements());
+  std::vector<std::string> sts(nb);
+  for(unsigned int i=0;i<nb;i++)
+    sts[i]=sm->GetElement(i);
+  ///
+  pqExodusIIVariableSelectionWidget *sc(this->UI->Fields);
+  for(int i0=0;i0<sc->topLevelItemCount();i0++)
+    {
+      QTreeWidgetItem *lev0(sc->topLevelItem(i0));//TS
+      for(int i1=0;i1<lev0->childCount();i1++)
+        {
+          QTreeWidgetItem *lev1(lev0->child(i1));//Mesh
+          for(int i2=0;i2<lev1->childCount();i2++)
+            {
+              QTreeWidgetItem *lev2(lev1->child(i2));//Comp
+              for(int i3=0;i3<lev2->childCount();i3++)
+                {
+                  QTreeWidgetItem *lev3(lev2->child(i3));
+                  pqTreeWidgetItemObject *scc(dynamic_cast<pqTreeWidgetItemObject *>(lev3));
+                  int ll(scc->property("PosInStringVector").toInt());
+                  int v(scc->isChecked());
+                  std::ostringstream oss; oss << v;
+                  sts[2*ll+1]=oss.str();
+                }
+            }
+        }
+    }
+  ///
+  const char **args=new const char *[nb];
+  for(unsigned int i=0;i<nb;i++)
+    {
+      args[i]=sts[i].c_str();
+    }
+  {//agy : let's go to put info in property FieldsStatus
+    int iup(sm->GetImmediateUpdate());
+    //sm->SetNumberOfElements(0);
+    sm->SetElements(args,nb);
+    proxy->UpdateVTKObjects(); // push properties states abroad
+    sm->SetImmediateUpdate(iup);
+  }
+  delete [] args;
+  //
+  ((vtkSMSourceProxy *)proxy)->UpdatePipelineInformation();//performs an update of all properties of proxy and proxy itself
+  // here wonderful proxy is declared modified right after FieldsStatus and FieldsTreeInfo -> IMPORTANT : The updated MTime of proxy will be the ref
+  // to detect modified properties.
+  _is_fields_status_changed=true;
+  setModified();
+}
+

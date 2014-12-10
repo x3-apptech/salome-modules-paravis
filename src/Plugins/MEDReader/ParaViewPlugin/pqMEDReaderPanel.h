@@ -37,8 +37,12 @@ Q_OBJECT
 public:
   pqMEDReaderPanel(pqProxy* proxy, QWidget* p = NULL);
   ~pqMEDReaderPanel();
+  void updateInformationAndDomains();
+  void aLev4HasBeenFiredBy(pqTreeWidgetItemObject *zeItem);
 protected slots:
   void aLev4HasBeenFired();
+  void aLev3HasBeenFired(bool);
+  //
   void updateSIL();
   void reloadFired();
   void vectOfBoolWidgetRequested(bool isMode);
@@ -46,6 +50,8 @@ private:
   int getMaxNumberOfTS() const;
   void getCurrentTS(QStringList& its, QStringList& dts, QStringList& tts) const;
 protected:
+  void putLev3InOrder();
+  void somethingChangedInFieldRepr();
   /// populate widgets with properties from the server manager
   virtual void linkServerManagerProperties();
   void initAll();
@@ -54,6 +60,7 @@ protected:
   std::vector<pqTreeWidgetItemObject *> _all_lev4;
 private:
   bool _reload_req;
+  bool _is_fields_status_changed;
   std::set<std::pair<pqTreeWidgetItemObject *,int> > _leaves;
   VectBoolWidget *_optional_widget;
 };

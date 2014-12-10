@@ -37,7 +37,9 @@ Q_OBJECT
 public:
   pqExtractCellTypePanel(pqProxy* proxy, QWidget* p = NULL);
   ~pqExtractCellTypePanel();
+  void updateInformationAndDomains();
 protected slots:
+  void anItemAsBeenFired();
   void updateSIL();
 protected:
   /// populate widgets with properties from the server manager

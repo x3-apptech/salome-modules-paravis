@@ -29,6 +29,7 @@
 #include "vtkSMIntVectorProperty.h"
 #include "vtkSMStringVectorProperty.h"
 #include "vtkSMProxy.h"
+#include "vtkSMSourceProxy.h"
 #include "vtkEventQtSlotConnect.h"
 #include "vtkPVSILInformation.h"
 #include "vtkGraph.h"
@@ -50,6 +51,8 @@
 #include "pqPropertyLinks.h"
 
 #include <QHeaderView>
+
+#include <sstream>
 
 static const char ZE_SEP[]="@@][@@";
 
@@ -199,7 +202,8 @@ pqExtractGroupPanel::pqExtractGroupPanel(pqProxy* object_proxy, QWidget* p):Supe
             item1->setData(0,Qt::DecorationRole,PixSingleExtractPanel::GetInstance().getPixFromStr(0));
           if(!isOnCell && isOnPoint)
             item1->setData(0,Qt::DecorationRole,PixSingleExtractPanel::GetInstance().getPixFromStr(1));
-          this->propertyManager()->registerLink(item1,"checked",SIGNAL(checkedStateChanged(bool)),this->proxy(),SMProperty,ll++);
+          item1->setProperty("PosInStringVector",QVariant(ll++));
+          connect(item1,SIGNAL(checkedStateChanged(bool)),this,SLOT(anItemAsBeenFired()));
         }
       itGrps->Delete();
       // families 
@@ -227,7 +231,8 @@ pqExtractGroupPanel::pqExtractGroupPanel(pqProxy* object_proxy, QWidget* p):Supe
             item1->setData(0,Qt::DecorationRole,PixSingleExtractPanel::GetInstance().getPixFromStr(0));
           if(idInt>0)
             item1->setData(0,Qt::DecorationRole,PixSingleExtractPanel::GetInstance().getPixFromStr(1));
-          this->propertyManager()->registerLink(item1,"checked",SIGNAL(checkedStateChanged(bool)),this->proxy(),SMProperty,ll++);
+          item1->setProperty("PosInStringVector",QVariant(ll++));
+          connect(item1,SIGNAL(checkedStateChanged(bool)),this,SLOT(anItemAsBeenFired()));
         }
       itFams->Delete();
     }
@@ -269,6 +274,50 @@ void pqExtractGroupPanel::updateSIL()
         info->Delete();
       }
     }
+}
+
+void pqExtractGroupPanel::anItemAsBeenFired()
+{
+  ///
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("GroupsFlagsStatus"));
+  vtkSMStringVectorProperty *sm(dynamic_cast<vtkSMStringVectorProperty *>(SMProperty));
+  unsigned int nb(sm->GetNumberOfElements());
+  std::vector<std::string> sts(nb);
+  for(unsigned int i=0;i<nb;i++)
+    sts[i]=sm->GetElement(i);
+  ///
+  pqTreeWidget *sc(this->UI->Fields);
+  for(int i0=0;i0<sc->topLevelItemCount();i0++)
+    {
+      QTreeWidgetItem *lev0(sc->topLevelItem(i0));//Group and Fam
+      for(int i1=0;i1<lev0->childCount();i1++)
+        {
+          QTreeWidgetItem *lev1(lev0->child(i1));
+          pqTreeWidgetItemObject *scc(dynamic_cast<pqTreeWidgetItemObject *>(lev1));
+          int ll(scc->property("PosInStringVector").toInt());
+          int v(scc->isChecked());
+          std::ostringstream oss; oss << v;
+          sts[2*ll+1]=oss.str();
+        }
+    }
+  ///
+  const char **args=new const char *[nb];
+  for(unsigned int i=0;i<nb;i++)
+    {
+      args[i]=sts[i].c_str();
+    }
+  {
+    int iup(sm->GetImmediateUpdate());
+    //sm->SetNumberOfElements(0);
+    sm->SetElements(args,nb);
+    proxy->UpdateVTKObjects();
+    sm->SetImmediateUpdate(iup);
+  }
+  delete [] args;
+  //
+  ((vtkSMSourceProxy *)proxy)->UpdatePipelineInformation();
+  setModified();
 }
 
 std::map<std::string,int> pqExtractGroupPanel::DeduceMapOfFamilyFromSIL(vtkMutableDirectedGraph *graph)
@@ -314,4 +363,12 @@ std::map<std::string,int> pqExtractGroupPanel::DeduceMapOfFamilyFromSIL(vtkMutab
     }
   it0->Delete();
   return ret;
+}
+
+void pqExtractGroupPanel::updateInformationAndDomains()
+{
+  pqNamedObjectPanel::updateInformationAndDomains();
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("GroupsFlagsStatus"));
+  SMProperty->Modified();// agy : THE LINE FOR 7.5.1 !
 }

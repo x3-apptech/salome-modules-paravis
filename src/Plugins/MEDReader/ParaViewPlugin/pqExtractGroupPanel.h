@@ -37,8 +37,10 @@ Q_OBJECT
 public:
   pqExtractGroupPanel(pqProxy* proxy, QWidget* p = NULL);
   ~pqExtractGroupPanel();
+  void updateInformationAndDomains();
 protected slots:
   void updateSIL();
+  void anItemAsBeenFired();
 private:
   static std::map<std::string,int> DeduceMapOfFamilyFromSIL(vtkMutableDirectedGraph *graph);
 protected:

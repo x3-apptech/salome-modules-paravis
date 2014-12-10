@@ -29,6 +29,7 @@
 #include "vtkSMIntVectorProperty.h"
 #include "vtkSMStringVectorProperty.h"
 #include "vtkSMProxy.h"
+#include "vtkSMSourceProxy.h"
 #include "vtkEventQtSlotConnect.h"
 #include "vtkPVSILInformation.h"
 #include "vtkGraph.h"
@@ -50,6 +51,8 @@
 #include "pqPropertyLinks.h"
 
 #include <QHeaderView>
+
+#include <sstream>
 
 static const char ZE_SEP[]="@@][@@";
 
@@ -126,7 +129,8 @@ pqExtractCellTypePanel::pqExtractCellTypePanel(pqProxy* object_proxy, QWidget* p
       item0->setData(0,Qt::UserRole,geoTypeName);
       item0->setData(0,Qt::ToolTipRole,toolTipName0);
       item0->setData(0,Qt::CheckStateRole,0);
-      this->propertyManager()->registerLink(item0,"checked",SIGNAL(checkedStateChanged(bool)),this->proxy(),SMProperty,ll++);
+      item0->setProperty("PosInStringVector",QVariant(ll++));
+      connect(item0,SIGNAL(checkedStateChanged(bool)),this,SLOT(anItemAsBeenFired()));
     }
   it0->Delete(); 
   this->UI->Fields->header()->setStretchLastSection(true);
@@ -166,4 +170,52 @@ void pqExtractCellTypePanel::updateSIL()
         }
       info->Delete();
     }
+}
+
+void pqExtractCellTypePanel::anItemAsBeenFired()
+{
+  ///
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("GeoTypesStatus"));
+  vtkSMStringVectorProperty *sm(dynamic_cast<vtkSMStringVectorProperty *>(SMProperty));
+  unsigned int nb(sm->GetNumberOfElements());
+  std::vector<std::string> sts(nb);
+  for(unsigned int i=0;i<nb;i++)
+    sts[i]=sm->GetElement(i);
+  ///
+  pqTreeWidget *sc(this->UI->Fields);
+  for(int i0=0;i0<sc->topLevelItemCount();i0++)
+    {
+      QTreeWidgetItem *lev0(sc->topLevelItem(i0));
+      pqTreeWidgetItemObject *scc(dynamic_cast<pqTreeWidgetItemObject *>(lev0));
+      int ll(scc->property("PosInStringVector").toInt());
+      int v(scc->isChecked());
+      std::ostringstream oss; oss << v;
+      sts[2*ll+1]=oss.str();
+    }
+  ///
+  const char **args=new const char *[nb];
+  for(unsigned int i=0;i<nb;i++)
+    {
+      args[i]=sts[i].c_str();
+    }
+  {
+    int iup(sm->GetImmediateUpdate());
+    //sm->SetNumberOfElements(0);
+    sm->SetElements(args,nb);
+    proxy->UpdateVTKObjects();
+    sm->SetImmediateUpdate(iup);
+  }
+  delete [] args;
+  //
+  ((vtkSMSourceProxy *)proxy)->UpdatePipelineInformation();
+  setModified();
+}
+
+void pqExtractCellTypePanel::updateInformationAndDomains()
+{
+  pqNamedObjectPanel::updateInformationAndDomains();
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("GeoTypesStatus"));
+  SMProperty->Modified();// agy : THE LINE FOR 7.5.1 !
 }
