@@ -254,6 +254,10 @@
       <translation>メモリ使用量</translation>
     </message>
     <message>
+      <source>TTL_VIEW_PANEL</source>
+      <translation type="unfinished">View</translation>
+    </message>
+    <message>
       <source>TOP_OPEN_FILE</source>
       <translation>ファイル ParaView を開く</translation>
     </message>
@@ -1164,6 +1168,10 @@
     <message>
       <source>PREF_STOP_TRACE</source>
       <translation>（のみのための次のセッション) のトレースを有効に</translation>
+    </message>
+    <message>
+      <source>PREF_NO_EXT_PVSERVER</source>
+      <translation type="unfinished">Do not use external PVServer (Warning: scripts running outside SALOME's GUI will be unusable!)</translation>
     </message>
     <message>
       <source>PREF_SHOW_COLOR_LEGEND</source>
