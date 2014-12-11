@@ -42,7 +42,7 @@ class PVSERVER_Impl:
     """ The core implementation (non CORBA, or Study related).
         See the IDL for the documentation.
     """
-    MAX_PVSERVER_PORT_TRIES = 10
+    MAX_PVSERVER_PORT_TRIES = 1000
     PVSERVER_DEFAULT_PORT = 11111
     
     def __init__(self):
