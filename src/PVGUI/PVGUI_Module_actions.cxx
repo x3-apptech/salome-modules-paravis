@@ -559,7 +559,9 @@ void PVGUI_Module::pvCreateMenus()
 void PVGUI_Module::pvCreateToolBars()
 {
   SUIT_Desktop* desk = application()->desktop();
-  pqParaViewMenuBuilders::buildToolbars(*desk);
+//  pqParaViewMenuBuilders::buildToolbars(*desk);
+  PVViewer_GUIElements * guiElements = PVViewer_GUIElements::GetInstance(desk);
+  guiElements->setToolBarVisible(true);
 }
 
 /*!
