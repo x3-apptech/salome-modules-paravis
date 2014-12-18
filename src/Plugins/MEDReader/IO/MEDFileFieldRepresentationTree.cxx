@@ -1404,53 +1404,53 @@ void MEDFileFieldRepresentationTree::AppendFieldFromMeshes(const ParaMEDMEM::MED
       ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileField1TS> f1tsMultiLev(ParaMEDMEM::MEDFileField1TS::New());
       MEDFileUMesh *mmu(dynamic_cast<MEDFileUMesh *>(mm));
       if(mmu)
-	{
-	  for(std::vector<int>::const_iterator it=levs.begin();it!=levs.end();it++)
-	    {
-	      std::vector<INTERP_KERNEL::NormalizedCellType> gts(mmu->getGeoTypesAtLevel(*it));
-	      for(std::vector<INTERP_KERNEL::NormalizedCellType>::const_iterator gt=gts.begin();gt!=gts.end();gt++)
-		{
-		  ParaMEDMEM::MEDCouplingMesh *m(mmu->getDirectUndergroundSingleGeoTypeMesh(*gt));
-		  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_CELLS));
-		  f->setMesh(m);
-		  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(f->getNumberOfTuplesExpected());
-		  arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
-		  arr->iota();
-		  f->setArray(arr);
-		  f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
-		  f1tsMultiLev->setFieldNoProfileSBT(f);
-		}
-	    }
-	  if(levs.empty())
-	    {
-	      std::vector<int> levsExt(mm->getNonEmptyLevelsExt());
-	      if(levsExt.size()==levs.size()+1)
-		{
-		  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(1));
-		  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_NODES));
-		  f->setMesh(m);
-		  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(m->getNumberOfNodes());
-		  arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
-		  arr->iota(); f->setArray(arr);
-		  f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
-		  f1tsMultiLev->setFieldNoProfileSBT(f);
-		}
-	      else
-		continue;
-	    }
-	}
+        {
+          for(std::vector<int>::const_iterator it=levs.begin();it!=levs.end();it++)
+            {
+              std::vector<INTERP_KERNEL::NormalizedCellType> gts(mmu->getGeoTypesAtLevel(*it));
+              for(std::vector<INTERP_KERNEL::NormalizedCellType>::const_iterator gt=gts.begin();gt!=gts.end();gt++)
+                {
+                  ParaMEDMEM::MEDCouplingMesh *m(mmu->getDirectUndergroundSingleGeoTypeMesh(*gt));
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_CELLS));
+                  f->setMesh(m);
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(f->getNumberOfTuplesExpected());
+                  arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
+                  arr->iota();
+                  f->setArray(arr);
+                  f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
+                  f1tsMultiLev->setFieldNoProfileSBT(f);
+                }
+            }
+          if(levs.empty())
+            {
+              std::vector<int> levsExt(mm->getNonEmptyLevelsExt());
+              if(levsExt.size()==levs.size()+1)
+                {
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(1));
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_NODES));
+                  f->setMesh(m);
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(m->getNumberOfNodes());
+                  arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
+                  arr->iota(); f->setArray(arr);
+                  f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
+                  f1tsMultiLev->setFieldNoProfileSBT(f);
+                }
+              else
+                continue;
+            }
+        }
       else
-	{
-	  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(0));
-	  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_CELLS));
-	  f->setMesh(m);
-	  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(f->getNumberOfTuplesExpected());
-	  arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
-	  arr->iota();
-	  f->setArray(arr);
-	  f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
-	  f1tsMultiLev->setFieldNoProfileSBT(f);
-	}
+        {
+          ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(0));
+          ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_CELLS));
+          f->setMesh(m);
+          ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(f->getNumberOfTuplesExpected());
+          arr->setInfoOnComponent(0,std::string(COMPO_STR_TO_LOCATE_MESH_DA));
+          arr->iota();
+          f->setArray(arr);
+          f->setName(BuildAUniqueArrayNameForMesh(mm->getName(),ret));
+          f1tsMultiLev->setFieldNoProfileSBT(f);
+        }
       //
       ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileFieldMultiTS> fmtsMultiLev(ParaMEDMEM::MEDFileFieldMultiTS::New());
       fmtsMultiLev->pushBackTimeStep(f1tsMultiLev);
