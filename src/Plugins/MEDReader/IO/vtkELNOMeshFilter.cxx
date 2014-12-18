@@ -108,7 +108,7 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
   for(int index = 0; index < fielddata->GetNumberOfArrays(); index++)
     {
       vtkDataArray *data(fielddata->GetArray(index));
-      vtkQuadratureSchemeDefinition **dict = 0;
+      vtkQuadratureSchemeDefinition **dict(0);
       vtkInformationQuadratureSchemeDefinitionVectorKey *key(vtkQuadratureSchemeDefinition::DICTIONARY());
       if(key->Has(data->GetInformation()))
         {
@@ -120,15 +120,17 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
         continue;
       
       vtkInformation *info(data->GetInformation());
-      const char *arrayOffsetName = info->Get(vtkQuadratureSchemeDefinition::QUADRATURE_OFFSET_ARRAY_NAME());
-
-      bool isELGA(false);
+      const char *arrayOffsetName(info->Get(vtkQuadratureSchemeDefinition::QUADRATURE_OFFSET_ARRAY_NAME()));
+      vtkIdTypeArray *offData(0);
+      bool isELGA(false),isELNO(false);
 
       if(arrayOffsetName)
         {
           vtkFieldData *cellData(usgIn->GetCellData());
-          vtkDataArray *offData(cellData->GetArray(arrayOffsetName));
-          isELGA=offData->GetInformation()->Get(MEDUtilities::ELGA())==1;
+          vtkDataArray *offDataTmp(cellData->GetArray(arrayOffsetName));
+          isELGA=offDataTmp->GetInformation()->Get(MEDUtilities::ELGA())==1;
+          isELNO=offDataTmp->GetInformation()->Get(MEDUtilities::ELNO())==1;
+          offData=dynamic_cast<vtkIdTypeArray *>(offDataTmp);
         }
 
       if(arrayOffsetName == NULL || isELGA)
@@ -141,39 +143,56 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
         }
       else
         {
-          vtkDataArray* newArray = data->NewInstance();
+          vtkDataArray *newArray(data->NewInstance());
           newArray->SetName(data->GetName());
           usgOut->GetPointData()->AddArray(newArray);
           newArray->SetNumberOfComponents(data->GetNumberOfComponents());
           newArray->SetNumberOfTuples(usgOut->GetNumberOfPoints());
           newArray->CopyComponentNames(data);
           newArray->Delete();
-          vtkIdList *ids(vtkIdList::New());
-          vtkIdType offset(0);
-          for(vtkIdType cellId = 0; cellId < ncell; cellId++)
+          if(isELGA)
             {
-              int cellType = shrinked->GetCellType(cellId);
-              shrinked->GetCellPoints(cellId, ids);
-              for(int id = 0; id < dict[cellType]->GetNumberOfQuadraturePoints(); id++)
+              vtkIdList *ids(vtkIdList::New());
+              vtkIdType offset(0);
+              for(vtkIdType cellId=0;cellId<ncell;cellId++)
                 {
-                  const double * w = dict[cellType]->GetShapeFunctionWeights(id);
-                  int j;
-                  for(j = 0; j < dict[cellType]->GetNumberOfNodes(); j++)
+                  int cellType(shrinked->GetCellType(cellId));
+                  shrinked->GetCellPoints(cellId, ids);
+                  for(int id = 0; id < dict[cellType]->GetNumberOfQuadraturePoints(); id++)
                     {
-                      if(w[j] == 1.0)
-                        break;
+                      const double * w = dict[cellType]->GetShapeFunctionWeights(id);
+                      int j;
+                      for(j = 0; j < dict[cellType]->GetNumberOfNodes(); j++)
+                        {
+                          if(w[j] == 1.0)
+                            break;
+                        }
+                      if(j == dict[cellType]->GetNumberOfNodes())
+                        {
+                          j = id;
+                        }
+                      newArray->SetTuple(ids->GetId(id), offset + j, data);
                     }
-                  if(j == dict[cellType]->GetNumberOfNodes())
-                    {
-                      j = id;
-                    }
-                  newArray->SetTuple(ids->GetId(id), offset + j, data);
+                  vtkCell *cell(usgIn->GetCell(cellId));
+                  vtkIdType nbptsInCell(cell->GetNumberOfPoints());
+                  offset+=nbptsInCell;
                 }
-              vtkCell *cell(usgIn->GetCell(cellId));
-              vtkIdType nbptsInCell(cell->GetNumberOfPoints());
-              offset+=nbptsInCell;
+              ids->FastDelete();
             }
-          ids->FastDelete();
+          else if(offData && isELNO)
+            {
+              vtkIdType *offsetPtr(offData->GetPointer(0));
+              vtkIdType zeId(0);
+              for(vtkIdType cellId=0;cellId<ncell;cellId++)
+                {
+                  vtkCell *cell(shrinked->GetCell(cellId));
+                  vtkIdType nbPoints(cell->GetNumberOfPoints()),offset(offsetPtr[cellId]);
+                  for(vtkIdType j=0;j<nbPoints;j++,zeId++)
+                    newArray->SetTuple(zeId,offsetPtr[cellId]+j,data);
+                }
+            }
+          else
+            continue ;
         }
       delete [] dict;
     }
