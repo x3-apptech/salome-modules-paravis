@@ -106,7 +106,7 @@ class PVSERVER_Impl:
         opt = []
         if port <= 0:
             port = self.__getFreePort(self.PVSERVER_DEFAULT_PORT)
-        self.pvserverPop = subp.Popen([pvServerPath, "--multi-clients", "--server-port=%d" % port])
+        self.pvserverPop = subp.Popen([pvServerPath, "--multi-clients", "--server-port=%d" % port, "--use-offscreen-rendering"])
         sleep(3)  # Give some time to the server to start up to avoid 
                   # ugly messages on the client side saying that it cannot connect
         # Is PID still alive? If yes, consider that the launch was successful
