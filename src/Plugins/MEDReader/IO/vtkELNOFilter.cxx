@@ -33,6 +33,7 @@
 #include "vtkUnstructuredGrid.h"
 
 #include "MEDUtilities.hxx"
+#include "InterpKernelAutoPtr.hxx"
 
 //vtkCxxRevisionMacro(vtkELNOFilter, "$Revision: 1.2.2.2 $");
 vtkStandardNewMacro(vtkELNOFilter);
@@ -158,6 +159,7 @@ int vtkELNOFilter::RequestData(vtkInformation *request, vtkInformationVector **i
             }
         }
     }
+  AttachCellFieldsOn(usgIn,pdOut->GetCellData(),pdOut->GetNumberOfCells());
   return 1;
 }
 
@@ -165,4 +167,39 @@ void vtkELNOFilter::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
   os << indent << "ShrinkFactor : " << this->ShrinkFactor << endl;
+}
+
+/*!
+ * This method attach fields on cell of \a inGrid and add it as a point data in \a outData.
+ */
+void vtkELNOFilter::AttachCellFieldsOn(vtkUnstructuredGrid *inGrid, vtkCellData *outData, int nbCellsOut)
+{
+  vtkCellData *cd(inGrid->GetCellData());
+  int nbOfArrays(cd->GetNumberOfArrays());
+  vtkIdType nbCells(inGrid->GetNumberOfCells());
+  if(nbOfArrays==0)
+    return ;
+  INTERP_KERNEL::AutoPtr<vtkIdType> tmpPtr(new vtkIdType[nbCells]);
+  for(vtkIdType cellId=0;cellId<nbCells;cellId++)
+    {
+      vtkCell *cell(inGrid->GetCell(cellId));
+      tmpPtr[cellId]=cell->GetNumberOfPoints();
+    }
+  for(int index=0;index<nbOfArrays;index++)
+    {
+      vtkDataArray *data(cd->GetArray(index));
+      vtkDataArray *newArray(data->NewInstance());
+      newArray->SetName(data->GetName());
+      outData->AddArray(newArray);
+      newArray->SetNumberOfComponents(data->GetNumberOfComponents());
+      newArray->SetNumberOfTuples(nbCellsOut);
+      newArray->CopyComponentNames(data);
+      newArray->Delete();
+      vtkIdType offset(0);
+      for(vtkIdType cellId=0;cellId<nbCells;cellId++)
+        {
+          for(vtkIdType j=0;j<tmpPtr[cellId];j++,offset++)
+            newArray->SetTuple(offset,cellId,data);
+        }
+    }
 }

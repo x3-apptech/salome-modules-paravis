@@ -26,7 +26,6 @@ This test focused on ELNO. Here a 2 QUAD4 cells and a single ELNO field
 is defined.
 """
 fname="testMEDReader1.med"
-outImgName="testMEDReader1.png"
 
 coords=DataArrayDouble([(0,0,0),(2,1,0),(1,0,0),(1,1,0),(2,0,0),(0,1,0)])
 m=MEDCouplingUMesh("mesh",2) ; m.setCoords(coords)

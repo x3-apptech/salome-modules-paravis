@@ -24,7 +24,6 @@ from MEDLoader import *
 """ This test is a non regression test of EDF8662 : This bug revealed that ELNOMesh and ELNOPoints do not behave correctly after the call of ExtractGroup"""
 
 fname="testMEDReader16.med"
-outImgName="testMEDReader16.png"
 
 arr=DataArrayDouble([0,1,2])
 m=MEDCouplingCMesh() ; m.setCoords(arr,arr) ; m=m.buildUnstructured() ; m.setName("Mesh")
