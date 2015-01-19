@@ -74,7 +74,7 @@ int vtkELNOFilter::RequestData(vtkInformation *request, vtkInformationVector **i
     return 0;
   
   int dictSize(key->Size(info));
-  vtkQuadratureSchemeDefinition **dict(new vtkQuadratureSchemeDefinition *[dictSize]);
+  vtkQuadratureSchemeDefinition **dict = new vtkQuadratureSchemeDefinition *[dictSize];
   key->GetRange(info, dict, 0, 0, dictSize);
 
   vtkIdType ncell(usgIn->GetNumberOfCells());
