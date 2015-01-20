@@ -169,6 +169,7 @@ public:
   inline static pqPVApplicationCore * GetPVApplication();
 
   virtual CAM_DataModel* createDataModel();
+  void  fixAnimationScene();
 
 public slots:
   //void onImportFromVisu(QString theEntry);

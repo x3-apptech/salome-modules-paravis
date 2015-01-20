@@ -42,9 +42,8 @@ protected:
   vtkELNOFilter();
   ~vtkELNOFilter();
 
-  int RequestData(vtkInformation *, vtkInformationVector **,
-      vtkInformationVector *);
-
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
+  void AttachCellFieldsOn(vtkUnstructuredGrid *, vtkCellData *, int);
   double ShrinkFactor;
 
 private:

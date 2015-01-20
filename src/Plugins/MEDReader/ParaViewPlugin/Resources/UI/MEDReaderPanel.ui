@@ -84,7 +84,7 @@
          </layout>
         </item>
         <item>
-         <widget class="pqTreeWidget" name="Fields">
+         <widget class="pqExodusIIVariableSelectionWidget" name="Fields">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -198,9 +198,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>pqTreeWidget</class>
+   <class>pqExodusIIVariableSelectionWidget</class>
    <extends>QTreeWidget</extends>
-   <header>pqTreeWidget.h</header>
+   <header>pqExodusIIVariableSelectionWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

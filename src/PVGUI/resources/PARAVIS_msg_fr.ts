@@ -1170,6 +1170,10 @@
         <translation>Déactiver la trace (seulement pour la session suivante)</translation>
     </message>
     <message>
+        <source>PREF_NO_EXT_PVSERVER</source>
+        <translation>Ne pas utiliser le PVServer externe (Attention: les scripts lancés en dehors de la GUI SALOME seront inutilisables !)</translation>
+    </message>
+    <message>
         <source>TIT_PVISSETTINGS</source>
         <translation>Options de ParaVis </translation>
     </message>

@@ -42,7 +42,7 @@ class PVSERVER_Impl:
     """ The core implementation (non CORBA, or Study related).
         See the IDL for the documentation.
     """
-    MAX_PVSERVER_PORT_TRIES = 10
+    MAX_PVSERVER_PORT_TRIES = 1000
     PVSERVER_DEFAULT_PORT = 11111
     
     def __init__(self):
@@ -106,7 +106,7 @@ class PVSERVER_Impl:
         opt = []
         if port <= 0:
             port = self.__getFreePort(self.PVSERVER_DEFAULT_PORT)
-        self.pvserverPop = subp.Popen([pvServerPath, "--multi-clients", "--server-port=%d" % port])
+        self.pvserverPop = subp.Popen([pvServerPath, "--multi-clients", "--server-port=%d" % port, "--use-offscreen-rendering"])
         sleep(3)  # Give some time to the server to start up to avoid 
                   # ugly messages on the client side saying that it cannot connect
         # Is PID still alive? If yes, consider that the launch was successful
