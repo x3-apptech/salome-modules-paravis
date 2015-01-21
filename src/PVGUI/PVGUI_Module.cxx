@@ -367,13 +367,13 @@ void PVGUI_Module::initialize( CAM_Application* app )
   LightApp_Application* anApp = getApp();
   SUIT_Desktop* aDesktop = anApp->desktop();
 
+  // Remember current state of desktop toolbars
+  QList<QToolBar*> foreignToolbars = aDesktop->findChildren<QToolBar*>();
+
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
   PVViewer_ViewManager::ParaviewInitApp(aDesktop, anApp->logWindow());
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
-
-  // Remember current state of desktop toolbars
-  QList<QToolBar*> foreignToolbars = aDesktop->findChildren<QToolBar*>();
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
   // and the connection to the server. This order is very sensitive if one wants to make
