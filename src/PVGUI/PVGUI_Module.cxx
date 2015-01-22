@@ -367,13 +367,13 @@ void PVGUI_Module::initialize( CAM_Application* app )
   LightApp_Application* anApp = getApp();
   SUIT_Desktop* aDesktop = anApp->desktop();
 
+  // Remember current state of desktop toolbars
+  QList<QToolBar*> foreignToolbars = aDesktop->findChildren<QToolBar*>();
+
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
   PVViewer_ViewManager::ParaviewInitApp(aDesktop, anApp->logWindow());
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
-
-  // Remember current state of desktop toolbars
-  QList<QToolBar*> foreignToolbars = aDesktop->findChildren<QToolBar*>();
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
   // and the connection to the server. This order is very sensitive if one wants to make
@@ -426,9 +426,21 @@ void PVGUI_Module::initialize( CAM_Application* app )
   // Find created toolbars
   QCoreApplication::processEvents();
 
+  // process PVViewer toolbars (might be added by PVViewer created BEFORE activating ParaVis)
+  QList<QToolBar*> pvToolbars = myGuiElements->getToolbars();
+  foreach(QToolBar* aBar, pvToolbars) {
+    if (!myToolbars.contains(aBar)) {
+      myToolbars[aBar] = true;
+      myToolbarBreaks[aBar] = false;
+      aBar->setVisible(false);
+      aBar->toggleViewAction()->setVisible(false);
+    }
+  }
+
+  // process other toolbars (possibly added by Paraview)
   QList<QToolBar*> allToolbars = aDesktop->findChildren<QToolBar*>();
   foreach(QToolBar* aBar, allToolbars) {
-    if (!foreignToolbars.contains(aBar)) {
+    if (!foreignToolbars.contains(aBar) && !myToolbars.contains(aBar)) {
       myToolbars[aBar] = true;
       myToolbarBreaks[aBar] = false;
       aBar->setVisible(false);
