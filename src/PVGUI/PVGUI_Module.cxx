@@ -426,9 +426,21 @@ void PVGUI_Module::initialize( CAM_Application* app )
   // Find created toolbars
   QCoreApplication::processEvents();
 
+  // process PVViewer toolbars (might be added by PVViewer created BEFORE activating ParaVis)
+  QList<QToolBar*> pvToolbars = myGuiElements->getToolbars();
+  foreach(QToolBar* aBar, pvToolbars) {
+    if (!myToolbars.contains(aBar)) {
+      myToolbars[aBar] = true;
+      myToolbarBreaks[aBar] = false;
+      aBar->setVisible(false);
+      aBar->toggleViewAction()->setVisible(false);
+    }
+  }
+
+  // process other toolbars (possibly added by Paraview)
   QList<QToolBar*> allToolbars = aDesktop->findChildren<QToolBar*>();
   foreach(QToolBar* aBar, allToolbars) {
-    if (!foreignToolbars.contains(aBar)) {
+    if (!foreignToolbars.contains(aBar) && !myToolbars.contains(aBar)) {
       myToolbars[aBar] = true;
       myToolbarBreaks[aBar] = false;
       aBar->setVisible(false);
