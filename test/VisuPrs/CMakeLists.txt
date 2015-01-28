@@ -17,7 +17,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TIMEOUT 10000)
+#SET(TIMEOUT 10000)
+SET(TIMEOUT 900)
 SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
 
 IF(NOT WIN32)
@@ -30,7 +31,7 @@ ENDIF(NOT WIN32)
 
 SET(PARAVIS_TEST_HELPER_FILE ${PROJECT_SOURCE_DIR}/test/VisuPrs/Util/paravistesthelper.py)
 
-SET(TEST_DIRECTORIES 
+SET(TEST_DIRECTORIES
   Util
   2D_viewer
   3D_viewer
@@ -54,7 +55,7 @@ SET(TEST_DIRECTORIES
   imps
   dump_study
 )
-  
+
 FOREACH(test_dir ${TEST_DIRECTORIES})
   ADD_SUBDIRECTORY(${test_dir})
 ENDFOREACH()
