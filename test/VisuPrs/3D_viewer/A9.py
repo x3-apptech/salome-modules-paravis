@@ -104,8 +104,7 @@ shrink_filter = Shrink(scalar_map.Input)
 shrink_filter.ShrinkFactor = 0.8
 shrink_filter.UpdatePipeline()
 shrinked_scalar_map = GetRepresentation(shrink_filter)
-shrinked_scalar_map.ColorAttributeType = EntityType.get_pvtype(EntityType.CELL)
-shrinked_scalar_map.ColorArrayName = field_name
+shrinked_scalar_map.ColorArrayName = (EntityType.get_pvtype(EntityType.CELL), field_name)
 shrinked_scalar_map.Representation = scalar_map.Representation
 lookup_table = scalar_map.LookupTable
 shrinked_scalar_map.LookupTable = lookup_table
@@ -206,8 +205,7 @@ shrink_filter = Shrink(scalar_map.Input)
 shrink_filter.ShrinkFactor = 0.8
 shrink_filter.UpdatePipeline()
 shrinked_scalar_map = GetRepresentation(shrink_filter)
-shrinked_scalar_map.ColorAttributeType = EntityType.get_pvtype(EntityType.CELL)
-shrinked_scalar_map.ColorArrayName = field_name
+shrinked_scalar_map.ColorArrayName = (EntityType.get_pvtype(EntityType.CELL), field_name)
 shrinked_scalar_map.Representation = scalar_map.Representation
 lookup_table = scalar_map.LookupTable
 shrinked_scalar_map.LookupTable = lookup_table

@@ -47,7 +47,7 @@ field_name = 'vitesse'
 
 print "Creating Scalar Map......."
 scmap1 = ScalarMapOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
-if scmap1 is None : 
+if scmap1 is None :
     raise RuntimeError, "ScalarMap presentation is None!!!"
 else:
     print "OK"
@@ -70,11 +70,11 @@ time.sleep(sleep_delay)
 # 3. Create Deformed Shape And Scalar Map
 print "Creating DeformedShapeAndScalarMap......."
 scmap2 = DeformedShapeAndScalarMapOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
-if scmap2 is None : 
+if scmap2 is None :
     raise RuntimeError, "DeformedShapeAndScalarMapOnField presentation is None!!!"
 else:
     print "OK"
-    
+
 scmap2.Input.ScaleFactor = 1.0
 
 display_only(scmap2)
@@ -95,7 +95,7 @@ time.sleep(sleep_delay)
 # 4.Create Deformed Shape
 print "Creating DeformedShape........"
 scmap3 = DeformedShapeOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
-if scmap3 is None : 
+if scmap3 is None :
     raise RuntimeError, "DeformedShapeOnField presentation is None!!!"
 else:
     print "OK"
@@ -115,11 +115,7 @@ time.sleep(sleep_delay)
 scmap2.Input.ScaleFactor = 1.0
 
 # show colored:
-scmap3.ColorAttributeType = EntityType.get_pvtype(EntityType.NODE)
-scmap3.ColorArrayName = field_name
+scmap3.ColorArrayName = (EntityType.get_pvtype(EntityType.NODE), field_name)
 
 display_only(scmap3)
 reset_view()
-
-
-

@@ -32,7 +32,7 @@ picturedir = get_picture_dir("imps/A1")
 def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
     # Get time value
     time_value = get_time(proxy, timestamp_nb)
-    
+
     # Check vector mode
     nb_components = get_nb_components(proxy, entity, field_name)
     check_vector_mode(vector_mode, nb_components)
@@ -47,14 +47,13 @@ def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    prs.ColorAttributeType = EntityType.get_pvtype(entity)
-    prs.ColorArrayName = field_name
+    prs.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     prs.LookupTable = lookup_table
 
     # Add scalar bar
     add_scalar_bar(field_name, nb_components,
                    vector_mode, lookup_table, time_value)
-    
+
 
 # 1. Import of the "Penta6.med" file
 print 'Import "Penta6.med" file........',
@@ -71,7 +70,7 @@ view = pvsimple.GetRenderView()
 # 2. Creation of "CutPlanes" presentation, based on time stamp of "scalar field" field
 print 'Creation of "CutPlanes" presentation, based on time stamp of "scalar field" field....'
 cutplanes = CutPlanesOnField(med_reader, EntityType.CELL, "scalar field", 1)
-if cutplanes is None : 
+if cutplanes is None :
     raise RuntimeError, "Presentation is None!!!"
 else:
     print "OK"
@@ -96,7 +95,7 @@ process_prs_for_test(presentation, view, pic_path)
 print 'Creation of "CutPlanes" presentation, based on time stamp of "vectoriel field" field....'
 cutplanes = CutPlanesOnField(med_reader, EntityType.CELL, "vectoriel field", 1)
 
-if cutplanes is None : 
+if cutplanes is None :
     raise RuntimeError, "Presentation is None!!!"
 else:
     print "OK"

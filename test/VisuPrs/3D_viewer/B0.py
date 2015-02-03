@@ -88,9 +88,8 @@ for reprCode in represents:
                 shrink_filter = Shrink(scalar_map.Input)
                 shrinked_sm = GetRepresentation(shrink_filter)
                 shrink_filter.ShrinkFactor = 0.8
-                shrink_filter.UpdatePipeline()                
-                shrinked_sm.ColorAttributeType = scalar_map.ColorAttributeType
-                shrinked_sm.ColorArrayName = scalar_map.ColorArrayName
+                shrink_filter.UpdatePipeline()
+                shrinked_sm.ColorArrayName = scalar_map.ColorArrayName[0:2]
                 lookup_table = scalar_map.LookupTable
                 shrinked_sm.LookupTable = lookup_table
 

@@ -90,8 +90,7 @@ for reprCode in represents:
                 shrink_filter.ShrinkFactor = 0.8
                 shrink_filter.UpdatePipeline()
                 shrinked_ds = GetRepresentation(shrink_filter)
-                shrinked_ds.ColorAttributeType = ds.ColorAttributeType
-                shrinked_ds.ColorArrayName = ds.ColorArrayName
+                shrinked_ds.ColorArrayName = ds.ColorArrayName[0:2]
                 shrinked_ds.LookupTable = ds.LookupTable
             ds.Visibility = 0
             shrinked_ds.Representation = ds.Representation

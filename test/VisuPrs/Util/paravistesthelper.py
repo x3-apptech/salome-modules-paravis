@@ -104,6 +104,8 @@ def run_test(command):
       print "    ** end of message **"
       pass
 
+  if _out:
+      print _out
   return res
 #
 
