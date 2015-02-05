@@ -20,6 +20,7 @@
 SET(_PYFILES_TO_INSTALL
   modes.py
   annotate_groups.py
+  ShowSalomeObject.py
   )
 
 INSTALL_AND_COMPILE_PYTHON_FILE("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_SCRIPT_PYTHON}/Macro)
