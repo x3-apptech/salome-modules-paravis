@@ -240,7 +240,14 @@ if data.GetDataObjectType() == vtkDataObjectTypes.GetTypeIdFromClassName("vtkMul
       raise RuntimeError("Point data array has no '%s'." % FAMILY_NODE)
 
     scalarBarlabel = "POINTS"
-    activeRepresentation = 'Points'
+    
+    # Check that PointSprite plugin is available
+    if hasattr(representation, "MaxPixelSize"):
+	activeRepresentation = 'Point Sprite'
+	if representation.MaxPixelSize == 64:
+	    representation.MaxPixelSize = 8
+    else:
+        activeRepresentation = 'Points'
 
     dataArray = pointData.GetArray(FAMILY_NODE)
     for tupleId in range(dataArray.GetNumberOfTuples()):
@@ -285,7 +292,7 @@ for idFamily in sortedArray:
       if mapRelations.has_key(famName):
         annotationList.append(str(', ').join(mapRelations.get(famName)))
       else:
-        annotationList.append(str('None group'))
+        annotationList.append(str('No group'))
 
 # Generate indexed colour for array
 indexedColor = []
