@@ -39,13 +39,13 @@ from pvsimple import *
 selection = session.getSelection()
 
 for entry in selection:
-    obj = salome.myStudy.FindObjectID(entry).GetObject()
+    sobj = salome.myStudy.FindObjectID(entry)
     try:
         import GEOM
-        go = obj._narrow(GEOM.GEOM_Object)
+        from salome.geom import geomBuilder
+        geompy = geomBuilder.New(salome.myStudy)
+        go = sobj.GetObject()._narrow(GEOM.GEOM_Object)
         if go:
-            from salome.geom import geomBuilder
-            geompy = geomBuilder.New(salome.myStudy)
             tmpf = tempfile.NamedTemporaryFile(suffix='.vtk')
             fname = tmpf.name
             tmpf.close()
@@ -62,10 +62,10 @@ for entry in selection:
         pass
     try: 
         import SMESH
-        mo = obj._narrow(SMESH.SMESH_Mesh)
+        from salome.smesh import smeshBuilder
+        mesh = smeshBuilder.New(salome.myStudy)
+        mo = sobj.GetObject()._narrow(SMESH.SMESH_Mesh)
         if mo:
-            from salome.smesh import smeshBuilder
-            mesh = smeshBuilder.New(salome.myStudy)
             tmpf = tempfile.NamedTemporaryFile(suffix='.med')
             fname = tmpf.name
             tmpf.close()
@@ -81,6 +81,3 @@ for entry in selection:
         # not mesh object
         pass
     pass
-
-    
-    
