@@ -23,18 +23,15 @@ import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A6")
 
 med_file_path = datadir + "fra.med"
 
 # 1. Import MED file
 print 'Importing "fra.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -51,10 +48,8 @@ for mesh_name in [get_field_short_name(name) for name in mesh_names]:
         raise RuntimeError, "Error"
 
     mesh.Representation = 'Wireframe'
-        
+
     pic_path = os.path.join(picturedir, mesh_name + "_Cell." + pictureext)
     pic_path = re.sub("\s+","_", pic_path)
     print "Save picture ", pic_path
     process_prs_for_test(mesh, pvsimple.GetRenderView(), pic_path)
-    
-

@@ -21,17 +21,14 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 print "**** Step1: Import MED file"
 
 print 'Import "ResOK_0000.med"...',
 file_path = datadir + "ResOK_0000.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -108,7 +105,7 @@ print "**** Step3: Import another MED file"
 
 print 'Import "Fields_group3D.med"...............',
 file_path = datadir + "Fields_group3D.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader1 = pvsimple.GetActiveSource()
 
 if med_reader1 is None:

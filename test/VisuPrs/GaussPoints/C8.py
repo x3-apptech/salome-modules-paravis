@@ -25,9 +25,7 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("GaussPoints/C8")
@@ -40,7 +38,7 @@ field_name = "gravit__VARI_ELGA"
 #timestamp_nb = 1
 timestamp_nb = 6 # timestamp 1 is empty
 
-paravis.OpenDataFile(file_name)
+pvsimple.OpenDataFile(file_name)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError("File wasn't imported!!!")

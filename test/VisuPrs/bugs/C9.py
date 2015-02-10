@@ -21,15 +21,12 @@
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 med_file_path = datadir + "TimeStamps.med"
 
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -37,7 +34,7 @@ if med_reader is None:
 
 # 2. Creation of presentations
 mesh_on_cells = MeshOnEntity(med_reader, "dom", EntityType.CELL)
-if mesh_on_cells is None : 
+if mesh_on_cells is None :
     raise RuntimeError, "Mesh presentation is None!!!"
 
 view = pvsimple.GetRenderView()
@@ -47,7 +44,7 @@ reset_view(view)
 mesh_on_cells.Representation = 'Wireframe'
 
 scalar_map = ScalarMapOnField(med_reader, EntityType.NODE, "vitesse", 1)
-if scalar_map is None : 
+if scalar_map is None :
     raise RuntimeError, "ScalarMap presentation is None!!!"
 
 scalar_map.Visibility = 1

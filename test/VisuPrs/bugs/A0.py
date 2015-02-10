@@ -23,17 +23,14 @@ import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
 import presentations
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A0")
 
 # 1. Import MED file
 print 'Importing "hydro_sea_alv.med"...',
 file_path = datadir + "hydro_sea_alv.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -58,11 +55,3 @@ for ts in xrange(1, len(timestamps) + 1):
     presentations.process_prs_for_test(cutlines, pvsimple.GetRenderView(), pic_path)
     nb_lines = len(cutlines.Input.SliceOffsetValues)
     print "Number of lines = ", nb_lines
-    
-    
-
-    
-
-
-
-

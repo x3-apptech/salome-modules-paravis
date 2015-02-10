@@ -21,10 +21,7 @@
 
 from paravistest import datadir, delete_with_inputs
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal'}
 

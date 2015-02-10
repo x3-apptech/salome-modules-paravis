@@ -22,16 +22,14 @@
 import time
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
 sleep_delay = 1
-my_paravis = paravis.myParavis
 
 # 1. MED file import
 print 'Import "ResOK_0000.med"...............',
 med_file_path = datadir + "ResOK_0000.med"
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError, "ResOK_0000.med was not imported!!!"

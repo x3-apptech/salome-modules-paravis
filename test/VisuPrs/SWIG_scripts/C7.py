@@ -25,9 +25,7 @@ import sys
 
 from paravistest import tablesdir, get_picture_dir, pictureext
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
 
 # Import table from file
 print 'Import file with tables....',

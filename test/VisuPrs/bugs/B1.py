@@ -23,18 +23,15 @@
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/B1")
 
 # 1. Import MED file
 med_file_path = datadir + "resultat.01.med"
 
 print 'Importing "resultat.01.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -54,15 +51,15 @@ for group in groups:
     shor_name = group.split('/')[-1]
     print "group: ", shor_name
     prs = MeshOnGroup(med_reader, extGrp, group)
-    
-    if prs is None : 
+
+    if prs is None :
         print "FAILED!!! Created presentation is None!!!"
         errors += 1
     else :
         print "Presentation was created!"
         pic_path = os.path.join(picturedir, shor_name.strip().split("_")[0]+str(i)+"."+pictureext)
-        process_prs_for_test(prs, pvsimple.GetRenderView(), pic_path)                    
-        
+        process_prs_for_test(prs, pvsimple.GetRenderView(), pic_path)
+
 
 # check errors
 if errors == 1:

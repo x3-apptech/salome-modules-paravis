@@ -25,21 +25,19 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import GaussPointsOnField, EntityType, get_time, process_prs_for_test
-import pvserver as paravis
 import pvsimple
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("GaussPoints/B0")
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-    
+
 # MED file
 file_name = datadir + "cube_hexa8_quad4.med"
 field_name = "fieldcelldouble"
 timestamp_nb = -1 # last timestamp
 
-paravis.OpenDataFile(file_name)
+pvsimple.OpenDataFile(file_name)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError("File wasn't imported!!!")

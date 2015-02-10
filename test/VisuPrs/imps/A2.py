@@ -22,10 +22,8 @@
 import time
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
 sleep_delay = 2
 
 med_file = "pointe.med"
@@ -36,7 +34,7 @@ timestamp = 1
 # 1. Import MED file
 print 'Import "pointe.med"....................',
 med_file_path = datadir + med_file
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -63,7 +61,7 @@ print "Set Point Sprite representation"
 scalar_map.Representation = 'Point Sprite'
 
 data_range = get_data_range(med_reader, entity,
-                            field_name, 'Magnitude')
+                           field_name, 'Magnitude')
 mult = abs(0.1 / data_range[1])
 scalar_map.RadiusScalarRange = data_range
 scalar_map.RadiusTransferFunctionEnabled = 1
@@ -76,5 +74,4 @@ scalar_map.RadiusIsProportional = 1
 scalar_map.RadiusProportionalFactor = mult
 
 pvsimple.Render()
-
-
+time.sleep(sleep_delay)

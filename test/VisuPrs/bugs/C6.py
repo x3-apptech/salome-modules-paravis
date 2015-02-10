@@ -23,18 +23,15 @@ import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/C6")
 
 # 1. Import MED file
 med_file_path = datadir + "relachement_brutal_sans_dudg_gauss.med"
 
 print 'Importing "relachement_brutal_sans_dudg_gauss.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -54,5 +51,3 @@ for timestamp in timestamp_list:
         raise RuntimeError,  "Created presentation is None!!!"
     pic_path = os.path.join(picturedir, "GaussPoints_" + mesh_name + "_" + field_name + "_" + str(timestamp) + "." + pictureext)
     process_prs_for_test(gauss_points, pvsimple.GetRenderView(), pic_path)
-
-

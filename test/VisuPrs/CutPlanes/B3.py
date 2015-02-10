@@ -21,10 +21,7 @@
 
 from paravistest import datadir
 from presentations import CutPlanesOnField, EntityType
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 #====================Stage1: Importing MED file====================
 print "**** Stage1: Importing MED file"
@@ -32,7 +29,7 @@ print "**** Stage1: Importing MED file"
 print 'Import "ResOK_0000.med"...............',
 
 file_path = datadir + "ResOK_0000.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

@@ -24,22 +24,19 @@ import os
 import time
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A1")
 
 med_file_path = datadir + "fra1.med"
 pic_path = os.path.join(picturedir, "A1." + pictureext)
 
 # 1. Import MED file
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 # 2. Create mesh
-mesh = MeshOnEntity(med_reader, "LE_VOLUME", EntityType.CELL)
+mesh = MeshOnEntity(med_reader, "LE VOLUME", EntityType.CELL)
 mesh.Representation = 'Surface With Edges'
 
 # 3. Display mesh and make snapshot

@@ -222,6 +222,7 @@ def process_prs_for_test(prs, view, picture_name, show_bar=True):
     display_only(prs, view)
 
     # Show scalar bar
+    global _current_bar
     if show_bar and _current_bar:
         _current_bar.Visibility = 1
 
@@ -235,6 +236,7 @@ def process_prs_for_test(prs, view, picture_name, show_bar=True):
         os.makedirs(pic_dir)
 
     # Save picture
+    print "Write image:", file_name
     pvs.WriteImage(file_name, view=view, Magnification=1)
 
 
@@ -292,7 +294,7 @@ def display_only(prs, view=None):
 
 def set_visible_lines(xy_prs, lines):
     """Set visible only the given lines for XYChartRepresentation."""
-    sv = xy_prs.GetProperty("SeriesVisibilityInfo").GetData()
+    sv = xy_prs.GetProperty("SeriesVisibility").GetData()
     visible = '0'
 
     for i in xrange(0, len(sv)):
@@ -805,9 +807,6 @@ def select_cells_with_data(proxy, on_points=[], on_cells=[], on_gauss=[]):
         fields_info = proxy.GetProperty("FieldsTreeInfo")[::2]
         arr_name_with_dis=[elt.split("/")[-1] for elt in fields_info]
 
-        proxy.AllArrays = []
-        proxy.UpdatePipeline()
-        
         fields = []
         for name in on_gauss:
             fields.append(name+_med_field_sep+'GAUSS')
@@ -821,13 +820,14 @@ def select_cells_with_data(proxy, on_points=[], on_cells=[], on_gauss=[]):
             if arr_name_with_dis.count(name) > 0:
                 index = arr_name_with_dis.index(name)
                 field_list.append(fields_info[index])
-                
-        proxy.AllArrays = field_list
-        proxy.UpdatePipeline()
+
+        if field_list:
+            proxy.AllArrays = field_list
+            proxy.UpdatePipeline()
         return len(field_list) != 0
 
     # TODO: VTN. Looks like this code is out of date.
-    
+
     #all_cell_types = proxy.CellTypes.Available
     all_cell_types = proxy.Entity.Available
     all_arrays = list(proxy.CellArrays.GetData())
@@ -927,13 +927,11 @@ def add_scalar_bar(field_name, nb_components,
     # Reassign the current bar
     _current_bar = scalar_bar
 
-    return scalar_bar
+    return _current_bar
 
 
 def get_bar():
     """Get current scalar bar."""
-    global _current_bar
-
     return _current_bar
 
 
@@ -1002,10 +1000,10 @@ def get_group_names(extrGrps):
 
 def get_time(proxy, timestamp_nb):
     """Get time value by timestamp number."""
-    proxy.UpdatePipeline()
+    #proxy.UpdatePipeline()
     # Check timestamp number
     timestamps = []
-    
+
     if (hasattr(proxy, 'TimestepValues')):
         timestamps = proxy.TimestepValues.GetData()
     elif (hasattr(proxy.Input, 'TimestepValues')):
@@ -1014,6 +1012,9 @@ def get_time(proxy, timestamp_nb):
     length = len(timestamps)
     if (timestamp_nb > 0 and (timestamp_nb - 1) not in xrange(length) ) or (timestamp_nb < 0 and -timestamp_nb > length):
         raise ValueError("Timestamp number is out of range: " + str(timestamp_nb))
+
+    if not timestamps:
+        return 0.0
 
     # Return time value
     if timestamp_nb > 0:
@@ -1195,7 +1196,7 @@ def CutPlanesOnField(proxy, entity, field_name, timestamp_nb,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    cut_planes.ColorArrayName = (EntityType.get_pvtype(entity), field_name) 
+    cut_planes.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     cut_planes.LookupTable = lookup_table
 
     # Add scalar bar
@@ -1526,9 +1527,9 @@ def VectorsOnField(proxy, entity, field_name, timestamp_nb,
 
     # Set properties
     if (is_colored):
-        vectors.ColorArrayName = 'GlyphVector'
+        vectors.ColorArrayName = (EntityType.get_pvtype(entity), 'GlyphVector')
     else:
-        vectors.ColorArrayName = ''
+        vectors.ColorArrayName = (None, '')
     vectors.LookupTable = lookup_table
 
     vectors.LineWidth = 1.0
@@ -1585,6 +1586,7 @@ def DeformedShapeOnField(proxy, entity, field_name,
 
     # Do merge
     source = pvs.MergeBlocks(proxy)
+    pvs.UpdatePipeline()
 
     # Cell data to point data
     if is_data_on_cells(proxy, field_name):
@@ -1625,7 +1627,7 @@ def DeformedShapeOnField(proxy, entity, field_name,
     if is_colored:
         defshape.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     else:
-        defshape.ColorArrayName = ''
+        defshape.ColorArrayName = (None, '')
     defshape.LookupTable = lookup_table
 
     # Set wireframe represenatation mode
@@ -1702,6 +1704,7 @@ def DeformedShapeAndScalarMapOnField(proxy, entity, field_name,
 
     # Do merge
     source = pvs.MergeBlocks(proxy)
+    pvs.UpdatePipeline()
 
     # Cell data to point data
     if is_data_on_cells(proxy, field_name):
@@ -1963,6 +1966,7 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
 
     # Do merge
     source = pvs.MergeBlocks(proxy)
+    pvs.UpdatePipeline()
 
     # Transform cell data into point data if necessary
     if is_data_on_cells(proxy, field_name):
@@ -2011,7 +2015,7 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
     if (is_colored):
         isosurfaces.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     else:
-        isosurfaces.ColorArrayName = ''
+        isosurfaces.ColorArrayName = (None, '')
         if color:
             isosurfaces.DiffuseColor = color
     isosurfaces.LookupTable = lookup_table
@@ -2080,7 +2084,7 @@ def GaussPointsOnField(proxy, entity, field_name,
 
     # Set timestamp
     pvs.GetRenderView().ViewTime = time_value
-    proxy.UpdatePipeline(time=time_value)
+    pvs.UpdatePipeline(time_value, proxy)
 
     source = proxy
 
@@ -2102,8 +2106,7 @@ def GaussPointsOnField(proxy, entity, field_name,
         vector_array = field_name
         # If the given vector array has only 2 components, add the third one
         if nb_components == 2:
-            calc = get_add_component_calc(source,
-                                          EntityType.NODE, field_name)
+            calc = get_add_component_calc(source, EntityType.NODE, field_name)
             vector_array = calc.ResultArrayName
             source = calc
 
@@ -2135,7 +2138,7 @@ def GaussPointsOnField(proxy, entity, field_name,
     if is_colored:
         gausspnt.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     else:
-        gausspnt.ColorArrayName = ''
+        gausspnt.ColorArrayName = (None, '')
         if color:
             gausspnt.DiffuseColor = color
 
@@ -2249,7 +2252,7 @@ def GaussPointsOnField1(proxy, entity, field_name,
     # Create Gauss Points object
     source = pvs.GaussPoints(proxy)
     source.UpdatePipeline()
-  
+
     # Get Gauss Points representation object
     gausspnt = pvs.GetRepresentation(source)
 
@@ -2266,7 +2269,7 @@ def GaussPointsOnField1(proxy, entity, field_name,
     if is_colored:
         gausspnt.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     else:
-        gausspnt.ColorArrayName = ''
+        gausspnt.ColorArrayName = (None, '')
         if color:
             gausspnt.DiffuseColor = color
 
@@ -2375,12 +2378,13 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
 
     # Do merge
     source = pvs.MergeBlocks(proxy)
+    pvs.UpdatePipeline()
 
     # Cell data to point data
     if is_data_on_cells(proxy, field_name):
         cell_to_point = pvs.CellDatatoPointData(source)
         cell_to_point.PassCellData = 1
-        cell_to_point.UpdatePipeline()
+        pvs.UpdatePipeline()
         source = cell_to_point
 
     vector_array = field_name
@@ -2388,14 +2392,13 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
     if nb_components == 2:
         calc = get_add_component_calc(source, EntityType.NODE, field_name)
         vector_array = calc.ResultArrayName
-        calc.UpdatePipeline()
+        pvs.UpdatePipeline()
         source = calc
 
     # Stream Tracer
     stream = pvs.StreamTracer(source)
     stream.SeedType = "Point Source"
     stream.Vectors = ['POINTS', vector_array]
-    stream.SeedType = "Point Source"
     stream.IntegrationDirection = direction
     stream.IntegratorType = 'Runge-Kutta 2'
     stream.UpdatePipeline()
@@ -2418,7 +2421,7 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
     if is_colored:
         streamlines.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
     else:
-        streamlines.ColorArrayName = ''
+        streamlines.ColorArrayName = (None, '')
         if color:
             streamlines.DiffuseColor = color
 
@@ -2452,8 +2455,6 @@ def MeshOnEntity(proxy, mesh_name, entity):
     if not mesh_full_name:
         raise RuntimeError, "The given mesh name was not found"
     # Select only the given mesh
-    proxy.AllArrays = []
-    proxy.UpdatePipeline()
     proxy.AllArrays = [mesh_full_name]
     proxy.UpdatePipeline()
 
@@ -2461,8 +2462,9 @@ def MeshOnEntity(proxy, mesh_name, entity):
     prs = None
     if (proxy.GetDataInformation().GetNumberOfPoints() or
         proxy.GetDataInformation().GetNumberOfCells()):
-        prs = pvs.GetRepresentation(proxy)
-        prs.ColorArrayName = ''
+        my_view = pvs.GetRenderView()
+        prs = pvs.GetRepresentation(proxy, view=my_view)
+        prs.ColorArrayName = (None, '')
 
     return prs
 
@@ -2507,14 +2509,13 @@ def MeshOnGroup(proxy, extrGroups, group_name):
     return prs
 
 
-def CreatePrsForFile(paravis_instance, file_name, prs_types,
+def CreatePrsForFile(file_name, prs_types,
                      picture_dir, picture_ext):
     """Build presentations of the given types for the file.
 
     Build presentations for all fields on all timestamps.
 
     Arguments:
-      paravis_instance: ParaVis module instance object
       file_name: full path to the MED file
       prs_types: the list of presentation types to build
       picture_dir: the directory path for saving snapshots
@@ -2529,13 +2530,16 @@ def CreatePrsForFile(paravis_instance, file_name, prs_types,
         if proxy is None:
             print "FAILED"
         else:
-            proxy.UpdatePipeline()
+            #proxy.UpdatePipeline()
             print "OK"
     except:
         print "FAILED"
     else:
         # Get view
         view = pvs.GetRenderView()
+        time_value = get_time(proxy, 0)
+        view.ViewTime = time_value
+        pvs.UpdatePipeline(time=time_value, proxy=proxy)
 
         # Create required presentations for the proxy
         CreatePrsForProxy(proxy, view, prs_types,
@@ -2578,7 +2582,7 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                 print "OK"
             # Construct image file name
             pic_name = picture_dir + get_field_short_name(mesh_name) + "." + picture_ext
-            
+
             # Show and dump the presentation into a graphics file
             process_prs_for_test(prs, view, pic_name, False)
 
@@ -2596,7 +2600,7 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                         print "OK"
                     # Construct image file name
                     pic_name = picture_dir + get_group_short_name(group) + "." + picture_ext
-                    
+
                     # Show and dump the presentation into a graphics file
                     process_prs_for_test(prs, view, pic_name, False)
 
@@ -2607,12 +2611,9 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
         if field_name == get_field_mesh_name(field):
             continue
         field_entity = get_field_entity(field)
-        # Clear fields selection state
-        proxy.AllArrays = []
-        proxy.UpdatePipeline()
         # Select only the current field:
         # necessary for getting the right timestamps
-        proxy.AllArrays = field
+        proxy.AllArrays = [field]
         proxy.UpdatePipeline()
 
         # Get timestamps

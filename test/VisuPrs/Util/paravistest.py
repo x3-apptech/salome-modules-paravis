@@ -231,13 +231,12 @@ def TimeStampId(proxy):
     return mesh_name, iterations
 
 
-def Import_Med_Field(paravis, file, field_names, check_errors=0, prs=[]):
+def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
     """Builds presentations on the given fields of the MED file.
     Originally defined in VISU_TEST/Grids/visu/ImportMedField/begin file.
 
     Arguments:
-      paravis      : PARAVIS instance
-      file_name    : the full path to med file
+      filename     : the full path to med file
       field_names  : the list of field names (for ex: ["pression","temperature","vitesse"])
       prs          : [[0,1,...], [], []]; empty list (sublist(s)) is ignored
                      0-VISU.TGAUSSPOINTS
@@ -255,15 +254,16 @@ def Import_Med_Field(paravis, file, field_names, check_errors=0, prs=[]):
 
     nb_errors = 0
 
-    print "File: ", file
+    print "File: ", filename
 
     # check the file accessibility
-    if not os.access(file, os.F_OK):
-        msg = "File " + file + " does not exist!!!"
+    if not os.access(filename, os.F_OK):
+        msg = "File " + filename + " does not exist!!!"
         raise RuntimeError, msg
 
     # import MED file
-    paravis.ImportFile(file)
+    import pvsimple
+    pvsimple.OpenDataFile(filename)
     proxy = presentations.pvs.GetActiveSource()
     if proxy is None:
         raise RuntimeError, "ERROR!!! Can't import file!!!"
@@ -321,7 +321,7 @@ def Import_Med_Field(paravis, file, field_names, check_errors=0, prs=[]):
                     print "Presentation(s) creation...OK"
 
     if nb_errors > 0 and check_errors:
-        raise RuntimeError, "There are some errors were occured!!! For more information see ERRORs above..."
+        raise RuntimeError, "Errors occured!!! For more information see ERRORs above..."
     else:
         return nb_errors
 

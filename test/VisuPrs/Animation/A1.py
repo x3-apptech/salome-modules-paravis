@@ -22,12 +22,9 @@
 
 import sys
 import os
-from paravistest import * 
+from paravistest import *
 from presentations import *
 from pvsimple import *
-import pvserver as paravis
-
-my_paravis = paravis.myParavis
 
 # 1. TimeStamps.med import
 print 'Importing "TimeStamps.med"................',
@@ -43,8 +40,8 @@ else:
 print "Creating Cut Lines........................",
 med_field = "vitesse"
 cutlines = CutLinesOnField(med_reader, EntityType.NODE, med_field, 1,
-			   nb_lines = 20,
-			   orientation1=Orientation.XY, orientation2=Orientation.ZX)
+                           nb_lines = 20,
+                           orientation1=Orientation.XY, orientation2=Orientation.ZX)
 if cutlines is None:
     print "FAILED"
 else:
@@ -78,7 +75,7 @@ scene.Duration = 120
 scene.Duration = 0
 scene.Duration = 30
 print "Duration        ... ", scene.Duration
- 
+
 print "Loop            ... ", scene.Loop
 scene.Loop = 1
 print "Loop            ... ", scene.Loop

@@ -22,7 +22,6 @@
 from paravistest import *
 from presentations import *
 from pvsimple import *
-import pvserver as paravis
 
 import math
 
@@ -47,8 +46,8 @@ view2.ViewSize = [w2, size2[1]]
 h = view1.ViewSize[1]
 view1.ViewSize = [h//2, w]
 view2.ViewSize = [h//2, w]
-view1.ViewPosition = [0, h//2]
-view1.ViewPosition = [0, 0]
+#view1.ViewPosition = [0, h//2]
+#view1.ViewPosition = [0, 0]
 
 Render(view1)
 Render(view2)

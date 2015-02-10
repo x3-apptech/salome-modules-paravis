@@ -25,13 +25,9 @@ from time import sleep
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-
 DELAY = 0.25
-
-my_paravis = paravis.myParavis
 
 # Get view
 view = pvsimple.GetRenderView()
@@ -55,7 +51,7 @@ field_name = "fieldnodedouble"
 entity = EntityType.NODE
 timestamp = 1
 
-OpenDataFile(med_file)
+pvsimple.OpenDataFile(med_file)
 med_reader = pvsimple.GetActiveSource()
 
 
@@ -238,7 +234,7 @@ for curve in curves:
     b = str(random.random())
     xyrep.SeriesColor = [field_name, r, g, b]
     index += 1
-    
+
 pvsimple.Render(xy_view)
 sleep(DELAY)
 
@@ -256,7 +252,7 @@ field_name = "vitesse"
 entity = EntityType.NODE
 timestamp = 2
 
-OpenDataFile(med_file)
+pvsimple.OpenDataFile(med_file)
 med_reader = pvsimple.GetActiveSource()
 
 isosurf = IsoSurfacesOnField(med_reader, entity, field_name, timestamp)
@@ -264,4 +260,4 @@ print "IsoSurfacesOnField(...)"
 pvsimple.ResetCamera(view)
 
 print "Start Animation"
-pvsimple.AnimateReader(med_reader, view)        
+pvsimple.AnimateReader(med_reader, view)

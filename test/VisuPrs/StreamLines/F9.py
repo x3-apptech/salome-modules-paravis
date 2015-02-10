@@ -24,11 +24,7 @@ import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import StreamLinesOnField, EntityType, \
      reset_view, process_prs_for_test
-import pvserver as paravis
 import pvsimple
-
-
-my_paravis = paravis.myParavis
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("StreamLines/F9")
@@ -36,7 +32,7 @@ picturedir = get_picture_dir("StreamLines/F9")
 # Import of the "Bug829_resu_mode.med" file
 file_path = datadir + "Bug829_resu_mode.med"
 
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

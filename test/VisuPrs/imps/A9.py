@@ -23,7 +23,6 @@ from time import sleep
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
 # Import CSV table

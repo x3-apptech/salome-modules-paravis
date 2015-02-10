@@ -23,17 +23,13 @@
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
-import pvserver as paravis
-
-# Create presentations 
-myParavis = paravis.myParavis
 
 # Directory for saving snapshots
-picturedir = get_picture_dir("Vectors/E5") 
+picturedir = get_picture_dir("Vectors/E5")
 
 file = datadir + "hydro_sea_alv.med"
 print " --------------------------------- "
 print "file ", file
 print " --------------------------------- "
 print "CreatePrsForFile..."
-CreatePrsForFile(myParavis, file, [PrsTypeEnum.VECTORS], picturedir, pictureext)
+CreatePrsForFile(file, [PrsTypeEnum.VECTORS], picturedir, pictureext)

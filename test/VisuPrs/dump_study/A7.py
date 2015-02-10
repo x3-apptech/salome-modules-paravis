@@ -21,10 +21,7 @@
 
 from paravistest import datadir, delete_with_inputs
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 # StreamLines settings
 settings = {'name': 'myStreamLines',

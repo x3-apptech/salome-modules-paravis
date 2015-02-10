@@ -22,13 +22,10 @@
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
-import pvserver as paravis
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A7")
 
 med_file_path = datadir + "hexa_28320_ELEM.med"
-CreatePrsForFile(my_paravis, med_file_path, [PrsTypeEnum.MESH], picturedir, pictureext)
-CreatePrsForFile(my_paravis, med_file_path, [PrsTypeEnum.SCALARMAP], picturedir, pictureext)
-CreatePrsForFile(my_paravis, med_file_path, [PrsTypeEnum.CUTPLANES], picturedir, pictureext)
+CreatePrsForFile(med_file_path, [PrsTypeEnum.MESH], picturedir, pictureext)
+CreatePrsForFile(med_file_path, [PrsTypeEnum.SCALARMAP], picturedir, pictureext)
+CreatePrsForFile(med_file_path, [PrsTypeEnum.CUTPLANES], picturedir, pictureext)

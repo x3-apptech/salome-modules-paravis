@@ -21,11 +21,7 @@
 
 from paravistest import datadir
 from presentations import DeformedShapeOnField, EntityType
-import pvserver as paravis
 import pvsimple
-
-
-my_paravis = paravis.myParavis
 
 #====================Stage1: Import from MED file in ParaVis============
 print "**** Stage1: Import from MED file in ParaVis"
@@ -33,7 +29,7 @@ print "**** Stage1: Import from MED file in ParaVis"
 print 'Import "Hexa8.med"....................',
 
 file_path = datadir + "Hexa8.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

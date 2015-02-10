@@ -21,10 +21,7 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 # 1. TimeStamps.med import
 file_path = datadir + "TimeStamps.med"
@@ -43,10 +40,10 @@ med_field = "vitesse"
 for name in prs_names:
     print "Creation of ", name, " presentation..."
     if name == "GaussPoints":
-        prs = GaussPointsOnField(med_reader, EntityType.CELL, "pression", 1)  
- 	pass
-    else: 
-	prs = eval(name + "OnField(med_reader, EntityType.NODE, med_field, 1)")
+        prs = GaussPointsOnField(med_reader, EntityType.CELL, "pression", 1)
+        pass
+    else:
+        prs = eval(name + "OnField(med_reader, EntityType.NODE, med_field, 1)")
     if prs is None:
         print "ERROR!!! ", name," presentation wasn't created..."
         errors += 1

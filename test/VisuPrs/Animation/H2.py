@@ -22,13 +22,9 @@
 
 import sys
 import os
-from paravistest import * 
+from paravistest import *
 from presentations import *
 from pvsimple import *
-import pvserver as paravis
-
-#import file
-myParavis = paravis.myParavis
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("Animation/H2")
@@ -41,7 +37,7 @@ print " --------------------------------- "
 OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-	raise RuntimeError, "Error: can't import file."
+        raise RuntimeError, "Error: can't import file."
 else: print "OK"
 
 print "Creating a Viewer.........................",
@@ -68,22 +64,22 @@ aProxy.AllArrays = []
 aProxy.UpdatePipeline()
 aProxy.AllArrays = ['TS0/dom/ComSup0/vitesse@@][@@P1']
 aProxy.UpdatePipeline()
-   
+
 # Animation creation and saving into set of files into picturedir
 scene = AnimateReader(aProxy,aView,picturedir+"H2_dom."+my_format)
 nb_frames = len(scene.TimeKeeper.TimestepValues)
 
-pics = os.listdir(picturedir) 
+pics = os.listdir(picturedir)
 if len(pics) != nb_frames:
    print "FAILED!!! Number of made pictures is equal to ", len(pics), " instead of ", nb_frames
-    
+
 for pic in pics:
-    os.remove(picturedir+pic)    
-    
-# Prepare animation  performance    
+    os.remove(picturedir+pic)
+
+# Prepare animation  performance
 scene.PlayMode = 1 #  set RealTime mode for animation performance
 # set period
-scene.Duration = 30 # correspond to set the speed of animation in VISU 
+scene.Duration = 30 # correspond to set the speed of animation in VISU
 scene.GoToFirst()
 print "Animation.................................",
 scene.Play()

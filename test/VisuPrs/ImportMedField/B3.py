@@ -21,10 +21,9 @@
 # Import MED file; create presentations for the given fields.
 
 from paravistest import datadir, Import_Med_Field
-import pvserver as paravis
 
 med_file = datadir + "zzzz121b.med"
 field_names = ["RESUZERODEPL____________________", "RESUZEROERRE_ELGA_NORE__________", "RESUZEROSIEF_ELGA_DEPL__________", "RESUZEROSIGM_ELNO_DEPL__________"]
 prs_list = [ [0,1,5,6,7], [0,1,5,6,7], [0,1,5,6,7], [0,1,5,6,7,9] ]
 
-Import_Med_Field(paravis.myParavis, med_file, field_names, 1, prs_list)
+Import_Med_Field(med_file, field_names, 1, prs_list)

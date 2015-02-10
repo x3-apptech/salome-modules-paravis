@@ -21,15 +21,12 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 #====================Stage1: Import MED file=========================
 print 'Importing "fra.med"...................',
 medFile = datadir + "fra.med"
-OpenDataFile(medFile)
+pvsimple.OpenDataFile(medFile)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -172,11 +169,11 @@ print "Changing number of colors:"
 print "Default number of colors: ", lt.NumberOfTableValues
 lt.Discretize = 1
 
-print "Set negative number of colors"
-num = -128
-lt.NumberOfTableValues = num
-print "Number of colors: ", lt.NumberOfTableValues
-pvsimple.Render(view)
+#print "Set negative number of colors"
+#num = -128
+#lt.NumberOfTableValues = num
+#print "Number of colors: ", lt.NumberOfTableValues
+#pvsimple.Render(view)
 
 print "Set zero number of colors"
 num = 0

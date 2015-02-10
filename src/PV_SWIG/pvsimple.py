@@ -47,8 +47,8 @@ def __getFromGUI():
 
 def ShowParaviewView():
     """
-    If the import is made from SALOME embedded console, the ParaView application needs to 
-    be instanciated to avoid a future crash. 
+    If the import is made from SALOME embedded console, the ParaView application needs to
+    be instanciated to avoid a future crash.
     """
     if __getFromGUI():
       __my_log("Initializing ParaView main elements, please be patient ...")
@@ -58,14 +58,14 @@ def ShowParaviewView():
       if len(viewIds):
         sgPyQt.setViewVisible(viewIds[0], True)
         sgPyQt.activateView(viewIds[0])
-      else:  
+      else:
         sgPyQt.createView("ParaView")
       # Now let the GUI main loop process the initialization event posted above
-      sgPyQt.processEvents()  
+      sgPyQt.processEvents()
       __my_log("ParaView initialized.")
 
 ## The below has to called BEFORE importing paraview!!! This is crazy, but it has to be.
-ShowParaviewView()  
+ShowParaviewView()
 
 import paraview
 import pvserver
@@ -97,7 +97,7 @@ def SalomeConnectToPVServer():
         __my_log("*******************************************")
         raise e
     pass
-    
+
 if __getFromGUI() < 1:
     # Only if not in GUI (otherwise the createView will do the connection)
     SalomeConnectToPVServer()
@@ -108,4 +108,3 @@ for name in dir(simple):
   if not name.startswith("__"):
     globals()[name] = getattr(simple, name)
 del simple
-   

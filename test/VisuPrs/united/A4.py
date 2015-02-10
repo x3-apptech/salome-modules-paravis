@@ -21,10 +21,7 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
@@ -34,7 +31,7 @@ print "**** Step1: Import MED file"
 
 print 'Import "Hexa8.med"....................',
 file_path = datadir + "Hexa8.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader1 = pvsimple.GetActiveSource()
 
 if med_reader1 is None:
@@ -42,7 +39,7 @@ if med_reader1 is None:
 else:
     print "OK"
 
-mesh_name1 = 'Maillage_MED_HEXA8'
+mesh_name1 = 'Maillage MED_HEXA8'
 scalar_field = 'scalar field'
 vectoriel_field = 'vectoriel field'
 view = pvsimple.GetRenderView()
@@ -55,7 +52,7 @@ else:
     display_only(scalarmap1, view)
     reset_view(view)
     print "OK"
-    
+
 print "Creating Vectors......................",
 vectors1 = VectorsOnField(med_reader1, cell_entity, vectoriel_field, 1)
 if vectors1 is None:
@@ -99,7 +96,7 @@ print "OK"
 
 print "Editing Vectors.......................",
 glyph = vectors1.Input
-glyph.SetScaleFactor = 2
+glyph.ScaleFactor = 2
 vectors1.LineWidth = 2
 glyph.GlyphType.Center = [0.5, 0.0, 0.0] # TAIL position
 print "OK"
@@ -116,7 +113,7 @@ hide_all(view)
 print 'Importing file "cube_hexa8_quad4.med".',
 file_path = datadir + "cube_hexa8_quad4.med"
 mesh_name2 = 'CUBE_EN_HEXA8_QUAD4'
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader2 = pvsimple.GetActiveSource()
 
 if med_reader2 is None:
@@ -142,7 +139,7 @@ if vectors1 is None:
     print "FAILED"
 else:
     glyph2 = vectors2.Input
-    glyph2.SetScaleFactor = 0.2
+    glyph2.ScaleFactor = 0.2
     vectors2.LineWidth = 2
     glyph2.GlyphType.Center = [0.5, 0.0, 0.0] # TAIL position
     print "OK"
@@ -160,14 +157,14 @@ hide_all(view)
 
 print 'Importing file "Penta6.med"...........',
 file_path = datadir + "Penta6.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader3 = pvsimple.GetActiveSource()
 
 if med_reader3 is None:
     print "FAILED"
 else:
     print "OK"
-    
+
 print "Creating Cut Planes...................",
 cutplanes1 = CutPlanesOnField(med_reader3, cell_entity, scalar_field, 1)
 if cutplanes1 is None:
@@ -200,7 +197,7 @@ else:
 
 print "Displaying Vectors (l.w.=2, s.f.=1.5).",
 glyph3 = vectors3.Input
-glyph3.SetScaleFactor = 1.5
+glyph3.ScaleFactor = 1.5
 vectors3.LineWidth = 2
 display_only(vectors3, view)
 print "OK"
@@ -221,7 +218,7 @@ hide_all(view)
 
 print 'Importing "Quad4.med".................',
 file_path = datadir + "Quad4.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader4 = pvsimple.GetActiveSource()
 
 if med_reader4 is None:
@@ -269,7 +266,7 @@ print "OK"
 
 print 'Importing "Tetra4.med"................',
 file_path = datadir + "Tetra4.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader5 = pvsimple.GetActiveSource()
 
 if med_reader5 is None:
@@ -294,7 +291,7 @@ else:
     print "OK"
 
 vectors5.LineWidth = 3
-vectors5.Input.SetScaleFactor = 2
+vectors5.Input.ScaleFactor = 2
 
 print "Displaying Scalar Map and Vectoes.....",
 hide_all(view)
@@ -305,7 +302,7 @@ print "OK"
 
 print 'Importing "Tria3.med".................',
 file_path = datadir + "Tria3.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader6 = pvsimple.GetActiveSource()
 
 if med_reader6 is None:
@@ -353,7 +350,7 @@ else:
     glyph = vectors6.Input
     glyph.GlyphType.Center = [0.5, 0.0, 0.0] # TAIL position
     vectors6.LineWidth = 2
-    glyph.SetScaleFactor = 1
+    glyph.ScaleFactor = 1
     display_only(vectors6, view)
     print "OK"
 

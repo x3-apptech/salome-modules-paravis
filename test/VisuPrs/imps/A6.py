@@ -21,15 +21,13 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
 error =0
 
 # Import MED file
 file_path = datadir + "Bug891_Box.resu.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -41,10 +39,9 @@ scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, 'RESUMECAEQUI_ELGA_SIG
 if scalarmap is None:
     print "Error!!! ScalarMap is not created"
     error = error+1
-    
+
 scalarmap.Visibility = 1
 reset_view()
 
 if error > 0:
     raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
-

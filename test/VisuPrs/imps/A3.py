@@ -21,15 +21,13 @@
 
 from paravistest import datadir, compare_lists
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-error =0
+error = 0
 
 # Import MED file
 file_path = datadir + "fra.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -49,8 +47,8 @@ if bar.Orientation != 'Vertical':
    print "Error!!! Default Scalar Bar Orientation is wrong - not vertical but ", scalarmap.Orientation
    error = error+1
 
-error = error + compare_lists(bar.Position, [0.87, 0.25])
-error = error + compare_lists(bar.Position2, [0.13, 0.5])
+error = error + compare_lists(bar.Position, [0.85, 0.05])
+error = error + compare_lists(bar.Position2, [0.12, 0.43])
 
 if error > 0:
     raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."

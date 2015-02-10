@@ -21,10 +21,7 @@
 
 import paravistest
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 # 1. Table creation
 title = "My Table"
@@ -90,6 +87,6 @@ if table.Script != orig_script:
     print "ERROR!!! The script value is incorrect:"
     print table.Script
     errors += 1
-    
+
 if errors > 0:
     raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."

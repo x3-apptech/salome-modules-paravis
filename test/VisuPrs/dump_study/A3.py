@@ -21,10 +21,7 @@
 
 from paravistest import datadir, delete_with_inputs
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.333, "ColorArray": "", "ColorComponents": [0.111, 0.222, 0.333]}
 
@@ -49,7 +46,7 @@ deformedshape.LookupTable.NumberOfTableValues = settings["NbColors"]
 deformedshape.LookupTable.UseLogScale = settings["UseLogScale"]
 
 deformedshape.Input.ScaleFactor = settings["Scale"]
-deformedshape.ColorArrayName = ''
+deformedshape.ColorArrayName = (None, '')
 deformedshape.AmbientColor = settings["ColorComponents"]
 
 bar = get_bar()
@@ -161,7 +158,7 @@ if abs(scale - settings["Scale"]) > tolerance:
     errors += 1
 
 # Color array name
-array_name = recreated_deformedshape.ColorArrayName
+array_name = recreated_deformedshape.ColorArrayName[1]
 if array_name != settings["ColorArray"]:
     print "ERROR!!! Color array name of presentation is incorrect: ",  array_name, " instead of ", settings["arrayName"]
     errors += 1

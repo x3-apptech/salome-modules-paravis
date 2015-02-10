@@ -23,15 +23,11 @@ import time
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-
-my_paravis = paravis.myParavis
 view = pvsimple.GetRenderView()
 reset_view(view)
 delay = 1
-
 
 def after_set(error_string, prop_name, old_value, new_value):
     print prop_name, ": old_value = ", old_value, "new_value  = ", new_value
@@ -96,7 +92,7 @@ file_path = datadir + "ResOK_0000.med"
 field_name = 'vitesse'
 node_entity = EntityType.NODE
 
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -132,7 +128,7 @@ file_path = datadir + "fra.med"
 field_name = 'VITESSE'
 
 pvsimple.SetActiveSource(None)
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

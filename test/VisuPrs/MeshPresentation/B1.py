@@ -23,17 +23,13 @@
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
-import pvserver as paravis
-
-# Create presentations 
-myParavis = paravis.myParavis
 
 # Directory for saving snapshots
-picturedir = get_picture_dir("MeshPresentation/B1") 
+picturedir = get_picture_dir("MeshPresentation/B1")
 
 file = datadir + "carre_en_quad4_seg2_fields.med"
 print " --------------------------------- "
 print "file ", file
 print " --------------------------------- "
 print "CreatePrsForFile..."
-CreatePrsForFile(myParavis, file, [PrsTypeEnum.MESH], picturedir, pictureext)
+CreatePrsForFile(file, [PrsTypeEnum.MESH], picturedir, pictureext)

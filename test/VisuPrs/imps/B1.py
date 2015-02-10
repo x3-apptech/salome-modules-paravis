@@ -21,14 +21,11 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # Import MED file
 file_path = datadir + "fra.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 entity = EntityType.NODE

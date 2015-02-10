@@ -25,24 +25,27 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import GaussPointsOnField, EntityType, get_time, process_prs_for_test
-import pvserver as paravis
 import pvsimple
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("GaussPoints/A0")
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-    
+
 # MED file
 file_name = datadir + "hexa_28320_ELEM.med"
 field_name = "pression_elem_dom_pb1"
 timestamp_nb = -1 # last timestamp
 
-paravis.OpenDataFile(file_name)
+pvsimple.OpenDataFile(file_name)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError("File wasn't imported!!!")
+
+view = pvsimple.GetRenderView()
+time = get_time(med_reader, timestamp_nb)
+view.ViewTime = time
+pvsimple.UpdatePipeline(time=time, proxy=med_reader)
 
 # Create Gauss Points presentation
 prs = GaussPointsOnField(med_reader, EntityType.CELL, field_name, timestamp_nb)
@@ -50,10 +53,5 @@ if prs is None:
     raise RuntimeError, "Created presentation is None!!!"
 
 # Display presentation and get snapshot
-view = pvsimple.GetRenderView()
-time = get_time(med_reader, timestamp_nb)
-
 pic_name = picturedir + field_name + "_" + str(time) + "_GAUSSPOINTS." + pictureext
 process_prs_for_test(prs, view, pic_name)
-
-

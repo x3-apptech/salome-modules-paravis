@@ -24,9 +24,9 @@ import salome
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
+salome.salome_init()
 myStudy = salome.myStudy
 myStudyManager = salome.myStudyManager
 
@@ -39,9 +39,10 @@ if tmp_dir == None:
 save_file = tmp_dir + "/TimeStamps_save.hdf"
 print "Save to file ", save_file
 
-paravis.OpenDataFile(data_file)
+pvsimple.OpenDataFile(data_file)
 myStudyManager.SaveAs(save_file, myStudy, 0)
 myStudyManager.Close(myStudy)
+
 openedStudy = myStudyManager.Open(data_file)
 myStudyManager.Close(openedStudy)
 

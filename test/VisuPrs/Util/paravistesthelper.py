@@ -83,7 +83,7 @@ def run_test(command):
 
   # :TRICKY: Special case of returncode=127
   # When using paraview in SALOME environment, the following error
-  # systematicallty appears when exiting paraview (it's also true when using
+  # systematically appears when exiting paraview (it's also true when using
   # PARAVIS and exiting SALOME):
   # Inconsistency detected by ld.so: dl-close.c: 738: _dl_close: Assertion `map->l_init_called' failed!
   # For PARAVIS tests purpose, paraview functionalities are accessed in each
@@ -92,8 +92,12 @@ def run_test(command):
   # status is considered as "failed".
   # The tricky part here is to discard such return codes, waiting for a fix
   # maybe in paraview...
+  print "#############################"
+  print res
+  print _err
+  print "#############################"
   if res == 127 and _err.startswith("Inconsistency detected by ld.so: dl-close.c"):
-      print "    ** THE FOLLOWING MESSAGE IS NOT CONSIDERED WHEN ANALYZING TEST SUCCESSFULNESS **"
+      print "    ** THE FOLLOWING MESSAGE IS DISCARDED WHEN ANALYZING TEST SUCCESSFULNESS **"
       print _err
       print "    ** end of message **"
       res = 0;

@@ -19,7 +19,6 @@
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
 # Import table from file

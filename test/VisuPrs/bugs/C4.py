@@ -23,18 +23,15 @@ import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/C4")
 
 # 1. Import MED file
 med_file_path = datadir + "forma01f.resu.med"
 
 print 'Importing "forma01f.resu.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -52,19 +49,19 @@ view = pvsimple.GetRenderView()
 
 for scale in scales:
     for i in range(len(fields)):
-	print "Field: ", fields[i], "; Scale: ", scale
+        print "Field: ", fields[i], "; Scale: ", scale
         presentation = None
         try:
             presentation = DeformedShapeAndScalarMapOnField(med_reader, entities[i], fields[i], 1)
         except ValueError as e:
             print "Error:", e
-        
-	if presentation is not None:
-	    if scale is not None:
-	        presentation.Input.ScaleFactor = scale
+
+        if presentation is not None:
+            if scale is not None:
+                presentation.Input.ScaleFactor = scale
             # save picture
             pic_path = os.path.join(picturedir, "MAIL_" + entities_str[i] + "_" + fields[i] + "_" + str(scale) + "_." + pictureext)
             process_prs_for_test(presentation, view, pic_path)
         else:
-	    print "FAILED! Created presentation is None!!!"
+            print "FAILED! Created presentation is None!!!"
 

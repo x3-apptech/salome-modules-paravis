@@ -24,21 +24,13 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
-import pvserver as paravis
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("StreamLines/A0")
-
-# Create presentations
-myParavis = paravis.myParavis
 
 file = datadir +  "fra.med"
 print " --------------------------------- "
 print "file ", file
 print " --------------------------------- "
 print "\nCreatePrsForFile..."
-CreatePrsForFile(myParavis, file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)
-
-import time
-time.sleep(10000)
+CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)

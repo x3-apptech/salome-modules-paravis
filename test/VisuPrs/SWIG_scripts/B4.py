@@ -25,14 +25,11 @@ import os
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # Import MED file
 med_file_path = datadir + "pointe.med"
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -46,7 +43,7 @@ try:
            entity = EntityType.NODE
            field_name = "fieldnodedouble"
            timestamp_id = 1
-           
+
            scalarmap = ScalarMapOnField(med_reader, entity, field_name, timestamp_id)
            if get_nb_components(med_reader, entity, field_name) > 1:
                vectors = VectorsOnField(med_reader, entity, field_name, timestamp_id)
@@ -56,9 +53,9 @@ try:
        else:
            print "We have no permission to rewrite medFile"
     else:
-        print  "We have no permission to read medFile, it will not be opened"; 
+        print  "We have no permission to read medFile, it will not be opened";
 except:
-    print sys.exc_type 
+    print sys.exc_type
     print sys.exc_value
     print sys.exc_traceback
 

@@ -22,14 +22,11 @@
 import time
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 med_file_path = datadir + "hexa_28320_ELEM.med"
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 # 2. Create vectors
@@ -39,13 +36,13 @@ display_only(vectors)
 reset_view()
 time.sleep(1)
 
-vectors.Input.SetScaleFactor = 0.005
+#vectors.Input.SetScaleFactor = 0.005
 display_only(vectors)
 reset_view()
 time.sleep(1)
 
 
-vectors.Input.SetScaleFactor = 0.002
-display_only(vectors)
-reset_view()
-time.sleep(1)
+#vectors.Input.SetScaleFactor = 0.002
+#display_only(vectors)
+#reset_view()
+#time.sleep(1)

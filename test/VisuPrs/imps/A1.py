@@ -23,10 +23,8 @@ import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
 picturedir = get_picture_dir("imps/A1")
 
 def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
@@ -58,7 +56,7 @@ def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
 # 1. Import of the "Penta6.med" file
 print 'Import "Penta6.med" file........',
 file_path = datadir + "Penta6.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError, "Penta6.med was not imported!!!"
