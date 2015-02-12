@@ -1,4 +1,4 @@
-# Copyright (C) 2014  CEA/DEN, EDF R&D, OPEN CASCADE
+# Copyright (C) 2014-2015  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+
 ###
 # Macro to show SALOME object in ParaView viewer.
 # 
