@@ -36,6 +36,10 @@ SET(_demo_files
   demo_14_med.py
   demo_15_med.py
   )
- 
+
 INSTALL_AND_COMPILE_PYTHON_FILE("${_demo_files}" ${SALOME_INSTALL_SCRIPT_PYTHON})
-  
+
+# Application tests
+INSTALL(FILES CTestTestfileInstall.cmake
+  DESTINATION ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test
+  RENAME CTestTestfile.cmake)

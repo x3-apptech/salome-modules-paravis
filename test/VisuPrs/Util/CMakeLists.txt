@@ -19,7 +19,6 @@
 
 SET(dist_testscript_DATA
   paravistest.py
-  paravistesthelper.py
   )
 
 SALOME_INSTALL_SCRIPTS("${dist_testscript_DATA}" ${SALOME_INSTALL_SCRIPT_SCRIPTS})
