@@ -114,7 +114,7 @@ int vtkParaGEOMCorbaSource::RequestData(vtkInformation* request, vtkInformationV
 	TopoDS_Shape aTopoDSShape = GEOM_Client::get_client().GetShape( geomGen, geomObj );
 	
 	if ( !aTopoDSShape.IsNull() ) {
-	  vtkPolyData *ret=GEOM::GetData(aTopoDSShape, this->Deflection);
+	  vtkPolyData *ret=GEOM::GetVTKData(aTopoDSShape, this->Deflection);
 	  if(!ret) {
 	    vtkErrorMacro("On geom object CORBA fetching an error occurs !");
 	    return 0;
