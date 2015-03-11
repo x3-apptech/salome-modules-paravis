@@ -112,7 +112,6 @@
 
 #include <pqApplicationCore.h>
 #include <pqPVApplicationCore.h>
-#include <pqActiveView.h>
 #include <pqObjectBuilder.h>
 #include <pqOptions.h>
 #include <pqSettings.h>
