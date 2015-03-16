@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2012-2015  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(input ${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in)
-SET(output ${CMAKE_CURRENT_BINARY_DIR}/doxyfile)
+SALOME_CONFIGURE_FILE(conf.py.in conf.py)
 
-MESSAGE(STATUS "Creation of ${output}")
-CONFIGURE_FILE(${input} ${output})
+SET(_cmd_options -c ${CMAKE_CURRENT_BINARY_DIR} -b html -d doctrees -D latex_paper_size=a4 ${CMAKE_CURRENT_SOURCE_DIR} html)
+SALOME_GENERATE_ENVIRONMENT_SCRIPT(_cmd env_script "${SPHINX_EXECUTABLE}" "${_cmd_options}")            
 
+ADD_CUSTOM_TARGET(html_docs COMMAND ${_cmd})
+
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" --build ${PROJECT_BINARY_DIR} --target html_docs)")
+INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ DESTINATION ${SALOME_INSTALL_DOC}/dev/PARAVIS)
+
+SET(make_clean_files html doctrees)
+SET_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${make_clean_files}")
