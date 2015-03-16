@@ -126,6 +126,22 @@ pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass
   initAll();
 }
 
+// VSR, 16/03/2015, PAL22921
+// Below is the helper class which is implemented a workaround about ugly pqTreeWidgetItemObject class.
+// We use this helper class to make 1st and 2nd level tree items uncheckable.
+class pqMyTreeWidgetItemObject : public pqTreeWidgetItemObject
+{
+public:
+  pqMyTreeWidgetItemObject(const QStringList& t, int type=QTreeWidgetItem::UserType): pqTreeWidgetItemObject(t, type){}
+  pqMyTreeWidgetItemObject(QTreeWidget* p, const QStringList& t, int type=QTreeWidgetItem::UserType): pqTreeWidgetItemObject(p, t, type){}
+  pqMyTreeWidgetItemObject(QTreeWidgetItem* p, const QStringList& t, int type=QTreeWidgetItem::UserType): pqTreeWidgetItemObject(p, t, type){}
+  virtual void	setData ( int column, int role, const QVariant & value )
+  {
+    if ( role != Qt::CheckStateRole)
+      pqTreeWidgetItemObject::setData(column, role, value );
+  }
+};
+
 void pqMEDReaderPanel::initAll()
 {
   _all_lev4.clear();
@@ -187,7 +203,7 @@ void pqMEDReaderPanel::initAll()
       SMProperty->ResetToDefault();//this line is very important !
       //
       QString name0(QString::fromStdString((const char *)verticesNames2->GetValue(id1))); QList<QString> strs0; strs0.append(name0);
-      pqTreeWidgetItemObject *item0(new pqTreeWidgetItemObject(this->UI->Fields,strs0));
+      pqTreeWidgetItemObject *item0(new pqMyTreeWidgetItemObject(this->UI->Fields,strs0));
       item0->setData(0,Qt::UserRole,name0);
       item0->setData(0,Qt::ToolTipRole,toolTipName0);
       //
@@ -207,7 +223,7 @@ void pqMEDReaderPanel::initAll()
           vtkIdType id2(it1->Next());
           QString name1(QString::fromStdString((const char *)verticesNames2->GetValue(id2))); QList<QString> strs1; strs1.append(name1);
           QString toolTipName1(name1);
-          pqTreeWidgetItemObject *item1(new pqTreeWidgetItemObject(item0,strs1));
+          pqTreeWidgetItemObject *item1(new pqMyTreeWidgetItemObject(item0,strs1));
           item1->setData(0,Qt::UserRole,name1);
           item1->setData(0,Qt::ToolTipRole,toolTipName1);
           vtkAdjacentVertexIterator *it2(vtkAdjacentVertexIterator::New());//common support
