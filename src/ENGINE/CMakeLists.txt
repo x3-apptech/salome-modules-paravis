@@ -17,27 +17,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-    INCLUDE_DIRECTORIES(
-      ${OMNIORB_INCLUDE_DIR} 
-      ${KERNEL_INCLUDE_DIRS} 
-      ${PROJECT_BINARY_DIR}/idl)
-    
-    ADD_DEFINITIONS(${KERNEL_DEFINITIONS})
-    ADD_DEFINITIONS(${OMNIORB_DEFINITIONS})
-    
-    ADD_LIBRARY(PARAVISEngine PARAVIS_Engine_i.cc)
-    
-    TARGET_LINK_LIBRARIES(PARAVISEngine 
-      ${KERNEL_SalomeIDLKernel} ${KERNEL_SalomeNS} ${KERNEL_SalomeContainer} ${KERNEL_SALOMELocalTrace} 
-      ${OMNIORB_LIBRARIES} 
-      SalomeIDLPARAVIS)
-    INSTALL(TARGETS PARAVISEngine)  # doesn't need to be exported
-      
-    INSTALL(FILES PARAVIS_Engine_i.hh DESTINATION ${SALOME_INSTALL_HEADERS})
-ELSE()
-    SET(_bin_SCRIPTS no_wrap/PVSERVER.py no_wrap/PVSERVER_utils.py)
-    # --- rules ---
-    SALOME_INSTALL_SCRIPTS("${_bin_SCRIPTS}" ${SALOME_INSTALL_SCRIPT_PYTHON})
-ENDIF()
+SET(_bin_SCRIPTS 
+    PVSERVER.py 
+    PVSERVER_utils.py
+    )
+# --- rules ---
+SALOME_INSTALL_SCRIPTS("${_bin_SCRIPTS}" ${SALOME_INSTALL_SCRIPT_PYTHON})
+
     

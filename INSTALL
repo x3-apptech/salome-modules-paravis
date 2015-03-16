@@ -1,5 +1,5 @@
 Building and installing PARAVIS module
-===============================================
+======================================
 
 PARAVIS is a SALOME module that wraps ParaView GUI and makes it available in
 SALOME GUI.
@@ -8,22 +8,23 @@ Like any other SALOME module, PARAVIS requires PARAVIS_ROOT_DIR environment vari
 installation directory.
 
 Specific prerequisites:
-- cmake 2.6 or higher should be installed, path to cmake executable
+- cmake 2.8.10 or higher should be installed, path to cmake executable
 should be added to PATH environment variable.
-- ParaView-3.7.0, should be installed
-
+- ParaView-4.3.1, should be installed
 
 It also requires common SALOME environment including GUI_ROOT_DIR and
 other standard SALOME prerequisites.
 
 As soon as the environment is set, execute the following commands in a shell:
 
-mkdir PARAVIS_BIN
+mkdir PARAVIS_BUILD
+cd PARAVIS_BUILD
 ccmake ../PARAVIS_SRC
 make 
 make install
 
 PARAVIS module can be launched using the following commands:
 
-runSalome --modules="PARAVIS"
+salome -mMED,PARAVIS
+
 

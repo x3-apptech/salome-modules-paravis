@@ -35,7 +35,7 @@ class QHideEvent;
 class LightApp_Application;
 
 /**!
- * Almost identical copy/paste of what is found in
+ * Almost a copy/paste of what is found in
  *    <PARAVIEW>/Qt/Components/pqSettingsDialog.h
  * This is (almost) the same, except for the inheritance to QtxUserDefinedContent providing the link
  * to SALOME preference mechanism.

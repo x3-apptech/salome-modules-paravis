@@ -32,6 +32,7 @@ import os
 #from SALOME_utilities import MESSAGE
 
 def MESSAGE(m):
+    """ Debug function """
     pass
     #os.system("echo \"%s\" >> /tmp/paravis_log.txt" % m)
 
@@ -39,8 +40,8 @@ class PVSERVER_Impl:
     """ The core implementation (non CORBA, or Study related).
         See the IDL for the documentation.
     """
-    MAX_PVSERVER_PORT_TRIES = 1000
-    PVSERVER_DEFAULT_PORT = 11111
+    MAX_PVSERVER_PORT_TRIES = 1000  # Maximum number of tries to get a free port for the PVServer
+    PVSERVER_DEFAULT_PORT = 11111   # First port being tried to launch the pvserver
     
     def __init__(self):
         self.pvserverPort = -1
@@ -65,6 +66,9 @@ class PVSERVER_Impl:
 
     """
     Private. Identify a free port to launch the PVServer. 
+    This is done by trying to bind a socket on the port.
+    We are still subject to a race condition between this detection mechanism and the actual launch of the pvserver
+    itself ...
     """
     def __getFreePort(self, startPort):
         cnt = 0

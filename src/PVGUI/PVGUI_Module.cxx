@@ -29,10 +29,6 @@
 #include <vtkPython.h> // Python first
 #include "PVGUI_Module.h"
 
-//#ifdef PARAVIS_WITH_FULL_CORBA
-//# include "PARAVIS_Gen_i.hh"
-//#endif
-
 #include CORBA_SERVER_HEADER(SALOME_ModuleCatalog)
 #include CORBA_SERVER_HEADER(SALOMEDS)
 
@@ -136,9 +132,6 @@
 #include <pqAnimationScene.h>
 #include <pqServerManagerModel.h>
 #include <pqAnimationTimeToolbar.h>
-
-//#include <PVViewer_EngineWrapper.h>
-
 
 //----------------------------------------------------------------------------
 PVGUI_Module* ParavisModule = 0;

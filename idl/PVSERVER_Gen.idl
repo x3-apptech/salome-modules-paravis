@@ -29,6 +29,9 @@
 
 /*!
   The main package of interfaces of the module %PARAVIS.
+  The main service provided by the interface is to give to the caller the URL of the pvserver, and to launch it
+  if it is not already started.  
+  The connection to the ParaView's pvserver should then be done using ParaView's API directly.
 */
 module PVSERVER_ORB {
 
@@ -70,6 +73,8 @@ module PVSERVER_ORB {
      * This avoids multiple attempts to connect from a single thread (makes ParaView crash). */ 
     void SetGUIConnected(in boolean isConnected);
     
+    /*! Indicates if the GUI process is already connected to the pvserver. 
+     * This avoids multiple attempts to connect from a single thread (makes ParaView crash). */
     boolean GetGUIConnected();
     
   };

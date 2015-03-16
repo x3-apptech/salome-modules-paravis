@@ -25,40 +25,22 @@
 #include "SALOME_LifeCycleCORBA.hxx"
 #include "SalomeApp_Application.h"
 #include "SalomeApp_Study.h"
-#include <stdexcept>
 
 using namespace std;
 
 //=============================================================================
 namespace PARAVIS
 {
-#ifdef PARAVIS_WITH_FULL_CORBA
-  //------------------------------------------------------------
-  PARAVIS_Gen_i* GetParavisGen(const CAM_Module* theModule)
-  {
-    static PARAVIS_Gen_i* aGen = NULL;
-    if(!aGen){
-      SALOME_LifeCycleCORBA aLCC(SalomeApp_Application::namingService());
-      Engines::EngineComponent_var aComponent = aLCC.FindOrLoad_Component("FactoryServer","PARAVIS");
-      PARAVIS_Gen_var aPARAVIS = PARAVIS_Gen::_narrow(aComponent);
-      if(!CORBA::is_nil(aPARAVIS)){
-        aGen = PARAVIS_Gen_i::GetParavisGenImpl();
-      }
-    }
-    if(!aGen)
-      throw std::runtime_error("Can not create PARAVIS_Gen");
-    return aGen;
-  }
-#endif
-
-  //------------------------------------------------------------
+  /**
+   *  Get current study.
+   */
   _PTR(Study) GetCStudy(const CAM_Module* theModule)
   {
     if (theModule && theModule->application()) {
       SalomeApp_Study* activeStudy = 
-	dynamic_cast<SalomeApp_Study*>(theModule->application()->activeStudy());
+          dynamic_cast<SalomeApp_Study*>(theModule->application()->activeStudy());
       if (activeStudy) {
-	return activeStudy->studyDS();
+          return activeStudy->studyDS();
       }
     }
     

@@ -16,15 +16,19 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  File   : paravis.py
+#  Module : PARAVIS
+#
 
-r""" This module is a direct forward to the initial 
-'servermanager' module of ParaView. We keep it for backward compatibility only.
+"""
+This module does the minimum required to retrieve the PVSERVER engine and make
+it available in the global variables myParavis and myPVServerService
+(TODO: who needs this ??)
 """
 
-from paraview import servermanager
+import PVSERVER_utils
 
-for name in dir(servermanager):
-  if not name.startswith("__"):
-    globals()[name] = getattr(servermanager, name)
-del servermanager
- 
+## Initialize PARAVIS interface
+myPVServerService = PVSERVER_utils.getEngine()
+# Backward compatibility:
+myParavis = myPVServerService 

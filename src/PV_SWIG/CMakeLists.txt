@@ -25,23 +25,14 @@ IF(SALOME_LIGHT_ONLY)
     presentations.py
   )
 ELSE(SALOME_LIGHT_ONLY)
-  IF(SALOME_PARAVIS_MINIMAL_CORBA)
-    # Use another set of Python files redirecting the API directly 
+    # Use a set of Python files redirecting the API directly 
     # to the original ParaView modules.
     LIST(APPEND _PYFILES_TO_INSTALL
-      no_wrap/pvserver.py
-      no_wrap/pvsimple.py
-      no_wrap/presentations.py
-      no_wrap/paravisSM.py
-    )
-  ELSE()
-    LIST(APPEND _PYFILES_TO_INSTALL
-      paravis.py
-      paravisSM.py
+      pvserver.py
       pvsimple.py
       presentations.py
+      paravisSM.py
     )
-  ENDIF()
 ENDIF(SALOME_LIGHT_ONLY)
 
 INSTALL_AND_COMPILE_PYTHON_FILE("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_PYTHON})

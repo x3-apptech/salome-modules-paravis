@@ -19,7 +19,7 @@
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
 // File   : PVGUI_Module.h
-// Author : Sergey ANIKIN
+// Author : Sergey ANIKIN, Adrien BRUNETON
 //
 
 
