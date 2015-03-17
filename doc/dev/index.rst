@@ -144,19 +144,30 @@ This folder hence deals with:
   writing the pipeline, some menus, and other elements are very hard to connect *after* having set up a 3D view. They are
   however not wanted when the user just requested a 3D view, outside the ParaVis interface. We hence create those elements
   any way, but hide them, so that we can later show them again, once the ParaVis module is activated.
+  The class ``PVViewer_GUIElements`` is in charge of this.
 
-The class ``PVViewer_GUIElements`` is in charge of this.
+The PVViewer follows otherwise the standard structure of a Salome's view (SUIT model).
+
+A special trick is used to make ``PVGUI_ViewWindow`` the parent of the ``pqViewManager`` widget. 
+It is created initally by ``pqMainWindowCore`` 
+with the desktop as a parent, so when it is shown, a ``PVGUI_ViewWindow`` instance is passed to its ``setParent()`` method. 
+In the destructor ``PVGUI_ViewWindow::~PVGUI_ViewWindow()``the parent is nullified to avoid deletion
+of the ``pqViewManager`` widget (that would break the ``pqMainWindowCore`` class).
+
 
 ParaVis graphical interface
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The initialization of the viewer takes part of instantiating the most important widgets, notably:
+The initialization of the viewer (see previous section) takes part of instantiating the most important widgets, notably:
 
 * the pipeline
 * the dynamic menus (filters and sources)
 * the macros
 * the Properties panel
 * and finally the toolbars
+
+All those menus are dynamic in the sense that they are automatically populated when a plugin/a configuration is loaded
+(this is also they need to be connected so early by the ``PVViewer_GUIElements`` class seen before).
 
 In the ParaVis module, the class ``PVGUI_Module`` represents the GUI client compliant with the usual architecture of
 a SALOME GUI module. The implementation is split in three ``cxx`` files:
@@ -248,6 +259,7 @@ then it can be defined with the help of the PARAVIS_OPTIONS environment variable
 	export PARAVIS_OPTIONS=--server=myServer
 
 If it is necessary to define several command line parameters, these parameters have to be separated by the “:” character.
+
 
 Various TODO
 %%%%%%%%%%%%
