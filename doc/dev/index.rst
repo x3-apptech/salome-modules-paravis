@@ -255,3 +255,7 @@ Various TODO
 * make the PVSERVER a true CORBA service not linked to the PARAVIS module
 * the PARAVIS module should be a *light* module (TODO check again why this is blocking). 
 
+Doxygen documentation
+%%%%%%%%%%%%%%%%%%%%%
+
+If you are looking for the Doxygen of the C++ code, it can be found here: `Doxygen documentation <api/index.html>`_
