@@ -441,20 +441,6 @@ void PVGUI_Module::initialize( CAM_Application* app )
       }
     }
   }
-  fixAnimationScene();
-}
-
-/*!
- * Little trick to force the proper update of the timesteps/time range when the module is initialized.
- * This is otherwise not properly working when PARAVIS is activated after a PVViewer has already been
- * instanciated.
- */
-void PVGUI_Module::fixAnimationScene()
-{
-  pqServer* server = pqActiveObjects::instance().activeServer();
-  pqApplicationCore * app = pqApplicationCore::instance();
-  pqPipelineSource * src = app->getObjectBuilder()->createSource(QString("sources"), QString("TimeSource"),server);
-  app->getObjectBuilder()->destroy(src);
 }
 
 /*!
