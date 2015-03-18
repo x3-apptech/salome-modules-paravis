@@ -70,7 +70,7 @@
 
 class ResizeHelper : public pqPVAnimationWidget
 {
-  // TEMPORARILY WORKAROUND AROUND PARAVIEW 3.14 BUG:
+  // TEMPORARY WORKAROUND AROUND PARAVIEW 3.14 BUG:
   // WHEN ANIMATION VIEW IS RESIZED, ITS CONTENTS IS NOT PREPERLY RE-ARRANGED
   // CAUSING SOME CONTROLS TO STAY NON-VISIBLE
   // THIS BUG IS NATURALLY FIXED BY ADDING
@@ -93,8 +93,6 @@ protected:
     pqPVAnimationWidget::resizeEvent( e );
   }
 };
-
-
 
 /*!
   \brief Create dock widgets for ParaView widgets such as object inspector, pipeline browser, etc.

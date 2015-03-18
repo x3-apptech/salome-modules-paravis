@@ -139,64 +139,13 @@ PVSERVER_ORB::PVSERVER_Gen_var PVGUI_Module::MyEngine;
 
 /*!
   \mainpage
-  TODO TODO update this:
+  This is the doxygen documentation of the ParaVis module.
+  If you are looking for general information about the structure of the module, you should
+  take a look at the <a href="../index.html">Sphinx documentation</a> first.
 
-  <h2>Building and installing PARAVIS</h2>
-  As any other SALOME module, PARAVIS requires PARAVIS_ROOT_DIR environment variable to be set to PARAVIS
-  installation directory.
-  Other variables needed for correct detection of ParaView location:
-  \li PVHOME - points at the ParaView installation directory tree
-  \li PVVERSION - number of ParaView version
-
-  It also requires common SALOME environment including GUI_ROOT_DIR and other prerequsites.
-
-
-  PARAVIS module can be launched using the following commands:
-  \li Full SALOME configuration
-  \code
-  runSalome --modules="PARAVIS"
-  \endcode
-
-  <h2>ParaView GUI integration</h2>
-  <h3>ParaView GUI integration overview</h3>
-
-  The main idea is to reuse ParaView GUI internal logic as much as possible, providing a layer 
-  between it and SALOME GUI that hides the following SALOME GUI implementation details from ParaView:
-
-  \li SALOME GUI executable and Qt event loop
-  \li SALOME GUI desktop
-  \li Dock windows areas
-  \li SALOME menu and toolbar managers
-
-  Major part of the integration is implemented in PVGUI_Module class.
-
-  <h3>ParaView client initalization</h3>
-
-  ParaView client initalization is performed when an instance of PVGUI_Module class has been created 
-  and \link PVGUI_Module::initialize() PVGUI_Module::initialize()\endlink method is called by SALOME GUI.
-  The actual client start-up is done in \link PVGUI_Module::pvInit() PVGUI_Module::pvInit()\endlink method. 
-  
-
-  <h3>Multi-view manager</h3>
-
-  SALOME GUI requires that each kind of view be implemnted with help of (at least) three classes. For ParaView multi-view manager 
-  these are:
-
-  \li PVGUI_ViewManager - view manager class
-  \li PVGUI_Viewer      - view model class
-  \li PVGUI_ViewWindow  - view window class that acts as a parent for %pqViewManager
-
-  Single instances of PVGUI_ViewManager and PVGUI_ViewWindow classes are created by \link PVGUI_Module::showView() 
-  PVGUI_Module::showView()\endlink method upon the first PARAVIS module activation. The same method hides the multi-view manager 
-  when the module is deactivated (the user switches to another module or a study is closed). 
-  A special trick is used to make PVGUI_ViewWindow the parent of %pqViewManager widget. It is created initally by %pqMainWindowCore
-  with the desktop as a parent, so when it is shown PVGUI_ViewWindow instance is passed to its setParent() method. In  
-  \link PVGUI_ViewWindow::~PVGUI_ViewWindow() PVGUI_ViewWindow::~PVGUI_ViewWindow()\endlink the parent is nullified to avoid deletion
-  of %pqViewManager widget that would break %pqMainWindowCore class.
-
-  <h3>ParaView plugins</h3>
-  ParaView server and client plugins are managed by %pqMainWindowCore slots that has full access to PARAVIS menus and toolbars. 
-  As a result they appears automatically in PARAVIS menus and toolbars if loaded successfully.
+  The integration of ParaView into SALOME is split in two parts:
+  \li the PVViewer in the GUI module (folder *src/PVViewer*)
+  \li the ParaVis module itself (the pages you are currently browsing)
 */
 
 /*!
@@ -246,7 +195,9 @@ ClientFindOrCreateParavisComponent(_PTR(Study) theStudyDocument)
 }
 
 /*!
-  Clean up function; used to stop ParaView progress events when
+  \brief Clean up function
+
+  Used to stop ParaView progress events when
   exception is caught by global exception handler.
 */
 void paravisCleanUp()
@@ -306,11 +257,23 @@ PVGUI_Module::~PVGUI_Module()
     delete myInitTimer;
 }
 
+/*!
+ * \brief Retrieve the PVSERVER CORBA engine.
+ * This uses the Python wrapper provided
+ * by the PVViewer code in GUI (class PVViewer_EngineWrapper).
+ * \sa GetCPPEngine()
+ */
 PVViewer_EngineWrapper * PVGUI_Module::GetEngine()
 {
   return PVViewer_EngineWrapper::GetInstance();
 }
 
+/*!
+ * \brief Retrieve the PVSERVER CORBA engine.
+ * Uses directly the standard Salome C++ mechanisms
+ * (LifeCycleCorba).
+ * \sa GetEngine()
+ */
 PVSERVER_ORB::PVSERVER_Gen_var PVGUI_Module::GetCPPEngine()
 {
   // initialize PARAVIS module engine (load, if necessary)
@@ -331,6 +294,9 @@ CAM_DataModel* PVGUI_Module::createDataModel()
   return new PVGUI_DataModel( this );
 }
 
+/*!
+ * \brief Get the ParaView application singleton.
+ */
 pqPVApplicationCore * PVGUI_Module::GetPVApplication()
 {
   return PVViewer_ViewManager::GetPVApplication();
@@ -476,10 +442,9 @@ void PVGUI_Module::initialize( CAM_Application* app )
     }
   }
   fixAnimationScene();
-
 }
 
-/**
+/*!
  * Little trick to force the proper update of the timesteps/time range when the module is initialized.
  * This is otherwise not properly working when PARAVIS is activated after a PVViewer has already been
  * instanciated.
@@ -492,11 +457,17 @@ void PVGUI_Module::fixAnimationScene()
   app->getObjectBuilder()->destroy(src);
 }
 
+/*!
+ * \brief Slot called when the progress bar starts.
+ */
 void PVGUI_Module::onStartProgress()
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
 }
 
+/*!
+ * \brief Slot called when the progress bar is done.
+ */
 void PVGUI_Module::onEndProgress()
 {
   QApplication::restoreOverrideCursor();
@@ -510,7 +481,7 @@ void PVGUI_Module::onDataRepresentationUpdated() {
 }
 
 /*!
-  \brief Initialisation timer event - trace start up
+  \brief Initialisation timer event - Starts up the Python trace
 */
 void PVGUI_Module::onInitTimer()
 {
@@ -538,6 +509,9 @@ QStringList PVGUI_Module::getEmbeddedMacrosList()
   return aFullPathSourceFiles;
 }
 
+/*!
+  \brief Update the list of embedded macros
+*/
 void PVGUI_Module::updateMacros()
 {
   pqPythonManager* aPythonManager = pqPVApplicationCore::instance()->pythonManager();
@@ -623,6 +597,9 @@ void PVGUI_Module::endWaitCursor()
   QApplication::restoreOverrideCursor();
 }
 
+/*!
+  \brief Handler method for the output of messages.
+*/
 static void ParavisMessageOutput(QtMsgType type, const char *msg)
 {
   switch(type)
@@ -859,6 +836,8 @@ void PVGUI_Module::openFile(const char* theName)
 }
 
 /**!
+ * \brief Starts Python trace.
+ *
  * Start trace invoking the newly introduced C++ API (PV 4.2)
  * (inspired from pqTraceReaction::start())
  */
@@ -883,11 +862,17 @@ void PVGUI_Module::startTrace()
     }
 }
 
+/**!
+ * \brief Stops Python trace.
+ */
 void PVGUI_Module::stopTrace()
 {
   vtkSMTrace::StopTrace();
 }
 
+/**!
+ * \brief Execute a Python script.
+ */
 void PVGUI_Module::executeScript(const char *script)
 {
 #ifndef WNT
@@ -1009,7 +994,7 @@ pqServer* PVGUI_Module::getActiveServer()
 
 
 /*!
-  \brief Creates PARAVIS preference pane 
+  \brief Creates PARAVIS preferences panel.
 */
 void PVGUI_Module::createPreferences()
 {
@@ -1312,6 +1297,9 @@ void PVGUI_Module::onDelete()
   }
 }
 
+/*!
+ * \brief Slot called everytime the Python trace is pushed onto the CORBA engine.
+ */
 void PVGUI_Module::onPushTraceTimer()
 {
   //MESSAGE("onPushTraceTimer(): Pushing trace to engine...");

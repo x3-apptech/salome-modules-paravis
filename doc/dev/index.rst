@@ -233,6 +233,7 @@ They are often a copy/paste of ParaView's source code with a slight amendment to
 	* ``PVViewer_Behaviors`` (GUI module): compare with ``Qt/ApplicationComponents/pqParaViewBehaviors.cxx``
 * *menus and actions*: ``PVGUI_Module_widgets.cxx`` (ParaVis module) should be compared with ``Applications/ParaView/ParaViewMainWindow.cxx``
 * *toolbars*: ``PVViewer_GUIElements::myBuildToolbars()`` (GUI module): compare with ``pqParaViewMenuBuilders::buildToolbars()``
+* *dock widgets placement*: ``PVGUI_Module::setupDockWidgets()`` (ParaVis module): compare with ``Application/Paraview/ParaviewMainWindow.ui``
 * *settings dialog box*: ``PVGUI_ParaViewSettingsPane`` (ParaVis module) should be compared with ``Qt/Components/pqSettingsDialog.h``
 * *trace mechanism*: method ``PVGUI_Module::startTrace()`` should be compared with ``pqTraceReaction::start()`` in file 
   ``Qt/ApplicationComponents/pqTraceReaction.h``

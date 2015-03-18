@@ -41,9 +41,6 @@
 #include <QFile>
 
 #include <pqApplicationCore.h>
-//#include <pqProgressManager.h>
-//#include <pqUndoStack.h>
-//#include <pqVCRController.h>
 
 #include <pqSaveStateReaction.h>
 #include <pqLoadDataReaction.h>
@@ -92,7 +89,6 @@ void PVGUI_Module::pvCreateActions()
 
   QPixmap aPixmap;
   QAction* anAction;
-  //QtxAction* aQtxAction;
   
   // --- Menu "File"
 
