@@ -41,12 +41,9 @@
 #include <QFile>
 
 #include <pqApplicationCore.h>
-// #include <pqColorScaleToolbar.h>
-#include <pqProgressManager.h>
-//#include <pqRubberBandHelper.h>
-//#include <pqScalarBarVisibilityAdaptor.h>
-#include <pqUndoStack.h>
-#include <pqVCRController.h>
+//#include <pqProgressManager.h>
+//#include <pqUndoStack.h>
+//#include <pqVCRController.h>
 
 #include <pqSaveStateReaction.h>
 #include <pqLoadDataReaction.h>
@@ -63,29 +60,26 @@
 #include <pqDeleteReaction.h>
 #include <pqChangePipelineInputReaction.h>
 #include <pqApplicationSettingsReaction.h>
-//#include <pqViewSettingsReaction.h>
 #include <pqIgnoreSourceTimeReaction.h>
-#include <pqViewMenuManager.h>
-#include <pqParaViewMenuBuilders.h>
-#include <pqProxyGroupMenuManager.h>
 #include <pqCreateCustomFilterReaction.h>
 #include <pqManageLinksReaction.h>
 #include <pqManagePluginsReaction.h>
 #include <pqCameraLinkReaction.h>
 #include <pqManageCustomFiltersReaction.h>
-#include <pqSetName.h>
-#include <pqPythonShellReaction.h>
 #include <pqTimerLogReaction.h>
 #include <pqTestingReaction.h>
 #include <pqAboutDialogReaction.h>
 #include <pqHelpReaction.h>
-#include <pqViewManager.h>
 #include <pqDataQueryReaction.h>
+#include <pqPythonShellReaction.h>
+
+#include <pqViewManager.h>
+#include <pqViewMenuManager.h>
+#include <pqParaViewMenuBuilders.h>
+#include <pqProxyGroupMenuManager.h>
+#include <pqSetName.h>
 #include <pqRecentFilesMenu.h>
 #include <pqPipelineBrowserWidget.h>
-
-#include "PVGUI_Tools.h"
-
 
 /*!
   \brief Create actions for ParaView GUI operations
@@ -536,20 +530,6 @@ void PVGUI_Module::pvCreateMenus()
   // -- Context menu in the pipeline browser
   pqPipelineBrowserWidget * pq = guiElements->getPipelineBrowserWidget();
   pqParaViewMenuBuilders::buildPipelineBrowserContextMenu( *pq );
-
-//  // Reload configuration to populate dynamic menus from ParaView:
-//  PVViewer_ViewManager::ParaviewLoadConfigurations(true);
-//
-//  // Disable all filters for now (for some weird reasons they are all on when starting?)
-//  QList<QMenu*> sub_menus = filtersMenu->findChildren<QMenu*>();
-//  foreach(QMenu * m, sub_menus)
-//    {
-//      QList<QAction *> act_list = m->actions();
-//      foreach(QAction * a, act_list)
-//      {
-//        a->setEnabled(false);
-//      }
-//    }
 }
 
 /*!
@@ -642,12 +622,6 @@ QMenu* PVGUI_Module::getMenu( const int id )
 void PVGUI_Module::createActions()
 {
   QAction* anAction;
-
-//  // New ParaView window
-//  anAction = new QtxAction(tr("MEN_NEW_PV_VIEW"), tr("MEN_NEW_PV_VIEW"), 0,
-//        this, false, "ParaViS:Create new ParaView view");
-//  connect(anAction, SIGNAL(triggered()), this, SLOT(onNewParaViewWindow()));
-//  registerAction(ParaViewNewWindowId, anAction);
 
   // Save state under the module root object
   anAction = new QAction(tr("MEN_SAVE_MULTI_STATE"), this);

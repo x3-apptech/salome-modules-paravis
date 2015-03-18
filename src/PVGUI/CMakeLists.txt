@@ -34,9 +34,6 @@ INCLUDE_DIRECTORIES(${OMNIORB_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
-# Process viewer:
-#ADD_SUBDIRECTORY(view)
-
 # additional preprocessor / compiler flags
 ADD_DEFINITIONS(${CAS_DEFINITIONS})
 ADD_DEFINITIONS(${OMNIORB_DEFINITIONS})
@@ -77,16 +74,8 @@ SET(_moc_HEADERS
 
 # header files / no moc processing
 SET(_other_HEADERS
-#  PVGUI_OutputWindowAdapter.h
   PVGUI_Tools.h
-  PV_I.h
-  PARAVIS_Gen_i.hh
-  PV_Events.h
 )
-
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-    LIST(APPEND _other_HEADERS PV_Tools.h)
-ENDIF()
 
 # header files / to install
 SET(PVGUI_HEADERS ${_moc_HEADERS} ${_other_HEADERS} ${_ui_FORMS_HEADERS})
@@ -146,73 +135,19 @@ SET(_other_SOURCES
   PVGUI_DataModel.cxx
   )
 
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-  # Generate headers and sources corresponding to the IDL implementations:
-  INCLUDE(${PROJECT_SOURCE_DIR}/src/VTKWrapping/wrap.cmake)
-
-  ## From 2.8.10, we should use:
-  ## SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
-  # Make the list of wrapped files visible from the top directory (will be used in idl):
-  SET(WRAP_IDL_I_HH "${WRAP_IDL_I_HH}" PARENT_SCOPE)
-  SET(WRAP_IDL_I_CC "${WRAP_IDL_I_CC}" PARENT_SCOPE)
-
-  SET(_VTK_wrap_SOURCES
-    PARAVIS_Gen_i.cc
-    PARAVIS_CreateClass.cxx
-    ${WRAP_IDL_I_CC}
-  )
-ENDIF()
-  
 # sources / to compile
 SET(PVGUI_SOURCES 
   ${_other_SOURCES} 
   ${_moc_SOURCES} 
   ${_rcc_SOURCES} 
-#  ${vtkEDFCutter_SRCS} 
   ${_VTK_wrap_SOURCES}
   ${_ui_FORMS_HEADERS}
   )
 
 # --- rules ---
-
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-  ADD_CUSTOM_COMMAND(
-   OUTPUT PARAVIS_CreateClass.cxx
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/VTKWrapping/create_class.py ${CMAKE_BINARY_DIR}
-    DEPENDS ${CMAKE_BINARY_DIR}/wrapfiles.txt 
-         ${PROJECT_BINARY_DIR}/idl/PARAVIS_Gen.hh 
-         ${PROJECT_BINARY_DIR}/idl/PARAVIS_Gen_Types.hh
-         SalomeIDLPARAVIS
-         generate_implements
-  )
-
-  # All wrapping tools have to be build before generating the above module - NEEDED?
-  ###ADD_DEPENDENCIES(SalomeIDLPARAVIS vtkWrapIDL_HH vtkWrapIDL_CC vtkWrapIDL)
-
-  # Intermediate target used in PVGUI directory (we can not cross reference
-  # a generated source file across directories, hence this trick):
-  INCLUDE_DIRECTORIES(
-    ${PROJECT_BINARY_DIR}/idl
-    ${PROJECT_BINARY_DIR}/src/VTKWrapping
-  )
-ENDIF()
-
 ADD_LIBRARY(PARAVIS ${PVGUI_SOURCES})
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-  # Make sure the generation of the VTK wrapping get executed first:
-  ADD_DEPENDENCIES(PARAVIS PARAVIS_CreateClass.cxx)
-ENDIF()
-
-IF(NOT SALOME_PARAVIS_MINIMAL_CORBA)
-  # Ensure .hh files corresponding to IDL have been generated first:
-  ADD_DEPENDENCIES(PARAVIS omniorb_module_SalomeIDLPARAVIS)  
-ENDIF()
-
 TARGET_LINK_LIBRARIES(PARAVIS ${_link_LIBRARIES})
 INSTALL(TARGETS PARAVIS EXPORT ${PROJECT_NAME}TargetGroup DESTINATION ${SALOME_INSTALL_LIBS})
-
 
 # --- header and resources installation ---
 INSTALL(FILES ${PVGUI_HEADERS} DESTINATION ${SALOME_INSTALL_HEADERS})

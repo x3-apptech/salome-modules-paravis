@@ -56,7 +56,6 @@
 #include <pqMultiBlockInspectorPanel.h>
 #include <pqProgressWidget.h>
 #include <pqProgressManager.h>
-//#include <pqDisplayProxyEditorWidget.h>
 #include <pqPropertiesPanel.h>
 
 #include <pqApplicationCore.h>

@@ -25,10 +25,6 @@
 #ifndef PVGUI_Tools_H
 #define PVGUI_Tools_H
 
-#ifdef PARAVIS_WITH_FULL_CORBA
-#  include "PARAVIS_Gen_i.hh"
-#endif
-
 #include "SALOMEDSClient_Study.hxx"
 
 #define PVSTATEID 15555
@@ -37,10 +33,6 @@ class CAM_Module;
 
 namespace PARAVIS 
 {
-#ifdef PARAVIS_WITH_FULL_CORBA
-  PARAVIS_Gen_i* GetParavisGen(const CAM_Module* theModule);
-#endif
-
   _PTR(Study)    GetCStudy(const CAM_Module* theModule);
 };
 
