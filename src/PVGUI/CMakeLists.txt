@@ -49,7 +49,7 @@ SET(_link_LIBRARIES
   ${QT_LIBRARIES}
   ${PYTHON_LIBS}
   ${KERNEL_LDFLAGS} ${KERNEL_SalomeDS}
-  ${GUI_LDFLAGS} ${GUI_SalomeApp} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit} ${GUI_Event}  
+  ${GUI_LDFLAGS} ${GUI_SalomeApp} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit}   
                  ${GUI_SalomeObject} ${GUI_vtkTools}
   ${MED_SalomeIDLMED}
   ${_PARAVIEW_APP_COMPO_LIB}
@@ -120,10 +120,6 @@ QT4_ADD_RESOURCES(_rcc_SOURCES ${_rcc_RESOURCES})
 
 # sources / moc wrappings
 QT4_WRAP_CPP(_moc_SOURCES ${_moc_HEADERS})
-
-# sources / EDF specific stuff
-#INCLUDE(vtkWrapClientServer)
-#VTK_WRAP_ClientServer(vtkEDFCutterCS vtkEDFCutter_SRCS ${GUI_ROOT_DIR}/include/salome/vtkEDFCutter.h)
 
 # sources / static
 SET(_other_SOURCES
