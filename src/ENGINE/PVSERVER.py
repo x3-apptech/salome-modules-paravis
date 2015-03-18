@@ -200,18 +200,18 @@ class PVSERVER(PVSERVER_ORB__POA.PVSERVER_Gen,
         attr.SetValue( PVSERVER_utils.objectID() )
         pass
 
-    """
-    Dump module data to the Python script.
-    """
-    def DumpPython( self, study, isPublished, isMultiFile ):
-        MESSAGE("dumpPython()") 
-        abuffer = self.GetPythonTraceString().split("\n")
-        if isMultiFile:
-            abuffer       = [ "  " + s for s in abuffer ]
-            abuffer[0:0]  = [ "def RebuildData( theStudy ):" ]
-            abuffer      += [ "  pass" ]
-        abuffer += [ "\0" ]
-        return ("\n".join( abuffer ), 1)
+#     """
+#     Dump module data to the Python script.
+#     """
+#     def DumpPython( self, study, isPublished, isMultiFile ):
+#         MESSAGE("dumpPython()") 
+#         abuffer = self.GetPythonTraceString().split("\n")
+#         if isMultiFile:
+#             abuffer       = [ "  " + s for s in abuffer ]
+#             abuffer[0:0]  = [ "def RebuildData( theStudy ):" ]
+#             abuffer      += [ "  pass" ]
+#         abuffer += [ "\0" ]
+#         return ("\n".join( abuffer ), 1)
   
     """
     Import file to restore module data

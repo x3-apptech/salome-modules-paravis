@@ -258,6 +258,10 @@
         <translation>Utilisation de la mémoire</translation>
     </message>
     <message>
+        <source>TTL_VIEW_PANEL</source>
+        <translation>Vue</translation>
+    </message>    
+    <message>
         <source>TOP_OPEN_FILE</source>
         <translation>Ouvrir un fichier ParaView</translation>
     </message>
