@@ -448,7 +448,10 @@ void PVGUI_Module::initialize( CAM_Application* app )
  */
 void PVGUI_Module::onStartProgress()
 {
-  QApplication::setOverrideCursor(Qt::WaitCursor);
+  // VSR 19/03/2015, issue 0023025
+  // next line is commented: it is bad idea to show wait cursor on ANY vtk event
+  // moreover, it does not work when running pvserver with --multi-client mode
+  //QApplication::setOverrideCursor(Qt::WaitCursor);
 }
 
 /*!
@@ -456,7 +459,10 @@ void PVGUI_Module::onStartProgress()
  */
 void PVGUI_Module::onEndProgress()
 {
-  QApplication::restoreOverrideCursor();
+  // VSR 19/03/2015, issue 0023025
+  // next line is commented: it is bad idea to show wait cursor on ANY vtk event
+  // moreover, it does not work when running pvserver with --multi-client mode
+  //QApplication::restoreOverrideCursor();
 }
 
 void PVGUI_Module::onDataRepresentationUpdated() {
