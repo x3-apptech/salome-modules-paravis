@@ -21,10 +21,9 @@
 # Import MED file; create presentations for the given fields.
 
 from paravistest import datadir, Import_Med_Field
-import pvserver as paravis
 
 med_file = datadir + "carre_en_quad4_seg2.med"
 field_names = ["fieldcelldouble", "fieldnodedouble", "fieldnodedouble", "fieldnodedouble", "fieldnodeint"]
 prs_list = [ range(10), [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8] ]
 
-Import_Med_Field(paravis.myParavis, med_file, field_names, 1, prs_list)
+Import_Med_Field(med_file, field_names, 1, prs_list)

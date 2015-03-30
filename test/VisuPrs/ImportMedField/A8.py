@@ -21,10 +21,9 @@
 # Import MED file; create presentations for the given fields.
 
 from paravistest import datadir, Import_Med_Field
-import pvserver as paravis
 
 med_file = datadir + "fra1.med"
 field_names = ["TAUX_DE_VIDE", "VITESSE"]
 prs_list = [ [1,2,3,4,8], range(1,10) ]
 
-Import_Med_Field(paravis.myParavis, med_file, field_names, 1, prs_list)
+Import_Med_Field(med_file, field_names, 1, prs_list)

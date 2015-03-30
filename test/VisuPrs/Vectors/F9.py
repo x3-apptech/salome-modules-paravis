@@ -20,14 +20,11 @@
 # This case corresponds to: /visu/Vectors/F9 case
 # Create Vectors for field of the the given MED file for 10 timestamps%
 
+import os
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
-import pvserver as paravis
-from pvsimple import GetActiveSource, GetRenderView, Render
-from presentations import VectorsOnField, hide_all,EntityType,PrsTypeEnum,reset_view,process_prs_for_test
-
-# Create presentations
-myParavis = paravis.myParavis
+from pvsimple import GetActiveSource, GetRenderView, Render, OpenDataFile, UpdatePipeline
+from presentations import VectorsOnField, hide_all,EntityType,PrsTypeEnum,reset_view,process_prs_for_test, get_time
 
 picturedir = get_picture_dir("Vectors/F9")
 
@@ -41,10 +38,13 @@ print " --------------------------------- "
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-	raise RuntimeError, "Error: can't import file."
+        raise RuntimeError, "Error: can't import file."
 else: print "OK"
 # Get view
 aView = GetRenderView()
+time_value = get_time(aProxy, 0)
+aView.ViewTime = time_value
+UpdatePipeline(time=time_value, proxy=aProxy)
 
 # Create required presentations for the proxy
 # CreatePrsForProxy(aProxy, aView, thePrsTypeList, thePictureDir, thePictureExt, theIsAutoDelete)
@@ -58,24 +58,23 @@ for colored in [False,True]:
         colored_str = "_colored"
     for i in range(1,11):
         hide_all(aView, True)
-        aPrs = VectorsOnField(aProxy, aFieldEntity, aFieldName, i, is_colored=colored)	
+        aPrs = VectorsOnField(aProxy, aFieldEntity, aFieldName, i, is_colored=colored)
         if aPrs is None:
             raise RuntimeError, "Presentation is None!!!"
         # display only current deformed shape
         #display_only(aView,aPrs)
-        aPrs.Visibility =1	
+        aPrs.Visibility =1
         reset_view(aView)
         Render(aView)
         # Add path separator to the end of picture path if necessery
         if not picturedir.endswith(os.sep):
                 picturedir += os.sep
         prs_type = PrsTypeEnum.VECTORS
-                
+
         # Get name of presentation type
-        prs_name = PrsTypeEnum.get_name(prs_type)    
+        prs_name = PrsTypeEnum.get_name(prs_type)
         f_prs_type = prs_name.replace(' ', '').upper()
         # Construct image file name
         pic_name = picturedir + aFieldName+colored_str + "_" + str(i) + "_" + f_prs_type + "." + pictureext
         # Show and record the presentation
         process_prs_for_test(aPrs, aView, pic_name)
- 

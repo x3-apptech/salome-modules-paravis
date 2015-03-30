@@ -22,9 +22,7 @@
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
 
 # 1. Import tables from file
 file_path = tablesdir + "tables_test.xls"
@@ -47,4 +45,3 @@ xy_rep.XArrayName = 'toto 1 [s]'
 xy_rep.SeriesVisibility = [xy_rep.XArrayName, '0']
 xy_rep.SeriesVisibility = ['vtkOriginalIndices', '0']
 pvsimple.Render(xy_view)
-

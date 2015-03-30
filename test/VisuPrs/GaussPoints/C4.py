@@ -25,9 +25,7 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import GaussPointsOnField, EntityType, get_time, process_prs_for_test
-import pvserver as paravis
 import pvsimple
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("GaussPoints/C4")
@@ -39,7 +37,7 @@ file_name = datadir + "homard_ASTER_OSF_MEDV2.1.5_1_v2.3.med"
 field_names = ["REMEUN__ERRE_ELGA_NORE__________", "REMEZEROERRE_ELGA_NORE__________"]
 timestamp_nb = -1 # last timestamp
 
-paravis.OpenDataFile(file_name)
+pvsimple.OpenDataFile(file_name)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError("File wasn't imported!!!")

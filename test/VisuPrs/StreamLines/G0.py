@@ -1,4 +1,3 @@
-
 # Copyright (C) 2010-2015  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -23,23 +22,16 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 file_path = datadir + "new_case.rmed"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError, "new_case.rmed was not imported!!!"
 
 # 2. Creation of a set of "StreamLines" presentations, based on time stamps of "RESU_DEPL" field
 streamlines = StreamLinesOnField(med_reader, EntityType.NODE, 'RESU_DEPL', 1)
-if streamlines is None: 
+if streamlines is None:
     raise RuntimeError, "Presentation is None!!!"
-
-import time
-time.sleep(10000)
-

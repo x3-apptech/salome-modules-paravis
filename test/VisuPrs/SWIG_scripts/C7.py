@@ -25,9 +25,7 @@ import sys
 
 from paravistest import tablesdir, get_picture_dir, pictureext
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
 
 # Import table from file
 print 'Import file with tables....',
@@ -97,8 +95,7 @@ lookup_table = get_lookup_table(table_name, nb_components, vector_mode)
 lookup_table.LockScalarRange = 0
 
 # Set properties
-pointmap3d.ColorAttributeType = EntityType.get_pvtype(entity)
-pointmap3d.ColorArrayName = table_name
+pointmap3d.ColorArrayName = (EntityType.get_pvtype(entity), table_name)
 pointmap3d.LookupTable = lookup_table
 
 # Add scalar bar

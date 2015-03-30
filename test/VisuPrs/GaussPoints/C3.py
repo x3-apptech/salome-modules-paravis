@@ -25,9 +25,7 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import GaussPointsOnField, EntityType, get_time, process_prs_for_test
-import pvserver as paravis
 import pvsimple
-
 
 # Directory for saving snapshots
 picturedir = get_picture_dir("GaussPoints/C3")
@@ -39,7 +37,7 @@ file_name = datadir + "UO2_250ans.med"
 field_name = "Concentration_O2(aq)_mol per l"
 timestamp_nb = -1 # last timestamp
 
-paravis.OpenDataFile(file_name)
+pvsimple.OpenDataFile(file_name)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     raise RuntimeError("File wasn't imported!!!")

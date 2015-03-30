@@ -23,16 +23,13 @@ import sys
 import os
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. MED file import
 print 'Importing "Fields_group3D.med"........',
 
 med_file_path = datadir + "Fields_group3D.med"
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
     print "FAILED"
@@ -55,8 +52,9 @@ if scalarmap is None:
 else:
     print "OK"
 
-med_reader.Groups = ['GROUP/mailles_MED/OnCell/box_1']
+extract_group = pvsimple.ExtractGroup(med_reader)
+extract_group.UpdatePipelineInformation()
+extract_group.AllGroups = ['GRP_box_1']
 
 display_only(scalarmap, view)
 reset_view(view)
-

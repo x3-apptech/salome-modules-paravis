@@ -24,10 +24,7 @@ import os
 import time
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 medPath = datadir
 
@@ -43,11 +40,11 @@ class DisplayManager:
             self.meshName = None
             self.myData   = None
             self.myMesh   = None
-	    self.myEntity = None
-             
+            self.myEntity = None
+
     def loadData(self, medFile, meshName=None, myEntity=EntityType.NODE):
         self.medFile  = medFile
-        OpenDataFile(medFile)
+        pvsimple.OpenDataFile(medFile)
         self.myData   = pvsimple.GetActiveSource()
         self.myEntity = myEntity
         if meshName is not None:
@@ -55,7 +52,7 @@ class DisplayManager:
 
     def getData(self):
         return self.myData
-        
+
     def checkData(self):
         if ( self.myData is None or self.myMesh is None ):
             return False
@@ -70,7 +67,7 @@ class DisplayManager:
 
     def DisplayMap(self, aView, aMap, title, aDelay=0):
         if aMap is None:
-            print "Null scalar map is created"        
+            print "Null scalar map is created"
         display_only(aMap, aView)
         reset_view(aView)
         time.sleep(aDelay)
@@ -84,14 +81,14 @@ class DisplayManager:
         if not self.checkData(): return
         aMap = DeformedShapeOnField(self.myData, self.myEntity, fieldName, iteration)
         if aMap is not None:
-            aMap.ColorArrayName = fieldName
+            aMap.ColorArrayName = ("CELLS", fieldName)
         self.DisplayMap(aView, aMap, title, delay)
 
     def Vectors(self, aView, fieldName, iteration, title , delay=0):
         if not self.checkData(): return
         aMap = VectorsOnField(self.myData, self.myEntity, fieldName, iteration)
         if aMap is not None:
-            aMap.ColorArrayName = fieldName
+            aMap.ColorArrayName = ("CELLS", fieldName)
         self.DisplayMap(aView, aMap, title, delay)
 
     def IsoSurfaces(self, aView, fieldName, iteration, title , delay=0):
@@ -104,10 +101,10 @@ class DisplayManager:
         path = None
         if aPath is not "":
             print "Define save path"
-	    path = aPath
-            
+            path = aPath
+
         scene = pvsimple.AnimateReader(theObj, aView, path)
-	
+
         print "Start Animation"
 
         scene.Duration = theDuration
@@ -132,7 +129,7 @@ class DisplayManager:
         # >>> Create curve
         myView = CreateXYPlotView()
         myCurve = Show(table, view = myView)
-    
+
 def createView():
     aView=pvsimple.GetRenderView()
     return aView

@@ -24,9 +24,7 @@ from paravistest import *
 from presentations import *
 from pvsimple import *
 import sys
-import pvserver as paravis
 import time
-
 
 def check_value(prs, property_name, value, do_raise=1, compare_toler=-1.0):
     # compare just set value and the one got from presentation
@@ -59,9 +57,6 @@ picturedir = get_picture_dir("3D_viewer/A9")
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-
-#import file
-myParavis = paravis.myParavis
 
 # Get view
 my_view = GetRenderView()
@@ -104,8 +99,7 @@ shrink_filter = Shrink(scalar_map.Input)
 shrink_filter.ShrinkFactor = 0.8
 shrink_filter.UpdatePipeline()
 shrinked_scalar_map = GetRepresentation(shrink_filter)
-shrinked_scalar_map.ColorAttributeType = EntityType.get_pvtype(EntityType.CELL)
-shrinked_scalar_map.ColorArrayName = field_name
+shrinked_scalar_map.ColorArrayName = (EntityType.get_pvtype(EntityType.CELL), field_name)
 shrinked_scalar_map.Representation = scalar_map.Representation
 lookup_table = scalar_map.LookupTable
 shrinked_scalar_map.LookupTable = lookup_table
@@ -206,8 +200,7 @@ shrink_filter = Shrink(scalar_map.Input)
 shrink_filter.ShrinkFactor = 0.8
 shrink_filter.UpdatePipeline()
 shrinked_scalar_map = GetRepresentation(shrink_filter)
-shrinked_scalar_map.ColorAttributeType = EntityType.get_pvtype(EntityType.CELL)
-shrinked_scalar_map.ColorArrayName = field_name
+shrinked_scalar_map.ColorArrayName = (EntityType.get_pvtype(EntityType.CELL), field_name)
 shrinked_scalar_map.Representation = scalar_map.Representation
 lookup_table = scalar_map.LookupTable
 shrinked_scalar_map.LookupTable = lookup_table

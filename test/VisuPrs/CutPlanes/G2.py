@@ -24,10 +24,7 @@ import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
 from pvsimple import *
-import pvserver as paravis
 
-# Create presentations
-myParavis = paravis.myParavis
 picturedir = get_picture_dir("CutPlanes/G2")
 
 theFileName = datadir +  "Bug829_resu_mode.med"
@@ -40,7 +37,7 @@ print " --------------------------------- "
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-	raise RuntimeError, "Error: can't import file."
+        raise RuntimeError, "Error: can't import file."
 else: print "OK"
 # Get viewScalarMap
 aView = GetRenderView()
@@ -59,19 +56,19 @@ for i in range(1,11):
     #display only current scalar map
     aPrs.Visibility=1
     reset_view(aView)
-    Render(aView)    
-    
+    Render(aView)
+
     # Add path separator to the end of picture path if necessery
     if not picturedir.endswith(os.sep):
             picturedir += os.sep
     prs_type = PrsTypeEnum.CUTPLANES
-            
+
     # Get name of presentation type
-    prs_name = PrsTypeEnum.get_name(prs_type)    
+    prs_name = PrsTypeEnum.get_name(prs_type)
     f_prs_type = prs_name.replace(' ', '').upper()
     # Construct image file name
     pic_name = picturedir + aFieldName + "_" + str(i) + "_" + f_prs_type + "." + pictureext
-    
+
     # Show and record the presentation
     process_prs_for_test(aPrs, aView, pic_name)
 

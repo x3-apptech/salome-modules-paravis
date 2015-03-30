@@ -21,11 +21,8 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 from math import radians
-
-my_paravis = paravis.myParavis
 
 cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
@@ -35,7 +32,7 @@ print "**** Step1: Import MED file"
 
 print 'Import "fra.med"....................',
 file_path = datadir + "fra.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -81,7 +78,7 @@ for i in xrange(1,50):
     normal = get_normal_by_orientation(orient, x_angle, radians(y_angle))
     slice_filter.SliceType.Normal = normal
     pvsimple.Render()
-    
+
 print "OK"
 
 print "View Point (FRONT)..................",
@@ -90,7 +87,7 @@ view.CameraPosition = [2.4453961849843453, 0.03425, 0.541]
 pvsimple.Render()
 print "OK"
 
-print "View Point (BACK)...................", 
+print "View Point (BACK)...................",
 view.CameraPosition = [-2.0343961849843457, 0.03425, 0.541]
 pvsimple.Render()
 print "OK"
@@ -112,7 +109,7 @@ view.CameraPosition = [0.2055, -2.2056461849843454, 0.541]
 pvsimple.Render()
 print "OK"
 
-print "View Point (RIGHT) .................", 
+print "View Point (RIGHT) .................",
 view.CameraPosition = [0.2055, 2.2741461849843456, 0.541]
 pvsimple.Render()
 print "OK"

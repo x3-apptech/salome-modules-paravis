@@ -23,18 +23,15 @@ import os
 import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/C7")
 
 # 1. Import MED file
 med_file_path = datadir + "Bug583-Quadratique.resu.med"
 
 print 'Importing "Bug583-Quadratique.resu.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -55,7 +52,7 @@ for field in field_names:
     print "Creation of the GaussPoints presentation.. Field: ", field, "; Iteration: 1"
     presentation = GaussPointsOnField1(med_reader, EntityType.CELL, field, 1)
     if presentation is None:
-	print "ERROR!!! GaussPoints presentation wasn't created for the ", field, " field!!!"
+        print "ERROR!!! GaussPoints presentation wasn't created for the ", field, " field!!!"
         error += 1
     else:
         pic_path = os.path.join(picturedir, "GaussPoints_" + mesh_name + "_" + field + "." + pictureext)

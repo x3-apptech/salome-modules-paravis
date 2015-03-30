@@ -21,11 +21,7 @@
 
 from paravistest import datadir
 from presentations import DeformedShapeOnField, EntityType
-import pvserver as paravis
 import pvsimple
-
-
-my_paravis = paravis.myParavis
 
 #====================Stage1: Import from MED file in ParaVis============
 print "**** Stage1: Import from MED file in ParaVis"
@@ -33,7 +29,7 @@ print "**** Stage1: Import from MED file in ParaVis"
 print 'Import "Tria3.med"....................',
 
 file_path = datadir + "Tria3.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -86,26 +82,26 @@ print "Scale: ", warp_vector.ScaleFactor
 #====================Stage4: Coloring method of Deformed Shape===========
 print "**** Stage4: Coloring of Deformed Shape"
 
-color_array = defshape.ColorArrayName
+color_array = defshape.ColorArrayName[1]
 if color_array:
     print "Default shape is colored by array: ", color_array
 else:
     print "Default shape is colored by solid color: ", defshape.AmbientColor
 
 print "Set colored by array mode    .... ",
-defshape.ColorArrayName = field_name
+defshape.ColorArrayName = ("CELLS", field_name)
 pvsimple.Render()
 
-if defshape.ColorArrayName == field_name:
+if defshape.ColorArrayName[1] == field_name:
     print "OK"
 else:
     print "FAILED"
 
 print "Set colored by solid color mode .... ",
-defshape.ColorArrayName = ''
+defshape.ColorArrayName = (None, '')
 pvsimple.Render()
 
-if defshape.ColorArrayName:
+if defshape.ColorArrayName[1]:
     print "FAILED"
 else:
     print "OK"

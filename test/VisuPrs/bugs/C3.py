@@ -21,16 +21,13 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 med_file_path = datadir + "MEDfileForStructuredMesh.med"
 
 print 'Importing "MEDfileForStructuredMesh.med"....',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

@@ -24,7 +24,6 @@ from paravistest import *
 from presentations import *
 from pvsimple import *
 import sys
-import pvserver as paravis
 import time
 
 # Directory for saving snapshots
@@ -33,9 +32,6 @@ picturedir = get_picture_dir("3D_viewer/B0")
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-
-#import file
-myParavis = paravis.myParavis
 
 # Get view
 my_view = GetRenderView()
@@ -88,9 +84,8 @@ for reprCode in represents:
                 shrink_filter = Shrink(scalar_map.Input)
                 shrinked_sm = GetRepresentation(shrink_filter)
                 shrink_filter.ShrinkFactor = 0.8
-                shrink_filter.UpdatePipeline()                
-                shrinked_sm.ColorAttributeType = scalar_map.ColorAttributeType
-                shrinked_sm.ColorArrayName = scalar_map.ColorArrayName
+                shrink_filter.UpdatePipeline()
+                shrinked_sm.ColorArrayName = scalar_map.ColorArrayName[0:2]
                 lookup_table = scalar_map.LookupTable
                 shrinked_sm.LookupTable = lookup_table
 

@@ -117,7 +117,10 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
           key->GetRange(data->GetInformation(),dict,0,0,dictSize);
         }
       if(data == NULL)
-        continue;
+        {
+          delete [] dict;
+          continue;
+        }
       
       vtkInformation *info(data->GetInformation());
       const char *arrayOffsetName(info->Get(vtkQuadratureSchemeDefinition::QUADRATURE_OFFSET_ARRAY_NAME()));
@@ -139,6 +142,7 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
             usgOut->GetPointData()->AddArray(data);
           else
             shrinked->GetFieldData()->AddArray(data);
+          delete [] dict;
           continue;
         }
       else
@@ -192,7 +196,10 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
                 }
             }
           else
-            continue ;
+            {
+              delete [] dict;
+              continue ;
+            }
         }
       delete [] dict;
     }

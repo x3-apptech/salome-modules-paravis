@@ -97,5 +97,6 @@ else :
     pvLookupTable = GetLookupTableForArray( rootname, 3, VectorMode='Magnitude' )
     WarpByVectorDataRepresentation.ColorArrayName = rootname
     WarpByVectorDataRepresentation.LookupTable = pvLookupTable
-  
+    WarpByVectorDataRepresentation.RescaleTransferFunctionToDataRange(True)
+
   AnimationScene1.Play()

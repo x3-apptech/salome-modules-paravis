@@ -24,9 +24,6 @@ import sys
 
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
-import pvserver as paravis
-
-myParavis = paravis.myParavis
 
 # Directory for saving snapshots
 picturedir = get_picture_dir(sys.argv[1], "StreamLines/B3")
@@ -40,4 +37,4 @@ for item in files:
     print "file ", file
     print "\nCreatePrsForFile..."
     print "BREAKPOINT_1"
-    CreatePrsForFile(myParavis, file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)
+    CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)

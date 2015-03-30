@@ -23,18 +23,14 @@ from time import sleep
 
 from paravistest import datadir, tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-
 DELAY = 2
-
-my_paravis = paravis.myParavis
 
 # Step 1
 print 'Importing "pointe.med"...............',
 file_path = datadir + "pointe.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

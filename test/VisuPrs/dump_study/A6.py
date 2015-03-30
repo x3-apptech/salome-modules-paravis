@@ -21,10 +21,7 @@
 
 from paravistest import datadir, delete_with_inputs
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.12929}
 
@@ -165,7 +162,7 @@ if abs(cur_range_min - range_min) > tolerance:
 if abs(cur_range_max - range_max) > tolerance:
     print "ERROR!!! Maximum value of range of presentation is incorrect: ",  cur_range_max, " instead of ", range_max
     errors += 1
-    
+
 # Scale factor
 scale = recreated_prs.Input.ScaleFactor
 if abs(scale - settings["Scale"]) > tolerance:

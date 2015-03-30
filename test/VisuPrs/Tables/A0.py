@@ -25,9 +25,7 @@ import sys
 
 from paravistest import tablesdir, get_picture_dir, pictureext
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
 
 # Import table from file
 print 'Import tables_test.xls ....',
@@ -74,5 +72,3 @@ if not picturedir.endswith(os.sep):
 
 file_name = picturedir + "sinus." + pictureext
 pvsimple.WriteImage(file_name, view=xy_view, Magnification=1)
-
-

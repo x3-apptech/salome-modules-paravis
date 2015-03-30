@@ -24,20 +24,16 @@ import sys
 
 from paravistest import datadir, get_picture_dir, pictureext
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A9")
 
 # 1. Step1: Import MED file
 print "**** Step1: Importing MED file"
 
 print 'Import "sortie_med_volumique.med"...............',
-file_path = datadir + "sortie_med_volumique_v3.0.6.med"
-OpenDataFile(file_path)
+file_path = datadir + "sortie_med_volumique.med"
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -52,8 +48,8 @@ if view is None:
 else:
     reset_view(view)
     print "OK"
-    
-mesh_name = 'Volume_fluide'
+
+mesh_name = 'Volume fluide'
 cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
 

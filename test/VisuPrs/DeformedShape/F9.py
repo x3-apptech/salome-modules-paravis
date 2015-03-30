@@ -24,10 +24,6 @@ import sys
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
 from pvsimple import *
-import pvserver as paravis
-
-# Create presentations
-myParavis = paravis.myParavis
 
 picturedir = get_picture_dir("DeformedShape/F9")
 
@@ -41,7 +37,7 @@ print " --------------------------------- "
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-	raise RuntimeError, "Error: can't import file."
+        raise RuntimeError, "Error: can't import file."
 else: print "OK"
 # Get view
 aView = GetRenderView()
@@ -58,12 +54,12 @@ for colored in [False,True]:
         colored_str = "_colored"
     for i in range(1,11):
         hide_all(aView, True)
-        aPrs = DeformedShapeOnField(aProxy, aFieldEntity, aFieldName, i, is_colored=colored)	
+        aPrs = DeformedShapeOnField(aProxy, aFieldEntity, aFieldName, i, is_colored=colored)
         if aPrs is None:
             raise RuntimeError, "Presentation is None!!!"
         # display only current deformed shape
         #display_only(aView,aPrs)
-        aPrs.Visibility =1	
+        aPrs.Visibility =1
 
         reset_view(aView)
         Render(aView)
@@ -71,9 +67,9 @@ for colored in [False,True]:
         if not picturedir.endswith(os.sep):
                 picturedir += os.sep
         prs_type = PrsTypeEnum.DEFORMEDSHAPE
-                
+
         # Get name of presentation type
-        prs_name = PrsTypeEnum.get_name(prs_type)    
+        prs_name = PrsTypeEnum.get_name(prs_type)
         f_prs_type = prs_name.replace(' ', '').upper()
         # Construct image file name
         pic_name = picturedir + aFieldName+colored_str + "_" + str(i) + "_" + f_prs_type + "." + pictureext

@@ -21,15 +21,13 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
 error = 0
 
 # Import MED file
 med_file_path = datadir + "fra.med"
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -37,7 +35,7 @@ if med_reader is None:
     error = error+1
 
 # Create Mesh
-mesh_name = 'LE_VOLUME'
+mesh_name = 'LE VOLUME'
 cell_entity = EntityType.CELL
 mesh = MeshOnEntity(med_reader, mesh_name, cell_entity)
 if mesh is None:

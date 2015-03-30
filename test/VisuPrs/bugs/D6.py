@@ -21,15 +21,12 @@
 
 from paravistest import datadir
 from presentations import *
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 med_file_path = datadir + "fra.med"
 
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 # 2. Creation of CutSegment presentations, based on time stamps of "VITESSE" field
@@ -38,7 +35,7 @@ point2 = [0.4, 0.05, 1.0]
 cut_segment1 = CutSegmentOnField(med_reader, EntityType.NODE, "VITESSE", 1,
                                 point1, point2)
 if cut_segment1 == None:
-   raise RuntimeError, "ERROR!!! The first CutSegment presentation is not built!" 
+   raise RuntimeError, "ERROR!!! The first CutSegment presentation is not built!"
 
 # 3. Creation of CutSegment presentations, based on time stamps of "TAUX_DE_VIDE" field
 point1 = [0, 0, 1]

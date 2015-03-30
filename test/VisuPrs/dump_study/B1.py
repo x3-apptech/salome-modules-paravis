@@ -21,10 +21,7 @@
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 from pvsimple import *
-
-my_paravis = paravis.myParavis
 
 # Import table from file
 xls_file = tablesdir + "tables_test.xls"
@@ -58,15 +55,15 @@ count_not=0
 
 for name in tables:
     if name not in available_tables:
-	count_not += 1
-	print "ERROR!!! Table with ", name, " name was not found"
+        count_not += 1
+        print "ERROR!!! Table with ", name, " name was not found"
         errors += 1
     else:
         print "\"" + name + "\" table was found..."
 
 if count_not > 0:
     print "ERROR!!! "+str(count_not)+" table(s) was(were) not found!!!"
-    errors += 1   	    
+    errors += 1
 if errors > 0:
     raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
 

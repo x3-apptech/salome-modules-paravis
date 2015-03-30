@@ -19,7 +19,6 @@
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
 # Import table from file
@@ -46,19 +45,18 @@ for table_nb in range(0, tables_count):
     field_name = 'Table'
     vector_mode = 'Magnitude'
     nb_components = 1
-    
+
     # Get lookup table
     lookup_table = get_lookup_table(field_name, nb_components, vector_mode)
     lookup_table.LockScalarRange = 0
 
     # Set properties
-    prs.ColorAttributeType = EntityType.get_pvtype(EntityType.NODE)
-    prs.ColorArrayName = field_name
+    prs.ColorArrayName = (EntityType.get_pvtype(EntityType.NODE), field_name)
     prs.LookupTable = lookup_table
 
     # Add scalar bar
     bar = add_scalar_bar(available_tables[table_nb], nb_components, vector_mode,
                          lookup_table, "")
- 
+
     reset_view()
     pvsimple.Delete(bar)

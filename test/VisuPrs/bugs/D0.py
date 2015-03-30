@@ -24,18 +24,16 @@ import os
 import time
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/D0")
 
 # Aux method
 def get_group_full_name(source, group_name):
     result_name = group_name
-    
-    full_names = source.Groups.Available
+
+    #full_names = source.Groups.Available
+    full_names = get_group_names(source)
     for name in full_names:
         if name.endswith(group_name):
             result_name = name
@@ -46,7 +44,7 @@ def get_group_full_name(source, group_name):
 # 1. Import of the "Bug619-result_calcul_OCC.med" file
 med_file_path = datadir + "Bug619-result_calcul_OCC.med"
 
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -62,13 +60,13 @@ groups = ['TU_3D_G1', 'TU_3D_D1']
 
 for group_name in groups:
     extract_group = pvsimple.ExtractGroup(med_reader)
-    extract_group.Groups = [get_group_full_name(med_reader, group_name)]
+    #extract_group.Groups = [get_group_full_name(med_reader, group_name)]
+    extract_group.AllGroups = [get_group_full_name(extract_group, group_name)]
     extract_group.UpdatePipeline()
-    
+
     scalar_map = ScalarMapOnField(extract_group, EntityType.CELL, field_name, 1)
     if scalar_map is None :
         raise RuntimeError, "ScalarMap presentation on '" + group_name + "' group is None!!!"
 
     pic_path = os.path.join(picturedir, "npal18711_" + group_name + "." + pictureext)
     process_prs_for_test(scalar_map, view, pic_path)
-    

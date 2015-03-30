@@ -25,7 +25,6 @@ from paravistest import *
 from presentations import *
 from pvsimple import *
 import sys
-import pvserver as paravis
 import time
 
 # Directory for saving snapshots
@@ -34,9 +33,6 @@ picturedir = get_picture_dir("3D_viewer/A6")
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-
-#import file
-my_paravis = paravis.myParavis
 
 # Get view
 my_view = GetRenderView()
@@ -91,9 +87,8 @@ for reprCode in represents:
                 shrink_filter.ShrinkFactor = 0.8
                 shrink_filter.UpdatePipeline()
                 shr_sm_on_ds = GetRepresentation(shrink_filter)
-                shr_sm_on_ds.ColorArrayName = sm_on_ds.ColorArrayName
+                shr_sm_on_ds.ColorArrayName = sm_on_ds[0:2]
                 shr_sm_on_ds.LookupTable = sm_on_ds.LookupTable
-                shr_sm_on_ds.ColorAttributeType = sm_on_ds.ColorAttributeType
             sm_on_ds.Visibility = 0
             shr_sm_on_ds.Representation = sm_on_ds.Representation
             shape_to_show = shr_sm_on_ds

@@ -23,13 +23,8 @@
 import sys
 import os
 from paravistest import datadir, pictureext, get_picture_dir
-import pvserver as paravis
-from pvsimple import GetActiveSource, GetRenderView, Render
+from pvsimple import GetActiveSource, GetRenderView, Render, OpenDataFile
 from presentations import ScalarMapOnField, hide_all, EntityType, PrsTypeEnum,reset_view,process_prs_for_test
-
-
-# Create presentations
-myParavis = paravis.myParavis
 
 picturedir = get_picture_dir("ScalarMap/G2")
 
@@ -37,13 +32,13 @@ theFileName = datadir +  "Bug829_resu_mode.med"
 print " --------------------------------- "
 print "file ", theFileName
 print " --------------------------------- "
-    
+
 """Build presentations of the given types for all fields of the given file."""
 #print "Import %s..." % theFileName.split('/')[-1],
 result = OpenDataFile(theFileName)
 proxy = GetActiveSource()
 if proxy is None:
-	raise RuntimeError, "Error: can't import file."
+        raise RuntimeError, "Error: can't import file."
 else: print "OK"
 # Get view
 aView = GetRenderView()
@@ -62,27 +57,27 @@ for i in range(1,11):
     #display only current scalar map
     aPrs.Visibility=1
     reset_view(aView)
-    Render(aView)    
-    
+    Render(aView)
+
     # Add path separator to the end of picture path if necessery
     if not picturedir.endswith(os.sep):
             picturedir += os.sep
     prs_type = PrsTypeEnum.SCALARMAP
-            
+
     # Get name of presentation type
-    prs_name = PrsTypeEnum.get_name(prs_type)    
+    prs_name = PrsTypeEnum.get_name(prs_type)
     f_prs_type = prs_name.replace(' ', '').upper()
     # Construct image file name
     pic_name = picturedir + aFieldName + "_" + str(i) + "_" + f_prs_type + "." + pictureext
-    
+
     # Show and record the presentation
     process_prs_for_test(aPrs, aView, pic_name)
     sizes.append(os.path.getsize(pic_name))
 
-# check sizes of pictures	
+# check sizes of pictures
 if abs(max(sizes)-min(sizes)) > 0.01*max(sizes):
-    print "<b>WARNING!!! Pictures have different sizes!!!</b>"; 
+    print "<b>WARNING!!! Pictures have different sizes!!!</b>";
     for i in range(1,11):
         picture_name = "time_stamp_"+str(i)+"."+pictureext
-        print "Picture: "+picture_name+"; size: "+str(sizes[i-1]) 
-    raise RuntimeError	
+        print "Picture: "+picture_name+"; size: "+str(sizes[i-1])
+    raise RuntimeError

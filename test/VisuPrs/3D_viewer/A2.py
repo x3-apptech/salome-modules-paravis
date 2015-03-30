@@ -24,7 +24,6 @@ from paravistest import *
 from presentations import *
 from pvsimple import *
 import sys
-import pvserver as paravis
 import time
 
 # Directory for saving snapshots
@@ -33,9 +32,6 @@ picturedir = get_picture_dir("3D_viewer/A2")
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-
-#import file
-my_paravis = paravis.myParavis
 
 # Get view
 my_view = GetRenderView()

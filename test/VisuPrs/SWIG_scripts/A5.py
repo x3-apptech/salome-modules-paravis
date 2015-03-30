@@ -21,9 +21,7 @@
 # Create table and display it as curves
 
 from paravistest import tablesdir
-import pvserver as paravis
 import pvsimple
-
 
 # Define script for table creation
 script = """

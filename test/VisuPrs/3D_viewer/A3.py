@@ -24,7 +24,6 @@ from paravistest import *
 from presentations import *
 from pvsimple import *
 import sys
-import pvserver as paravis
 import time
 
 # Directory for saving snapshots
@@ -33,9 +32,6 @@ picturedir = get_picture_dir("3D_viewer/A3")
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
-
-#import file
-my_paravis = paravis.myParavis
 
 # Get view
 my_view = GetRenderView()
@@ -48,6 +44,17 @@ print "file ", file_name
 print " --------------------------------- "
 
 OpenDataFile(file_name)
+#reader = OpenDataFile(file_name)
+#reader = MEDReader(FileName=file_name)
+#keys = reader.GetProperty("FieldsTreeInfo")[::2]
+#reader.AllArrays = [keys[0]]
+#SetActiveSource(reader)
+
+#reader.UpdatePipelineInformation()
+#from paraview import servermanager
+#res = servermanager.Fetch(reader,0)
+#print res
+
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
@@ -56,6 +63,7 @@ else:
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
+
 shrinks = [0, 1]
 shadings = ["Flat", "Gouraud"]
 opacities = [1.0, 0.5, 0.0]
@@ -66,10 +74,10 @@ field_name = 'vectoriel field'
 
 print "\nCreating stream_lines......."
 stream_lines = StreamLinesOnField(proxy, EntityType.CELL,
-field_name, 1, is_colored=True)
+                                  field_name, 1, is_colored=True)
 stream_tracer = stream_lines.Input
 print "stream_tracer:", stream_tracer
-stream_tracer.Input = None
+#stream_tracer.Input = None
 stream_tracer.InitialStepLength = 0.00940275
 stream_tracer.MaximumStreamlineLength = 140.373
 stream_tracer.MaximumStepLength = 0.5319

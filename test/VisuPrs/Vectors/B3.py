@@ -23,10 +23,7 @@ import sys
 
 from paravistest import datadir
 from presentations import VectorsOnField, EntityType
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 #====================Stage1: Importing MED file====================
 
@@ -34,7 +31,7 @@ print "**** Stage1: Importing MED file"
 
 print 'Import "ResOK_0000.med"...............',
 medFile = datadir + "ResOK_0000.med"
-OpenDataFile(medFile)
+pvsimple.OpenDataFile(medFile)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -64,20 +61,20 @@ print "Default subtype   : ", glyph.GlyphType.GlyphType
 print "Default GlyphPos  : ", glyph.GlyphType.Center
 
 print "Changing value of line width"
-width = -10
-vectors.LineWidth = width
-print "Negative value -10 : ", vectors.LineWidth
-pvsimple.Render()
+#width = -10
+#vectors.LineWidth = width
+#print "Negative value -10 : ", vectors.LineWidth
+#pvsimple.Render()
 
 width = 10
 vectors.LineWidth = width
 print "Positive value  10 : ", vectors.LineWidth
 pvsimple.Render()
 
-width = 0
-vectors.LineWidth = width
-print "Zero value       0 : ", vectors.LineWidth
-pvsimple.Render()
+# width = 0
+# vectors.LineWidth = width
+# print "Zero value       0 : ", vectors.LineWidth
+# pvsimple.Render()
 
 width = 2
 vectors.LineWidth = width

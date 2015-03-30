@@ -21,7 +21,6 @@
 
 from paravistest import tablesdir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
 # 1. Import table from file
@@ -59,8 +58,8 @@ for table in available_tables:
     xy_rep.AttributeType = 'Row Data'
     xy_rep.UseIndexForXAxis = 0
     xy_rep.SeriesVisibility = ['0', '0']
-    
+
     pvsimple.Render()
 
 
-    
+

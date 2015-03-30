@@ -24,20 +24,17 @@ import os
 import time
 from paravistest import datadir, pictureext, get_picture_dir
 from presentations import *
-import pvserver as paravis
 import pvsimple
 
-my_paravis = paravis.myParavis
-os.environ["PARAVIS_TEST_PICS"] = sys.argv[1]
 picturedir = get_picture_dir("bugs/A2")
 
-med_file_path = datadir + "carre_MIXTE_0000_v3.0.6.med"
+med_file_path = datadir + "carre_MIXTE_0000.med"
 pic_path = os.path.join(picturedir, "A2." + pictureext)
 
 print "BREAKPOINT_1"
 # 1. Import MED file
 print 'Importing "carre_MIXTE_0000.med"...',
-OpenDataFile(med_file_path)
+pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:

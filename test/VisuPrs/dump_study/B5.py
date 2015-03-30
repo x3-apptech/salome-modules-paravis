@@ -23,32 +23,30 @@ import os
 import sys
 import salome
 
-class SalomeSession(object):
-    def __init__(self):
-        import runSalome
-        import sys
-        sys.argv += ["--show-desktop=1"]
-        sys.argv += ["--splash=0"]
-        sys.argv += ["--modules=MED,VISU,PARAVIS"]
-        clt, d = runSalome.main()
-        port = d['port']
-        self.port = port
-        return
-    pass
+# class SalomeSession(object):
+#     def __init__(self):
+#         import runSalome
+#         import sys
+#         sys.argv += ["--show-desktop=1"]
+#         sys.argv += ["--splash=0"]
+#         sys.argv += ["--modules=MED,VISU,PARAVIS"]
+#         clt, d = runSalome.main()
+#         port = d['port']
+#         self.port = port
+#         return
+#     pass
 
 
 # 1. Opening saved study
 
 # run Salome
-salome_session = SalomeSession()
+#salome_session = SalomeSession()
 salome.salome_init()
+salome.myStudyManager.Close(salome.myStudy)
 
 file_name = os.path.join(os.path.dirname(sys.argv[0]), "test1.hdf")
 opened_study = salome.myStudyManager.Open(file_name)
 salome.myStudy = opened_study
-
-# 2. Load PARAVIS module
-import pvserver as paravis
 
 # 3. Find IsoSurfaces
 from pvsimple import *
@@ -59,7 +57,7 @@ if obj is None:
 # 4. Remove med reader object and all other sources
 for obj in GetSources().values():
     Delete(obj)
-    
+
 # 5. Check results
 obj = FindSource('ScalarMap')
 if obj is not None:

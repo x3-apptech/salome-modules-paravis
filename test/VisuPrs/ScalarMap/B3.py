@@ -22,16 +22,13 @@
 
 from paravistest import datadir
 import presentations
-import pvserver as paravis
 import pvsimple
-
-my_paravis = paravis.myParavis
 
 # 1. Import MED file
 
 print 'Importing "fra.med"...',
 file_path = datadir + "fra.med"
-OpenDataFile(file_path)
+pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
@@ -56,7 +53,7 @@ print "Vector component .....", lookup_table.VectorComponent
 lookup_table.VectorMode = 'Component'
 lookup_table.VectorComponent = 0
 
-scalarmap.LookupTable = lookup_table 
+scalarmap.LookupTable = lookup_table
 
 print "Vector mode .....", scalarmap.LookupTable.VectorMode
 print "Vector component .....", scalarmap.LookupTable.VectorComponent
@@ -132,10 +129,10 @@ print "Default number of colors = ", scalarmap.LookupTable.NumberOfTableValues
 
 scalarmap.LookupTable.Discretize = 1
 
-print "Set negative number of colors"
-nb_colors = -128
-scalarmap.LookupTable.NumberOfTableValues = nb_colors
-print "Number of colors =", scalarmap.LookupTable.NumberOfTableValues
+#print "Set negative number of colors"
+#nb_colors = -128
+#scalarmap.LookupTable.NumberOfTableValues = nb_colors
+#print "Number of colors =", scalarmap.LookupTable.NumberOfTableValues
 
 print "Set zero number of colors"
 nb_colors = 0
