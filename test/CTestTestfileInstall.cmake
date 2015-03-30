@@ -20,9 +20,7 @@
 SET(SALOME_TEST_DRIVER "$ENV{ABSOLUTE_APPLI_PATH}/bin/salome/appliskel/salome_test_driver.py")
 
 SET(COMPONENT_NAME PARAVIS)
-#SET(TIMEOUT        10000)
-#SET(TIMEOUT        900)
-SET(TIMEOUT        300)
+SET(TIMEOUT        1000)
 
 SUBDIRS(VisuPrs)
 SUBDIRS(MEDReader)
