@@ -50,6 +50,7 @@ class pqDataRepresentation;
 class pqRepresentation;
 class PVViewer_GUIElements;
 class PVViewer_EngineWrapper;
+class SUIT_ViewWindow;
 
 class PVGUI_Module : public SalomeApp_Module
 {
@@ -190,7 +191,7 @@ private:
   void                   setupDockWidgets();
 
   //! Save states of dockable ParaView widgets
-  void                   saveDockWidgetsState();
+  void                   saveDockWidgetsState( bool hideWidgets = true );
 
   //! Restore states of dockable ParaView widgets
   void                   restoreDockWidgetsState();
@@ -264,6 +265,10 @@ protected slots:
   virtual void           onModelOpened();
   virtual void           onPushTraceTimer();
   virtual void           onInitTimer();
+  virtual void           onViewManagerAdded( SUIT_ViewManager* );
+  virtual void           onViewManagerRemoved( SUIT_ViewManager* );
+  virtual void           onPVViewCreated( SUIT_ViewWindow* );
+  virtual void           onPVViewDelete( SUIT_ViewWindow* );
 
 private:
   int                    mySelectionControlsTb;

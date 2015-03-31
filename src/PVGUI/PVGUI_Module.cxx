@@ -1305,7 +1305,7 @@ void PVGUI_Module::onPushTraceTimer()
 QString PVGUI_Module::getHelpFileName() {
   QString aPVHome(getenv("PVHOME"));
   if (aPVHome.isNull()) {
-    qWarning("Wariable PVHOME is not defined");
+    qWarning("Variable PVHOME is not defined");
     return QString();
   }
   QChar aSep = QDir::separator();
@@ -1371,6 +1371,36 @@ void PVGUI_Module::loadSelectedState(bool toClear)
                               tr("ERR_ERROR"),
                               tr("ERR_STATE_CANNOT_BE_RESTORED"));
   }
+}
+
+void PVGUI_Module::onViewManagerAdded( SUIT_ViewManager* vm )
+{
+  if (PVViewer_ViewManager* pvvm = dynamic_cast<PVViewer_ViewManager*>(vm)) {
+    connect(pvvm, SIGNAL(viewCreated(SUIT_ViewWindow*)), this, SLOT(onPVViewCreated(SUIT_ViewWindow*)));
+    connect(pvvm, SIGNAL(deleteView(SUIT_ViewWindow*)), this, SLOT(onPVViewDelete(SUIT_ViewWindow*)));
+    }
+}
+
+void PVGUI_Module::onViewManagerRemoved( SUIT_ViewManager* vm )
+{
+  if (PVViewer_ViewManager* pvvm = dynamic_cast<PVViewer_ViewManager*>(vm))
+    disconnect(pvvm, SIGNAL(viewCreated(SUIT_ViewWindow*)), this, SLOT(onPVViewCreated(SUIT_ViewWindow*)));
+}
+
+/*!Show toolbars at \a vw PV view window creating when PARAVIS is active.
+*/
+void PVGUI_Module::onPVViewCreated( SUIT_ViewWindow* vw )
+{
+  myGuiElements->setToolBarVisible(true);
+  restoreDockWidgetsState();
+}
+
+/*!Save toolbars state at \a view view closing.
+*/
+void PVGUI_Module::onPVViewDelete(SUIT_ViewWindow* view)
+{
+  if (dynamic_cast<PVViewer_ViewWindow*>(view))
+    saveDockWidgetsState( false );
 }
 
 /*!

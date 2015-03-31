@@ -343,7 +343,7 @@ void PVGUI_Module::setupDockWidgets()
 /*!
   \brief Save states of dockable ParaView widgets.
 */
-void PVGUI_Module::saveDockWidgetsState()
+void PVGUI_Module::saveDockWidgetsState(bool hideWidgets)
 {
   SUIT_Desktop* desk = application()->desktop();
 
@@ -362,8 +362,10 @@ void PVGUI_Module::saveDockWidgetsState()
     it1.next();
     QDockWidget* dw = qobject_cast<QDockWidget*>( it1.key() );
     myDockWidgets[dw] = dw->isVisible();
-    dw->setVisible( false );
-    dw->toggleViewAction()->setVisible( false );
+    if ( hideWidgets ) {
+      dw->setVisible( false );
+      dw->toggleViewAction()->setVisible( false );
+    }
   }
   // store toolbar breaks state and remove all tollbar breaks 
   QMapIterator<QWidget*, bool> it2( myToolbarBreaks );
@@ -371,7 +373,7 @@ void PVGUI_Module::saveDockWidgetsState()
     it2.next();
     QToolBar* tb = qobject_cast<QToolBar*>( it2.key() );
     myToolbarBreaks[tb] = desk->toolBarBreak( tb );
-    if ( myToolbarBreaks[tb] )
+    if ( myToolbarBreaks[tb] && hideWidgets )
       desk->removeToolBarBreak( tb );
   }
   // store toolbars visibility state and hide'em all
@@ -380,8 +382,10 @@ void PVGUI_Module::saveDockWidgetsState()
     it3.next();
     QToolBar* tb = qobject_cast<QToolBar*>( it3.key() );
     myToolbars[tb] = tb->isVisible();
-    tb->setVisible( false );
-    tb->toggleViewAction()->setVisible( false );
+    if ( hideWidgets ) {
+      tb->setVisible( false );
+      tb->toggleViewAction()->setVisible( false );
+    }
   }
 }
 
