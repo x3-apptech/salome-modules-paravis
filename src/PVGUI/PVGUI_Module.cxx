@@ -708,7 +708,6 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
   /*if (pqImplementation::helpWindow) {
     pqImplementation::helpWindow->hide();
     }*/
-  showView( false );
   // hide menus
   menuMgr()->hide(myRecentMenuId);
   menuMgr()->hide(mySourcesMenuId);
@@ -773,6 +772,7 @@ void PVGUI_Module::deleteTemporaryFiles()
 */
 void PVGUI_Module::studyClosed(SUIT_Study* study)
 {
+  showView(false);
   clearParaviewState();
 
   LightApp_Module::studyClosed(study);
