@@ -17,6 +17,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+# For make test
+
+SET(TIMEOUT 1000)
+SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
+
+IF(NOT WIN32)
+  # Special case for the PV_PLUGIN_PATH environment variable:
+  # PV_PLUGIN_PATH=VAL_1;VAL_2;...;VAL_N
+  # But the ';' character is used as separator between variables (PATH, LD_LIBRARY_PATH, etc...)
+  # So we should shield a sequence ";/" by the '\' character.
+  STRING(REGEX REPLACE ";/" "\\\\;/" tests_env "${tests_env}")
+ENDIF(NOT WIN32)
+
+SET(SALOME_TEST_DRIVER "${KERNEL_ROOT_DIR}/bin/salome/appliskel/salome_test_driver.py")
+
+# Common part
+
 SET(TEST_DIRECTORIES
   Util
   2D_viewer
