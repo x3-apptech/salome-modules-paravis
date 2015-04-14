@@ -29,6 +29,7 @@ class pqTreeWidgetItemObject;
 class VectBoolWidget;
 
 class vtkSMProperty;
+class vtkSMIntVectorProperty;
 
 class pqMEDReaderPanel: public pqNamedObjectPanel
 {
@@ -46,6 +47,7 @@ protected slots:
   void updateSIL();
   void reloadFired();
   void vectOfBoolWidgetRequested(bool isMode);
+  void updateCheckStatusOfLev4FromServerState();
 private:
   int getMaxNumberOfTS() const;
   void getCurrentTS(QStringList& its, QStringList& dts, QStringList& tts) const;
@@ -54,6 +56,7 @@ protected:
   void somethingChangedInFieldRepr();
   /// populate widgets with properties from the server manager
   virtual void linkServerManagerProperties();
+  virtual void paintEvent(QPaintEvent *event);
   void initAll();
   class pqUI;
   pqUI* UI;
@@ -63,6 +66,8 @@ private:
   bool _is_fields_status_changed;
   std::set<std::pair<pqTreeWidgetItemObject *,int> > _leaves;
   VectBoolWidget *_optional_widget;
+  int _my_mtime;
+  vtkSMIntVectorProperty *_sm_prop_remote_mtime;
 };
 
 #endif

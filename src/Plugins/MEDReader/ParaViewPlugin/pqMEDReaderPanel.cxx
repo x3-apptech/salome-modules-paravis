@@ -121,7 +121,7 @@ public:
   QMap<QTreeWidgetItem*, QString> TreeItemToPropMap;
 };
 
-pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_is_fields_status_changed(false),_optional_widget(0)
+pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_is_fields_status_changed(false),_optional_widget(0),_my_mtime(0),_sm_prop_remote_mtime(0)
 {
   initAll();
 }
@@ -149,7 +149,11 @@ void pqMEDReaderPanel::initAll()
   this->UI->setupUi(this);
   this->UI->Fields->setHeaderHidden(true);
   this->updateSIL();
-  ////////////////////
+  //
+  _sm_prop_remote_mtime=dynamic_cast<vtkSMIntVectorProperty *>(this->proxy()->GetProperty("ServerModifTime"));
+  if(_sm_prop_remote_mtime)
+    _sm_prop_remote_mtime->SetImmediateUpdate(1);
+  //
   vtkSMProxy *reader(this->referenceProxy()->getProxy());
   vtkPVSILInformation *info(vtkPVSILInformation::New());
   reader->GatherInformation(info);
@@ -200,6 +204,7 @@ void pqMEDReaderPanel::initAll()
       vtkIdType id1(it0->Next());
       //
       vtkSMProperty *SMProperty(this->proxy()->GetProperty("FieldsStatus"));
+      vtkSMProperty *SMPropertyRead(this->proxy()->GetProperty("FieldsTreeInfo"));
       SMProperty->ResetToDefault();//this line is very important !
       //
       QString name0(QString::fromStdString((const char *)verticesNames2->GetValue(id1))); QList<QString> strs0; strs0.append(name0);
@@ -257,7 +262,6 @@ void pqMEDReaderPanel::initAll()
                   pqTreeWidgetItemObject *item3(new pqTreeWidgetItemObject(item2,strs3));
                   _all_lev4.push_back(item3);
                   item3->setData(0,Qt::UserRole,name3);
-                  item3->setChecked(false);
                   if(isSpecial)
                     {
                       QFont font; font.setItalic(true);	font.setUnderline(true);
@@ -273,15 +277,10 @@ void pqMEDReaderPanel::initAll()
                   _leaves.insert(std::pair<pqTreeWidgetItemObject *,int>(item3,ll));
                   std::ostringstream pdm; pdm << name0.toStdString() << "/" << name1.toStdString() << "/" << name2.toStdString() << "/" << name3CppFull;
                   (static_cast<vtkSMStringVectorProperty *>(SMProperty))->SetElement(2*ll,pdm.str().c_str());
-                  ////char tmp2[2]; tmp2[0]=(kk==0?'1':'0'); tmp2[1]='\0';
-                  ////std::string tmp(tmp2);
-                  ////(static_cast<vtkSMStringVectorProperty *>(SMProperty))->SetElement(2*ll+1,tmp.c_str());
-                  //SMProperty->ResetToDefault();
-                  const char *tmp((static_cast<vtkSMStringVectorProperty *>(SMProperty))->GetElement(2*ll+1));
-                  ////item2->setChecked(kk==0);
-                  ////item3->setChecked(kk==0);
+                  const char *tmp((static_cast<vtkSMStringVectorProperty *>(SMPropertyRead))->GetElement(2*ll+1));
                   item3->setChecked(tmp[0]=='1');
                   item3->setProperty("PosInStringVector",QVariant(ll));
+                  item3->setProperty("ZeKey",QVariant(QString(pdm.str().c_str())));
                   connect(item3,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
                   ll++;
                 }
@@ -348,6 +347,21 @@ pqMEDReaderPanel::~pqMEDReaderPanel()
 void pqMEDReaderPanel::linkServerManagerProperties()
 {
   this->Superclass::linkServerManagerProperties();
+}
+
+void pqMEDReaderPanel::paintEvent(QPaintEvent *event)
+{
+  if(_sm_prop_remote_mtime)
+    {
+      int remoteMTimeVal(_sm_prop_remote_mtime->GetElement(0));
+      if(remoteMTimeVal>_my_mtime)
+        {
+          //std::cout << "Refresh MEDReader panel due to external update." << std::endl;
+          updateCheckStatusOfLev4FromServerState();
+          _my_mtime=remoteMTimeVal;
+        }
+    }
+  pqNamedObjectPanel::paintEvent(event);
 }
 
 void pqMEDReaderPanel::updateSIL()
@@ -509,6 +523,37 @@ void pqMEDReaderPanel::vectOfBoolWidgetRequested(bool isMode)
     }
 }
 
+void pqMEDReaderPanel::updateCheckStatusOfLev4FromServerState()
+{
+  this->proxy()->UpdatePropertyInformation();
+  vtkSMStringVectorProperty *SMProperty(static_cast<vtkSMStringVectorProperty *>(this->proxy()->GetProperty("FieldsTreeInfo")));
+  for(std::vector<pqTreeWidgetItemObject *>::const_iterator it=_all_lev4.begin();it!=_all_lev4.end();it++)
+    {
+      pqTreeWidgetItemObject *elt(*it);
+      if(!elt)
+        continue;
+      QVariant v(elt->property("PosInStringVector"));
+      if(v.isNull())
+        continue;
+      bool isOK;
+      int pos(v.toInt(&isOK));
+      if(!isOK)
+        continue;
+      const char *tmp(SMProperty->GetElement(2*pos+1));
+      bool posCheckTarget(tmp[0]=='1'),actualPos(elt->isChecked());
+      if(actualPos!=posCheckTarget)
+        {
+          QTreeWidgetItem *curFather(elt->QTreeWidgetItem::parent());
+          pqTreeWidgetItemObject *father(dynamic_cast<pqTreeWidgetItemObject *>(curFather));
+          disconnect(father,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev3HasBeenFired(bool)));
+          disconnect(elt,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
+          elt->setChecked(posCheckTarget);
+          connect(elt,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev4HasBeenFired()));
+          connect(father,SIGNAL(checkedStateChanged(bool)),this,SLOT(aLev3HasBeenFired(bool)));
+        }
+    }
+}
+
 void pqMEDReaderPanel::getCurrentTS(QStringList& its, QStringList& dts, QStringList& tts) const
 {
   
@@ -562,8 +607,6 @@ void pqMEDReaderPanel::somethingChangedInFieldRepr()
   vtkSMStringVectorProperty *sm(dynamic_cast<vtkSMStringVectorProperty *>(SMProperty));
   unsigned int nb(sm->GetNumberOfElements());
   std::vector<std::string> sts(nb);
-  for(unsigned int i=0;i<nb;i++)
-    sts[i]=sm->GetElement(i);
   ///
   pqExodusIIVariableSelectionWidget *sc(this->UI->Fields);
   for(int i0=0;i0<sc->topLevelItemCount();i0++)
@@ -582,12 +625,13 @@ void pqMEDReaderPanel::somethingChangedInFieldRepr()
                   int ll(scc->property("PosInStringVector").toInt());
                   int v(scc->isChecked());
                   std::ostringstream oss; oss << v;
+                  sts[2*ll]=scc->property("ZeKey").toString().toStdString();
                   sts[2*ll+1]=oss.str();
                 }
             }
         }
     }
-  ///
+  //
   const char **args=new const char *[nb];
   for(unsigned int i=0;i<nb;i++)
     {

@@ -150,7 +150,7 @@ class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0)
   {
   }
   
@@ -184,6 +184,8 @@ public:
   int LastLev0;
   // The property keeper is usable only in pvsm mode.
   PropertyKeeper PK;
+  int MyMTime;
+  std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great !
 private:
   unsigned char FirstCall0;
 };
@@ -210,6 +212,11 @@ void vtkMEDReader::Reload(int a)
   delete this->Internal;
   this->Internal=new vtkMEDReaderInternal(this);
   this->SetFileName(fName.c_str());
+}
+
+int vtkMEDReader::GetServerModifTime()
+{
+  return this->Internal->MyMTime;
 }
 
 void vtkMEDReader::GenerateVectors(int val)
@@ -353,19 +360,26 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
 
 void vtkMEDReader::SetFieldsStatus(const char* name, int status)
 {
-  //std::cerr << "vtkMEDReader::SetFieldsStatus(" << name << "," << status << ") called !" << std::endl;
+  //this->Internal->_wonderful_set.insert(name);
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushFieldStatusEntry(name,status);
       return ;
     }
+  this->Internal->_wonderful_set.insert(name);
   //not pvsm mode (general case)
   try
     {
       this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(this->Internal->Tree.getIdHavingZeName(name),status);
-      if(std::string(name)==GetFieldsTreeArrayName(GetNumberOfFieldsTreeArrays()-1))
-        if(!this->Internal->PluginStart0())
-          this->Modified();
+      if(this->Internal->_wonderful_set.size()==GetNumberOfFieldsTreeArrays())
+        {
+          if(!this->Internal->PluginStart0())
+            {
+              this->Modified();
+            }
+          this->Internal->MyMTime++;
+          this->Internal->_wonderful_set.clear();
+        }
     }
   catch(INTERP_KERNEL::Exception& e)
     {
@@ -381,9 +395,8 @@ int vtkMEDReader::GetNumberOfFieldsTreeArrays()
 {
   if(!this->Internal)
     return 0;
-  int ret(this->Internal->Tree.getNumberOfLeavesArrays());
+  return this->Internal->Tree.getNumberOfLeavesArrays();
   //std::cerr << "vtkMEDReader::GetNumberOfFieldsTreeArrays called ! " << ret << std::endl;
-  return ret;
 }
 
 const char *vtkMEDReader::GetFieldsTreeArrayName(int index)

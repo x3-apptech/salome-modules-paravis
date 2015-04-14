@@ -53,6 +53,8 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   //! Build the graph used to pass information to the client on the supports
   virtual std::string BuildSIL(vtkMutableDirectedGraph*);
   virtual void Reload(int);
+  virtual int GetServerModifTime();
+  //
   virtual void GenerateVectors(int);
   virtual void ChangeMode(int);
   virtual const char *GetSeparator();

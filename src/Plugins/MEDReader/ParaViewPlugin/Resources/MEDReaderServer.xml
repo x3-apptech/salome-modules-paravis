@@ -28,6 +28,10 @@
         <SimpleIntInformationHelper />
       </IntVectorProperty>
 
+      <IntVectorProperty command="GetServerModifTime" information_only="1" name="ServerModifTime">
+        <SimpleIntInformationHelper />
+      </IntVectorProperty>
+
       <IntVectorProperty
         name="GenerateVectors"
         command="GenerateVectors"
