@@ -294,7 +294,7 @@
       </Hints>
     </SourceProxy>
 
-    <SourceProxy name="GaussPoints" class="vtkQuadraturePointsGenerator" label="Gauss Points">
+    <SourceProxy name="GaussPoints" class="vtkMEDQuadraturePointsGenerator" label="Gauss Points">
       <Documentation
         long_help="Create a point set with data at Gauss points."
         short_help="Create a point set with data at Gauss points.">

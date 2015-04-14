@@ -27,7 +27,7 @@ IF(HDF5_IS_PARALLEL)
   ADD_DEFINITIONS("-DMEDREADER_USE_MPI")
 ENDIF(HDF5_IS_PARALLEL)
 
-SET(MEDReader_CLASSES vtkMEDReader vtkExtractGroup vtkELNOMeshFilter vtkELNOSurfaceFilter vtkELNOFilter vtkExtractCellType)
+SET(MEDReader_CLASSES vtkMEDReader vtkExtractGroup vtkELNOMeshFilter vtkELNOSurfaceFilter vtkELNOFilter vtkExtractCellType vtkMEDQuadraturePointsGenerator)
 
 SET(MEDReader_SRCS)
 SET(MEDReader_HDRS)
