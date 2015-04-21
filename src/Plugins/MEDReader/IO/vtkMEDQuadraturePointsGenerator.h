@@ -27,7 +27,7 @@
 class vtkInformation;
 class vtkInformationVector;
 
-class VTKFILTERSGENERAL_EXPORT vtkMEDQuadraturePointsGenerator : public vtkQuadraturePointsGenerator
+class VTK_EXPORT vtkMEDQuadraturePointsGenerator : public vtkQuadraturePointsGenerator
 {
 public:
   vtkTypeMacro(vtkMEDQuadraturePointsGenerator,vtkQuadraturePointsGenerator);
