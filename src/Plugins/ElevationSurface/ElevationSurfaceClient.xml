@@ -1,5 +1,0 @@
-<ParaViewFilters>
-  <Category name="Neutronics" menu_label="&amp;Neutronics" preserve_order="1">
-    <Filter name="ElevationSurface"/>
-  </Category>
-</ParaViewFilters>

@@ -29,7 +29,6 @@ ADD_PARAVIEW_PLUGIN(DifferenceTimesteps "1.0"
   SERVER_MANAGER_XML DifferenceTimesteps.xml
   SERVER_MANAGER_SOURCES vtkDifferenceTimestepsFilter.cxx
   GUI_RESOURCES pqDifferenceTimesteps.qrc
-  GUI_RESOURCE_FILES DifferenceTimestepsGUI.xml
   )
 
 INSTALL(TARGETS DifferenceTimesteps

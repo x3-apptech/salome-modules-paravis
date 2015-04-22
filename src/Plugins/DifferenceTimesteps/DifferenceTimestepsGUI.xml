@@ -1,5 +1,0 @@
-<ParaViewFilters>
-    <Category name="Temporal" menu_label="&amp;Temporal">
-        <Proxy group="filters" name="DifferenceTimesteps" icon=":/DifferenceTimestepsIcons/resources/timesteps-icon.png" omit_from_toolbar="1"/>
-    </Category>
-</ParaViewFilters>

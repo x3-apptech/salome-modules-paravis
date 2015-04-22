@@ -110,6 +110,9 @@
 		This property sets the end angle for every ellipse.
 	      </Documentation>
             </DoubleVectorProperty>
+        <Hints>
+          <ShowInMenu category="DataAnalysis" icon=":/EllipseBuilderIcons/resources/ellipse-icon.png" />
+        </Hints>
         </SourceProxy>
     </ProxyGroup>
 </ServerManagerConfiguration>

@@ -31,7 +31,6 @@ SET(SRCS
 
 ADD_PARAVIEW_PLUGIN(ElevationSurface "1.0"
 	SERVER_MANAGER_XML ElevationSurface.xml
-	GUI_RESOURCE_FILES ElevationSurfaceClient.xml
 	SERVER_MANAGER_SOURCES ${SRCS})
 
 install(TARGETS ${PROJECT_NAME} 

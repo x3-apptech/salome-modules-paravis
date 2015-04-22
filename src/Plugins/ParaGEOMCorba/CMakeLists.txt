@@ -27,8 +27,6 @@ PROJECT( ParaGEOMCorba )
   )
   ADD_PARAVIEW_PLUGIN( ParaGEOMCorbaPlugin "1.0"
     SERVER_MANAGER_XML ParaGEOMCorbaServerManager.xml
-    GUI_RESOURCE_FILES
-    ParaGEOMCorbaUserInterfaceSources.xml
     SERVER_MANAGER_SOURCES ${PARA_GEOM_CORBA_SRCS} )
     
   INCLUDE_DIRECTORIES(

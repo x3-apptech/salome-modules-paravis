@@ -29,8 +29,6 @@
 
  ADD_PARAVIEW_PLUGIN( ParaSMESHCorbaPlugin "1.0"
       SERVER_MANAGER_XML ParaSMESHCorbaServerManager.xml
-      GUI_RESOURCE_FILES
-      ParaSMESHCorbaUserInterfaceSources.xml
       SERVER_MANAGER_SOURCES ${PARA_SMESH_CORBA_SRC} )
 
  INCLUDE_DIRECTORIES(

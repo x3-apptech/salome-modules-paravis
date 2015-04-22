@@ -46,8 +46,6 @@ PROJECT( ParaMEDCorba )
     
     ADD_PARAVIEW_PLUGIN( ParaMEDCorbaPlugin "1.0"
       SERVER_MANAGER_XML ParaMEDCorbaServerManager.xml
-      GUI_RESOURCE_FILES
-      ParaMEDCorbaUserInterfaceSources.xml
       SERVER_MANAGER_SOURCES ${PARACORBAPLUG_SRCS} )
     
     INCLUDE_DIRECTORIES(${OMNIORB_INCLUDE_DIR} ${MED_ROOT_DIR}/include/salome ${KERNEL_ROOT_DIR}/include/salome)

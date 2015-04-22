@@ -129,6 +129,7 @@
       </PropertyGroup>
       <Hints>
         <Visibility replace_input="0" />
+        <ShowInMenu category="Temporal" icon=":/DifferenceTimestepsIcons/resources/timesteps-icon.png" />
       </Hints>
 
     </SourceProxy>

@@ -85,7 +85,9 @@
         default_values="1">
         <BooleanDomain name="bool"/>
       </IntVectorProperty>
-
+      <Hints>
+       <ShowInMenu category="Neutronics"/>
+      </Hints>
     </SourceProxy>
 
   </ProxyGroup>

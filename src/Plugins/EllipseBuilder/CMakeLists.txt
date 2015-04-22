@@ -28,7 +28,6 @@ ADD_PARAVIEW_PLUGIN(EllipseBuilderFilter "1.0"
     SERVER_MANAGER_XML EllipseBuilderFilter.xml 
     SERVER_MANAGER_SOURCES vtkEllipseBuilderFilter.cxx
     GUI_RESOURCES pqEllipseBuilder.qrc
-    GUI_RESOURCE_FILES EllipseBuilderGUI.xml
     )
 
 INSTALL(
