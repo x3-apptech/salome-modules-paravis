@@ -22,7 +22,6 @@
 #include "PVGUI_DataModel.h"
 #include "PVGUI_Module.h"
 
-#include <iostream>
 #include <QFile>
 #include <QTextStream>
 
@@ -64,7 +63,6 @@ bool PVGUI_DataModel::dumpPython( const QString& path, CAM_Study* std,
   out.flush();
   file.close();
 
-  std::cout << "@@@@@ wrote :\n" <<trace.toStdString().c_str()<< "\n";
   return true;
 }
 
