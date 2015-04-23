@@ -28,7 +28,6 @@
 
 #include <QtxActionToolMgr.h>
 #include <LightApp_Application.h>
-#include <SalomeApp_Application.h>   // // should ultimately be a LightApp only
 #include <SUIT_Desktop.h>
 
 #include <QApplication>
@@ -414,15 +413,15 @@ void PVGUI_Module::restoreDockWidgetsState()
     dw->toggleViewAction()->setVisible( true );
   }
 
-    // restore toolbar breaks state
-    QMapIterator<QWidget*, bool> it2( myToolbarBreaks );
-    while( it2.hasNext() ) {
-        it2.next();
-        QToolBar* tb = qobject_cast<QToolBar*>( it2.key() );
-        if ( myToolbarBreaks[tb] )
-          desk->insertToolBarBreak( tb );
-    }
-
+  // restore toolbar breaks state
+  QMapIterator<QWidget*, bool> it2( myToolbarBreaks );
+  while( it2.hasNext() ) {
+    it2.next();
+    QToolBar* tb = qobject_cast<QToolBar*>( it2.key() );
+    if ( myToolbarBreaks[tb] )
+      desk->insertToolBarBreak( tb );
+  }
+  
   // restore toolbar visibility state
   QMapIterator<QWidget*, bool> it3( myToolbars );
   while( it3.hasNext() ) {
@@ -451,13 +450,10 @@ void PVGUI_Module::storeCommonWindowsState() {
   //     restoreCommonWindowsState() method, and at the moment of the ParaVis activation we call 
   //     this method.
 
-  //LightApp_Application* anApp = getApp();
-  SalomeApp_Application* anApp = getApp();
+  LightApp_Application* anApp = getApp();
   if(!anApp)
     return;
 
-//  int begin = SalomeApp_Application::WT_ObjectBrowser;
-//  int end = SalomeApp_Application::WT_NoteBook;
   int begin = LightApp_Application::WT_ObjectBrowser;
   int end = LightApp_Application::WT_User;
   for( int i = begin; i <= end; i++ ) {
@@ -466,15 +462,15 @@ void PVGUI_Module::storeCommonWindowsState() {
       QDockWidget* dock = 0;
       QWidget* w = wg->parentWidget();
       while ( w && !dock ) {
-          dock = ::qobject_cast<QDockWidget*>( w );
-          w = w->parentWidget();
+        dock = ::qobject_cast<QDockWidget*>( w );
+        w = w->parentWidget();
       }
       if(dock){
-          if(!myCommonMap.contains(i)){
-              myCommonMap.insert(i,dock->isVisible());
-          } else {
-              myCommonMap[i] = dock->isVisible();
-          }
+        if(!myCommonMap.contains(i)){
+          myCommonMap.insert(i,dock->isVisible());
+        } else {
+          myCommonMap[i] = dock->isVisible();
+        }
       }
     }
   }
@@ -484,8 +480,7 @@ void PVGUI_Module::storeCommonWindowsState() {
   \brief Restore visibility of the common dockable windows (OB, PyConsole, ... etc.)
 */
 void PVGUI_Module::restoreCommonWindowsState() {
-  SalomeApp_Application* anApp = getApp();
-//  LightApp_Application* anApp = getApp();
+  LightApp_Application* anApp = getApp();
   if(!anApp)
     return;
   DockWindowMap::const_iterator it = myCommonMap.begin();
@@ -495,11 +490,11 @@ void PVGUI_Module::restoreCommonWindowsState() {
       QDockWidget* dock = 0;
       QWidget* w = wg->parentWidget();
       while ( w && !dock ) {
-          dock = ::qobject_cast<QDockWidget*>( w );
-          w = w->parentWidget();
+        dock = ::qobject_cast<QDockWidget*>( w );
+        w = w->parentWidget();
       }
       if(dock) {
-          dock->setVisible(it.value());
+        dock->setVisible(it.value());
       }
     }
   }

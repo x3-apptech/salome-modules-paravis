@@ -30,7 +30,6 @@ INCLUDE_DIRECTORIES(${OMNIORB_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${QT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/view
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
@@ -48,13 +47,11 @@ SET(_link_LIBRARIES
   ${OMNIORB_LIBRARIES}
   ${QT_LIBRARIES}
   ${PYTHON_LIBS}
-  ${KERNEL_LDFLAGS} ${KERNEL_SalomeDS}
-  ${GUI_LDFLAGS} ${GUI_SalomeApp} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit}   
+  ${KERNEL_LDFLAGS}
+  ${GUI_LDFLAGS} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit}
                  ${GUI_SalomeObject} ${GUI_vtkTools}
-  ${MED_SalomeIDLMED}
   ${_PARAVIEW_APP_COMPO_LIB}
   ${GUI_PVViewer}
-  SalomeIDLPVServer
 )
 
 # --- headers ---
@@ -72,13 +69,8 @@ SET(_moc_HEADERS
   PVGUI_ParaViewSettingsPane.h
 )
 
-# header files / no moc processing
-SET(_other_HEADERS
-  PVGUI_Tools.h
-)
-
 # header files / to install
-SET(PVGUI_HEADERS ${_moc_HEADERS} ${_other_HEADERS} ${_ui_FORMS_HEADERS})
+SET(PVGUI_HEADERS ${_moc_HEADERS} ${_ui_FORMS_HEADERS})
 
 # --- resources ---
 
@@ -126,7 +118,6 @@ SET(_other_SOURCES
   PVGUI_Module.cxx
   PVGUI_Module_actions.cxx
   PVGUI_Module_widgets.cxx
-  PVGUI_Tools.cxx
   PVGUI_ParaViewSettingsPane.cxx
   PVGUI_DataModel.cxx
   )

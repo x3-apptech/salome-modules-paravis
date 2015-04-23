@@ -23,11 +23,7 @@
 # ---
 #
 __all__ = [
-    "moduleID",
-    "objectID",
-    "unknownID",
     "moduleName",
-    "modulePixmap",
     "verbose",
     "getORB",
     "getNS",
@@ -35,8 +31,6 @@ __all__ = [
     "getStudyManager",
     "getEngine",
     "getEngineIOR",
-    "findOrCreateComponent",
-    "getObjectID",
     ]
 
 from omniORB import CORBA
@@ -48,37 +42,10 @@ import PVSERVER_ORB
 import os
 
 ###
-# Get PVSERVER module's ID
-###
-def moduleID():
-    MODULE_ID = 1000
-    return MODULE_ID
-
-###
-# Get PVSERVER object's ID
-###
-def objectID():
-    OBJECT_ID = 1010
-    return OBJECT_ID
-
-###
-# Get unknown ID
-###
-def unknownID():
-    FOREIGN_ID = -1
-    return FOREIGN_ID
-
-###
 # Get PVSERVER module's name
 ###
 def moduleName():
     return "PVSERVER"
-
-###
-# Get module's pixmap name
-###
-def modulePixmap():
-    return "PVSERVER_small.png"
 
 ###
 # Get verbose level
@@ -160,40 +127,3 @@ def getEngineIOR():
         IOR = getORB().object_to_string( getEngine() )
         pass
     return IOR
-
-###
-# Find or create PVSERVER component object in a study
-###
-def findOrCreateComponent( study ):
-    father = study.FindComponent( moduleName() )
-    if father is None:
-        builder = study.NewBuilder()
-        father = builder.NewComponent( moduleName() )
-        attr = builder.FindOrCreateAttribute( father, "AttributeName" )
-        attr.SetValue( moduleName() )
-        attr = builder.FindOrCreateAttribute( father, "AttributePixMap" )
-        attr.SetPixMap( modulePixmap() )
-        attr = builder.FindOrCreateAttribute( father, "AttributeLocalID" )
-        attr.SetValue( moduleID() )
-        try:
-            builder.DefineComponentInstance( father, getEngine() )
-            pass
-        except:
-            pass
-        pass
-    return father
-
-###
-# Get object's ID
-###
-def getObjectID( study, entry ):
-    ID = unknownID()
-    if study and entry:
-        sobj = study.FindObjectID( entry )
-        if sobj is not None:
-            test, anAttr = sobj.FindAttribute( "AttributeLocalID" )
-            if test: ID = anAttr._narrow( SALOMEDS.AttributeLocalID ).Value()
-            pass
-        pass
-    return ID
-    

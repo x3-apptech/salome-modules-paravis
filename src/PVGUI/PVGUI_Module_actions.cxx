@@ -32,7 +32,6 @@
 #include <SUIT_Desktop.h>
 #include <SUIT_ResourceMgr.h>
 #include <SUIT_Session.h>
-#include <SalomeApp_Application.h>  // should ultimately be a LightApp only
 #include <LightApp_Application.h>
 
 #include <QAction>
@@ -366,7 +365,7 @@ void PVGUI_Module::pvCreateActions()
   connect(anAction, SIGNAL(triggered()), this, SLOT(onShowTrace()));
   registerAction(ShowTraceId, anAction);
 
-  //Show Trace
+  //Restart Trace
   anAction = new QAction(tr("MEN_RESTART_TRACE"), this);
   anAction->setToolTip(tr("TOP_RESTART_TRACE"));
   anAction->setStatusTip(tr("STB_RESTART_TRACE"));
@@ -461,13 +460,6 @@ void PVGUI_Module::pvCreateMenus()
 
   // --- Menu "View"
   aPVMnu = createMenu( tr( "MEN_DESK_VIEW" ), -1, -1 );
-  /*myToolbarsMenuId = createMenu( "Toolbars", aPVMnu );
-  aMenu = getMenu( myToolbarsMenuId );
-  if (aMenu) {
-    buildToolbarsMenu();
-    connect(aMenu, SIGNAL(aboutToShow()), this, SLOT(buildToolbarsMenu()));
-  }
-  createMenu( separator(), aPVMnu );*/
 
   createMenu( FullScreenId, aPVMnu );
   
@@ -538,120 +530,4 @@ void PVGUI_Module::pvCreateToolBars()
 //  pqParaViewMenuBuilders::buildToolbars(*desk);
   PVViewer_GUIElements * guiElements = PVViewer_GUIElements::GetInstance(desk);
   guiElements->setToolBarVisible(true);
-}
-
-/*!
-  \brief Returns QMenu by its id.
-*/
-QMenu* PVGUI_Module::getMenu( const int id )
-{
-  QMenu* res = 0;
-  //SalomeApp_Application* anApp = getApp();
-  LightApp_Application* anApp = getApp();
-  SUIT_Desktop* desk = anApp->desktop();
-  if ( desk ){
-    QtxActionMenuMgr* menuMgr = desk->menuMgr();
-    res = menuMgr->findMenu( id );
-  }
-  return res;
-}
-
-/*!
-  \brief Returns list of ParaView toolbars
-*/
-/*QList<QToolBar*> PVGUI_Module::getParaViewToolbars()
-{
-  QList<QToolBar*> all_toolbars = application()->desktop()->findChildren<QToolBar*>();
-  // First two toolbars has to be ignored because they are not from ParaView
-  if (all_toolbars.size() > 2) {
-    all_toolbars.removeFirst();
-    all_toolbars.removeFirst();
-  }
-  return all_toolbars;
-  }*/
-
-
-
-/*!
-  \brief Builds a menu which referred to toolbars
-*/
-/*void PVGUI_Module::buildToolbarsMenu()
-{
-  SUIT_Desktop* desk = application()->desktop();
-  QMenu* aMenu = menuMgr()->findMenu( myToolbarsMenuId );
-  if (aMenu) {
-    aMenu->clear();
-    QList<QMenu*> child_menus = aMenu->findChildren<QMenu*>();
-    foreach (QMenu* menu, child_menus) {
-      delete menu;
-    }
-    QList<QToolBar*> all_toolbars = getParaViewToolbars();
-
-    // Add menus for all toolbars and actions from them.
-    // This puts menu actions for all toolbars making it possible to access all
-    // toolbar actions even when the toolbar are not visible.
-    // I wonder if I should ignore the pqMainControlsToolbar since those actions
-    // are already placed at other places.
-    foreach (QToolBar* toolbar, all_toolbars) {
-      QMenu* sub_menu = new QMenu(aMenu) << pqSetName(toolbar->windowTitle());
-      bool added = false;
-      foreach (QAction* action, toolbar->actions()) {
-        if (!action->text().isEmpty()) {
-          added = true;
-          sub_menu->addAction(action);
-        }
-      }
-      if (added) {
-        QAction* menu_action = aMenu->addMenu(sub_menu);
-        menu_action->setText(toolbar->windowTitle());
-      } else {
-        delete sub_menu;
-      }
-    }
-    disconnect(aMenu, SIGNAL(aboutToShow()), this, SLOT(buildToolbarsMenu()));
-  }
-  }*/
-
-/*!
-  \brief Create actions for ParaViS
-*/
-void PVGUI_Module::createActions()
-{
-  QAction* anAction;
-
-  // Save state under the module root object
-  anAction = new QAction(tr("MEN_SAVE_MULTI_STATE"), this);
-  connect(anAction, SIGNAL(triggered()), this, SLOT(onSaveMultiState()));
-  registerAction(SaveStatePopupId, anAction);
-
-  // Restore the selected state by merging with the current one
-  anAction = new QAction(tr("MEN_ADD_STATE"), this);
-  connect(anAction, SIGNAL(triggered()), this, SLOT(onAddState()));
-  registerAction(AddStatePopupId, anAction);
-
-  // Clean the current state and restore the selected one
-  anAction = new QAction(tr("MEN_CLEAN_ADD_STATE"), this);
-  connect(anAction, SIGNAL(triggered()), this, SLOT(onCleanAddState()));
-  registerAction(CleanAndAddStatePopupId, anAction);
-
-  // Rename the selected object (Object Browser)
-  anAction = new QAction(tr("MEN_PARAVIS_RENAME"), this);
-  connect(anAction, SIGNAL(triggered()), this, SLOT(onRename()));
-  registerAction(ParaVisRenameId, anAction);
-
-  // Delete the selected object (Object Browser)
-  anAction = new QAction(tr("MEN_PARAVIS_DELETE"), this);
-  connect(anAction, SIGNAL(triggered()), this, SLOT(onDelete()));
-  registerAction(ParaVisDeleteId, anAction);
-}
-
-/*!
-  \brief Create actions for ParaViS
-*/
-void PVGUI_Module::createMenus()
-{
-  // "Window" - "New Window" - "ParaView view" menu
-  int aWindowMenu = createMenu(tr( "MEN_DESK_WINDOW" ), -1, -1);
-  int aNewWindowMenu = createMenu(tr( "MEN_DESK_NEWWINDOW"), aWindowMenu, -1, -1);
-  createMenu(ParaViewNewWindowId, aNewWindowMenu);
 }

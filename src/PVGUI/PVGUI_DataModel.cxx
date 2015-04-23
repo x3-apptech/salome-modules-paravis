@@ -19,9 +19,15 @@
 // Author : Adrien Bruneton (CEA)
 //
 
+//Local includes
 #include "PVGUI_DataModel.h"
 #include "PVGUI_Module.h"
 
+// GUI includes
+#include <LightApp_Study.h>
+#include <CAM_DataObject.h>
+
+// Qt includes
 #include <QFile>
 #include <QTextStream>
 
@@ -33,19 +39,27 @@ PVGUI_DataModel::~PVGUI_DataModel()
 {}
 
 bool PVGUI_DataModel::dumpPython( const QString& path, CAM_Study* std,
-            bool multiFile, QStringList& listOfFiles)
+            bool isMultiFile, QStringList& listOfFiles)
 {
-  QString tmpFile("/tmp/kikou.py");
-  listOfFiles.push_back(tmpFile);
-  QFile file(tmpFile);
+
+  LightApp_Study* study = dynamic_cast<LightApp_Study*>( std );
+  if(!study)
+    return false;
+
+  std::string aTmpDir = study->GetTmpDir( path.toLatin1().constData(), isMultiFile );
+  std::string aFile = aTmpDir + "paravis_dump.tmp";
+
+  listOfFiles.append(aTmpDir.c_str());
+  listOfFiles.append("paravis_dump.tmp");
+
+  QFile file(aFile.c_str());
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return false;
 
-  //MESSAGE("[PARAVIS] dumpPython()")
   PVGUI_Module * mod = (PVGUI_Module *) getModule();
   QString trace(mod->getTraceString());
 
-  if (multiFile)
+  if (isMultiFile)
     {
       QStringList abuffer;
       abuffer.push_back(QString("def RebuildData( theStudy ):"));
@@ -66,3 +80,26 @@ bool PVGUI_DataModel::dumpPython( const QString& path, CAM_Study* std,
   return true;
 }
 
+/*-----------------------------------------------------------------------------------------*/
+bool PVGUI_DataModel::open( const QString& theName, CAM_Study* theStudy, QStringList theList) {
+  bool res = LightApp_DataModel::open(theName, theStudy, theList);
+  publishComponent(theStudy);
+  return res;
+}
+
+/*-----------------------------------------------------------------------------------------*/
+bool PVGUI_DataModel::create( CAM_Study* theStudy) {
+  bool res = LightApp_DataModel::create(theStudy);
+  publishComponent(theStudy);
+  return res;
+}
+/*-----------------------------------------------------------------------------------------*/
+void PVGUI_DataModel::publishComponent( CAM_Study* theStudy ) {
+  LightApp_Study* study = dynamic_cast<LightApp_Study*>( theStudy );
+  CAM_ModuleObject *aModelRoot = dynamic_cast<CAM_ModuleObject*>( root());
+  if( study && aModelRoot == NULL ) {
+    aModelRoot = createModuleObject( theStudy->root() );
+    aModelRoot->setDataModel( this );
+    setRoot(aModelRoot);
+  }
+}

@@ -59,16 +59,6 @@ module PVSERVER_ORB {
      */
     boolean StopPVServer();
     
-    /*! Gets the last trace string pushed by the GUI onto the engine.
-     */
-    string GetPythonTraceString();
-    
-    /*! HACK!! For now ParaView's trace mechanism is implemented in such away that asking the trace
-     * outside the GUI provides an incomplete script. Hence the GUI regularly pushes to the engine
-     * the latest status of the trace which is then returned by GetPythonTraceString().
-     */
-    void PutPythonTraceStringToEngine(in string trace);
-    
     /*! Indicates if the GUI process is already connected to the pvserver. 
      * This avoids multiple attempts to connect from a single thread (makes ParaView crash). */ 
     void SetGUIConnected(in boolean isConnected);

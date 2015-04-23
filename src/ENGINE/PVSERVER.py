@@ -21,7 +21,6 @@
 
 import PVSERVER_ORB__POA
 import SALOME_ComponentPy
-import SALOME_DriverPy
 import SALOMEDS
 import SALOME
 import PVSERVER_utils
@@ -46,7 +45,6 @@ class PVSERVER_Impl:
     def __init__(self):
         self.pvserverPort = -1
         self.pvserverPop = None  # Popen object from subprocess module
-        self.lastTrace = ""
         self.isGUIConnected = False  # whether there is an active connection from the GUI.
         try:
             import paraview
@@ -133,12 +131,6 @@ class PVSERVER_Impl:
                 return True
         MESSAGE("[PVSERVER] Nothing to kill.")
         return False
-    
-    def PutPythonTraceStringToEngine( self, t ):
-        self.lastTrace = t
-        
-    def GetPythonTraceString(self):
-        return self.lastTrace
       
     def SetGUIConnected( self, isConnected ):
         self.isGUIConnected = isConnected
@@ -148,20 +140,17 @@ class PVSERVER_Impl:
     
 class PVSERVER(PVSERVER_ORB__POA.PVSERVER_Gen,
               SALOME_ComponentPy.SALOME_ComponentPy_i,
-              SALOME_DriverPy.SALOME_DriverPy_i,
               PVSERVER_Impl):
     """
     Construct an instance of PVSERVER module engine.
     The class PVSERVER implements CORBA interface PVSERVER_Gen (see PVSERVER_Gen.idl).
     It is inherited from the classes SALOME_ComponentPy_i (implementation of
-    Engines::EngineComponent CORBA interface - SALOME component) and SALOME_DriverPy_i
-    (implementation of SALOMEDS::Driver CORBA interface - SALOME module's engine).
+    Engines::EngineComponent CORBA interface - SALOME component).
     """
     def __init__ ( self, orb, poa, contID, containerName, instanceName, 
                    interfaceName ):
         SALOME_ComponentPy.SALOME_ComponentPy_i.__init__(self, orb, poa,
                     contID, containerName, instanceName, interfaceName, 0)
-        SALOME_DriverPy.SALOME_DriverPy_i.__init__(self, interfaceName)
         PVSERVER_Impl.__init__(self)
         #
         self._naming_service = SALOME_ComponentPy.SALOME_NamingServicePy_i( self._orb )
@@ -170,7 +159,7 @@ class PVSERVER(PVSERVER_ORB__POA.PVSERVER_Gen,
     """ Override base class destroy to make sure we try to kill the pvserver
         before leaving.
     """
-    def destroy(self):    
+    def destroy(self):
         self.StopPVServer()
         # Invokes super():
         SALOME_ComponentPy.destroy(self)
@@ -182,72 +171,8 @@ class PVSERVER(PVSERVER_ORB__POA.PVSERVER_Gen,
         import salome_version
         return salome_version.getVersion("PARAVIS", True)
 
+    """
+    Get engine IOR
+    """
     def GetIOR(self):
         return PVSERVER_utils.getEngineIOR()
-
-    """
-    Create object.
-    """
-    def createObject( self, study, name ):
-        MESSAGE("createObject()")
-        self._createdNew = True # used for getModifiedData method
-        builder = study.NewBuilder()
-        father  = findOrCreateComponent( study )
-        object  = builder.NewObject( father )
-        attr    = builder.FindOrCreateAttribute( object, "AttributeName" )
-        attr.SetValue( name )
-        attr    = builder.FindOrCreateAttribute( object, "AttributeLocalID" )
-        attr.SetValue( PVSERVER_utils.objectID() )
-        pass
-
-    """
-    Dump module data to the Python script.
-    """
-    def DumpPython( self, study, isPublished, isMultiFile ):
-        MESSAGE("dumpPython()") 
-        abuffer = self.GetPythonTraceString().split("\n")
-        if isMultiFile:
-    	  abuffer       = [ "  " + s for s in abuffer ]
-          abuffer[0:0]  = [ "def RebuildData( theStudy ):" ]
-          abuffer      += [ "  pass" ]
-        abuffer += [ "\0" ]
-        return ("\n".join( abuffer ), 1)
-
-    """
-    Import file to restore module data
-    """
-    def importData(self, studyId, dataContainer, options):
-      MESSAGE("importData()")
-      # get study by Id
-      obj = self._naming_service.Resolve("myStudyManager")
-      myStudyManager = obj._narrow(SALOMEDS.StudyManager)
-      study = myStudyManager.GetStudyByID(studyId)
-      # create all objects from the imported stream
-      stream = dataContainer.get()
-      for objname in stream.split("\n"):
-        if len(objname) != 0:
-          self.createObject(study, objname)
-      self._createdNew = False # to store the modification of the study information later
-      return ["objects"] # identifier what is in this file
- 
-    def getModifiedData(self, studyId):
-      MESSAGE("getModifiedData()")
-      if self._createdNew:
-        # get study by Id
-        obj = self._naming_service.Resolve("myStudyManager")
-        myStudyManager = obj._narrow(SALOMEDS.StudyManager)
-        study = myStudyManager.GetStudyByID(studyId)
-        # iterate all objects to get their names and store this information in stream
-        stream=""
-        father = study.FindComponent( moduleName() )
-        if father:
-            iter = study.NewChildIterator( father )
-            while iter.More():
-                name = iter.Value().GetName()
-                stream += name + "\n"
-                iter.Next()
-        # store stream to the temporary file to send it in DataContainer
-        dataContainer = SALOME_DataContainerPy_i(stream, "", "objects", False, True)
-        aVar = dataContainer._this()
-        return [aVar]
-      return []

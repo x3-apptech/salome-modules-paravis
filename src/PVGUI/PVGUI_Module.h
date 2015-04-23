@@ -26,193 +26,141 @@
 #ifndef PVGUI_Module_H
 #define PVGUI_Module_H
 
-#include <SalomeApp_Module.h>
-#include <SALOMEconfig.h>
-#include CORBA_SERVER_HEADER(PVSERVER_Gen)
-
-#include <ostream>
-#include <vtkType.h>
-#include <QTimer>
-
-#include <pqVariableType.h>
+#include <LightApp_Module.h>
 
 class QMenu;
-class QDockWidget;
-class QToolBar;
-class vtkPVMain;
-class pqOptions;
-class pqServer;
-class pqMainWindowCore;
+class QTimer;
 class vtkEventQtSlotConnect;
+class pqServer;
 class pqPythonScriptEditor;
 class pqPVApplicationCore;
-class pqDataRepresentation;
-class pqRepresentation;
 class PVViewer_GUIElements;
 class PVViewer_EngineWrapper;
 class SUIT_ViewWindow;
 
-class PVGUI_Module : public SalomeApp_Module
+class PVGUI_Module: public LightApp_Module
 {
   Q_OBJECT
    
   //! Menu actions
-  enum { // Menu "File"
-     OpenFileId,
-
-     LoadStateId,
-     SaveStateId,
-
-     SaveDataId,
-     SaveScreenshotId,
-     ExportId,
-
-     SaveAnimationId,
-     SaveGeometryId,
-
-     ConnectId,
-     DisconnectId,
-
-     // Menu "Edit"
-     UndoId,
-     RedoId,
-
-     CameraUndoId,
-     CameraRedoId,
-
-     FindDataId,
-     ChangeInputId,
-     IgnoreTimeId,
-     DeleteId,
-     DeleteAllId,
-
-     SettingsId,
-     ViewSettingsId,
-
-     // Menu "View"
-     FullScreenId,
-
-     // Menu "Animation"
-     FirstFrameId,
-     PreviousFrameId,
-     PlayId,
-     NextFrameId,
-     LastFrameId,
-     LoopId,
-
-     // Menu "Tools"
-     CreateCustomFilterId,
-     ManageCustomFiltersId,
-     CreateLookmarkId,
-     ManageLinksId,
-     AddCameraLinkId,
-     ManagePluginsExtensionsId,
-     DumpWidgetNamesId,
-     RecordTestId,
-     RecordTestScreenshotId,
-     PlayTestId,
-     MaxWindowSizeId,
-     CustomWindowSizeId,
-     TimerLogId,
-     OutputWindowId,
-     PythonShellId,
-     ShowTraceId,
-     RestartTraceId,
-
-     // Menu "Help"
-     AboutParaViewId,
-     ParaViewHelpId,
-     EnableTooltipsId,
-
-     // Menu "Window" - "New Window"
-     ParaViewNewWindowId,
-
-     // "Save state" ParaVis module root object popup
-     SaveStatePopupId,
-
-     // "Add state" and "Reload state" popups
-     AddStatePopupId,
-     CleanAndAddStatePopupId,
-
-     // "Rename" and "Delete" popups (Object Browser)
-     ParaVisRenameId,
-     ParaVisDeleteId
+  enum {
+    //-----------
+    // Menu "File"
+    OpenFileId,
+    //-
+    LoadStateId,
+    SaveStateId,
+    //-
+    SaveDataId,
+    SaveScreenshotId,
+    ExportId,
+    //-
+    SaveAnimationId,
+    SaveGeometryId,
+    //-
+    ConnectId,
+    DisconnectId,
+    //-----------
+    // Menu "Edit"
+    UndoId,
+    RedoId,
+    //-
+    CameraUndoId,
+    CameraRedoId,
+    //-
+    FindDataId,
+    ChangeInputId,
+    IgnoreTimeId,
+    DeleteId,
+    DeleteAllId,
+    //-
+    SettingsId,             // not used
+    ViewSettingsId,         // not used
+    //-----------
+    // Menu "View"
+    FullScreenId,           // not used
+    //-----------
+    // Menu "Animation"
+    FirstFrameId,           // not used
+    PreviousFrameId,        // not used
+    PlayId,                 // not used
+    NextFrameId,            // not used
+    LastFrameId,            // not used
+    LoopId,                 // not used
+    //-----------
+    // Menu "Tools"
+    CreateCustomFilterId,
+    ManageCustomFiltersId,
+    CreateLookmarkId,       // not used
+    ManageLinksId,
+    AddCameraLinkId,
+    ManagePluginsExtensionsId,
+    DumpWidgetNamesId,      //  not used
+    RecordTestId,
+    RecordTestScreenshotId, // not used
+    PlayTestId,
+    MaxWindowSizeId,
+    CustomWindowSizeId,
+    TimerLogId,
+    OutputWindowId,
+    PythonShellId,
+    ShowTraceId,
+    RestartTraceId,
+    //-----------
+    // Menu "Help"
+    AboutParaViewId,
+    ParaViewHelpId,
+    EnableTooltipsId,       // not used
   };
 
 public:
   PVGUI_Module();
   ~PVGUI_Module();
 
-  virtual void           initialize( CAM_Application* );
-  virtual void           windows( QMap<int, int>& ) const;
+  virtual void initialize( CAM_Application* );
+  virtual void windows( QMap<int, int>& ) const;
 
-  virtual QString engineIOR() const;  // to be removed when becoming Light
-
-  void openFile(const char* theName);
-  void executeScript(const char *script);
-  void saveParaviewState(const char* theFileName);
-  void loadParaviewState(const char* theFileName);
+  void openFile( const char* );                   // not used inside PARAVIS
+  void executeScript( const char* );              // not used inside PARAVIS
+  void saveParaviewState( const char* );          // not used inside PARAVIS
+  void loadParaviewState( const char* );          // not used inside PARAVIS
   void clearParaviewState();
 
   QString getTraceString();
   void startTrace();
   void stopTrace();
-  void saveTrace(const char* theName);
+  void saveTrace( const char* );
 
   pqServer* getActiveServer();
 
   virtual void createPreferences();
 
-  virtual void contextMenuPopup(const QString& theClient, QMenu* theMenu, QString& theTitle);
-
-  inline static PVViewer_EngineWrapper * GetEngine();
-  inline static PVSERVER_ORB::PVSERVER_Gen_var GetCPPEngine();  // to be removed once light!
-  inline static pqPVApplicationCore * GetPVApplication();
+  inline static PVViewer_EngineWrapper* GetEngine();
+  inline static pqPVApplicationCore* GetPVApplication(); // not used inside PARAVIS
 
   virtual CAM_DataModel* createDataModel();
-  void  fixAnimationScene();
-
-public slots:
-  //void onImportFromVisu(QString theEntry);
 
 private:
-  void deleteTemporaryFiles();
- 
   //! Create actions for ParaView GUI operations
-  void                   pvCreateActions();
+  void pvCreateActions();
 
   //! Create menus for ParaView GUI operations duplicating menus in pqMainWindow ParaView class
-  void                   pvCreateMenus();
+  void pvCreateMenus();
 
   //! Create toolbars for ParaView GUI operations duplicating toolbars in pqMainWindow ParaView class
-  void                   pvCreateToolBars();
+  void pvCreateToolBars();
 
   //! Create dock widgets for ParaView widgets
-  void                   setupDockWidgets();
+  void setupDockWidgets();
 
   //! Save states of dockable ParaView widgets
-  void                   saveDockWidgetsState( bool hideWidgets = true );
+  void saveDockWidgetsState( bool = true );
 
   //! Restore states of dockable ParaView widgets
-  void                   restoreDockWidgetsState();
+  void restoreDockWidgetsState();
 
   //! Shows or hides ParaView view window
-  void                   showView( bool );    
-
-  //! Returns QMenu object for a given menu id
-  QMenu*                 getMenu( const int );
-  
-  //! Discover help project files from the resources.
-  QString getHelpFileName();
-
-  //! Create actions for ParaViS
-  void createActions();
-
-  //! Create menus for ParaViS
-  void createMenus();
-
-  //! Load selected state
-  void loadSelectedState(bool toClear);
+  void showView( bool );    
 
   //! Get list of embedded macros files
   QStringList getEmbeddedMacrosList();
@@ -227,17 +175,11 @@ private:
   void restoreCommonWindowsState();
 
 private slots:
-
   void showHelpForProxy( const QString&, const QString& );
   
-  void onPreAccept();
-  void onPostAccept();
-  void endWaitCursor();
-
-  //  void buildToolbarsMenu();
-
-  //void showParaViewHelp();
-  //void showHelp(const QString& url);
+  void onPreAccept();    // not used inside PARAVIS
+  void onPostAccept();   // not used inside PARAVIS
+  void endWaitCursor();  // not used inside PARAVIS
 
   void onDataRepresentationUpdated();
 
@@ -246,15 +188,6 @@ private slots:
   void onShowTrace();
   void onRestartTrace();
 
-//  void onNewParaViewWindow();
-
-  void onSaveMultiState();
-  void onAddState();
-  void onCleanAddState();
-
-  void onRename();
-  void onDelete();
-
 public slots:
   virtual bool           activateModule( SUIT_Study* );
   virtual bool           deactivateModule( SUIT_Study* );
@@ -262,8 +195,6 @@ public slots:
   virtual void           studyClosed( SUIT_Study* );
 
 protected slots:
-  virtual void           onModelOpened();
-  virtual void           onPushTraceTimer();
   virtual void           onInitTimer();
   virtual void           onViewManagerAdded( SUIT_ViewManager* );
   virtual void           onViewManagerRemoved( SUIT_ViewManager* );
@@ -271,10 +202,8 @@ protected slots:
   virtual void           onPVViewDelete( SUIT_ViewWindow* );
 
 private:
-  int                    mySelectionControlsTb;
   int                    mySourcesMenuId;
   int                    myFiltersMenuId;
-  int                    myToolbarsMenuId;
   int                    myMacrosMenuId;
   int                    myRecentMenuId;
   
@@ -287,26 +216,16 @@ private:
   typedef QMap<int, bool> DockWindowMap;         
   DockWindowMap           myCommonMap; 
 
-  QStringList            myTemporaryFiles;
+  QtMsgHandler            myOldMsgHandler;
 
-  QtMsgHandler           myOldMsgHandler;
+  vtkEventQtSlotConnect*  VTKConnect;
 
-  vtkEventQtSlotConnect *VTKConnect;
-
-  pqPythonScriptEditor* myTraceWindow;
-
-  int myStateCounter;
+  pqPythonScriptEditor*   myTraceWindow;
 
   //! Single shot timer used to connect to the PVServer, and start the trace.
-  QTimer             * myInitTimer;
+  QTimer*                 myInitTimer;
 
-  //! Timer used to regularly push the Python trace to the engine.
-  QTimer             * myPushTraceTimer;
-
-  PVViewer_GUIElements * myGuiElements;
-
-  static PVSERVER_ORB::PVSERVER_Gen_var MyEngine;
-
+  PVViewer_GUIElements*   myGuiElements;
 };
 
 #endif // PVGUI_Module_H

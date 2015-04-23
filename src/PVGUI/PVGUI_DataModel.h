@@ -40,7 +40,11 @@ public:
   virtual ~PVGUI_DataModel();
 
   virtual bool dumpPython( const QString&,  CAM_Study*, bool, QStringList& );
+  virtual bool open( const QString&, CAM_Study*, QStringList );
+  virtual bool create( CAM_Study* );
 
+private:
+  void publishComponent(CAM_Study*);
 };
 
 #endif /* PVGUIDATAMODEL_H_ */
