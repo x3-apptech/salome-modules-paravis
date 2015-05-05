@@ -255,7 +255,7 @@
     </message>
     <message>
       <source>TTL_VIEW_PANEL</source>
-      <translation type="unfinished">View</translation>
+      <translation>表示</translation>
     </message>
     <message>
       <source>TOP_OPEN_FILE</source>
@@ -1171,7 +1171,7 @@
     </message>
     <message>
       <source>PREF_NO_EXT_PVSERVER</source>
-      <translation type="unfinished">Do not use external PVServer (Warning: scripts running outside SALOME's GUI will be unusable!)</translation>
+      <translation>外部PVサーバを使用できません。（警告: SALOMEのGUIの外側で実行されたスクリプトは使用できません。）</translation>
     </message>
     <message>
       <source>PREF_SHOW_COLOR_LEGEND</source>
