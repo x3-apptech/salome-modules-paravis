@@ -50,6 +50,7 @@
 
 #include "MEDFileFieldRepresentationTree.hxx"
 
+#include <map>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -185,7 +186,8 @@ public:
   // The property keeper is usable only in pvsm mode.
   PropertyKeeper PK;
   int MyMTime;
-  std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great !
+  std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great Items are not sorted ! Why ?
+  std::map<std::string,bool> _wonderful_ref;// this map stores the state before a SetFieldsStatus status.
 private:
   unsigned char FirstCall0;
 };
@@ -366,6 +368,8 @@ void vtkMEDReader::SetFieldsStatus(const char* name, int status)
       this->Internal->PK.pushFieldStatusEntry(name,status);
       return ;
     }
+  if(this->Internal->_wonderful_set.empty())
+    this->Internal->_wonderful_ref=this->Internal->Tree.dumpState();// start of SetFieldsStatus serie -> store ref to compare at the end of the SetFieldsStatus serie.
   this->Internal->_wonderful_set.insert(name);
   //not pvsm mode (general case)
   try
@@ -373,11 +377,14 @@ void vtkMEDReader::SetFieldsStatus(const char* name, int status)
       this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(this->Internal->Tree.getIdHavingZeName(name),status);
       if(this->Internal->_wonderful_set.size()==GetNumberOfFieldsTreeArrays())
         {
-          if(!this->Internal->PluginStart0())
+          if(this->Internal->_wonderful_ref!=this->Internal->Tree.dumpState())
             {
-              this->Modified();
+              if(!this->Internal->PluginStart0())
+                {
+                  this->Modified();
+                }
+              this->Internal->MyMTime++;
             }
-          this->Internal->MyMTime++;
           this->Internal->_wonderful_set.clear();
         }
     }

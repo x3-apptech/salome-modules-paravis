@@ -535,6 +535,12 @@ bool MEDFileFieldRepresentationLeaves::containZeName(const char *name, int& id) 
   return false;
 }
 
+void MEDFileFieldRepresentationLeaves::dumpState(std::map<std::string,bool>& status) const
+{
+  for(std::vector<MEDFileFieldRepresentationLeavesArrays>::const_iterator it=_arrays.begin();it!=_arrays.end();it++)
+    status[(*it).getZeName()]=(*it).getStatus();
+}
+
 bool MEDFileFieldRepresentationLeaves::isActivated() const
 {
   for(std::vector<MEDFileFieldRepresentationLeavesArrays>::const_iterator it=_arrays.begin();it!=_arrays.end();it++)
@@ -1391,6 +1397,16 @@ void MEDFileFieldRepresentationTree::printMySelf(std::ostream& os) const
         }
     }
     os << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+}
+
+std::map<std::string,bool> MEDFileFieldRepresentationTree::dumpState() const
+{
+  std::map<std::string,bool> ret;
+  for(std::vector< std::vector< std::vector< MEDFileFieldRepresentationLeaves > > >::const_iterator it0=_data_structure.begin();it0!=_data_structure.end();it0++)
+    for(std::vector< std::vector< MEDFileFieldRepresentationLeaves > >::const_iterator it1=(*it0).begin();it1!=(*it0).end();it1++)
+      for(std::vector< MEDFileFieldRepresentationLeaves >::const_iterator it2=(*it1).begin();it2!=(*it1).end();it2++)
+        (*it2).dumpState(ret);
+  return ret;
 }
 
 void MEDFileFieldRepresentationTree::AppendFieldFromMeshes(const ParaMEDMEM::MEDFileMeshes *ms, ParaMEDMEM::MEDFileFields *ret)

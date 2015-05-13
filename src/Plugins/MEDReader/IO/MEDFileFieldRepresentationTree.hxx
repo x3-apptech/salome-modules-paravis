@@ -28,6 +28,7 @@
 #include "vtkType.h"
 
 #include <vector>
+#include <map>
 
 class vtkQuadratureSchemeDefinition;
 class vtkMutableDirectedGraph;
@@ -108,6 +109,7 @@ public:
   void computeFullNameInLeaves(const std::string& tsName, const std::string& meshName, const std::string& comSupStr) const;
   bool containId(int id) const;
   bool containZeName(const char *name, int& id) const;
+  void dumpState(std::map<std::string,bool>& status) const;
   bool isActivated() const;
   void printMySelf(std::ostream& os) const;
   void activateAllArrays() const;
@@ -148,6 +150,7 @@ public:
   std::vector<double> getTimeSteps(int& lev0, const TimeKeeper& tk) const;
   vtkDataSet *buildVTKInstance(bool isStdOrMode, double timeReq, std::string& meshName, const TimeKeeper& tk) const;
   void printMySelf(std::ostream& os) const;
+  std::map<std::string,bool> dumpState() const;
   //non const methods
   void loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts);
   void removeEmptyLeaves();
