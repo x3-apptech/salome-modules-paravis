@@ -121,7 +121,7 @@ public:
   QMap<QTreeWidgetItem*, QString> TreeItemToPropMap;
 };
 
-pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_is_fields_status_changed(false),_optional_widget(0),_my_mtime(0),_sm_prop_remote_mtime(0)
+pqMEDReaderPanel::pqMEDReaderPanel(pqProxy *object_proxy, QWidget *p):Superclass(object_proxy,p),_reload_req(false),_optional_widget(0),_my_mtime(0),_sm_prop_remote_mtime(0)
 {
   initAll();
 }
@@ -349,21 +349,6 @@ void pqMEDReaderPanel::linkServerManagerProperties()
   this->Superclass::linkServerManagerProperties();
 }
 
-void pqMEDReaderPanel::paintEvent(QPaintEvent *event)
-{
-  if(_sm_prop_remote_mtime)
-    {
-      int remoteMTimeVal(_sm_prop_remote_mtime->GetElement(0));
-      if(remoteMTimeVal>_my_mtime)
-        {
-          //std::cout << "Refresh MEDReader panel due to external update." << std::endl;
-          updateCheckStatusOfLev4FromServerState();
-          _my_mtime=remoteMTimeVal;
-        }
-    }
-  pqNamedObjectPanel::paintEvent(event);
-}
-
 void pqMEDReaderPanel::updateSIL()
 {
   if(_reload_req)
@@ -586,14 +571,22 @@ int pqMEDReaderPanel::getMaxNumberOfTS() const
 
 void pqMEDReaderPanel::updateInformationAndDomains()
 {
+  //std::cerr << "updateInformationAndDomains called !" << std::endl;
   pqNamedObjectPanel::updateInformationAndDomains();
-  if(_is_fields_status_changed)
+  if(_sm_prop_remote_mtime)
     {
-      vtkSMProxy *proxy(this->proxy());
-      vtkSMProperty *SMProperty(proxy->GetProperty("FieldsStatus"));
-      SMProperty->Modified();// agy : THE LINE FOR 7.5.1 !
-      _is_fields_status_changed=false;
+      int remoteMTimeVal(_sm_prop_remote_mtime->GetElement(0));
+      if(remoteMTimeVal>_my_mtime)
+        {
+          //std::cout << "Refresh MEDReader panel due to external update." << std::endl;
+          updateCheckStatusOfLev4FromServerState();
+          _my_mtime=remoteMTimeVal;
+        }
     }
+  // now force modification of FieldsStatus property to appear in trace as AllArrays.
+  vtkSMProxy *proxy(this->proxy());
+  vtkSMProperty *SMProperty(proxy->GetProperty("FieldsStatus"));
+  SMProperty->Modified();// agy : THE LINE FOR 7.5.1 !
 }
 
 /*!
@@ -648,8 +641,7 @@ void pqMEDReaderPanel::somethingChangedInFieldRepr()
   //
   ((vtkSMSourceProxy *)proxy)->UpdatePipelineInformation();//performs an update of all properties of proxy and proxy itself
   // here wonderful proxy is declared modified right after FieldsStatus and FieldsTreeInfo -> IMPORTANT : The updated MTime of proxy will be the ref
-  // to detect modified properties.
-  _is_fields_status_changed=true;
+  // to detect modified properties. The idea here is to make FieldsTreeInfo property deprecated and so avoid to appear in trace. Don't know why InformationOnly property appear in trace ?
   setModified();
 }
 

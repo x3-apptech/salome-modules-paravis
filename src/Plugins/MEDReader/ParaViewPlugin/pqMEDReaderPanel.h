@@ -56,14 +56,12 @@ protected:
   void somethingChangedInFieldRepr();
   /// populate widgets with properties from the server manager
   virtual void linkServerManagerProperties();
-  virtual void paintEvent(QPaintEvent *event);
   void initAll();
   class pqUI;
   pqUI* UI;
   std::vector<pqTreeWidgetItemObject *> _all_lev4;
 private:
   bool _reload_req;
-  bool _is_fields_status_changed;
   std::set<std::pair<pqTreeWidgetItemObject *,int> > _leaves;
   VectBoolWidget *_optional_widget;
   int _my_mtime;
