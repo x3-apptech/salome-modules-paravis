@@ -707,7 +707,9 @@ void PVGUI_Module::startTrace()
   if ( proxy ) {
     // Set manually the properties entered via the dialog box poping-up when requiring
     // a trace start in PV4.2 (trace options)
-    trace->SetPropertiesToTraceOnCreate( vtkSMTrace::RECORD_USER_MODIFIED_PROPERTIES );
+    SUIT_ResourceMgr* aResourceMgr = SUIT_Session::session()->resourceMgr();
+    int type = aResourceMgr->integerValue( PARAVIS_MODULE_NAME, "tracestate_type", 2 );
+    trace->SetPropertiesToTraceOnCreate( type );
     trace->SetFullyTraceSupplementalProxies( false );
   }
 }
@@ -889,6 +891,10 @@ void PVGUI_Module::createPreferences()
   int aSaveType = addPreference( tr( "PREF_SAVE_TYPE_LBL" ), aParaVisSettingsTab,
                                  LightApp_Preferences::Selector,
                                  PARAVIS_MODULE_NAME, "savestate_type" );
+
+  int aTraceType = addPreference( tr( "PREF_TRACE_TYPE_LBL" ), aParaVisSettingsTab,
+                                 LightApp_Preferences::Selector,
+                                 PARAVIS_MODULE_NAME, "tracestate_type" );
   QList<QVariant> aIndices;
   QStringList aStrings;
   aIndices << 0 << 1 << 2;
@@ -897,6 +903,13 @@ void PVGUI_Module::createPreferences()
   aStrings << tr("PREF_SAVE_TYPE_2");
   setPreferenceProperty( aSaveType, "strings", aStrings );
   setPreferenceProperty( aSaveType, "indexes", aIndices );
+
+  aStrings.clear();
+  aStrings << tr("PREF_TRACE_TYPE_0");
+  aStrings << tr("PREF_TRACE_TYPE_1");
+  aStrings << tr("PREF_TRACE_TYPE_2");
+  setPreferenceProperty( aTraceType, "strings", aStrings );
+  setPreferenceProperty( aTraceType, "indexes", aIndices );
 }
 
 /*!

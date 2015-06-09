@@ -1178,6 +1178,22 @@
         <translation>Ne pas utiliser le PVServer externe (Attention: les scripts lancés en dehors de la GUI SALOME seront inutilisables !)</translation>
     </message>
     <message>
+        <source>PREF_TRACE_TYPE_LBL</source>
+        <translation type="unfinished">Select which properties to save in trace</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_0</source>
+        <translation type="unfinished">All properties</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_1</source>
+        <translation type="unfinished">Any modified properties</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_2</source>
+        <translation type="unfinished">Only user modified properties</translation>
+    </message>
+    <message>
         <source>TIT_PVISSETTINGS</source>
         <translation>Options de ParaVis </translation>
     </message>

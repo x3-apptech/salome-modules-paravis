@@ -1174,6 +1174,22 @@
         <translation>Do not use external PVServer (Warning: scripts running outside SALOME's GUI will be unusable!)</translation>
     </message>
     <message>
+        <source>PREF_TRACE_TYPE_LBL</source>
+        <translation>Select which properties to save in trace</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_0</source>
+        <translation>All properties</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_1</source>
+        <translation>Any modified properties</translation>
+    </message>
+    <message>
+        <source>PREF_TRACE_TYPE_2</source>
+        <translation>Only user modified properties</translation>
+    </message>
+    <message>
         <source>PREF_SHOW_COLOR_LEGEND</source>
         <translation>Show Color Legend</translation>
     </message>

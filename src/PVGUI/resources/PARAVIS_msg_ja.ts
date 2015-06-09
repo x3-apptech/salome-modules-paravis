@@ -1174,6 +1174,22 @@
       <translation>外部PVサーバを使用できません。（警告: SALOMEのGUIの外側で実行されたスクリプトは使用できません。）</translation>
     </message>
     <message>
+      <source>PREF_TRACE_TYPE_LBL</source>
+      <translation type="unfinished">Select which properties to save in trace</translation>
+    </message>
+    <message>
+      <source>PREF_TRACE_TYPE_0</source>
+      <translation type="unfinished">All properties</translation>
+    </message>
+    <message>
+      <source>PREF_TRACE_TYPE_1</source>
+      <translation type="unfinished">Any modified properties</translation>
+    </message>
+    <message>
+      <source>PREF_TRACE_TYPE_2</source>
+      <translation type="unfinished">Only user modified properties</translation>
+    </message>
+    <message>
       <source>PREF_SHOW_COLOR_LEGEND</source>
       <translation>色の凡例を表示します。</translation>
     </message>
