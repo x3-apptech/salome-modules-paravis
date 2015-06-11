@@ -49,7 +49,7 @@ SET(_link_LIBRARIES
   ${PYTHON_LIBS}
   ${KERNEL_LDFLAGS}
   ${GUI_LDFLAGS} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit}
-                 ${GUI_SalomeObject} ${GUI_vtkTools}
+                 ${GUI_SalomeObject}
   ${_PARAVIEW_APP_COMPO_LIB}
   ${GUI_PVViewer}
 )

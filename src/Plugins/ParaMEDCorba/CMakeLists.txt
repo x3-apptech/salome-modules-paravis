@@ -57,7 +57,6 @@ PROJECT( ParaMEDCorba )
       #vtkGraphics
       vtkClientServer
       vtkPVVTKExtensionsRendering
-      VTKViewer
       pqCore
       ${OMNIORB_LIBRARIES}
       ${MED_SalomeIDLMED}

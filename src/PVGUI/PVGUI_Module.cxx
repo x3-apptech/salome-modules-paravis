@@ -442,7 +442,9 @@ void PVGUI_Module::updateMacros()
 void PVGUI_Module::windows( QMap<int, int>& m ) const
 {
   m.insert( LightApp_Application::WT_ObjectBrowser, Qt::LeftDockWidgetArea );
+#ifndef DISABLE_PYCONSOLE
   m.insert( LightApp_Application::WT_PyConsole, Qt::BottomDockWidgetArea );
+#endif
   // ParaView diagnostic output redirected here
   m.insert( LightApp_Application::WT_LogWindow, Qt::BottomDockWidgetArea );
 }

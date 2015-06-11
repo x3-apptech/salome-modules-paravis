@@ -134,7 +134,8 @@ FIND_PACKAGE(SalomeParaView REQUIRED)
 # GUI itself has to be loaded AFTER ParaView: the ParaView config doesn't mix
 # well with the VTK one (and GUI loads VTK):
 FIND_PACKAGE(SalomeGUI REQUIRED)
-FULL_GUI(TRUE) # check whether GUI builded in full mode and with CORBA
+SALOME_GUI_WITH_CORBA() # check whether GUI builded with CORBA
+SALOME_GUI_MODE(SALOME_USE_SALOMEOBJECT SALOME_USE_PVVIEWER)
 ADD_DEFINITIONS(${GUI_DEFINITIONS})
 INCLUDE_DIRECTORIES(${GUI_INCLUDE_DIRS})
 
