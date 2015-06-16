@@ -156,7 +156,7 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS)
     MESSAGE(FATAL_ERROR "We absolutely need the Salome MED module to build plugins, please define MED_ROOT_DIR")
   ENDIF()
   IF(SALOME_MED_STANDALONE OR SALOME_MED_MICROMED)
-    MESSAGE(FATAL_ERROR "We absolutely need a Salome MED with KERNEL and with MED file dependancy, 
+    MESSAGE(FATAL_ERROR "We absolutely need a Salome MED with KERNEL and with MED file dependancy,
                          please set SALOME_MED_STANDALONE=OFF and SALOME_MED_MICROMED=OFF in MED module
                          or SALOME_PARAVIS_BUILD_PLUGINS=OFF in PARAVIS module")
   ENDIF()
@@ -174,13 +174,16 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_GEOM_SOURCE)
     LIST(APPEND CMAKE_MODULE_PATH "${GEOM_ROOT_DIR}/adm_local/cmake_files")
     FIND_PACKAGE(SalomeGEOM REQUIRED COMPONENTS GEOMClient SalomeIDLGEOM OCC2VTK)
   ELSE()
-    MESSAGE(FATAL_ERROR "We absolutely need a Salome GEOM to import GEOM objects to PARAVIS, please define GEOM_ROOT_DIR
-                         or set SALOME_PARAVIS_USE_GEOM_SOURCE=OFF")
+    MESSAGE(WARNING "Salome GEOM is absolutely needed to import GEOM objects to PARAVIS.
+                    As we do not find it, we set the variable SALOME_PARAVIS_USE_GEOM_SOURCE=OFF.
+                    If you really need Salome GEOM, please define GEOM_ROOT_DIR and re-run configuration script.")
+    SET(SALOME_PARAVIS_USE_GEOM_SOURCE OFF)
   ENDIF()
 ELSEIF(NOT SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_GEOM_SOURCE)
-  MESSAGE(FATAL_ERROR "We absolutely need to build PARAVIS plugins to use the import of GEOM objects to PARAVIS,
-                       please set SALOME_PARAVIS_BUILD_PLUGINS=ON
-		       or SALOME_PARAVIS_USE_GEOM_SOURCE=OFF")
+  MESSAGE(WARNING "PARAVIS plugins must be built to use the import of GEOM objects to PARAVIS.
+                  As plugins are not built, we set the variable SALOME_PARAVIS_USE_GEOM_SOURCE=OFF.
+                  If you really want to use Salome GEOM, please set SALOME_PARAVIS_BUILD_PLUGINS=ON and re-run configuration script.")
+  SET(SALOME_PARAVIS_USE_GEOM_SOURCE OFF)
 ENDIF()
 
 ##
@@ -193,22 +196,28 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_SMESH_SOURCE)
       LIST(APPEND CMAKE_MODULE_PATH "${GEOM_ROOT_DIR}/adm_local/cmake_files")
       FIND_PACKAGE(SalomeGEOM REQUIRED COMPONENTS SalomeIDLGEOM )
     ELSE()
-      MESSAGE(FATAL_ERROR "We absolutely need a Salome GEOM to import MESH objects to PARAVIS, please define GEOM_ROOT_DIR
-                           or set SALOME_PARAVIS_USE_SMESH_SOURCE=OFF")
+      MESSAGE(WARNING "Salome GEOM is absolutely needed to import MESH objects to PARAVIS.
+                      As we do not find it, we set the variable SALOME_PARAVIS_USE_SMESH_SOURCE=OFF.
+                      If you really want to use Salome MESH, please define GEOM_ROOT_DIR and re-run configuration script.")
+      SET(SALOME_PARAVIS_USE_GEOM_SOURCE OFF)
+      SET(SALOME_PARAVIS_USE_SMESH_SOURCE OFF)
     ENDIF()
-  ENDIF()                       
+  ENDIF()
   SET(SMESH_ROOT_DIR $ENV{SMESH_ROOT_DIR} CACHE PATH "Path to the Salome SMESH")
-  IF(EXISTS ${SMESH_ROOT_DIR})
+  IF(SALOME_PARAVIS_USE_GEOM_SOURCE AND EXISTS ${SMESH_ROOT_DIR})
     LIST(APPEND CMAKE_MODULE_PATH "${SMESH_ROOT_DIR}/adm_local/cmake_files")
     FIND_PACKAGE(SalomeSMESH REQUIRED)
   ELSE()
-    MESSAGE(FATAL_ERROR "We absolutely need a Salome MESH to import MESH objects to PARAVIS, please define SMESH_ROOT_DIR
-                         or set SALOME_PARAVIS_USE_SMESH_SOURCE=OFF")
+    MESSAGE(WARNING "Salome MESH is absolutely needed to import MESH objects to PARAVIS.
+                    As we do not find it, we set the variable SALOME_PARAVIS_USE_SMESH_SOURCE=OFF.
+                    If you really need Salome MESH, please define SMESH_ROOT_DIR and re-run configuration script.")
+    SET(SALOME_PARAVIS_USE_SMESH_SOURCE OFF)
   ENDIF()
 ELSEIF(NOT SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_SMESH_SOURCE)
-  MESSAGE(FATAL_ERROR "We absolutely need to build PARAVIS plugins to use the import of MESH objects to PARAVIS,
-                       please set SALOME_PARAVIS_BUILD_PLUGINS=ON
-                       or SALOME_PARAVIS_USE_SMESH_SOURCE=OFF")
+  MESSAGE(WARNING "PARAVIS plugins must be built to use the import of MESH objects to PARAVIS.
+                  As plugins are not built, we set the variable SALOME_PARAVIS_USE_SMESH_SOURCE=OFF.
+                  If you really want to use Salome MESH, please set SALOME_PARAVIS_BUILD_PLUGINS=ON and re-run configuration script.")
+  SET(SALOME_PARAVIS_USE_SMESH_SOURCE OFF)
 ENDIF()
 
 ## Detection summary:
@@ -221,18 +230,18 @@ SET(SALOME_INSTALL_BINS "${SALOME_INSTALL_BINS}" CACHE PATH "Install path: SALOM
 SET(SALOME_INSTALL_LIBS "${SALOME_INSTALL_LIBS}" CACHE PATH "Install path: SALOME libs")
 SET(SALOME_INSTALL_IDLS "${SALOME_INSTALL_IDLS}" CACHE PATH "Install path: SALOME IDL files")
 SET(SALOME_INSTALL_HEADERS "${SALOME_INSTALL_HEADERS}" CACHE PATH "Install path: SALOME headers")
-SET(SALOME_INSTALL_SCRIPT_SCRIPTS "${SALOME_INSTALL_SCRIPT_SCRIPTS}" CACHE PATH 
+SET(SALOME_INSTALL_SCRIPT_SCRIPTS "${SALOME_INSTALL_SCRIPT_SCRIPTS}" CACHE PATH
    "Install path: SALOME scripts")
-SET(SALOME_INSTALL_SCRIPT_DATA "${SALOME_INSTALL_SCRIPT_DATA}" CACHE PATH 
+SET(SALOME_INSTALL_SCRIPT_DATA "${SALOME_INSTALL_SCRIPT_DATA}" CACHE PATH
    "Install path: SALOME script data")
-SET(SALOME_INSTALL_SCRIPT_PYTHON "${SALOME_INSTALL_SCRIPT_PYTHON}" CACHE PATH 
+SET(SALOME_INSTALL_SCRIPT_PYTHON "${SALOME_INSTALL_SCRIPT_PYTHON}" CACHE PATH
    "Install path: SALOME Python scripts")
 SET(SALOME_INSTALL_PYTHON "${SALOME_INSTALL_PYTHON}" CACHE PATH "Install path: SALOME Python stuff")
-SET(SALOME_INSTALL_PYTHON_SHARED "${SALOME_INSTALL_PYTHON_SHARED}" CACHE PATH 
+SET(SALOME_INSTALL_PYTHON_SHARED "${SALOME_INSTALL_PYTHON_SHARED}" CACHE PATH
    "Install path: SALOME Python shared modules")
 SET(SALOME_INSTALL_CMAKE "${SALOME_INSTALL_CMAKE}" CACHE PATH "Install path: SALOME CMake files")
-SET(SALOME_INSTALL_CMAKE_LOCAL "${SALOME_INSTALL_CMAKE_LOCAL}" CACHE PATH 
-    "Install path: local SALOME CMake files") 
+SET(SALOME_INSTALL_CMAKE_LOCAL "${SALOME_INSTALL_CMAKE_LOCAL}" CACHE PATH
+    "Install path: local SALOME CMake files")
 SET(SALOME_INSTALL_AMCONFIG_LOCAL "${SALOME_INSTALL_AMCONFIG_LOCAL}" CACHE PATH
   "Install path: local SALOME config files (obsolete, to be removed)")
 
@@ -251,10 +260,10 @@ MARK_AS_ADVANCED(SALOME_INSTALL_AMCONFIG_LOCAL SALOME_INSTALL_DOC SALOME_PARAVIS
 # Accumulate environment variables for PARAVIS module
 SALOME_ACCUMULATE_ENVIRONMENT(PYTHONPATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_BINS}
                                                  ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_PYTHON})
-SALOME_ACCUMULATE_ENVIRONMENT(LD_LIBRARY_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_LIBS}) 
+SALOME_ACCUMULATE_ENVIRONMENT(LD_LIBRARY_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_LIBS})
 SALOME_ACCUMULATE_ENVIRONMENT(PV_PLUGIN_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/lib/paraview)
 
-# Sources 
+# Sources
 # ========
 IF(NOT SALOME_LIGHT_ONLY)
   ADD_SUBDIRECTORY(idl)   # Order matters when using the wrapping - to be added AFTER src
@@ -303,32 +312,32 @@ SET(MED_ROOT_DIR "${MED_ROOT_DIR}")
 SET(MEDFILE_ROOT_DIR "${MEDFILE_ROOT_DIR}")
 SET(GEOM_ROOT_DIR "${GEOM_ROOT_DIR}")
 SET(SMESH_ROOT_DIR "${SMESH_ROOT_DIR}")
- 
+
 SET(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include" "${PROJECT_BINARY_DIR}/include")
 
 # Build variables that will be expanded when configuring Salome<MODULE>Config.cmake:
 SALOME_CONFIGURE_PREPARE(MEDFile)
 
-CONFIGURE_PACKAGE_CONFIG_FILE(${PROJECT_NAME}Config.cmake.in 
+CONFIGURE_PACKAGE_CONFIG_FILE(${PROJECT_NAME}Config.cmake.in
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION "${SALOME_INSTALL_CMAKE_LOCAL}"
     PATH_VARS CONF_INCLUDE_DIRS SALOME_INSTALL_CMAKE_LOCAL CMAKE_INSTALL_PREFIX
     KERNEL_ROOT_DIR GUI_ROOT_DIR MED_ROOT_DIR MEDFILE_ROOT_DIR GEOM_ROOT_DIR SMESH_ROOT_DIR)
 
 #   - in the install tree (VSR 16/08/2013: TEMPORARILY COMMENT THIS - TO REMOVE?):
-#       Get the relative path of the include directory so 
+#       Get the relative path of the include directory so
 #       we can register it in the generated configuration files:
 #SET(CONF_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}")
-#CONFIGURE_PACKAGE_CONFIG_FILE(adm_local/cmake_files/${PROJECT_NAME}Config.cmake.in 
+#CONFIGURE_PACKAGE_CONFIG_FILE(adm_local/cmake_files/${PROJECT_NAME}Config.cmake.in
 #    ${PROJECT_BINARY_DIR}/to_install/${PROJECT_NAME}Config.cmake
 #    INSTALL_DESTINATION "${SALOME_INSTALL_CMAKE_LOCAL}"
-#    PATH_VARS CONF_INCLUDE_DIRS SALOME_INSTALL_CMAKE_LOCAL CMAKE_INSTALL_PREFIX 
+#    PATH_VARS CONF_INCLUDE_DIRS SALOME_INSTALL_CMAKE_LOCAL CMAKE_INSTALL_PREFIX
 #    KERNEL_ROOT_DIR GUI_ROOT_DIR MED_ROOT_DIR MEDFILE_ROOT_DIR)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${${PROJECT_NAME_UC}_VERSION}
     COMPATIBILITY AnyNewerVersion)
-  
+
 # Install the CMake configuration files:
 INSTALL(FILES
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
@@ -337,6 +346,6 @@ INSTALL(FILES
 
 IF(NOT SALOME_LIGHT_ONLY)
   # Install the export set for use with the install-tree
-  INSTALL(EXPORT ${PROJECT_NAME}TargetGroup DESTINATION "${SALOME_INSTALL_CMAKE_LOCAL}" 
+  INSTALL(EXPORT ${PROJECT_NAME}TargetGroup DESTINATION "${SALOME_INSTALL_CMAKE_LOCAL}"
           FILE ${PROJECT_NAME}Targets.cmake)
 ENDIF()
