@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/ArrayRenamerIcons" >
+    <file>resources/rename_ico_24x24.png</file>
+    <file>resources/copy_ico_16x16.png</file>
+    <file>resources/edit_ico_16x16.png</file>
+  </qresource>
+</RCC>
