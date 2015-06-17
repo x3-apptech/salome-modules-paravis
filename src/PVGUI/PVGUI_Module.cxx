@@ -31,6 +31,7 @@
 #include "PVGUI_Module.h"
 
 #include "PVViewer_ViewManager.h"
+#include "PVViewer_Core.h"
 #include "PVViewer_ViewWindow.h"
 #include "PVViewer_ViewModel.h"
 #include "PVGUI_ParaViewSettingsPane.h"
@@ -226,7 +227,7 @@ CAM_DataModel* PVGUI_Module::createDataModel()
 */
 pqPVApplicationCore* PVGUI_Module::GetPVApplication()
 {
-  return PVViewer_ViewManager::GetPVApplication();
+  return PVViewer_Core::GetPVApplication();
 }
 
 /*!
@@ -254,7 +255,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
 
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
-  PVViewer_ViewManager::ParaviewInitApp(aDesktop, anApp->logWindow());
+  PVViewer_Core::ParaviewInitApp(aDesktop, anApp->logWindow());
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
@@ -267,7 +268,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
   pvCreateMenus();
   pvCreateToolBars();
 
-  PVViewer_ViewManager::ParaviewInitBehaviors(true, aDesktop);
+  PVViewer_Core::ParaviewInitBehaviors(true, aDesktop);
 
   QList<QDockWidget*> activeDocks = aDesktop->findChildren<QDockWidget*>();
   QList<QMenu*> activeMenus = aDesktop->findChildren<QMenu*>();
@@ -301,7 +302,8 @@ void PVGUI_Module::initialize( CAM_Application* app )
 
   // Connect after toolbar creation, etc ... as some activations of the toolbars is triggered
   // by the ServerConnection event:
-  PVViewer_ViewManager::ParaviewLoadConfigurations(true);
+  const QString configPath(PVViewer_ViewManager::GetPVConfigPath());
+  PVViewer_Core::ParaviewLoadConfigurations(configPath, true);
   PVViewer_ViewManager::ConnectToExternalPVServer(aDesktop);
   updateObjBrowser();
 
@@ -658,7 +660,7 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
 */
 void PVGUI_Module::onApplicationClosed( SUIT_Application* theApp )
 {
-  PVViewer_ViewManager::ParaviewCleanup();
+  PVViewer_Core::ParaviewCleanup();
   CAM_Module::onApplicationClosed(theApp);
 }
 
