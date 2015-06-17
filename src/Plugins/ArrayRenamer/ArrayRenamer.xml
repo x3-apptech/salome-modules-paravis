@@ -33,9 +33,6 @@
                             repeat_command="1"
                             clean_command="ClearArrayInfo">
         <Documentation>Set the arrays information (new name and way how to process array: copy origin array with new name or keep existing array and set new name).</Documentation>
-        <RequiredProperties>
-            <Property function="Input" name="Input" />
-        </RequiredProperties>
       </StringVectorProperty>
 
       <StringVectorProperty command="SetComponentInfo"
@@ -45,10 +42,7 @@
                             clean_command="ClearComponentsInfo"
                             repeat_command="1"> 
         <Documentation>Set the compoenents information for the array.</Documentation>
-        <RequiredProperties>
-            <Property function="Input" name="Input" />
-        </RequiredProperties>
-      </StringVectorProperty>  
+      </StringVectorProperty>
 
       <PropertyGroup label="List of arrays"
                      panel_widget="custom_arrays_editor">
