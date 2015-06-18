@@ -1166,8 +1166,12 @@
         <translation>VCR Controls</translation>
     </message>
     <message>
+        <source>PREF_GROUP_TRACE</source>
+        <translation>Trace</translation>
+    </message>
+    <message>
         <source>PREF_STOP_TRACE</source>
-        <translation>Deactivate Trace (for next session only)</translation>
+        <translation>Deactivate Trace</translation>
     </message>
     <message>
         <source>PREF_NO_EXT_PVSERVER</source>

@@ -1166,6 +1166,10 @@
       <translation>VCR のコントロール</translation>
     </message>
     <message>
+      <source>PREF_GROUP_TRACE</source>
+      <translation type="unfinished">Trace</translation>
+    </message>
+    <message>
       <source>PREF_STOP_TRACE</source>
       <translation>（のみのための次のセッション) のトレースを有効に</translation>
     </message>

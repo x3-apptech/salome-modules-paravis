@@ -875,6 +875,9 @@ pqServer* PVGUI_Module::getActiveServer()
 */
 void PVGUI_Module::createPreferences()
 {
+  QList<QVariant> aIndices;
+  QStringList aStrings;
+
   // Paraview settings tab
   int aParaViewSettingsTab = addPreference( tr( "TIT_PVIEWSETTINGS" ) );
 
@@ -886,8 +889,6 @@ void PVGUI_Module::createPreferences()
 
   // Paravis settings tab
   int aParaVisSettingsTab = addPreference( tr( "TIT_PVISSETTINGS" ) );
-  addPreference( tr( "PREF_STOP_TRACE" ), aParaVisSettingsTab, 
-                 LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "stop_trace" );
 
   addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab, 
                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "no_ext_pv_server" );
@@ -896,24 +897,30 @@ void PVGUI_Module::createPreferences()
                                  LightApp_Preferences::Selector,
                                  PARAVIS_MODULE_NAME, "savestate_type" );
 
-  int aTraceType = addPreference( tr( "PREF_TRACE_TYPE_LBL" ), aParaVisSettingsTab,
-                                 LightApp_Preferences::Selector,
-                                 PARAVIS_MODULE_NAME, "tracestate_type" );
-  QList<QVariant> aIndices;
-  QStringList aStrings;
+  aStrings.clear();
+  aIndices.clear();
   aIndices << 0 << 1 << 2;
-  aStrings << tr("PREF_SAVE_TYPE_0");
-  aStrings << tr("PREF_SAVE_TYPE_1");
-  aStrings << tr("PREF_SAVE_TYPE_2");
+  aStrings << tr("PREF_SAVE_TYPE_0") << tr("PREF_SAVE_TYPE_1") << tr("PREF_SAVE_TYPE_2");
   setPreferenceProperty( aSaveType, "strings", aStrings );
   setPreferenceProperty( aSaveType, "indexes", aIndices );
 
+  // ... "Language" group <<start>>
+  int traceGroup = addPreference( tr( "PREF_GROUP_TRACE" ), aParaVisSettingsTab );
+
+  int stopTrace = addPreference( tr( "PREF_STOP_TRACE" ), traceGroup, 
+                                 LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "stop_trace" );
+  setPreferenceProperty( stopTrace, "restart",  true );
+
+  int aTraceType = addPreference( tr( "PREF_TRACE_TYPE_LBL" ), traceGroup,
+                                 LightApp_Preferences::Selector,
+                                 PARAVIS_MODULE_NAME, "tracestate_type" );
   aStrings.clear();
-  aStrings << tr("PREF_TRACE_TYPE_0");
-  aStrings << tr("PREF_TRACE_TYPE_1");
-  aStrings << tr("PREF_TRACE_TYPE_2");
+  aIndices.clear();
+  aIndices << 0 << 1 << 2;
+  aStrings << tr("PREF_TRACE_TYPE_0") << tr("PREF_TRACE_TYPE_1") << tr("PREF_TRACE_TYPE_2");
   setPreferenceProperty( aTraceType, "strings", aStrings );
   setPreferenceProperty( aTraceType, "indexes", aIndices );
+  setPreferenceProperty( aTraceType, "restart",  true );
 }
 
 /*!
