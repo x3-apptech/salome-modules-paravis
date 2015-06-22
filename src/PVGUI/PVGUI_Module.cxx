@@ -893,6 +893,7 @@ void PVGUI_Module::createPreferences()
   addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab, 
                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "no_ext_pv_server" );
 
+  /* VSR: not used
   int aSaveType = addPreference( tr( "PREF_SAVE_TYPE_LBL" ), aParaVisSettingsTab,
                                  LightApp_Preferences::Selector,
                                  PARAVIS_MODULE_NAME, "savestate_type" );
@@ -903,6 +904,7 @@ void PVGUI_Module::createPreferences()
   aStrings << tr("PREF_SAVE_TYPE_0") << tr("PREF_SAVE_TYPE_1") << tr("PREF_SAVE_TYPE_2");
   setPreferenceProperty( aSaveType, "strings", aStrings );
   setPreferenceProperty( aSaveType, "indexes", aIndices );
+  */
 
   // ... "Language" group <<start>>
   int traceGroup = addPreference( tr( "PREF_GROUP_TRACE" ), aParaVisSettingsTab );
