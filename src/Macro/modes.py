@@ -81,7 +81,9 @@ else :
   TimeAnimationCue1 = GetTimeTrack()
   TimeAnimationCue1.Enabled = 0
 
-  KeyFrameAnimationCue1 = GetAnimationTrack( ScaleVector1.GetProperty('ScaleFactor'))
+  KeyFrameAnimationCue1 = KeyFrameAnimationCue()
+  KeyFrameAnimationCue1.AnimatedProxy = ScaleVector1
+  KeyFrameAnimationCue1.AnimatedPropertyName = "ScaleFactor"
   KeyFrame0 = CompositeKeyFrame( KeyValues=[1.0], Interpolation='Sinusoid' )
   KeyFrame1 = CompositeKeyFrame( KeyTime=1.000000001, KeyValues=[1.0] )
 
@@ -90,6 +92,8 @@ else :
   AnimationScene1.Cues.append(KeyFrameAnimationCue1)
   AnimationScene1.Loop = 1
   AnimationScene1.PlayMode = 'Sequence'
+  AnimationScene1.StartTime = 0
+  AnimationScene1.EndTime = 1
   AnimationScene1.NumberOfFrames = 21
   
   WarpByVectorDataRepresentation = Show(WarpByVector1)
