@@ -27,6 +27,9 @@
     <parameter name="version" value="@SALOMEPARAVIS_VERSION@"/>
     <parameter name="singleton" value="true"/>
     <parameter name="show_color_legend" value="0"/>
+    <parameter name="no_ext_pv_server" value="false"/>
+    <parameter name="stop_trace" value="false"/>
+    <parameter name="tracestate_type" value="2"/>
   </section>
   <section name="resources">
     <!-- Module resources -->

@@ -31,6 +31,7 @@
 #include "PVGUI_Module.h"
 
 #include "PVViewer_ViewManager.h"
+#include "PVViewer_Core.h"
 #include "PVViewer_ViewWindow.h"
 #include "PVViewer_ViewModel.h"
 #include "PVGUI_ParaViewSettingsPane.h"
@@ -226,7 +227,7 @@ CAM_DataModel* PVGUI_Module::createDataModel()
 */
 pqPVApplicationCore* PVGUI_Module::GetPVApplication()
 {
-  return PVViewer_ViewManager::GetPVApplication();
+  return PVViewer_Core::GetPVApplication();
 }
 
 /*!
@@ -254,7 +255,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
 
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
-  PVViewer_ViewManager::ParaviewInitApp(aDesktop, anApp->logWindow());
+  PVViewer_Core::ParaviewInitApp(aDesktop, anApp->logWindow());
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
@@ -267,7 +268,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
   pvCreateMenus();
   pvCreateToolBars();
 
-  PVViewer_ViewManager::ParaviewInitBehaviors(true, aDesktop);
+  PVViewer_Core::ParaviewInitBehaviors(true, aDesktop);
 
   QList<QDockWidget*> activeDocks = aDesktop->findChildren<QDockWidget*>();
   QList<QMenu*> activeMenus = aDesktop->findChildren<QMenu*>();
@@ -301,7 +302,8 @@ void PVGUI_Module::initialize( CAM_Application* app )
 
   // Connect after toolbar creation, etc ... as some activations of the toolbars is triggered
   // by the ServerConnection event:
-  PVViewer_ViewManager::ParaviewLoadConfigurations(true);
+  const QString configPath(PVViewer_ViewManager::GetPVConfigPath());
+  PVViewer_Core::ParaviewLoadConfigurations(configPath, true);
   PVViewer_ViewManager::ConnectToExternalPVServer(aDesktop);
   updateObjBrowser();
 
@@ -658,7 +660,7 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
 */
 void PVGUI_Module::onApplicationClosed( SUIT_Application* theApp )
 {
-  PVViewer_ViewManager::ParaviewCleanup();
+  PVViewer_Core::ParaviewCleanup();
   CAM_Module::onApplicationClosed(theApp);
 }
 
@@ -873,6 +875,9 @@ pqServer* PVGUI_Module::getActiveServer()
 */
 void PVGUI_Module::createPreferences()
 {
+  QList<QVariant> aIndices;
+  QStringList aStrings;
+
   // Paraview settings tab
   int aParaViewSettingsTab = addPreference( tr( "TIT_PVIEWSETTINGS" ) );
 
@@ -884,34 +889,40 @@ void PVGUI_Module::createPreferences()
 
   // Paravis settings tab
   int aParaVisSettingsTab = addPreference( tr( "TIT_PVISSETTINGS" ) );
-  addPreference( tr( "PREF_STOP_TRACE" ), aParaVisSettingsTab, 
-                 LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "stop_trace" );
 
   addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab, 
                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "no_ext_pv_server" );
 
+  /* VSR: not used
   int aSaveType = addPreference( tr( "PREF_SAVE_TYPE_LBL" ), aParaVisSettingsTab,
                                  LightApp_Preferences::Selector,
                                  PARAVIS_MODULE_NAME, "savestate_type" );
 
-  int aTraceType = addPreference( tr( "PREF_TRACE_TYPE_LBL" ), aParaVisSettingsTab,
-                                 LightApp_Preferences::Selector,
-                                 PARAVIS_MODULE_NAME, "tracestate_type" );
-  QList<QVariant> aIndices;
-  QStringList aStrings;
+  aStrings.clear();
+  aIndices.clear();
   aIndices << 0 << 1 << 2;
-  aStrings << tr("PREF_SAVE_TYPE_0");
-  aStrings << tr("PREF_SAVE_TYPE_1");
-  aStrings << tr("PREF_SAVE_TYPE_2");
+  aStrings << tr("PREF_SAVE_TYPE_0") << tr("PREF_SAVE_TYPE_1") << tr("PREF_SAVE_TYPE_2");
   setPreferenceProperty( aSaveType, "strings", aStrings );
   setPreferenceProperty( aSaveType, "indexes", aIndices );
+  */
 
+  // ... "Language" group <<start>>
+  int traceGroup = addPreference( tr( "PREF_GROUP_TRACE" ), aParaVisSettingsTab );
+
+  int stopTrace = addPreference( tr( "PREF_STOP_TRACE" ), traceGroup, 
+                                 LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "stop_trace" );
+  setPreferenceProperty( stopTrace, "restart",  true );
+
+  int aTraceType = addPreference( tr( "PREF_TRACE_TYPE_LBL" ), traceGroup,
+                                 LightApp_Preferences::Selector,
+                                 PARAVIS_MODULE_NAME, "tracestate_type" );
   aStrings.clear();
-  aStrings << tr("PREF_TRACE_TYPE_0");
-  aStrings << tr("PREF_TRACE_TYPE_1");
-  aStrings << tr("PREF_TRACE_TYPE_2");
+  aIndices.clear();
+  aIndices << 0 << 1 << 2;
+  aStrings << tr("PREF_TRACE_TYPE_0") << tr("PREF_TRACE_TYPE_1") << tr("PREF_TRACE_TYPE_2");
   setPreferenceProperty( aTraceType, "strings", aStrings );
   setPreferenceProperty( aTraceType, "indexes", aIndices );
+  setPreferenceProperty( aTraceType, "restart",  true );
 }
 
 /*!

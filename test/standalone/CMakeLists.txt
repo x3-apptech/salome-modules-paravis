@@ -16,31 +16,20 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author: Adrien Bruneton (CEA)
 
-ADD_SUBDIRECTORY(VisuPrs)
-ADD_SUBDIRECTORY(standalone)
+PROJECT(LightPARAVIS)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.10)
 
-SET(_demo_files
-  demo0.py
-  demo1.py
-  demo2.py
-  demo3.py
-  demo4.py
-  demo5.py
-  demo6.py
-  demo7.py
-  demo8.py
-  demo9.py
-  demo10.py
-  demo11.py
-  demo12.py
-  demo_14_med.py
-  demo_15_med.py
-  )
+SET(CMAKE_BUILD_TYPE "Debug")
 
-SALOME_INSTALL_SCRIPTS("${_demo_files}" ${SALOME_INSTALL_SCRIPT_PYTHON})
+FIND_PACKAGE(Qt4 REQUIRED)
 
-# Application tests
-INSTALL(FILES CTestTestfileInstall.cmake
-  DESTINATION ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test
-  RENAME CTestTestfile.cmake)
+LIST(APPEND CMAKE_PREFIX_PATH "$ENV{PARAVIEW_ROOT_DIR}")
+FIND_PACKAGE(ParaView 4.3 REQUIRED)
+
+INCLUDE(${PARAVIEW_USE_FILE})
+INCLUDE(ParaViewMacros)
+
+# Main application
+ADD_SUBDIRECTORY(src)

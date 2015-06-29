@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2014-2015  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,31 +16,32 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Roman NIKOLAEV
 
-ADD_SUBDIRECTORY(VisuPrs)
-ADD_SUBDIRECTORY(standalone)
+PROJECT(ArrayRenamer)
 
-SET(_demo_files
-  demo0.py
-  demo1.py
-  demo2.py
-  demo3.py
-  demo4.py
-  demo5.py
-  demo6.py
-  demo7.py
-  demo8.py
-  demo9.py
-  demo10.py
-  demo11.py
-  demo12.py
-  demo_14_med.py
-  demo_15_med.py
+cmake_minimum_required(VERSION 2.8)
+
+FIND_PACKAGE(ParaView REQUIRED)
+INCLUDE(${PARAVIEW_USE_FILE})
+
+SET (outifaces)	
+SET (outsrcs)
+
+QT4_WRAP_CPP(moc_srcs pqArraysEditorPropertyWidget.h pqEditComponents.h)
+
+  ADD_PARAVIEW_PROPERTY_GROUP_WIDGET(outifaces outsrcs
+    TYPE "custom_arrays_editor"
+    CLASS_NAME pqArraysEditorPropertyWidget)
+
+ADD_PARAVIEW_PLUGIN(ArrayRenamer "1.0"
+  SERVER_MANAGER_XML ArrayRenamer.xml
+  SERVER_MANAGER_SOURCES vtkArrayRenamerFilter.cxx
+  GUI_INTERFACES ${outifaces}
+  GUI_RESOURCES pqArrayRenamer.qrc
+  SOURCES ${outsrcs} ${moc_srcs} pqArraysEditorPropertyWidget.cxx
   )
 
-SALOME_INSTALL_SCRIPTS("${_demo_files}" ${SALOME_INSTALL_SCRIPT_PYTHON})
-
-# Application tests
-INSTALL(FILES CTestTestfileInstall.cmake
-  DESTINATION ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test
-  RENAME CTestTestfile.cmake)
+INSTALL(TARGETS ArrayRenamer
+  DESTINATION lib/paraview
+)

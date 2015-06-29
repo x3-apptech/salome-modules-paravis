@@ -33,6 +33,7 @@ SET(_subdirs
   ScaleVector
   EllipseBuilder
   DifferenceTimesteps
+  ArrayRenamer
   )
   
 IF(NOT SALOME_LIGHT_ONLY)

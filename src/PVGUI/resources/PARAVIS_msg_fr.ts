@@ -1170,6 +1170,10 @@
         <translation>Contrôles VCR</translation>
     </message>
     <message>
+        <source>PREF_GROUP_TRACE</source>
+        <translation>Trace</translation>
+    </message>
+    <message>
         <source>PREF_STOP_TRACE</source>
         <translation>Déactiver la trace (seulement pour la session suivante)</translation>
     </message>
