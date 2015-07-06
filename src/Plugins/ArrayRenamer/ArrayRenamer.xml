@@ -51,7 +51,7 @@
       </PropertyGroup>
 
       <Hints>
-        <ShowInMenu category="Filters" icon=":/ArrayRenamerIcons/resources/rename_ico_24x24.png" />
+        <ShowInMenu category="DataAnalysis" icon=":/ArrayRenamerIcons/resources/rename_ico_24x24.png" />
       </Hints>
 
     </SourceProxy>
