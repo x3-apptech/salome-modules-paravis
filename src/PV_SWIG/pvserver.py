@@ -29,6 +29,6 @@ it available in the global variables myParavis and myPVServerService
 import PVSERVER_utils
 
 ## Initialize PARAVIS interface
-myPVServerService = PVSERVER_utils.getEngine()
+myPVServerService = PVSERVER_utils.getService()
 # Backward compatibility:
 myParavis = myPVServerService 

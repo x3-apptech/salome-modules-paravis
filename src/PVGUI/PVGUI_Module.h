@@ -35,7 +35,7 @@ class pqServer;
 class pqPythonScriptEditor;
 class pqPVApplicationCore;
 class PVViewer_GUIElements;
-class PVViewer_EngineWrapper;
+class PVServer_ServiceWrapper;
 class SUIT_ViewWindow;
 
 class PVGUI_Module: public LightApp_Module
@@ -135,7 +135,7 @@ public:
 
   virtual void createPreferences();
 
-  inline static PVViewer_EngineWrapper* GetEngine();
+  inline static PVServer_ServiceWrapper* GetEngine();
   inline static pqPVApplicationCore* GetPVApplication(); // not used inside PARAVIS
 
   virtual CAM_DataModel* createDataModel();
