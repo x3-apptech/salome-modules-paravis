@@ -36,7 +36,7 @@
 #include "PVViewer_ViewModel.h"
 #include "PVGUI_ParaViewSettingsPane.h"
 #include "PVViewer_GUIElements.h"
-#include "PVViewer_EngineWrapper.h"
+#include "PVServer_ServiceWrapper.h"
 #include "PVGUI_DataModel.h"
 
 // SALOME Includes
@@ -208,9 +208,9 @@ PVGUI_Module::~PVGUI_Module()
   by the PVViewer code in GUI (class PVViewer_EngineWrapper).
   \sa GetCPPEngine()
 */
-PVViewer_EngineWrapper* PVGUI_Module::GetEngine()
+PVServer_ServiceWrapper* PVGUI_Module::GetEngine()
 {
-  return PVViewer_EngineWrapper::GetInstance();
+  return PVServer_ServiceWrapper::GetInstance();
 }
 
 /*!

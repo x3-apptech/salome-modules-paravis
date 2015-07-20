@@ -99,11 +99,6 @@ FIND_PACKAGE(SalomePython REQUIRED)
 FIND_PACKAGE(SalomeHDF5 REQUIRED)
 FIND_PACKAGE(SalomeSWIG REQUIRED)
 
-IF(NOT SALOME_LIGHT_ONLY)
-  FIND_PACKAGE(SalomeOmniORB REQUIRED)
-  FIND_PACKAGE(SalomeOmniORBPy REQUIRED)
-ENDIF()
-
 IF(SALOME_BUILD_DOC)
   FIND_PACKAGE(SalomeDoxygen)
   FIND_PACKAGE(SalomeGraphviz)
@@ -256,10 +251,6 @@ SALOME_ACCUMULATE_ENVIRONMENT(PV_PLUGIN_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/lib
 
 # Sources 
 # ========
-IF(NOT SALOME_LIGHT_ONLY)
-  ADD_SUBDIRECTORY(idl)   # Order matters when using the wrapping - to be added AFTER src
-ENDIF()
-
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(adm_local)
 ADD_SUBDIRECTORY(resources)
@@ -286,7 +277,7 @@ INCLUDE(CMakePackageConfigHelpers)
 # List of targets in this project we want to make visible to the rest of the world.
 # They all have to be INSTALL'd with the option "EXPORT ${PROJECT_NAME}TargetGroup"
 IF(NOT SALOME_LIGHT_ONLY)
-  SET(_${PROJECT_NAME}_exposed_targets SalomeIDLPVServer PARAVIS)
+  SET(_${PROJECT_NAME}_exposed_targets PARAVIS)
 
   # Add all targets to the build-tree export set
   EXPORT(TARGETS ${_${PROJECT_NAME}_exposed_targets}
