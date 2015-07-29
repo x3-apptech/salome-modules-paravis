@@ -20,6 +20,7 @@
 
 #include "vtkExtractGroup.h"
 #include "MEDFileFieldRepresentationTree.hxx"
+#include "vtkMEDReader.h"
 
 #include "vtkAdjacentVertexIterator.h"
 #include "vtkIntArray.h"
@@ -54,6 +55,7 @@
 #include "vtkThreshold.h"
 #include "vtkMultiBlockDataGroupFilter.h"
 #include "vtkCompositeDataToUnstructuredGridFilter.h"
+#include "vtkInformationDataObjectMetaDataKey.h"
 
 #include <map>
 #include <deque>
@@ -163,9 +165,12 @@ bool ExtractGroupGrp::isSameAs(const ExtractGroupGrp& other) const
 
 bool vtkExtractGroup::vtkExtractGroupInternal::IsInformationOK(vtkInformation *info)
 {
-  if(!info->Has(vtkDataObject::SIL()))
+  // Check the information contain meta data key
+  if(!info->Has(vtkMEDReader::META_DATA()))
     return false;
-  vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::SafeDownCast(info->Get(vtkDataObject::SIL())));
+
+  // Recover Meta Data
+  vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::SafeDownCast(info->Get(vtkMEDReader::META_DATA())));
   if(!sil)
     return false;
   int idNames(0);
@@ -180,6 +185,16 @@ bool vtkExtractGroup::vtkExtractGroupInternal::IsInformationOK(vtkInformation *i
         return true;
     }
   return false;
+}
+
+const char* vtkExtractGroup::GetGrpStart()
+{
+  return ExtractGroupGrp::START;
+}
+
+const char* vtkExtractGroup::GetFamStart()
+{
+  return ExtractGroupFam::START;
 }
 
 const char *vtkExtractGroup::vtkExtractGroupInternal::getMeshName() const
@@ -249,7 +264,7 @@ void vtkExtractGroup::vtkExtractGroupInternal::loadFrom(vtkMutableDirectedGraph 
         }
       itFams->Delete();
     }
-  it0->Delete(); 
+  it0->Delete();
   //
   std::size_t szg(_groups.size()),szf(_fams.size());
   if(szg==oldGrps.size() && szf==oldFams.size())
@@ -427,32 +442,22 @@ void vtkExtractGroup::SetInsideOut(int val)
 
 int vtkExtractGroup::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
-  vtkUnstructuredGridAlgorithm::RequestInformation(request,inputVector,outputVector);
+//  vtkUnstructuredGridAlgorithm::RequestInformation(request,inputVector,outputVector);
   try
     {
-      //std::cerr << "########################################## vtkExtractGroup::RequestInformation ##########################################" << std::endl;
+//      std::cerr << "########################################## vtkExtractGroup::RequestInformation ##########################################" << std::endl;
+//      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
-      vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));//unfortunately inputInfo->Has(vtkDataObject::SIL) returns false... use executive to find it !
-      //
-      vtkExecutive *exe(GetExecutive());
-      vtkAlgorithm *alg(this);
-      vtkInformation *infoOnSIL(alg->GetOutputInformation(0));
-      while(!vtkExtractGroup::vtkExtractGroupInternal::IsInformationOK(infoOnSIL))// skipping vtkPVPostFilter
-	{
-	  if(exe->GetNumberOfInputConnections(0)<1)
-	    {
-	      vtkErrorMacro("No SIL Data available ! The source of this filter must be MEDReader !");
+      vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));
+      if(!vtkExtractGroup::vtkExtractGroupInternal::IsInformationOK(inputInfo))
+        {
+        vtkErrorMacro("No SIL Data available ! The source of this filter must be MEDReader !");
 	      return 0;
-	    }
-	  vtkExecutive *exe2(exe->GetInputExecutive(0,0));
-	  //
-	  alg=exe2->GetAlgorithm(); exe=exe2; infoOnSIL=alg->GetOutputInformation(0);
-	}
-      //
-      this->SetSIL(vtkMutableDirectedGraph::SafeDownCast(infoOnSIL->Get(vtkDataObject::SIL())));
+        }
+
+      this->SetSIL(vtkMutableDirectedGraph::SafeDownCast(inputInfo->Get(vtkMEDReader::META_DATA())));
       this->Internal->loadFrom(this->SIL);
       //this->Internal->printMySelf(std::cerr);
-      outInfo->Set(vtkDataObject::SIL(),this->SIL);
     }
   catch(INTERP_KERNEL::Exception& e)
     {
@@ -477,8 +482,8 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
                            vtkDataSet *input, const std::set<int>& idsToKeep, bool insideOut, const char *arrNameOfFamilyField,
                            const char *associationForThreshold, bool& catchAll, bool& catchSmth)
 {
-  static const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
-  static const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
   vtkDataSet *output(input->NewInstance());
   output->ShallowCopy(input);
   thres->SetInputData(output);
@@ -487,7 +492,7 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   //
   double vMin(insideOut==0?1.:0.),vMax(insideOut==0?2.:1.);
   thres->ThresholdBetween(vMin,vMax);
-  // OK for the output 
+  // OK for the output
   //
   CellPointExtractor cpe2(input);
   vtkDataArray *da(cpe2.Get()->GetScalars(arrNameOfFamilyField));
@@ -560,7 +565,8 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
 {
   try
     {
-      //std::cerr << "########################################## vtkExtractGroup::RequestData        ##########################################" << std::endl;
+//      std::cerr << "########################################## vtkExtractGroup::RequestData        ##########################################" << std::endl;
+//      request->Print(cout);
       vtkInformation* inputInfo=inputVector[0]->GetInformationObject(0);
       vtkDataSet *input(vtkDataSet::SafeDownCast(inputInfo->Get(vtkDataObject::DATA_OBJECT())));
       vtkInformation *info(input->GetInformation());
@@ -679,14 +685,14 @@ int vtkExtractGroup::GetNumberOfGroupsFlagsArrays()
 const char *vtkExtractGroup::GetGroupsFlagsArrayName(int index)
 {
   const char *ret(this->Internal->getKeyOfEntry(index));
-  //std::cerr << "vtkExtractGroup::GetFieldsTreeArrayName(" << index << ") -> " << ret << std::endl;
+//  std::cerr << "vtkExtractGroup::GetFieldsTreeArrayName(" << index << ") -> " << ret << std::endl;
   return ret;
 }
 
 int vtkExtractGroup::GetGroupsFlagsArrayStatus(const char *name)
 {
   int ret((int)this->Internal->getStatusOfEntryStr(name));
-  //std::cerr << "vtkExtractGroup::GetGroupsFlagsArrayStatus(" << name << ") -> " << ret << std::endl;
+//  std::cerr << "vtkExtractGroup::GetGroupsFlagsArrayStatus(" << name << ") -> " << ret << std::endl;
   return ret;
 }
 

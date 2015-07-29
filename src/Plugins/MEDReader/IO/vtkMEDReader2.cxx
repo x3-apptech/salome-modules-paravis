@@ -44,8 +44,6 @@
 #include "vtkCellArray.h"
 #include "vtkDoubleArray.h"
 #include "vtkObjectFactory.h"
-#include "vtkInformationDataObjectMetaDataKey.h"
-
 #ifdef MEDREADER_USE_MPI
 #include "vtkMultiProcessController.h"
 #endif
@@ -60,7 +58,7 @@
 
 /*!
  * This class stores properties in loading state mode (pvsm) when the MED file has not been read yet.
- * The file is not read beacause FileName has not been informed yet ! So this class stores properties of vtkMEDReader instance that
+ * The file is not read beacause FileName has not been informed yet ! So this class stores properties of vtkMEDReader instance that 
  * owns it and wait the vtkMEDReader::SetFileName to apply properties afterwards.
  */
 class PropertyKeeper
@@ -153,19 +151,18 @@ class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0), ReloadReq(0)
   {
   }
-
+  
   bool PluginStart0()
   {
-    return false; // TODO Useless and buggy
     if(FirstCall0==0)
       return false;
     FirstCall0--;
     return true;
   }
-
+  
   ~vtkMEDReaderInternal()
   {
     if(this->SIL)
@@ -192,12 +189,12 @@ public:
   std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great Items are not sorted ! Why ?
   std::map<std::string,bool> _wonderful_ref;// this map stores the state before a SetFieldsStatus status.
 
+  int ReloadReq;
 private:
   unsigned char FirstCall0;
 };
 
 vtkStandardNewMacro(vtkMEDReader);
-vtkInformationKeyMacro(vtkMEDReader, META_DATA, DataObjectMetaData);
 
 vtkMEDReader::vtkMEDReader():Internal(new vtkMEDReaderInternal(this))
 {
@@ -208,29 +205,40 @@ vtkMEDReader::vtkMEDReader():Internal(new vtkMEDReaderInternal(this))
 vtkMEDReader::~vtkMEDReader()
 {
   delete this->Internal;
-  this->Internal = 0;
 }
 
 void vtkMEDReader::Reload()
 {
+  this->Internal->ReloadReq = this->Internal->ReloadReq++;
+  std::cerr << "vtkMEDReader::Reload" << std::endl;
   std::string fName((const char *)this->GetFileName());
   delete this->Internal;
   this->Internal=new vtkMEDReaderInternal(this);
   this->SetFileName(fName.c_str());
 }
 
+int vtkMEDReader::GetReloadReq()
+{
+  cout<<"Get Reload Req Null" <<endl;
+/*  int ret = this->Internal->ReloadReq;
+ // this->Internal->ReloadReq = 0;
+  return ret;*/
+}
+int vtkMEDReader::GetReloadReq(int a)
+{
+  cout<<"Get Reload Req:"<< a <<endl;
+ /* int ret = this->Internal->ReloadReq;
+ // this->Internal->ReloadReq = 0;
+  return ret;*/
+}
+
 int vtkMEDReader::GetServerModifTime()
 {
-  if( !this->Internal )
-    return -1;
   return this->Internal->MyMTime;
 }
 
 void vtkMEDReader::GenerateVectors(int val)
 {
-  if ( !this->Internal )
-    return;
-  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushGenerateVectorsValue(val);
@@ -247,9 +255,6 @@ void vtkMEDReader::GenerateVectors(int val)
 
 void vtkMEDReader::ChangeMode(int newMode)
 {
-  if ( !this->Internal )
-    return;
-  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushChangeModeValue(newMode);
@@ -267,8 +272,6 @@ const char *vtkMEDReader::GetSeparator()
 
 void vtkMEDReader::SetFileName(const char *fname)
 {
-  if(!this->Internal)
-    return;
   try
     {
       this->Internal->FileName=fname;
@@ -314,27 +317,20 @@ void vtkMEDReader::SetFileName(const char *fname)
 
 char *vtkMEDReader::GetFileName()
 {
-  if (!this->Internal)
-    return 0;
   return const_cast<char *>(this->Internal->FileName.c_str());
 }
 
 int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
-//  std::cout << "########################################## vtkMEDReader::RequestInformation ##########################################" << std::endl;
+  std::cout << "########################################## RequestInformation ##########################################" << std::endl;
   if(!this->Internal)
     return 0;
   try
     {
-//      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       outInfo->Set(vtkDataObject::DATA_TYPE_NAME(),"vtkMultiBlockDataSet");
-      this->UpdateSIL(request, outInfo);
-
-      // Set the meta data graph as a meta data key in the information
-      // That's all that is needed to transfer it along the pipeline
-      outInfo->Set(vtkMEDReader::META_DATA(),this->Internal->SIL);
-
+      this->UpdateSIL(outInfo);
+      //
       bool dummy(false);
       this->PublishTimeStepsIfNeeded(outInfo,dummy);
     }
@@ -354,12 +350,11 @@ int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVect
 
 int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
-//  std::cout << "########################################## vtkMEDReader::RequestData ##########################################" << std::endl;
+  std::cout << "########################################## RequestData ##########################################" << std::endl;
   if(!this->Internal)
     return 0;
   try
     {
-//      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       bool isUpdated(false);
@@ -368,9 +363,8 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
         reqTS=outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
       this->FillMultiBlockDataSetInstance(output,reqTS);
       output->GetInformation()->Set(vtkDataObject::DATA_TIME_STEP(),reqTS);
-
-      // Is it really needed ? TODO
-      this->UpdateSIL(request, outInfo);
+      this->UpdateSIL(outInfo);
+      //this->UpdateProgress((float) progress/((float) maxprogress-1));
     }
   catch(INTERP_KERNEL::Exception& e)
     {
@@ -382,9 +376,6 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
 
 void vtkMEDReader::SetFieldsStatus(const char* name, int status)
 {
-  if( !this->Internal )
-    return;
-
   //this->Internal->_wonderful_set.insert(name);
   if(this->Internal->FileName.empty())
     {//pvsm mode
@@ -425,21 +416,18 @@ int vtkMEDReader::GetNumberOfFieldsTreeArrays()
 {
   if(!this->Internal)
     return 0;
+//  std::cout << "vtkMEDReader::GetNumberOfFieldsTreeArrays called ! " << std::endl;
   return this->Internal->Tree.getNumberOfLeavesArrays();
 }
 
 const char *vtkMEDReader::GetFieldsTreeArrayName(int index)
 {
-  if(!this->Internal)
-    return 0;
+//  std::cout << "vtkMEDReader::GetFieldsTreeArrayName(" << index << ") called ! " << std::endl;
   return this->Internal->Tree.getNameOfC(index);
 }
 
 int vtkMEDReader::GetFieldsTreeArrayStatus(const char *name)
 {
-  if(!this->Internal)
-    return -1;
-
   int zeId(this->Internal->Tree.getIdHavingZeName(name));
   int ret(this->Internal->Tree.getStatusOf(zeId));
   return ret;
@@ -447,9 +435,6 @@ int vtkMEDReader::GetFieldsTreeArrayStatus(const char *name)
 
 void vtkMEDReader::SetTimesFlagsStatus(const char *name, int status)
 {
-  if (!this->Internal)
-    return;
-  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushTimesFlagsStatusEntry(name,status);
@@ -481,20 +466,16 @@ const char *vtkMEDReader::GetTimesFlagsArrayName(int index)
 
 int vtkMEDReader::GetTimesFlagsArrayStatus(const char *name)
 {
-  if(!this->Internal)
-    return -1;
   int pos(0);
   std::istringstream iss(name); iss >> pos;
   return (int)this->Internal->TK.getTimesFlagArray()[pos].first;
 }
 
-void vtkMEDReader::UpdateSIL(vtkInformation* request, vtkInformation *info)
+void vtkMEDReader::UpdateSIL(vtkInformation *info)
 {
   if(!this->Internal)
-      return;
+      return ;
   vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::New());
-
-  // This Should be more clever, TODO
   std::string meshName(this->BuildSIL(sil));
   if(meshName!=this->Internal->DftMeshName)
     {
@@ -502,6 +483,8 @@ void vtkMEDReader::UpdateSIL(vtkInformation* request, vtkInformation *info)
         this->Internal->SIL->Delete();
       this->Internal->SIL=sil;
       this->Internal->DftMeshName=meshName;
+      info->Set(vtkDataObject::SIL(),this->Internal->SIL);
+      //request->AppendUnique(vtkExecutive::KEYS_TO_COPY(),vtkDataObject::SIL());
     }
   else
     {
@@ -514,8 +497,6 @@ void vtkMEDReader::UpdateSIL(vtkInformation* request, vtkInformation *info)
  */
 std::string vtkMEDReader::BuildSIL(vtkMutableDirectedGraph* sil)
 {
-  if (!this->Internal)
-    return std::string();
   sil->Initialize();
   vtkSmartPointer<vtkVariantArray> childEdge(vtkSmartPointer<vtkVariantArray>::New());
   childEdge->InsertNextValue(0);
@@ -552,9 +533,6 @@ std::string vtkMEDReader::BuildSIL(vtkMutableDirectedGraph* sil)
 
 double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isUpdated)
 {
-  if(!this->Internal)
-    return 0.0;
-
   int lev0(-1);
   std::vector<double> tsteps;
   if(!this->Internal->IsStdOrMode)
@@ -577,8 +555,6 @@ double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isU
 
 void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS)
 {
-  if( !this->Internal )
-    return;
   std::string meshName;
   vtkDataSet *ret(this->Internal->Tree.buildVTKInstance(this->Internal->IsStdOrMode,reqTS,meshName,this->Internal->TK));
   if(this->Internal->GenerateVect)

@@ -154,6 +154,23 @@ renderView1.InteractionMode = '2D'
 renderView1.CameraPosition = [3.0, 2.0, 10000.0]
 renderView1.CameraFocalPoint = [3.0, 2.0, 0.0]
 renderView1.ViewSize =[300,300]
+renderView1.GetRenderWindow().DoubleBufferOff()
 #
+
 Render()
-WriteImage(outImgName)
+
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader14.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(renderView1.GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

@@ -70,7 +70,7 @@ void vtkGenerateVectors::Operate(vtkFieldData *fd)
 
 vtkDoubleArray *vtkGenerateVectors::Operate2Compo(vtkDoubleArray *oldArr)
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
   std::size_t nbOfTuples(oldArr->GetNumberOfTuples());
   const double *inPt(oldArr->GetPointer(0));
@@ -93,7 +93,7 @@ vtkDoubleArray *vtkGenerateVectors::Operate2Compo(vtkDoubleArray *oldArr)
 
 vtkDoubleArray *vtkGenerateVectors::OperateMoreThan3Compo(vtkDoubleArray *oldArr)
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
   int nbOfCompo(oldArr->GetNumberOfComponents());
   std::size_t nbOfTuples(oldArr->GetNumberOfTuples());

@@ -29,8 +29,10 @@
 #       -DMEDFILE_ROOT_DIR=/where/is/med-3.0.7_install -DMEDCOUPLING_ROOT_DIR=/where/is/medcoupling_install \ 
 #       -DParaView_DIR=<PARAVIEW_INSTALL>/lib/cmake/paraview-4.3 
 
+IF(NOT KW_TESTING_PLATFORM)
 PROJECT(MEDReader)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+ENDIF(NOT KW_TESTING_PLATFORM)
 
 IF(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
@@ -107,6 +109,7 @@ IF(MEDReader_BUILD_ParaView_Plugin)
   ADD_SUBDIRECTORY(ParaViewPlugin)
 ENDIF(MEDReader_BUILD_ParaView_Plugin)
 
+SET(SALOME_BUILD_TESTS ON CACHE BOOL "Build Salome Test")
 IF(SALOME_BUILD_TESTS)
   ENABLE_TESTING()
   ADD_SUBDIRECTORY(Test)

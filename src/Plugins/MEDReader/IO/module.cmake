@@ -7,6 +7,6 @@ vtk_module(vtkMEDReader
     vtkRenderingCore
     vtkTestingRendering
     vtkInteractionStyle
-    vtkRenderingFreeTypeOpenGL
+    #vtkRenderingFreeTypeOpenGL
   EXCLUDE_FROM_WRAP_HIERARCHY
 )

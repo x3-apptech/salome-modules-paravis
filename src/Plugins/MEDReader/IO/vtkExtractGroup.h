@@ -40,6 +40,8 @@ public:
   // Every time the SIL is updated a this will return a different value.
   virtual int GetSILUpdateStamp();
   const char *GetMeshName();
+  static const char* GetGrpStart();
+  static const char* GetFamStart();
 protected:
   vtkExtractGroup();
   ~vtkExtractGroup();
@@ -49,6 +51,7 @@ protected:
 
   int RequestData(vtkInformation *request, vtkInformationVector **inputVector,
       vtkInformationVector *outputVector);
+
   // Description:
   // This SIL stores the structure of the mesh/groups/cell types
   // that can be selected.

@@ -22,7 +22,7 @@
 from MEDLoader import *
 
 """
-This test focused on ELNO. Here a 2 QUAD4 cells and a single ELNO field 
+This test focused on ELNO. Here a 2 QUAD4 cells and a single ELNO field
 is defined.
 """
 fname="testMEDReader1.med"

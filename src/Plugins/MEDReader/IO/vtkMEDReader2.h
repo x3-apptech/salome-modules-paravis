@@ -26,7 +26,6 @@
 #include "vtkMultiBlockDataSetAlgorithm.h"
 
 class vtkMutableDirectedGraph;
-class vtkInformationDataObjectMetaDataKey;
 
 class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
 {
@@ -53,20 +52,14 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   virtual const char *GetTimesFlagsArrayName(int index);
   //! Build the graph used to pass information to the client on the supports
   virtual std::string BuildSIL(vtkMutableDirectedGraph*);
-
-  // Description
-  // Reload will delete the internal reader and recreate it with default properties
   virtual void Reload();
-
+  virtual int GetReloadReq(int a);
+  virtual int GetReloadReq();
   virtual int GetServerModifTime();
   //
   virtual void GenerateVectors(int);
   virtual void ChangeMode(int);
   static const char *GetSeparator();
-
-  // Description
-  // Static information key used to transfer the meta data graph along the pipeline
-  static vtkInformationDataObjectMetaDataKey* META_DATA();
 
  protected:
   vtkMEDReader();
@@ -74,13 +67,12 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   virtual int RequestInformation(vtkInformation*, vtkInformationVector**, vtkInformationVector*);
   virtual int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*);
  private:
-  void UpdateSIL(vtkInformation *request, vtkInformation *info);
+  void UpdateSIL(vtkInformation *info);
   virtual double PublishTimeStepsIfNeeded(vtkInformation*, bool& isUpdated);
   virtual void FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS);
  private:
   //BTX
   //ETX
-
   class vtkMEDReaderInternal;
   vtkMEDReaderInternal* Internal;
 };

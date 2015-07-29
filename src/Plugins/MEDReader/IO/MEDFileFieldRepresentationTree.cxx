@@ -50,9 +50,6 @@
 #include "vtkFieldData.h"
 #include "vtkCellData.h"
 
-#include "vtksys/stl/string"
-#include "vtksys/ios/fstream"
-#include "vtksys/stl/algorithm"
 #include "vtkMutableDirectedGraph.h"
 
 using namespace ParaMEDMEM;
@@ -110,7 +107,7 @@ vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUs
 
 vtkIdTypeArray *ELGACmp::createNew(const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds) const
 {
-  static const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   std::vector< std::vector<std::string> > locNames(_loc_names);
   std::vector<vtkIdTypeArray *> elgas(_elgas);
   std::vector< std::pair< vtkQuadratureSchemeDefinition *, unsigned char > > defs;
@@ -167,7 +164,7 @@ vtkIdTypeArray *ELGACmp::createNew(const ParaMEDMEM::MEDFileFieldGlobsReal *glob
       offset+=delta;
     }
   elga->GetInformation()->Set(MEDUtilities::ELGA(),1);
-  elga->SetArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
+  elga->SetVoidArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
   std::ostringstream oss; oss << "ELGA" << "@" << _loc_names.size();
   std::string ossStr(oss.str());
   elga->SetName(ossStr.c_str());
@@ -275,8 +272,8 @@ bool MEDFileFieldRepresentationLeavesArrays::setStatus(bool status) const
 
 void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const ParaMEDMEM::MEDMeshMultiLev *mml, const ParaMEDMEM::MEDFileMeshStruct *mst, vtkDataSet *ds) const
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
-  static const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   tr->setNumberOfTS((operator->())->getNumberOfTS());
   tr->initIterator();
   for(int timeStepId=0;timeStepId<tr->size();timeStepId++,++(*tr))
@@ -366,7 +363,7 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
                   offset+=delta;
                 }
               elno->GetInformation()->Set(MEDUtilities::ELNO(),1);
-              elno->SetArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
+              elno->SetVoidArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
               std::string nameElno("ELNO"); nameElno+="@"; nameElno+=name;
               elno->SetName(nameElno.c_str());
               ds->GetCellData()->AddArray(elno);
@@ -634,7 +631,7 @@ void MEDFileFieldRepresentationLeaves::appendFields(const MEDTimeReq *tr, const 
 
 vtkUnstructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolationUnstructured(MEDUMeshMultiLev *mm) const
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   DataArrayDouble *coordsMC(0);
   DataArrayByte *typesMC(0);
   DataArrayInt *cellLocationsMC(0),*cellsMC(0),*faceLocationsMC(0),*facesMC(0);
@@ -648,18 +645,18 @@ vtkUnstructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInt
   vtkUnsignedCharArray *cellTypes(vtkUnsignedCharArray::New());
   cellTypes->SetArray(reinterpret_cast<unsigned char *>(typesSafe->getPointer()),nbOfCells,0,VTK_DATA_ARRAY_FREE); typesSafe->accessToMemArray().setSpecificDeallocator(0);
   vtkIdTypeArray *cellLocations(vtkIdTypeArray::New());
-  cellLocations->SetArray(cellLocationsSafe->getPointer(),nbOfCells,0,VTK_DATA_ARRAY_FREE); cellLocationsSafe->accessToMemArray().setSpecificDeallocator(0);
+  cellLocations->SetVoidArray(cellLocationsSafe->getPointer(),nbOfCells,0,VTK_DATA_ARRAY_FREE); cellLocationsSafe->accessToMemArray().setSpecificDeallocator(0);
   vtkCellArray *cells(vtkCellArray::New());
   vtkIdTypeArray *cells2(vtkIdTypeArray::New());
-  cells2->SetArray(cellsSafe->getPointer(),cellsSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); cellsSafe->accessToMemArray().setSpecificDeallocator(0);
+  cells2->SetVoidArray(cellsSafe->getPointer(),cellsSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); cellsSafe->accessToMemArray().setSpecificDeallocator(0);
   cells->SetCells(nbOfCells,cells2);
   cells2->Delete();
   if(faceLocationsMC!=0 && facesMC!=0)
     {
       vtkIdTypeArray *faces(vtkIdTypeArray::New());
-      faces->SetArray(facesSafe->getPointer(),facesSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); facesSafe->accessToMemArray().setSpecificDeallocator(0);
+      faces->SetVoidArray(facesSafe->getPointer(),facesSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); facesSafe->accessToMemArray().setSpecificDeallocator(0);
       vtkIdTypeArray *faceLocations(vtkIdTypeArray::New());
-      faceLocations->SetArray(faceLocationsSafe->getPointer(),faceLocationsSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); faceLocationsSafe->accessToMemArray().setSpecificDeallocator(0);
+      faceLocations->SetVoidArray(faceLocationsSafe->getPointer(),faceLocationsSafe->getNbOfElems(),0,VTK_DATA_ARRAY_FREE); faceLocationsSafe->accessToMemArray().setSpecificDeallocator(0);
       ret->SetCells(cellTypes,cellLocations,cells,faceLocations,faces);
       faceLocations->Delete();
       faces->Delete();
@@ -689,7 +686,7 @@ vtkUnstructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInt
 
 vtkRectilinearGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolationCartesian(ParaMEDMEM::MEDCMeshMultiLev *mm) const
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   bool isInternal;
   std::vector< DataArrayDouble * > arrs(mm->buildVTUArrays(isInternal));
   vtkDoubleArray *vtkTmp(0);
@@ -742,7 +739,7 @@ vtkRectilinearGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInte
 
 vtkStructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolationCurveLinear(ParaMEDMEM::MEDCurveLinearMeshMultiLev *mm) const
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   int meshStr[3]={1,1,1};
   DataArrayDouble *coords(0);
   std::vector<int> nodeStrct;
@@ -784,7 +781,7 @@ vtkStructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInter
  
 vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDFileFieldGlobsReal *globs, const ParaMEDMEM::MEDFileMeshes *meshes) const
 {
-  static const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDataSet *ret(0);
   //_fsp->isDataSetSupportEqualToThePreviousOne(i,globs);
   MEDCouplingAutoRefCountObjectPtr<MEDMeshMultiLev> mml(_fsp->buildFromScratchDataSetSupport(0,globs));//0=timestep Id. Make the hypothesis that support does not change 
@@ -1207,12 +1204,12 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
   this->_data_structure.resize(allFMTSLeavesPerTimeSeriesSafe.size());
   for(std::size_t i=0;i<allFMTSLeavesPerTimeSeriesSafe.size();i++)
     {
-      vtksys_stl::vector< vtksys_stl::string > meshNamesLoc;
+      std::vector< std::string > meshNamesLoc;
       std::vector< std::vector< MEDCouplingAutoRefCountObjectPtr<MEDFileAnyTypeFieldMultiTS> > > splitByMeshName;
       for(std::size_t j=0;j<allFMTSLeavesPerTimeSeriesSafe[i].size();j++)
         {
           std::string meshName(allFMTSLeavesPerTimeSeriesSafe[i][j]->getMeshName());
-          vtksys_stl::vector< vtksys_stl::string >::iterator it(std::find(meshNamesLoc.begin(),meshNamesLoc.end(),meshName));
+          std::vector< std::string >::iterator it(std::find(meshNamesLoc.begin(),meshNamesLoc.end(),meshName));
           if(it==meshNamesLoc.end())
             {
               meshNamesLoc.push_back(meshName);
@@ -1476,7 +1473,7 @@ void MEDFileFieldRepresentationTree::AppendFieldFromMeshes(const ParaMEDMEM::MED
 
 std::string MEDFileFieldRepresentationTree::BuildAUniqueArrayNameForMesh(const std::string& meshName, const ParaMEDMEM::MEDFileFields *ret)
 {
-  static const char KEY_STR_TO_AVOID_COLLIDE[]="MESH@";
+  const char KEY_STR_TO_AVOID_COLLIDE[]="MESH@";
   if(!ret)
     throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationTree::BuildAUniqueArrayNameForMesh : internal error ! NULL ret !");
   std::vector<std::string> fieldNamesAlreadyExisting(ret->getFieldsNames());
@@ -1536,7 +1533,7 @@ std::vector<std::string> MEDFileFieldRepresentationTree::SplitFieldNameIntoParts
 */
 std::string MEDFileFieldRepresentationTree::PostProcessFieldName(const std::string& fullFieldName)
 {
-  static const char SEP('_');
+  const char SEP('_');
   std::vector<std::string> v(SplitFieldNameIntoParts(fullFieldName,SEP));
   if(v.empty())
     return fullFieldName;//should never happen

@@ -18,36 +18,49 @@
 //
 // Author : Anthony Geay
 
-#ifndef _pqExtractGroupPanel_h
-#define _pqExtractGroupPanel_h
+#ifndef __pqMEDReaderTimeModeWidget_h
+#define __pqMEDReaderTimeModeWidget_h
 
-#include "pqNamedObjectPanel.h"
+#include "pqPropertyWidget.h"
 
-#include <map>
-
-class pqTreeWidgetItemObject;
-
-class vtkSMProperty;
-class vtkMutableDirectedGraph;
-
-class pqExtractGroupPanel: public pqNamedObjectPanel
+class pqMEDReaderTimeModeWidget : public pqPropertyWidget
 {
-Q_OBJECT
-  typedef pqNamedObjectPanel Superclass;
+  Q_OBJECT
+
+  // Qt property to link to vtk property
+  Q_PROPERTY(bool ModeEnabled READ isModeEnabled WRITE setModeEnabled)
+
+  typedef pqPropertyWidget Superclass;
 public:
-  pqExtractGroupPanel(pqProxy* proxy, QWidget* p = NULL);
-  ~pqExtractGroupPanel();
-  void updateInformationAndDomains();
-protected slots:
-  void updateSIL();
-  void anItemAsBeenFired();
+  pqMEDReaderTimeModeWidget(
+    vtkSMProxy *smproxy, vtkSMProperty *smproperty, QWidget *parentObject = 0);
+  virtual ~pqMEDReaderTimeModeWidget();
+
+  // Description
+  // Qt property getter
+  bool isModeEnabled() const;
+
+public slots:
+  // Description
+  // Qt Property setter
+  void setModeEnabled(bool enable);
+
+signals:
+  // Description
+  // Qt Property signal
+  void modeEnabled(bool enable);
+
 private:
-  static std::map<std::string,int> DeduceMapOfFamilyFromSIL(vtkMutableDirectedGraph *graph);
-protected:
-  /// populate widgets with properties from the server manager
-  virtual void linkServerManagerProperties();
-  class pqUI;
-  pqUI* UI;
+  Q_DISABLE_COPY(pqMEDReaderTimeModeWidget);
+
+  // Description
+  // Qt property value
+  bool ModeEnabled;
+
+  // Description
+  // UI Internals
+  class pqInternals;
+  pqInternals* Internals;
 };
 
 #endif

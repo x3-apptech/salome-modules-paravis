@@ -368,8 +368,8 @@ int vtkExtractCellType::RequestInformation(vtkInformation *request, vtkInformati
 
 vtkDataSet *FilterFamilies(vtkDataSet *input, const std::vector<int>& idsToKeep, bool insideOut)
 {
-  static const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
-  static const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
   vtkDataSet *output(input->NewInstance());
   output->ShallowCopy(input);
   vtkSmartPointer<vtkThreshold> thres(vtkSmartPointer<vtkThreshold>::New());

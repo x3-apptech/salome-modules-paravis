@@ -233,6 +233,7 @@ void VectBoolSpreadSheet::selectionChanged(const QItemSelection & selected, cons
       m->setData(ind,QVariant(true),Qt::UserRole);
     }
   QTableView::selectionChanged(selected,deselected);
+  this->clearSelection();
 }
 
 void VectBoolSpreadSheet::nbOfRowsHasChanged(int newNbOfRows)

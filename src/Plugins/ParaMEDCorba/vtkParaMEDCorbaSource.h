@@ -23,7 +23,7 @@
 
 #include "ParaMEDMEM2VTK_defines.hxx"
 #include "vtkUnstructuredGridAlgorithm.h"
-#include <vtksys/stl/vector>
+#include <vector>
 
 class vtkDoubleArray;
 class vtkUnstructuredGrid;
@@ -60,7 +60,7 @@ protected:
   int EndPiece;
   int BufferingPolicy;
   vtkUnstructuredGrid *MyDataSet;
-  vtksys_stl::vector<char> IOR;
+  std::vector<char> IOR;
   ParaMEDMEM2VTK::MEDCouplingMultiFieldsFetcher *mfieldsFetcher;
   //not clean but to avoid to include CORBA.h in this *.h
   static void *Orb;

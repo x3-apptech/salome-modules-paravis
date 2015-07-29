@@ -78,8 +78,7 @@ myMedReader=MEDReader(FileName=fname)
 myMedReader.AllArrays = ['TS0/mesh/ComSup1/fNode@@][@@P1']
 myMedReader.AllTimeSteps = ['0000']
 
-Clip1=Clip(ClipType="Plane")
-Clip1.Input=myMedReader
+Clip1=Clip(ClipType="Plane",Input=myMedReader)
 Clip1.Scalars = ['POINTS', 'FamilyIdNode']
 Clip1.ClipType.Origin = [2.0, 2.0, 2.0]
 Clip1.ClipType = "Plane"
@@ -109,6 +108,21 @@ DataRepresentation2.ScaleFactor = 0.4
 DataRepresentation2.ColorArrayName=('POINTS','fNode')
 DataRepresentation2.LookupTable=LookupTable
 
-
 RenderView1.ViewSize=[300,300]
-WriteImage(outImgName)
+Render()
+
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader5.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

@@ -115,7 +115,30 @@ a1_ANodeField_PVLookupTable.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunctio
 DataRepresentation2.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunction
 DataRepresentation2.ColorArrayName='ANodeField'
 DataRepresentation2.LookupTable=a1_ANodeField_PVLookupTable
+
+# Triangulate so rendring always the same with different gpu or graphic backend.
+extSurf = ExtractSurface(Input=testMEDReader3)
+triangulate = Triangulate(Input=extSurf)
+Hide(testMEDReader3, RenderView1)
+Show(triangulate, RenderView1)
+triangulate1Display = GetDisplayProperties(triangulate, view=RenderView1)
+ColorBy(triangulate1Display, ('POINTS', 'ANodeField'))
+
+Render()
 ###
-WriteImage(outImgName)
 
-
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader3.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

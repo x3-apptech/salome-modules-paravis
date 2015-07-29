@@ -62,7 +62,8 @@ bool VectBoolItem::isActivated() const
 
 void VectBoolItem::activated(bool val)
 {
-  //_model->setStatusAt(_pos,val);
+  _model->setStatusAt(_pos,val);
+  _old_status=val;
 }
 
 void VectBoolItem::theModelHasChanged()
@@ -149,11 +150,11 @@ VectBoolWidget::VectBoolWidget(QWidget *parent, int nbOfItems):QFrame(parent)
   _vbm->selectUnselectAll();
   _nb_of_rows_selecter->setValue(_nb_of_rows_selecter->maximum());
   //
-  _items.resize(nbOfItems);
   for(int i=0;i<nbOfItems;i++)
     {
-      _items[i]=new VectBoolItem(this,i,_vbm);
-      connect(_vbm,SIGNAL(nbOfTimeStepsOnChanged(int,int)),_items[i],SLOT(theModelHasChanged()));
+      VectBoolItem* item = new VectBoolItem(this,i,_vbm);
+      _items["000"+QString::number(i)]=item;
+      connect(_vbm, SIGNAL(nbOfTimeStepsOnChanged(int,int)), item, SLOT(theModelHasChanged()));
     }
 }
 
@@ -163,6 +164,7 @@ void VectBoolWidget::setItems(const QStringList& dts, const QStringList& its, co
   if(curNbOfItems>getNumberOfBoolItems())
     {
       std::cerr << "ERROR ! Internal Error in VectBoolWidget::setItems ! Current number of items is bigger than the current one !" << std::endl;
+      std::cerr << curNbOfItems << " "<<getNumberOfBoolItems()<<std::endl;
       return ;
     }
   if(_vbm->setCurrentItems(dts,its,tts))

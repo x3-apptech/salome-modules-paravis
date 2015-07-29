@@ -48,9 +48,7 @@ ELSE(HDF5_IS_PARALLEL)
 ENDIF(HDF5_IS_PARALLEL)
 
 VTK_MODULE_LIBRARY(vtkMEDReader ${MEDReader_SRCS})
-TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkRenderingFreeType vtkRenderingOpenGL 
-                                   vtkRenderingFreeTypeOpenGL vtkInteractionStyle vtkFiltersCore vtkFiltersGeneral 
-                                   MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
+TARGET_LINK_LIBRARIES(vtkMEDReader ${PARAVIEW_LIBRARIES} MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
 
 INSTALL(
   TARGETS vtkMEDReader MEDLoaderForPV

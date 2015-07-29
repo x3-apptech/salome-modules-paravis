@@ -17,22 +17,92 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
-
 SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
 
-FOREACH(tfile ${TEST_NUMBERS})
-  ADD_TEST(testMEDReader${tfile} ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py)
-  SET_TESTS_PROPERTIES(testMEDReader${tfile} PROPERTIES ENVIRONMENT "${tests_env}")
-ENDFOREACH()
-
-# Application tests
 SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/MEDReader)
+
+IF(KW_TESTING_PLATFORM)
 
 FOREACH(tfile ${TEST_NUMBERS})
   INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py
           DESTINATION ${TEST_INSTALL_DIRECTORY})
 ENDFOREACH()
+
+  INSTALL(FILES CTestTestfileInstall.cmake
+        DESTINATION ${TEST_INSTALL_DIRECTORY}
+        RENAME CTestTestfile.cmake)
+
+cmake_minimum_required(VERSION 2.7)
+
+find_package(ParaView REQUIRED)
+include(${PARAVIEW_USE_FILE})
+
+include(ParaViewTestingMacros)
+include(FindPythonModules)
+
+include(${PROJECT_SOURCE_DIR}/testing/testFunctions.cmake)
+set(PV_PLUGIN_PATH "${CMAKE_BINARY_DIR}/lib/")
+
+include(CTest)
+
+enable_testing()
+
+set(PARAVIEW_BIN_DIR "${ParaView_DIR}/bin" CACHE PATH "ParaView binary path")
+
+set(PVTEST_DRIVER "${PARAVIEW_BIN_DIR}/smTestDriver")
+set(PARAVIEW_CLIENT "${PARAVIEW_BIN_DIR}/paraview")
+set(PARAVIEW_SERVER "${PARAVIEW_BIN_DIR}/pvserver")
+set(PVPYTHON "${PARAVIEW_BIN_DIR}/pvpython")
+
+set(BASELINES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Baselines")
+set(PYTHON_SCRIPTS_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(TEMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/Testing/Temporary")
+
+# Application tests
+SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/MEDReader)
+
+if(NOT EXISTS ${TEMP_DIR})
+  file(MAKE_DIRECTORY ${TEMP_DIR})
+endif()
+
+# Override vtk_add_test_* variables for use with ParaView.
+macro (_myy_override_vtk_dirs)
+  set(VTK_TEST_DATA_DIR    ${PYTHON_SCRIPTS_DIR})
+  set(VTK_BASELINE_DIR     ${BASELINES_DIR})
+  set(VTK_TEST_OUTPUT_DIR  ${TEMP_DIR})
+  set(VTK_TEST_DATA_TARGET ParaViewData)
+endmacro ()
+
+function (myy_add_python_test)
+  message(STATUS "Add Python test for ${ARGV2}")
+  set(VTK_PYTHON_EXE "${PVPYTHON}")
+  list(APPEND VTK_PYTHON_ARGS -dr
+    ${PARAVIEW_PYTHON_ARGS})
+  _myy_override_vtk_dirs()
+  myvtk_add_test_python(${ARGN})
+endfunction ()
+
+# Test all python scripts
+file(GLOB scripts "${PYTHON_SCRIPTS_DIR}/*py")
+foreach(file ${scripts})
+  get_filename_component(fname ${file} NAME)
+  myy_add_python_test(
+    NO_DATA NO_RT
+    ${fname})
+  INSTALL(FILES ${file}
+          DESTINATION ${TEST_INSTALL_DIRECTORY})
+endforeach()
+
+ELSE(KW_TESTING_PLATFORM)
+
+SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
+
+FOREACH(tfile ${TEST_NUMBERS})
+  ADD_TEST(testMEDReader${tfile} ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py -B ${CMAKE_CURRENT_SOURCE_DIR}/Baselines )
+  SET_TESTS_PROPERTIES(testMEDReader${tfile} PROPERTIES ENVIRONMENT ${tests_env})
+ENDFOREACH()
+
+ENDIF(KW_TESTING_PLATFORM)
 
 INSTALL(FILES CTestTestfileInstall.cmake
         DESTINATION ${TEST_INSTALL_DIRECTORY}

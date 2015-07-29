@@ -57,16 +57,13 @@ f1ts.write(fname,0)
 
 from paraview.simple import *
 
-
-
 testMEDReader1=MEDReader(FileName=fname)
 testMEDReader1.AllArrays=['TS0/mesh/ComSup0/ACellField@@][@@P0']
 testMEDReader2=MEDReader(FileName=fname)
 testMEDReader2.AllArrays=['TS0/mesh/ComSup1/mesh@@][@@P0']
 GroupDatasets1=GroupDatasets(Input=[testMEDReader1,testMEDReader2])
 
-Clip1 = Clip(ClipType="Plane")
-Clip1.Input=GroupDatasets1
+Clip1 = Clip(ClipType="Plane",Input=GroupDatasets1)
 Clip1.Scalars=['FamilyIdCell']
 Clip1.ClipType.Origin=[3.0, 3.0, 3.0]
 Clip1.InsideOut=1
@@ -82,9 +79,8 @@ DataRepresentation4.ScaleFactor = 0.6000000000000001
 DataRepresentation4.Visibility = 1
 DataRepresentation4.Representation = 'Wireframe'
 
-ExtractBlock1 = ExtractBlock()
+ExtractBlock1 = ExtractBlock(Input=Clip1)
 ExtractBlock1.BlockIndices=[1, 2]
-ExtractBlock1.Input=Clip1
 
 DataRepresentation5 = Show()
 DataRepresentation5.EdgeColor = [0.0, 0.0, 0.5000076295109483]
@@ -105,6 +101,22 @@ RenderView1.CameraClippingRange = [0.026023957813772633, 26.023957813772633]
 RenderView1.CameraFocalPoint = [2.9999999999999996, 2.9999999999999987, 2.9999999999999982]
 
 RenderView1.ViewSize =[300,300]
-WriteImage(outImgName)
+Render()
 
+#WriteImage(outImgName)
 
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader2.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

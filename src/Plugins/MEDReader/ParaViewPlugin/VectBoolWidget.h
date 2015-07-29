@@ -23,6 +23,7 @@
 
 #include <QFrame>
 #include <QLabel>
+#include <QMap>
 
 class QSlider;
 class QGroupBox;
@@ -71,11 +72,11 @@ public:
   ~VectBoolWidget();
   int getNumberOfBoolItems() const;
   void setItems(const QStringList& dts, const QStringList& its, const QStringList& tts);
-  const QVector<VectBoolItem *>& getItems() const { return _items; }
+  const QMap<QString, VectBoolItem *>& getItems() const { return _items; }
 private:
   static int GetMaxTickValueOfSlider(int val);
 private:
-  QVector<VectBoolItem *> _items;
+  QMap<QString, VectBoolItem *> _items;
   QHBoxLayout *_horizontal_layout;
   QFrame *_spreadsheet_container;
   QGridLayout *_grid_layout;

@@ -35,9 +35,9 @@
 #include "vtkObjectFactory.h"
 #include "vtkInformation.h"
 //
-#include "vtksys/stl/string"
-#include "vtksys/ios/fstream"
-#include "vtksys/stl/algorithm"
+#include "string"
+#include "fstream"
+#include "algorithm"
 
 #include "VTKMEDCouplingMeshClient.hxx"
 #include "VTKMEDCouplingFieldClient.hxx"
@@ -85,7 +85,7 @@ void vtkParaMEDCorbaSource::SetIORCorba(char *ior)
     return;
   int length=strlen(ior);
   IOR.resize(length+1);
-  vtksys_stl::copy(ior,ior+length+1,&IOR[0]);
+  std::copy(ior,ior+length+1,&IOR[0]);
   this->Modified();
 }
 

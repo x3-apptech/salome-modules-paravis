@@ -74,6 +74,21 @@ a3_fieldELNO_Vector_PVLookupTable = GetLookupTableForArray( "fieldELNO_Vector", 
 
 a3_fieldELNO_Vector_PiecewiseFunction = CreatePiecewiseFunction( Points=[0.3464101615137755, 0.0, 0.5, 0.0, 1.9052558883257653, 1.0, 0.5, 0.0] )
 
-Render()
 RenderView1.ViewSize =[300,300]
-WriteImage(outImgName)
+Render()
+
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader13.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

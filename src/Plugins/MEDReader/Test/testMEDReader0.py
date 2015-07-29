@@ -20,7 +20,6 @@
 # Author : Anthony Geay
 
 from MEDLoader import *
-
 fname="testMEDReader0.med"
 outImgName="testMEDReader0.png"
 #########
@@ -87,10 +86,8 @@ arr_name_with_dis=[elt.split("/")[-1] for elt in keys]
 arr_name=[elt.split(myMedReader.GetProperty("Separator").GetData())[0] for elt in arr_name_with_dis]
 myMedReader.AllArrays=keys
 RenderView1 = GetRenderView()
-ELNOMesh1=ELNOMesh()
-ELNOMesh1.Input=myMedReader
-ExtractGroup1=ExtractGroup()
-ExtractGroup1.Input=ELNOMesh1
+ELNOMesh1=ELNOMesh(Input=myMedReader)
+ExtractGroup1=ExtractGroup(Input=ELNOMesh1)
 ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=['GRP_ba2','GRP_to1','GRP_web']
 assert(isinstance(ExtractGroup1.GetProperty("MeshName")[0],str))
@@ -108,8 +105,7 @@ DataRepresentation3.ColorArrayName = 'SolutionSIEQ_ELNO'
 DataRepresentation3.LookupTable = a2_SolutionSIEQ_ELNO_PVLookupTable
 DataRepresentation3.Visibility = 1
 #
-GaussPoints1=GaussPoints()
-GaussPoints1.Input=ELNOMesh1
+GaussPoints1=GaussPoints(Input=ELNOMesh1)
 GaussPoints1.SelectSourceArray=['CELLS','ELGA@0']
 DataRepresentation4 = Show()
 DataRepresentation4.ScaleFactor = 0.008999999705702066
@@ -122,5 +118,20 @@ RenderView1.CameraPosition = [0.11797550069274401, 0.20119836056342144, 0.208854
 RenderView1.CameraClippingRange = [0.14700465306315827, 0.40712447273162633]
 RenderView1.CameraFocalPoint = [1.0170565790969026e-18, 0.0599999981932342, 0.022500000894069675]
 RenderView1.ViewSize =[300,300]
-WriteImage(outImgName)
+Render()
 
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader0.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

@@ -48,7 +48,6 @@ reader=MEDReader(FileName=fname)
 ExpectedEntries=['TS0/zeName/ComSup0/zeName@@][@@P1','TS0/zeName/ComSup0/MESH@zeName@@][@@P1']
 assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
 
-
 #
 glyph1=Glyph(Input=reader,GlyphType='Arrow',Scalars='FamilyIdNode',Vectors='zeName',GlyphMode='All Points',ScaleFactor=0.1,GlyphTransform='Transform2')
 
@@ -62,13 +61,6 @@ zeNameLUT.VectorMode = 'Component'
 glyph1Display=Show(glyph1,renderView1)
 glyph1Display.ColorArrayName = ['POINTS', 'FamilyIdNode']
 glyph1Display.LookupTable = zeNameLUT
-glyph1Display.OpacityArray = [None, '']
-glyph1Display.RadiusArray = [None, '']
-glyph1Display.RadiusRange = [-0.0707106813788414, 1.0099999904632568]
-glyph1Display.ConstantRadius = 1.0099999904632568
-glyph1Display.PointSpriteDefaultsInitialized = 1
-glyph1Display.SelectInputVectors = ['POINTS', 'GlyphVector']
-glyph1Display.WriteLog = ''
 # show color bar/color legend
 glyph1Display.SetScalarBarVisibility(renderView1, True)
 # set scalar coloring
@@ -78,5 +70,22 @@ glyph1Display.RescaleTransferFunctionToDataRange(True)
 # show color bar/color legend
 glyph1Display.SetScalarBarVisibility(renderView1, True)
 #
+renderView1.ViewSize =[300,300]
+renderView1.GetRenderWindow().DoubleBufferOff()
 Render()
-WriteImage(outImgName)
+
+# compare with baseline image
+import os
+import sys
+try:
+  baselineIndex = sys.argv.index('-B')+1
+  baselinePath = sys.argv[baselineIndex]
+except:
+  print "Could not get baseline directory. Test failed."
+  exit(1)
+baseline_file = os.path.join(baselinePath, "testMEDReader15.png")
+import vtk.test.Testing
+vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                            threshold=25)
+vtk.test.Testing.interact()

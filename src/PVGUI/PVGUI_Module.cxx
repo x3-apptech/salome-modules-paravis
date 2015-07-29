@@ -798,24 +798,25 @@ QString PVGUI_Module::getTraceString()
   }
 
   // Save camera position to, which is no longer output by the tracer ...
-  VTK_PY_GIL_ENSURE
-  PyObject * mods(PySys_GetObject(const_cast<char*>("modules")));
-  PyObject * trace_mod(PyDict_GetItemString(mods, "paraview.smtrace"));  // module was already (really) imported by vtkSMTrace
-  if (PyModule_Check(trace_mod)) {
-      vtkSmartPyObject save_cam(PyObject_GetAttrString(trace_mod, const_cast<char*>("SaveCameras")));
-      vtkSmartPyObject camera_trace(PyObject_CallMethod(save_cam, const_cast<char*>("get_trace"), NULL));
-      // Convert to a single string
-      vtkSmartPyObject ret(PyString_FromString(end_line.toStdString().c_str()));
-      vtkSmartPyObject final_string(PyObject_CallMethod(ret, const_cast<char*>("join"),
-          const_cast<char*>("O"), (PyObject*)camera_trace));
-      if (PyString_CheckExact(final_string))
-        {
-          QString camera_qs(PyString_AsString(final_string));  // deep copy
-          traceString = traceString + end_line  + end_line + QString("#### saving camera placements for all active views")
-              + end_line + end_line + camera_qs + end_line;
-        }
-    }
-  VTK_PY_GIL_RELEASE
+  {
+    vtkPythonScopeGilEnsurer psge;
+    PyObject * mods(PySys_GetObject(const_cast<char*>("modules")));
+    PyObject * trace_mod(PyDict_GetItemString(mods, "paraview.smtrace"));  // module was already (really) imported by vtkSMTrace
+    if (PyModule_Check(trace_mod)) {
+        vtkSmartPyObject save_cam(PyObject_GetAttrString(trace_mod, const_cast<char*>("SaveCameras")));
+        vtkSmartPyObject camera_trace(PyObject_CallMethod(save_cam, const_cast<char*>("get_trace"), NULL));
+        // Convert to a single string
+        vtkSmartPyObject ret(PyString_FromString(end_line.toStdString().c_str()));
+        vtkSmartPyObject final_string(PyObject_CallMethod(ret, const_cast<char*>("join"),
+            const_cast<char*>("O"), (PyObject*)camera_trace));
+        if (PyString_CheckExact(final_string))
+          {
+            QString camera_qs(PyString_AsString(final_string));  // deep copy
+            traceString = traceString + end_line  + end_line + QString("#### saving camera placements for all active views")
+                + end_line + end_line + camera_qs + end_line;
+          }
+      }
+  } 
 
   return traceString;
 }

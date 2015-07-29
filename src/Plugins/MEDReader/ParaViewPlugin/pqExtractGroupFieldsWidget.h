@@ -18,34 +18,31 @@
 //
 // Author : Anthony Geay
 
-#ifndef _pqExtractCellTypePanel_h
-#define _pqExtractCellTypePanel_h
+#ifndef __pqExtractGroupFieldsWidget_h
+#define __pqExtractGroupFieldsWidget_h
 
-#include "pqNamedObjectPanel.h"
+#include "pqAbstractFieldsWidget.h"
 
-#include <map>
-
-class pqTreeWidgetItemObject;
-
+class vtkSMProxy;
 class vtkSMProperty;
-class vtkMutableDirectedGraph;
 
-class pqExtractCellTypePanel : public pqNamedObjectPanel
+class pqExtractGroupFieldsWidget : public pqAbstractFieldsWidget
 {
-Q_OBJECT
-  typedef pqNamedObjectPanel Superclass;
+  typedef pqAbstractFieldsWidget Superclass;
+  Q_OBJECT
+
 public:
-  pqExtractCellTypePanel(pqProxy* proxy, QWidget* p = NULL);
-  ~pqExtractCellTypePanel();
-  void updateInformationAndDomains();
-protected slots:
-  void anItemAsBeenFired();
-  void updateSIL();
+  pqExtractGroupFieldsWidget(
+    vtkSMProxy *smproxy, vtkSMProperty *smproperty, QWidget *parentObject = 0);
+  virtual ~pqExtractGroupFieldsWidget();
+
 protected:
-  /// populate widgets with properties from the server manager
-  virtual void linkServerManagerProperties();
-  class pqUI;
-  pqUI* UI;
+  // Description
+  // Load the tree widget using recovered meta data graph
+  void loadTreeWidgetItems();
+
+private:
+  Q_DISABLE_COPY(pqExtractGroupFieldsWidget);
 };
 
 #endif

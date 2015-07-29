@@ -30,8 +30,8 @@
 #include <vtkStringArray.h>
 #include <vtkStringToNumeric.h>
 
-#include <vtksys/stl/stdexcept>
-#include <vtksys/ios/sstream>
+#include <stdexcept>
+#include <sstream>
 
 vtkStandardNewMacro(vtkJSONReader);
 

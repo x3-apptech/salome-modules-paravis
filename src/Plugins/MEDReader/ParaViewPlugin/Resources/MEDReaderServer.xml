@@ -8,45 +8,23 @@
 	</ReaderFactory>
       </Hints>
 
+      <Property name="Reload"
+                command="Reload"
+                panel_widget="MEDReaderReloadWidgetType"/>
+
       <StringVectorProperty
         name="FileName"
         command="SetFileName"
         number_of_elements="1"
+        panel_visibility="never"
         animateable="0">
         <FileListDomain name="files" />
         <Documentation>
           This property specifies the file name for the MED reader.
         </Documentation>
       </StringVectorProperty>
-      
-      <IntVectorProperty
-        name="ReloadReq"
-        command="Reload"
-        number_of_elements="1"
-        default_values="0"
-        animateable="0">
-        <SimpleIntInformationHelper />
-      </IntVectorProperty>
 
       <IntVectorProperty command="GetServerModifTime" information_only="1" name="ServerModifTime">
-        <SimpleIntInformationHelper />
-      </IntVectorProperty>
-
-      <IntVectorProperty
-        name="GenerateVectors"
-        command="GenerateVectors"
-        number_of_elements="1"
-        default_values="0"
-        animateable="0">
-        <SimpleIntInformationHelper />
-      </IntVectorProperty>
-
-      <IntVectorProperty
-        name="TimeOrModal"
-        command="ChangeMode"
-        number_of_elements="1"
-        default_values="0"
-        animateable="0">
         <SimpleIntInformationHelper />
       </IntVectorProperty>
 
@@ -54,7 +32,7 @@
       <StringVectorProperty name="FieldsTreeInfo" information_only="1">
         <ArraySelectionInformationHelper attribute_name="FieldsTree" />
       </StringVectorProperty>
-      
+
       <StringVectorProperty
         name="FieldsStatus"
         command="SetFieldsStatus"
@@ -63,7 +41,9 @@
         repeat_command="1"
         number_of_elements_per_command="2"
         element_types="2 0"
-        information_property="FieldsTreeInfo">
+        information_property="FieldsTreeInfo"
+        immediate_update="1"
+        panel_widget="MEDReaderFieldsWidgetType">
         <ArraySelectionDomain name="array_list">
           <RequiredProperties>
             <Property name="FieldsTreeInfo" function="ArrayList" />
@@ -74,26 +54,28 @@
        </Documentation>
       </StringVectorProperty>
 
-      <StringVectorProperty name="TimesFlagsInfo" information_only="1">
-       <ArraySelectionInformationHelper attribute_name="TimesFlags" />
-     </StringVectorProperty>
-     
-     <StringVectorProperty name="TimesFlagsStatus" command="SetTimesFlagsStatus"
-                           label="All TimeSteps"
-                           number_of_elements="0"
-                           repeat_command="1"
-                           number_of_elements_per_command="2"
-                           element_types="2 0"
-                           information_property="TimesFlagsInfo">
-       <ArraySelectionDomain name="array_list">
-         <RequiredProperties>
-           <Property name="TimesFlagsInfo" function="ArrayList" />
-         </RequiredProperties>
-       </ArraySelectionDomain>
-       <Documentation>
-          This property lists all groups and families to select.
-       </Documentation>
-     </StringVectorProperty>
+      <IntVectorProperty name="VectorsProperty"
+                         label="Generate Vectors"
+                         command="GenerateVectors"
+                         number_of_elements="1"
+                         default_values="0"
+                         panel_widget="MEDReaderVectorsWidgetType">
+        <Documentation>
+          This property define if the reader generate vectors.
+        </Documentation>
+        <BooleanDomain name="bool"/>
+      </IntVectorProperty>
+      <IntVectorProperty name="TimeModeProperty"
+                         label="Activate Mode"
+                         command="ChangeMode"
+                         number_of_elements="1"
+                         default_values="0"
+                         panel_widget="MEDReaderTimeModeWidgetType">
+        <Documentation>
+          This property define if the reader read time steps as modes or not.
+        </Documentation>
+        <BooleanDomain name="bool"/>
+      </IntVectorProperty>
 
       <StringVectorProperty
         name="Separator"
@@ -116,7 +98,34 @@
         </Documentation>
       </DoubleVectorProperty>
 
-    </SourceProxy>
+      <StringVectorProperty name="TimesFlagsInfo" information_only="1">
+       <ArraySelectionInformationHelper attribute_name="TimesFlags" />
+     </StringVectorProperty>
+
+     <StringVectorProperty name="TimesFlagsStatus" command="SetTimesFlagsStatus"
+                           label="All TimeSteps"
+                           number_of_elements="0"
+                           repeat_command="1"
+                           number_of_elements_per_command="2"
+                           element_types="2 0"
+                           information_property="TimesFlagsInfo"
+                           panel_widget="MEDReaderTimesFlagsWidgetType">
+       <ArraySelectionDomain name="array_list">
+         <RequiredProperties>
+           <Property name="TimesFlagsInfo" function="ArrayList" />
+         </RequiredProperties>
+       </ArraySelectionDomain>
+        <Documentation>
+          This property define which time steps the reader should read.
+        </Documentation>
+        <Hints>
+          <PropertyWidgetDecorator type="ShowWidgetDecorator">
+            <Property name="TimeModeProperty" function="boolean" />
+          </PropertyWidgetDecorator>
+        </Hints>
+     </StringVectorProperty>
+
+   </SourceProxy>
   </ProxyGroup>
 
   <ProxyGroup name="filters">
@@ -133,27 +142,19 @@
          This property specifies the input to the Level Scalars filter.
        </Documentation>
      </InputProperty>
-     
-     <IntVectorProperty name="SILUpdateStamp" command="GetSILUpdateStamp" information_only="1">
-       <SimpleIntInformationHelper />
-       <Documentation>
-         Information property indicating the update stamp of the SIL. Every
-         time the SIL is rebuild, this
-         time stamp is changed.
-       </Documentation>
-     </IntVectorProperty>
-     
+
      <StringVectorProperty name="GroupsFlagsInfo" information_only="1">
        <ArraySelectionInformationHelper attribute_name="GroupsFlags" />
      </StringVectorProperty>
-     
+
      <StringVectorProperty name="GroupsFlagsStatus" command="SetGroupsFlagsStatus"
                            label="All Groups"
                            number_of_elements="0"
                            repeat_command="1"
                            number_of_elements_per_command="2"
                            element_types="2 0"
-                           information_property="GroupsFlagsInfo">
+                           information_property="GroupsFlagsInfo"
+                           panel_widget="ExtractGroupFieldsWidgetType">
        <ArraySelectionDomain name="array_list">
          <RequiredProperties>
            <Property name="GroupsFlagsInfo" function="ArrayList" />
@@ -164,7 +165,7 @@
        </Documentation>
      </StringVectorProperty>
 
-     <IntVectorProperty command="SetInsideOut" default_values="0" name="InsideOut" number_of_elements="1">
+     <IntVectorProperty command="SetInsideOut" default_values="0" name="InsideOut" label="Extract Complementary" number_of_elements="1">
        <BooleanDomain name="bool"/>
        <Documentation>Choose which part of the dataset to keep regarding the selected Groups/Families. When 0 (default) the direct selection
        is kept. When 1 the complementary part is selected.
@@ -181,9 +182,10 @@
           This property returns the name of the mesh.
         </Documentation>
       </StringVectorProperty>
+
     </SourceProxy>
   </ProxyGroup>
-  
+
   <ProxyGroup name="filters">
     <SourceProxy name="ExtractCellType" class="vtkExtractCellType" label="Extract Cell Type">
      <InputProperty name="Input" command="SetInputConnection">
@@ -198,22 +200,13 @@
          This property specifies the input to the Level Scalars filter.
        </Documentation>
      </InputProperty>
-     
-     <IntVectorProperty name="SILUpdateStamp" command="GetSILUpdateStamp" information_only="1">
-       <SimpleIntInformationHelper />
-       <Documentation>
-         Information property indicating the update stamp of the SIL. Every
-         time the SIL is rebuild, this
-         time stamp is changed.
-       </Documentation>
-     </IntVectorProperty>
-     
+
      <StringVectorProperty name="GeoTypesInfo" information_only="1">
        <ArraySelectionInformationHelper attribute_name="GeoTypes" />
      </StringVectorProperty>
-     
+
      <StringVectorProperty name="GeoTypesStatus" command="SetGeoTypesStatus"
-                           label="All GeoTypes"
+                           label="All Geo Types"
                            number_of_elements="0"
                            repeat_command="1"
                            number_of_elements_per_command="2"
@@ -228,7 +221,7 @@
           This property lists all the geometric types to select.
        </Documentation>
      </StringVectorProperty>
-     <IntVectorProperty command="SetInsideOut" default_values="0" name="InsideOut" number_of_elements="1">
+     <IntVectorProperty command="SetInsideOut" label="Extract Complementary" default_values="0" name="InsideOut" number_of_elements="1">
        <BooleanDomain name="bool"/>
        <Documentation>Choose which part of the dataset to keep regarding the selected geometric types. When 0 (default) the direct selection
        is kept. When 1 the complementary part is selected.
@@ -293,7 +286,7 @@
           </RequiredProperties>
         </ArrayListDomain>
       </StringVectorProperty>
-      <Hints> 
+      <Hints>
         <Property name="SelectSourceArray" show="0"/>
       </Hints>
     </SourceProxy>
@@ -358,7 +351,7 @@
       </Hints>
 
     </SourceProxy>
-    
+
     <SourceProxy name="ELNOPoints" class="vtkELNOFilter" label="ELNO Points">
       <Documentation
         long_help="Create a point set with data at ELNO points. Cells are shrinked by a given factor towards the cell center."
@@ -416,7 +409,6 @@
         <Property name="SelectSourceArray" show="0"/>
       </Hints>
     </SourceProxy>
-
 
     <SourceProxy
       name="GenerateStructuralElement"
