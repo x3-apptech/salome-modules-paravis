@@ -210,14 +210,29 @@ const ExtractCellTypeStatus& vtkExtractCellType::vtkExtractCellTypeInternal::get
 
 bool vtkExtractCellType::vtkExtractCellTypeInternal::getStatusOfEntryStr(const char *entry) const
 {
-  const ExtractCellTypeStatus& elt(getEntry(entry));
-  return elt.getStatus();
+  try 
+    {
+      const ExtractCellTypeStatus& elt(getEntry(entry));
+      return elt.getStatus();
+    }  
+  catch (INTERP_KERNEL::Exception e)
+    {      
+      //std::cerr << vtkDebugMacro"Exception has been thrown in vtkExtractCellType::vtkExtractCellTypeInternal::getStatusOfEntryStr : " << e.what() << std::endl;
+      return false;
+    }
 }
 
 void vtkExtractCellType::vtkExtractCellTypeInternal::setStatusOfEntryStr(const char *entry, bool status) const
 {
-  const ExtractCellTypeStatus& elt(getEntry(entry));
-  elt.setStatus(status);
+  try 
+    {
+      const ExtractCellTypeStatus& elt(getEntry(entry));
+      elt.setStatus(status);
+    }
+  catch (INTERP_KERNEL::Exception e)
+    {      
+      //std::cerr << "Exception has been thrown in vtkExtractCellType::vtkExtractCellTypeInternal::setStatusOfEntryStr : " << e.what() << std::endl;
+    }
 }
 
 void vtkExtractCellType::vtkExtractCellTypeInternal::printMySelf(std::ostream& os) const
