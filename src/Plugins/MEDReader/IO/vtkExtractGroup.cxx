@@ -683,6 +683,8 @@ int vtkExtractGroup::GetGroupsFlagsArrayStatus(const char *name)
 void vtkExtractGroup::SetGroupsFlagsStatus(const char *name, int status)
 {
   //std::cerr << "vtkExtractGroup::SetFieldsStatus(" << name << "," << status << ")" << std::endl;
+  if (GetNumberOfGroupsFlagsArrays()<1)
+    return;
   this->Internal->setStatusOfEntryStr(name,(bool)status);
   if(std::string(name)==GetGroupsFlagsArrayName(GetNumberOfGroupsFlagsArrays()-1))
      this->Modified();

@@ -471,6 +471,8 @@ int vtkExtractCellType::GetGeoTypesArrayStatus(const char *name)
 void vtkExtractCellType::SetGeoTypesStatus(const char *name, int status)
 {
   //std::cerr << "vtkExtractCellType::SetGeoTypesStatus(" << name << "," << status << ")" << std::endl;
+  if (GetNumberOfGeoTypesArrays()<1)
+    return;
   this->Internal->setStatusOfEntryStr(name,(bool)status);
   if(std::string(name)==GetGeoTypesArrayName(GetNumberOfGeoTypesArrays()-1))
     {
