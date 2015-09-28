@@ -1167,7 +1167,7 @@
     </message>
     <message>
       <source>PREF_GROUP_TRACE</source>
-      <translation type="unfinished">Trace</translation>
+      <translation>Trace</translation>
     </message>
     <message>
       <source>PREF_STOP_TRACE</source>
@@ -1179,19 +1179,19 @@
     </message>
     <message>
       <source>PREF_TRACE_TYPE_LBL</source>
-      <translation type="unfinished">Select which properties to save in trace</translation>
+      <translation>Trace内で保存するプロパティを選択</translation>
     </message>
     <message>
       <source>PREF_TRACE_TYPE_0</source>
-      <translation type="unfinished">All properties</translation>
+      <translation>すべてのプロパティ</translation>
     </message>
     <message>
       <source>PREF_TRACE_TYPE_1</source>
-      <translation type="unfinished">Any modified properties</translation>
+      <translation>任意の変更されたプロパティ</translation>
     </message>
     <message>
       <source>PREF_TRACE_TYPE_2</source>
-      <translation type="unfinished">Only user modified properties</translation>
+      <translation>ユーザのみが変更されたプロパティ</translation>
     </message>
     <message>
       <source>PREF_SHOW_COLOR_LEGEND</source>
