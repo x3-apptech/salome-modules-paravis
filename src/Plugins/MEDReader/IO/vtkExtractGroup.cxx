@@ -52,6 +52,8 @@
 #include "vtkDemandDrivenPipeline.h"
 #include "vtkDataObjectTreeIterator.h"
 #include "vtkThreshold.h"
+#include "vtkMultiBlockDataGroupFilter.h"
+#include "vtkCompositeDataToUnstructuredGridFilter.h"
 
 #include <map>
 #include <deque>
@@ -471,14 +473,14 @@ void vtkExtractGroup::SetSIL(vtkMutableDirectedGraph *mdg)
 }
 
 template<class CellPointExtractor>
-vtkDataSet *FilterFamilies(vtkDataSet *input, const std::set<int>& idsToKeep, bool insideOut, const char *arrNameOfFamilyField,
+vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
+                           vtkDataSet *input, const std::set<int>& idsToKeep, bool insideOut, const char *arrNameOfFamilyField,
                            const char *associationForThreshold, bool& catchAll, bool& catchSmth)
 {
   static const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   static const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
   vtkDataSet *output(input->NewInstance());
   output->ShallowCopy(input);
-  vtkSmartPointer<vtkThreshold> thres(vtkSmartPointer<vtkThreshold>::New());
   thres->SetInputData(output);
   vtkDataSetAttributes *dscIn(input->GetCellData()),*dscIn2(input->GetPointData());
   vtkDataSetAttributes *dscOut(output->GetCellData()),*dscOut2(output->GetPointData());
@@ -567,7 +569,8 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
       std::set<int> idsToKeep(this->Internal->getIdsToKeep());
       // first shrink the input
       bool catchAll,catchSmth;
-      vtkDataSet *tryOnCell(FilterFamilies<CellExtractor>(input,idsToKeep,this->InsideOut,
+      vtkSmartPointer<vtkThreshold> thres1(vtkSmartPointer<vtkThreshold>::New()),thres2(vtkSmartPointer<vtkThreshold>::New());
+      vtkDataSet *tryOnCell(FilterFamilies<CellExtractor>(thres1,input,idsToKeep,this->InsideOut,
 							  MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_CELL_NAME,"vtkDataObject::FIELD_ASSOCIATION_CELLS",catchAll,catchSmth));
       if(tryOnCell)
 	{
@@ -581,13 +584,20 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
 	    {
 	      if(catchSmth)
 		{
-		  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(tryOnCell,idsToKeep,this->InsideOut,
+		  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(thres2,input,idsToKeep,this->InsideOut,
 								       MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME,"vtkDataObject::FIELD_ASSOCIATION_POINTS",catchAll,catchSmth));
 		  if(tryOnNode && catchSmth)
 		    {
-		      output->ShallowCopy(tryOnNode);
+                      vtkSmartPointer<vtkMultiBlockDataGroupFilter> mb(vtkSmartPointer<vtkMultiBlockDataGroupFilter>::New());
+                      vtkSmartPointer<vtkCompositeDataToUnstructuredGridFilter> cd(vtkSmartPointer<vtkCompositeDataToUnstructuredGridFilter>::New());
+                      mb->AddInputConnection(thres1->GetOutputPort());
+                      mb->AddInputConnection(thres2->GetOutputPort());
+                      cd->SetInputConnection(mb->GetOutputPort());
+                      cd->SetMergePoints(0);
+                      cd->Update();
+		      output->ShallowCopy(cd->GetOutput());
 		      tryOnCell->Delete();
-		      tryOnNode->Delete();//
+		      tryOnNode->Delete();
 		      return 1;
 		    }
 		  else
@@ -601,7 +611,7 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
 		}
 	      else
 		{
-		  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(input,idsToKeep,this->InsideOut,
+		  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(thres1,input,idsToKeep,this->InsideOut,
 								       MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME,"vtkDataObject::FIELD_ASSOCIATION_POINTS",catchAll,catchSmth));
 		  if(tryOnNode)
 		    {
@@ -621,7 +631,7 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
 	}
       else
 	{
-	  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(input,idsToKeep,this->InsideOut,
+	  vtkDataSet *tryOnNode(FilterFamilies<PointExtractor>(thres1,input,idsToKeep,this->InsideOut,
 							       MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME,"vtkDataObject::FIELD_ASSOCIATION_POINTS",catchAll,catchSmth));
 	  if(tryOnNode)
 	    {
