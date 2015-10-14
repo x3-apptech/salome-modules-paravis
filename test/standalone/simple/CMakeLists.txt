@@ -18,23 +18,19 @@
 #
 # Author: Adrien Bruneton (CEA)
 
-PROJECT(LightPARAVIS)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.10)
-SET(CMAKE_BUILD_TYPE "Debug")
+SET(pl_SOURCES
+    simple_gil.cxx
+    #PyInterp_Interp.cxx
+    #SUITApp_init_python.cxx
+    Container_init_python.cxx
+    )
+    
+INCLUDE_DIRECTORIES(
+    ${PARAVIEW_INCLUDE_DIRS}
+    ${PYTHON_INCLUDE_DIRS}
+    ${QT_INCLUDE_DIRS}
+  )
 
-OPTION(LIGHTPARAVIS_WITH_GUI "Build GUI test app" ON)
+ADD_EXECUTABLE(paraCmdLine ${pl_SOURCES})
+TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents)
 
-# Package detection
-FIND_PACKAGE(Qt4 REQUIRED)
-LIST(APPEND CMAKE_PREFIX_PATH "$ENV{PARAVIEW_ROOT_DIR}")
-FIND_PACKAGE(ParaView REQUIRED)
-
-INCLUDE(${PARAVIEW_USE_FILE})
-INCLUDE(ParaViewMacros)
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# Main applications
-IF(LIGHTPARAVIS_WITH_GUI)
-    ADD_SUBDIRECTORY(gui)
-ENDIF()
-ADD_SUBDIRECTORY(simple)
