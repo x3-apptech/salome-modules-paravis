@@ -41,10 +41,18 @@ public:
 
   virtual bool dumpPython( const QString&,  CAM_Study*, bool, QStringList& );
   virtual bool open( const QString&, CAM_Study*, QStringList );
+  virtual bool save( QStringList& );
+  virtual bool saveAs( const QString&, CAM_Study*, QStringList& );
   virtual bool create( CAM_Study* );
 
 private:
   void publishComponent(CAM_Study*);
+
+  bool createAndCheckRestoreFlag(const QString& tmpdir, QStringList& listOfFiles, bool & alreadyThere);
+
+  QString              myStudyURL;
+
+  static const QString RESTORE_FLAG_FILE;
 };
 
 #endif /* PVGUIDATAMODEL_H_ */

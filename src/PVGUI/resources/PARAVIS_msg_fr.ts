@@ -1215,11 +1215,11 @@
     </message>
     <message>
         <source>PREF_SAVE_TYPE_0</source>
-        <translation>N&apos;enregistrer les fichiers de référence qu&apos;au serveur de babillard</translation>
+        <translation>Toujours enregistrer les fichiers de référence s&apos;ils sont accessibles</translation>
     </message>
     <message>
         <source>PREF_SAVE_TYPE_1</source>
-        <translation>Toujours enregistrer les fichiers de référence s&apos;ils sont accessibles</translation>
+        <translation>N&apos;enregistrer les fichiers de référence que pour le serveur builtin</translation>
     </message>
     <message>
         <source>PREF_SAVE_TYPE_2</source>

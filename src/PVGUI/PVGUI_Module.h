@@ -122,8 +122,9 @@ public:
 
   void openFile( const char* );                   // not used inside PARAVIS
   void executeScript( const char* );              // not used inside PARAVIS
-  void saveParaviewState( const char* );          // not used inside PARAVIS
-  void loadParaviewState( const char* );          // not used inside PARAVIS
+
+  void saveParaviewState( const QString& );
+  void loadParaviewState( const QString& );
   void clearParaviewState();
 
   QString getTraceString();
