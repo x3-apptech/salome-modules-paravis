@@ -57,7 +57,7 @@ SET(ui_resources
 GENERATE_QT_RESOURCE_FROM_FILES(
     "${ui_resources}"
     "/LightPara/Configuration"
-    "${PROJECT_SOURCE_DIR}/src/xml/ParaViewReaders.xml")
+    "${PROJECT_SOURCE_DIR}/gui/xml/ParaViewReaders.xml")
 
 QT4_ADD_RESOURCES(rcs_sources
     ${ui_resources}
