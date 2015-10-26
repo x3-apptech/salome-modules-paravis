@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015 CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,39 +17,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+# Author : Roman NIKOLAEV
+
+PROJECT(JSONReader)
+
+cmake_minimum_required(VERSION 2.8)
+
+# Find ParaView
+FIND_PACKAGE(ParaView REQUIRED)
 INCLUDE(${PARAVIEW_USE_FILE})
 
-IF(WIN32)
-  REMOVE_DEFINITIONS(-D_SECURE_SCL=0 -D_SECURE_SCL_THROWS=0)
-  IF(NOT CMAKE_BUILD_TYPE STREQUAL "RELEASE" AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    REMOVE_DEFINITIONS(-D_HAS_ITERATOR_DEBUGGING=0)  
-  ENDIF() 
-ENDIF() 
+# Standard CMake option for building libraries shared or static by default.
+OPTION(BUILD_SHARED_LIBS "Build with shared libraries" ${VTK_BUILD_SHARED_LIBS})
 
-SET(_subdirs
-  MEDReader 
-#  TableReader  
-  ElevationSurface
-  ScaleVector
-  EllipseBuilder
-  DifferenceTimesteps
-  ArrayRenamer
-  JSONReader
-  )
-  
-IF(NOT SALOME_LIGHT_ONLY)
-  LIST(APPEND _subdirs
-    ParaMEDCorba 
-  )
-ENDIF()   
-IF(SALOME_PARAVIS_USE_GEOM_SOURCE)
-  LIST(APPEND _subdirs ParaGEOMCorba)
+# Add subdirectories
+ADD_SUBDIRECTORY(JSONParser)
+ADD_SUBDIRECTORY(ParaViewPlugin)
+IF(SALOME_BUILD_TESTS)
+  ENABLE_TESTING()
+  ADD_SUBDIRECTORY(Test)
 ENDIF()
-
-IF(SALOME_PARAVIS_USE_SMESH_SOURCE)
-  LIST(APPEND _subdirs ParaSMESHCorba)
-ENDIF()
-
-FOREACH(_dir ${_subdirs})
-  ADD_SUBDIRECTORY(${_dir})
-ENDFOREACH()

@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+#  Copyright (C) 2015 CEA/DEN, EDF R&D, OPEN CASCADE
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,40 +16,17 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Roman NIKOLAEV
 
-INCLUDE(${PARAVIEW_USE_FILE})
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/JSONParser )
 
-IF(WIN32)
-  REMOVE_DEFINITIONS(-D_SECURE_SCL=0 -D_SECURE_SCL_THROWS=0)
-  IF(NOT CMAKE_BUILD_TYPE STREQUAL "RELEASE" AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    REMOVE_DEFINITIONS(-D_HAS_ITERATOR_DEBUGGING=0)  
-  ENDIF() 
-ENDIF() 
+ADD_PARAVIEW_PLUGIN(JSONReader "1.0"
+  SERVER_MANAGER_XML JSONReader.xml
+  SERVER_MANAGER_SOURCES vtkJSONReader.cxx
+  REQUIRED_ON_SERVER)
 
-SET(_subdirs
-  MEDReader 
-#  TableReader  
-  ElevationSurface
-  ScaleVector
-  EllipseBuilder
-  DifferenceTimesteps
-  ArrayRenamer
-  JSONReader
-  )
-  
-IF(NOT SALOME_LIGHT_ONLY)
-  LIST(APPEND _subdirs
-    ParaMEDCorba 
-  )
-ENDIF()   
-IF(SALOME_PARAVIS_USE_GEOM_SOURCE)
-  LIST(APPEND _subdirs ParaGEOMCorba)
-ENDIF()
+TARGET_LINK_LIBRARIES(JSONReader vtkJSONParser)
 
-IF(SALOME_PARAVIS_USE_SMESH_SOURCE)
-  LIST(APPEND _subdirs ParaSMESHCorba)
-ENDIF()
-
-FOREACH(_dir ${_subdirs})
-  ADD_SUBDIRECTORY(${_dir})
-ENDFOREACH()
+INSTALL(TARGETS JSONReader
+  DESTINATION lib/paraview
+)
