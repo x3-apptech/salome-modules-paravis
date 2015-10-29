@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015 CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,23 +17,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
+# Author : Roman NIKOLAEV
 
-SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
+PROJECT(JSONReader)
 
-FOREACH(tfile ${TEST_NUMBERS})
-  ADD_TEST(testMEDReader${tfile} ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py)
-  SET_TESTS_PROPERTIES(testMEDReader${tfile} PROPERTIES ENVIRONMENT "${tests_env}")
-ENDFOREACH()
+cmake_minimum_required(VERSION 2.8)
 
-# Application tests
-SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/MEDReader)
+# Find ParaView
+FIND_PACKAGE(ParaView REQUIRED)
+INCLUDE(${PARAVIEW_USE_FILE})
 
-FOREACH(tfile ${TEST_NUMBERS})
-  INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py
-          DESTINATION ${TEST_INSTALL_DIRECTORY})
-ENDFOREACH()
+# Standard CMake option for building libraries shared or static by default.
+OPTION(BUILD_SHARED_LIBS "Build with shared libraries" ${VTK_BUILD_SHARED_LIBS})
 
-INSTALL(FILES CTestTestfileInstall.cmake
-        DESTINATION ${TEST_INSTALL_DIRECTORY}
-        RENAME CTestTestfile.cmake)
+# Add subdirectories
+ADD_SUBDIRECTORY(JSONParser)
+ADD_SUBDIRECTORY(ParaViewPlugin)
+IF(SALOME_BUILD_TESTS)
+  ENABLE_TESTING()
+  ADD_SUBDIRECTORY(Test)
+ENDIF()

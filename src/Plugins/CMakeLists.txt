@@ -34,6 +34,7 @@ SET(_subdirs
   EllipseBuilder
   DifferenceTimesteps
   ArrayRenamer
+  JSONReader
   )
   
 IF(NOT SALOME_LIGHT_ONLY)

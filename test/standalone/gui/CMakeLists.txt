@@ -57,7 +57,7 @@ SET(ui_resources
 GENERATE_QT_RESOURCE_FROM_FILES(
     "${ui_resources}"
     "/LightPara/Configuration"
-    "${PROJECT_SOURCE_DIR}/src/xml/ParaViewReaders.xml")
+    "${PROJECT_SOURCE_DIR}/gui/xml/ParaViewReaders.xml")
 
 QT4_ADD_RESOURCES(rcs_sources
     ${ui_resources}
@@ -71,6 +71,6 @@ ADD_EXECUTABLE(paraLight
     ${pl_FORMS_HEADERS}
     ${rcs_sources})
     
-TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents)
+TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeTypeOpenGL)
 #INSTALL(TARGET paraLight bin)
 

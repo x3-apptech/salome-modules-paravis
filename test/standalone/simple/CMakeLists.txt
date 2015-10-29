@@ -16,24 +16,21 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author: Adrien Bruneton (CEA)
 
-SALOME_GENERATE_TESTS_ENVIRONMENT(tests_env)
+SET(pl_SOURCES
+    simple_gil.cxx
+    #PyInterp_Interp.cxx
+    #SUITApp_init_python.cxx
+    Container_init_python.cxx
+    )
+    
+INCLUDE_DIRECTORIES(
+    ${PARAVIEW_INCLUDE_DIRS}
+    ${PYTHON_INCLUDE_DIRS}
+    ${QT_INCLUDE_DIRS}
+  )
 
-SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
+ADD_EXECUTABLE(paraCmdLine ${pl_SOURCES})
+TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents)
 
-FOREACH(tfile ${TEST_NUMBERS})
-  ADD_TEST(testMEDReader${tfile} ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py)
-  SET_TESTS_PROPERTIES(testMEDReader${tfile} PROPERTIES ENVIRONMENT "${tests_env}")
-ENDFOREACH()
-
-# Application tests
-SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/MEDReader)
-
-FOREACH(tfile ${TEST_NUMBERS})
-  INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/testMEDReader${tfile}.py
-          DESTINATION ${TEST_INSTALL_DIRECTORY})
-ENDFOREACH()
-
-INSTALL(FILES CTestTestfileInstall.cmake
-        DESTINATION ${TEST_INSTALL_DIRECTORY}
-        RENAME CTestTestfile.cmake)

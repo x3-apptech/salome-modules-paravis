@@ -203,6 +203,7 @@ vtkMEDReader::vtkMEDReader():Internal(new vtkMEDReaderInternal(this))
 vtkMEDReader::~vtkMEDReader()
 {
   delete this->Internal;
+  this->Internal = 0;
 }
 
 void vtkMEDReader::Reload(int a)
@@ -218,11 +219,16 @@ void vtkMEDReader::Reload(int a)
 
 int vtkMEDReader::GetServerModifTime()
 {
+  if( !this->Internal )
+    return -1;
   return this->Internal->MyMTime;
 }
 
 void vtkMEDReader::GenerateVectors(int val)
 {
+  if ( !this->Internal )
+    return;
+  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushGenerateVectorsValue(val);
@@ -239,6 +245,9 @@ void vtkMEDReader::GenerateVectors(int val)
 
 void vtkMEDReader::ChangeMode(int newMode)
 {
+  if ( !this->Internal )
+    return;
+  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushChangeModeValue(newMode);
@@ -257,6 +266,8 @@ const char *vtkMEDReader::GetSeparator()
 
 void vtkMEDReader::SetFileName(const char *fname)
 {
+  if(!this->Internal)
+    return;
   try
     {
       this->Internal->FileName=fname;
@@ -302,6 +313,8 @@ void vtkMEDReader::SetFileName(const char *fname)
 
 char *vtkMEDReader::GetFileName()
 {
+  if (!this->Internal)
+    return 0;
   return const_cast<char *>(this->Internal->FileName.c_str());
 }
 
@@ -362,6 +375,9 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
 
 void vtkMEDReader::SetFieldsStatus(const char* name, int status)
 {
+  if( !this->Internal )
+    return;
+
   //this->Internal->_wonderful_set.insert(name);
   if(this->Internal->FileName.empty())
     {//pvsm mode
@@ -408,12 +424,17 @@ int vtkMEDReader::GetNumberOfFieldsTreeArrays()
 
 const char *vtkMEDReader::GetFieldsTreeArrayName(int index)
 {
+  if(!this->Internal)
+    return 0;
   return this->Internal->Tree.getNameOfC(index);
   //std::cerr << "vtkMEDReader::GetFieldsTreeArrayName(" << index << ") called ! " << ret << std::endl;
 }
 
 int vtkMEDReader::GetFieldsTreeArrayStatus(const char *name)
 {
+  if(!this->Internal)
+    return -1;
+
   int zeId(this->Internal->Tree.getIdHavingZeName(name));
   int ret(this->Internal->Tree.getStatusOf(zeId));
   return ret;
@@ -421,6 +442,9 @@ int vtkMEDReader::GetFieldsTreeArrayStatus(const char *name)
 
 void vtkMEDReader::SetTimesFlagsStatus(const char *name, int status)
 {
+  if (!this->Internal)
+    return;
+  
   if(this->Internal->FileName.empty())
     {//pvsm mode
       this->Internal->PK.pushTimesFlagsStatusEntry(name,status);
@@ -452,6 +476,8 @@ const char *vtkMEDReader::GetTimesFlagsArrayName(int index)
 
 int vtkMEDReader::GetTimesFlagsArrayStatus(const char *name)
 {
+  if(!this->Internal)
+    return -1;
   int pos(0);
   std::istringstream iss(name); iss >> pos;
   return (int)this->Internal->TK.getTimesFlagArray()[pos].first;
@@ -460,7 +486,7 @@ int vtkMEDReader::GetTimesFlagsArrayStatus(const char *name)
 void vtkMEDReader::UpdateSIL(vtkInformation *info)
 {
   if(!this->Internal)
-      return ;
+      return;
   vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::New());
   std::string meshName(this->BuildSIL(sil));
   if(meshName!=this->Internal->DftMeshName)
@@ -483,6 +509,8 @@ void vtkMEDReader::UpdateSIL(vtkInformation *info)
  */
 std::string vtkMEDReader::BuildSIL(vtkMutableDirectedGraph* sil)
 {
+  if (!this->Internal)
+    return std::string();
   sil->Initialize();
   vtkSmartPointer<vtkVariantArray> childEdge(vtkSmartPointer<vtkVariantArray>::New());
   childEdge->InsertNextValue(0);
@@ -519,6 +547,9 @@ std::string vtkMEDReader::BuildSIL(vtkMutableDirectedGraph* sil)
 
 double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isUpdated)
 {
+  if(!this->Internal)
+    return 0.0;
+
   int lev0(-1);
   std::vector<double> tsteps;
   if(!this->Internal->IsStdOrMode)
@@ -541,6 +572,8 @@ double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isU
 
 void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS)
 {
+  if( !this->Internal )
+    return;
   std::string meshName;
   vtkDataSet *ret(this->Internal->Tree.buildVTKInstance(this->Internal->IsStdOrMode,reqTS,meshName,this->Internal->TK));
   if(this->Internal->GenerateVect)

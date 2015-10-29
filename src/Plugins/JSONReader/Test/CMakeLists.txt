@@ -1,9 +1,9 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+#  Copyright (C) 2015 CEA/DEN, EDF R&D, OPEN CASCADE
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
-# version 2.1 of the License, or (at your option) any later version.
+# version 2.1 of the License.
 #
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,15 +17,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(SALOME_TEST_DRIVER "$ENV{ABSOLUTE_APPLI_PATH}/bin/salome/appliskel/salome_test_driver.py")
-SET(COMPONENT_NAME MEDREADER)
-SET(TIMEOUT        30)
+INCLUDE_DIRECTORIES(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../JSONParser
+  ${CPPUNIT_INCLUDE_DIRS}
+)
 
-SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
+SET(JSONParserTest_SOURCES
+ JSONParserTest.cxx
+ vtkJSONParserTest.cxx
+ )
 
-FOREACH(tfile ${TEST_NUMBERS})
-  SET(TEST_NAME MEDREADER_${tfile})
-  #ADD_TEST(${TEST_NAME} python testMEDReader${tfile}.py)
-  ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} testMEDReader${tfile}.py)
-  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
-ENDFOREACH()
+ADD_EXECUTABLE(vtkJSONParserTest ${JSONParserTest_SOURCES})
+TARGET_LINK_LIBRARIES(vtkJSONParserTest vtkJSONParser ${CPPUNIT_LIBRARIES})
+ADD_TEST(vtkJSONParserTest vtkJSONParserTest)
+
+
+ 
