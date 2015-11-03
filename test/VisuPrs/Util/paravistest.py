@@ -35,10 +35,12 @@ from datetime import date
 samples_dir = os.getenv("DATA_DIR")
 datadir = None
 tablesdir = None
+texturesdir = None
 if samples_dir is not None:
     samples_dir = os.path.normpath(samples_dir)
     datadir = samples_dir + "/MedFiles/"
     tablesdir = samples_dir + "/Tables/"
+    texturesdir = samples_dir + "/Textures/"
 
 # Graphics files extension
 pictureext = os.getenv("PIC_EXT")
@@ -285,36 +287,46 @@ def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
                 err = nb_errors
 
                 for type in prs[i]:
-                    if type==0:
-                        if presentations.GaussPointsOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created GaussPoints presentation is None!!!"; nb_errors+=1
-                    if type==1:
-                        if presentations.ScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created ScalarMap presentation is None!!!"; nb_errors+=1
-                    if type==2:
-                        if presentations.IsoSurfacesOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created IsoSurfaces presentation is None!!!"; nb_errors+=1
-                    if type==3:
-                        if presentations.CutPlanesOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created CutPlanes presentation is None!!!"; nb_errors+=1
-                    if type==4:
-                        if presentations.CutLinesOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created CutLines presentation is None!!!"; nb_errors+=1
-                    if type==5:
-                        if presentations.DeformedShapeOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created DeformedShape presentation is None!!!"; nb_errors+=1
-                    if type==6:
-                        if presentations.VectorsOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created Vectors presentation is None!!!"; nb_errors+=1
-                    if type==7:
-                        if presentations.StreamLinesOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created StreamLines presentation is None!!!"; nb_errors+=1
-                    if type==8:
-                        if presentations.Plot3DOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created Plot3D presentation is None!!!"; nb_errors+=1
-                    if type==9:
-                        if presentations.DeformedShapeAndScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
-                            print "ERROR!!! Created ScalarMapOnDeformedShape presentation is None!!!"; nb_errors+=1
+                    try:
+                        if type==0:
+                            if presentations.GaussPointsOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created GaussPoints presentation is None!!!"; nb_errors+=1
+                        if type==1:
+                            if presentations.ScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created ScalarMap presentation is None!!!"; nb_errors+=1
+                        if type==2:
+                            if presentations.IsoSurfacesOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created IsoSurfaces presentation is None!!!"; nb_errors+=1
+                        if type==3:
+                            if presentations.CutPlanesOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created CutPlanes presentation is None!!!"; nb_errors+=1
+                        if type==4:
+                            if presentations.CutLinesOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created CutLines presentation is None!!!"; nb_errors+=1
+                        if type==5:
+                            if presentations.DeformedShapeOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created DeformedShape presentation is None!!!"; nb_errors+=1
+                        if type==6:
+                            if presentations.VectorsOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created Vectors presentation is None!!!"; nb_errors+=1
+                        if type==7:
+                            if presentations.StreamLinesOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created StreamLines presentation is None!!!"; nb_errors+=1
+                        if type==8:
+                            if presentations.Plot3DOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created Plot3D presentation is None!!!"; nb_errors+=1
+                        if type==9:
+                            if presentations.DeformedShapeAndScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
+                                print "ERROR!!! Created ScalarMapOnDeformedShape presentation is None!!!"; nb_errors+=1
+                    except ValueError:
+                        """ This exception comes from get_nb_components(...) function.
+                            The reason of exception is an implementation of MEDReader
+                            activating the first leaf when reading MED file (refer to
+                            MEDFileFieldRepresentationTree::activateTheFirst() and
+                            MEDFileFieldRepresentationTree::getTheSingleActivated(...) methods).
+                        """
+                        print "ValueError exception is catched"
+                        continue
 
                 # check if number of errors has increased
                 if err == nb_errors:

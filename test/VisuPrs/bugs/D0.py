@@ -41,6 +41,12 @@ def get_group_full_name(source, group_name):
 
     return result_name
 
+#
+# NB! An 'Unknown exception' is raised, when a user try to open
+# "Bug619-result_calcul_OCC.med" file in MED module via 'Add Data Source' functionality.
+# Refer to LastTest.log file for more information.
+# TODO: check MedReader pb.
+#
 # 1. Import of the "Bug619-result_calcul_OCC.med" file
 med_file_path = datadir + "Bug619-result_calcul_OCC.med"
 

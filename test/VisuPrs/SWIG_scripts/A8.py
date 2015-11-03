@@ -20,12 +20,7 @@
 # This case corresponds to: /visu/SWIG_scripts/A8 case
 # Create table
 
-# Do not use pv as a short name.
-# It is a name of function from numpy and may be redefined implicitly by 'from numpy import *' call.
-# import paraview.simple as pv
-import paraview.simple as pvs
-import paraview.servermanager as sm
-
+import pvsimple
 
 # Define script for table creation
 script = """
@@ -61,8 +56,8 @@ for i in xrange(1, nb_cols + 1):
 """
 
 # Creating programmable source (table)
-ps = pvs.ProgrammableSource()
+ps = pvsimple.ProgrammableSource()
 ps.OutputDataSetType = 'vtkTable'
 ps.Script = script
-pvs.RenameSource("Very useful data", ps)
+pvsimple.RenameSource("Very useful data", ps)
 ps.UpdatePipeline()
