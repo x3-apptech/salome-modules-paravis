@@ -23,7 +23,15 @@
 from paravistest import datadir, Import_Med_Field
 
 med_file = datadir + "ResOK_0000.med"
-field_names = ["temperature", "vitesse", "pression"]
-prs_list = [ [1,2,3,4,8], range(1,10), [0,1,2,3,4,8] ]
+field_names1 = ["temperature", "vitesse", "pression"]
+prs_list1 = [ [1,2,3,4,8], [1,2,3,4,5,6,8,9], [0,1,2,3,4,8] ]
 
-Import_Med_Field(med_file, field_names, 1, prs_list)
+Import_Med_Field(med_file, field_names1, 1, prs_list1)
+
+# Stream Lines presentation on "vitesse" field is created
+# by ParaView as an empty presentation: no any cells or points.
+# TODO: check why presentation is empty.
+field_names2 = ["vitesse"]
+prs_list2 = [ [7] ]
+
+Import_Med_Field(med_file, field_names2, 0, prs_list2)

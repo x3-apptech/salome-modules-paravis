@@ -2181,7 +2181,7 @@ def GaussPointsOnField(proxy, entity, field_name,
 
     if is_proportional:
         mult = multiplier
-        if mult is None:
+        if mult is None and data_range[1] != 0:
             mult = abs(0.1 / data_range[1])
 
         gausspnt.RadiusScalarRange = data_range
@@ -2194,8 +2194,9 @@ def GaussPointsOnField(proxy, entity, field_name,
         gausspnt.RadiusTransferFunctionMode = 'Table'
         gausspnt.RadiusScalarRange = data_range
         gausspnt.RadiusUseScalarRange = 1
-        gausspnt.RadiusIsProportional = 1
-        gausspnt.RadiusProportionalFactor = mult
+        if mult is not None:
+            gausspnt.RadiusIsProportional = 1
+            gausspnt.RadiusProportionalFactor = mult
     else:
         gausspnt.RadiusTransferFunctionEnabled = 0
         gausspnt.RadiusMode = 'Constant'
@@ -2312,7 +2313,7 @@ def GaussPointsOnField1(proxy, entity, field_name,
 
     if is_proportional:
         mult = multiplier
-        if mult is None:
+        if mult is None and data_range[1] != 0:
             mult = abs(0.1 / data_range[1])
 
         gausspnt.RadiusScalarRange = data_range
@@ -2325,8 +2326,9 @@ def GaussPointsOnField1(proxy, entity, field_name,
         gausspnt.RadiusTransferFunctionMode = 'Table'
         gausspnt.RadiusScalarRange = data_range
         gausspnt.RadiusUseScalarRange = 1
-        gausspnt.RadiusIsProportional = 1
-        gausspnt.RadiusProportionalFactor = mult
+        if mult is not None:
+            gausspnt.RadiusIsProportional = 1
+            gausspnt.RadiusProportionalFactor = mult
     else:
         gausspnt.RadiusTransferFunctionEnabled = 0
         gausspnt.RadiusMode = 'Constant'
@@ -2617,7 +2619,6 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
         proxy.UpdatePipeline()
 
         # Get timestamps
-        entity_data_info = proxy.GetCellDataInformation()
         timestamps = proxy.TimestepValues.GetData()
 
         for prs_type in prs_types:
@@ -2644,8 +2645,18 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                         if (scalar_range[0] == scalar_range[1]):
                             continue
                     print "Creating " + prs_name + " on " + field_name + ", time = " + str(time) + "... "
-                    prs = create_prs(prs_type, proxy,
-                                     field_entity, field_name, timestamp_nb)
+                    try:
+                        prs = create_prs(prs_type, proxy,
+                                         field_entity, field_name, timestamp_nb)
+                    except ValueError:
+                        """ This exception comes from get_nb_components(...) function.
+                            The reason of exception is an implementation of MEDReader
+                            activating the first leaf when reading MED file (refer to
+                            MEDFileFieldRepresentationTree::activateTheFirst() and
+                            MEDFileFieldRepresentationTree::getTheSingleActivated(...) methods).
+                        """
+                        print "ValueError exception is catched"
+                        continue
                     if prs is None:
                         print "FAILED"
                         continue

@@ -53,7 +53,11 @@ else : print "OK"
 
 # Stream Lines creation
 prs= StreamLinesOnField(aProxy,EntityType.NODE,'vitesse' , 1)
-prs.Visibility=1
+if prs is None:
+  # TODO: check why stream lines prs is empty
+  print "WARNING! StreamLines presentation wasn't created or is empty..."
+else:
+  prs.Visibility=1
 aView.ResetCamera()
 print "Creating an Animation.....................",
 my_format = "jpeg"

@@ -19,7 +19,7 @@
 
 # This case corresponds to: /visu/imps/B1 case
 
-from paravistest import datadir
+from paravistest import datadir, texturesdir
 from presentations import *
 import pvsimple
 
@@ -43,6 +43,14 @@ scalarmap.Representation = 'Point Sprite'
 
 # Set texture
 scalarmap.RenderMode = 'Texture'
-scalarmap.Texture = [os.path.join(datadir, "Textures", "texture1.dat")]
+# COMMENTED OUT! Currently this does not work as Point Sprite ParaView plugin is not correctly wrapped to Python.
+# As soon as problem is fixed, below code probably need to be modified, but it should be something similar.
+#import vtk
+#texture = vtk.vtkTexture()
+#pngReader = vtk.vtkPNGReader()
+#pngReader.SetFileName(os.path.join(texturesdir, "texture1.png"))
+#texture.SetInputConnection(pngReader.GetOutputPort())
+#texture.InterpolateOn()
+#scalarmap.Texture = texture
 
 pvsimple.Render()

@@ -81,12 +81,6 @@ OPTION(SALOME_PARAVIS_USE_SMESH_SOURCE "Import a MESH object to PARAVIS via its 
 CMAKE_DEPENDENT_OPTION(SALOME_LIGHT_ONLY "Build SALOME Light only (no CORBA)" OFF
                        "NOT SALOME_KERNEL_LIGHT_ONLY" ON)
 
-IF(SALOME_BUILD_TESTS)
-  ENABLE_TESTING()
-  FIND_PACKAGE(SalomeCppUnit)
-  SALOME_LOG_OPTIONAL_PACKAGE(CppUnit SALOME_BUILD_TESTS)
-ENDIF()
-
 # Prerequisites
 # =============
 # Find "big" prerequisites first - they reference themselves many others
@@ -219,6 +213,12 @@ ELSEIF(NOT SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_SMESH_SOURCE)
                   As plugins are not built, we set the variable SALOME_PARAVIS_USE_SMESH_SOURCE=OFF.
                   If you really want to use Salome MESH, please set SALOME_PARAVIS_BUILD_PLUGINS=ON and re-run configuration script.")
   SET(SALOME_PARAVIS_USE_SMESH_SOURCE OFF)
+ENDIF()
+
+IF(SALOME_BUILD_TESTS)
+  ENABLE_TESTING()
+  FIND_PACKAGE(SalomeCppUnit)
+  SALOME_LOG_OPTIONAL_PACKAGE(CppUnit SALOME_BUILD_TESTS)
 ENDIF()
 
 ## Detection summary:
