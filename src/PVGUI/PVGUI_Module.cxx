@@ -198,6 +198,7 @@ PVGUI_Module::PVGUI_Module()
 */
 PVGUI_Module::~PVGUI_Module()
 {
+  vtkSMTrace::StopTrace();
   if (myInitTimer)
     delete myInitTimer;
 }
