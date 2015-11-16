@@ -361,6 +361,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
       }
     }
   }
+  connect( application(), SIGNAL( appClosed() ), this, SLOT( onStopTrace() ) );
 }
 
 /*!
@@ -947,6 +948,13 @@ void PVGUI_Module::onRestartTrace()
   startTrace();
 }
 
+/*!
+  \brief. Close ParaView python trace.
+*/
+void PVGUI_Module::onStopTrace()
+{
+  stopTrace();
+}
 /*!
   \brief Called when view manager is added
 */

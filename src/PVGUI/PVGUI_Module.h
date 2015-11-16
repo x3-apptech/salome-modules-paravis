@@ -188,6 +188,7 @@ private slots:
   void onEndProgress();
   void onShowTrace();
   void onRestartTrace();
+  void onStopTrace();
 
 public slots:
   virtual bool           activateModule( SUIT_Study* );
