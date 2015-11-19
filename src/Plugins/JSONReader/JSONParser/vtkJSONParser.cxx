@@ -34,7 +34,7 @@
 //#define __DEBUG
 
 
-// Key worlds
+// Key words
 #define MD  "_metadata"
 #define CMT "_comment"
 #define TBN "table_name"
@@ -268,8 +268,8 @@ int vtkJSONParser::Parse(vtkTable* theTable)
 
   if(this->CInfoVector.size() > 0 ) {
     throwException("braket is not closed ", 
-		   this->CInfoVector.back().ln,
-		   this->CInfoVector.back().cn);
+           this->CInfoVector.back().ln,
+           this->CInfoVector.back().cn);
   }
 
   finalize(theTable);
@@ -315,23 +315,32 @@ void vtkJSONParser::finalize( vtkTable *t ) {
     for( ; it != this->Nodes.end(); it++ ) {
       in = dynamic_cast<vtkJSONInfoNode*>(*it);
       if (in) {
-	vtkJSONMap& vl = in->GetValues();
-	vtkJSONMap::iterator mit = vl.find(this->ShortNames[col]);
-	if(mit != vl.end()) {
-	  newCol->SetValue(row, mit->second);
-	  vl.erase(mit);
-	  delete mit->first;
-	  const char* c = mit->first;
-	  c = 0;
-	  row++;
-	} else {
-	  std::string s("Item with name '");
-	  s+=in->GetName();
-	  s+="' has not key '";
-	  s+=this->ShortNames[col];
-	  s+="' !";
-	  throwSimpleException(s.c_str());
-	}
+          vtkJSONMap& vl = in->GetValues();
+          vtkJSONMap::iterator mit = vl.find(this->ShortNames[col]);
+          if(mit != vl.end()) {
+              newCol->SetValue(row, mit->second);
+              vl.erase(mit);
+              delete mit->first;
+              const char* c = mit->first;
+              c = 0;
+              row++;
+          } else {
+              std::string s("Item with name '");
+              s+=in->GetName();
+              s+="' has no key (or not a numerical value for key) '";
+              s+=this->ShortNames[col];
+              s+="'! Value set to 0.0.";
+              //throwSimpleException(s.c_str());
+              std::ostringstream oss;
+              oss << "vtkJSONParser::finalize(): " << s << std::endl;
+              if(this->HasObserver("ErrorEvent") )
+                this->InvokeEvent("ErrorEvent",const_cast<char *>(oss.str().c_str()));
+              else
+                vtkOutputWindowDisplayErrorText(const_cast<char *>(oss.str().c_str()));
+              vtkObject::BreakOnError();
+
+              newCol->SetValue(row, 0.0);
+          }
       }
     }
     t->AddColumn(newCol);
@@ -343,12 +352,12 @@ void vtkJSONParser::finalize( vtkTable *t ) {
     if (in) {     
       vtkJSONMap& vl = in->GetValues();
       if(vl.size() > 0 ) {
-	std::string s("Item with name '");
-	s+=in->GetName();
-	s+="' has unexpected key '";
-	s+=vl.begin()->first;
-	s+="' !";
-	throwSimpleException(s.c_str());	
+          std::string s("Item with name '");
+          s+=in->GetName();
+          s+="' has unexpected key '";
+          s+=vl.begin()->first;
+          s+="' !";
+          throwSimpleException(s.c_str());
       }
     }
   }
@@ -369,10 +378,10 @@ void vtkJSONParser::processQTS() {
       this->LastString = getString(begin, end);
       bool parse_list = (this->CInfoVector.size() >= 1 && this->CInfoVector.back().type == OSB);
       if(parse_list) {
-	this->CurrentList.push_back(this->LastString);
+    this->CurrentList.push_back(this->LastString);
       } else {
-	this->Strings.push_back(this->LastString);
-	processMetaNode();
+    this->Strings.push_back(this->LastString);
+    processMetaNode();
       }
 #ifdef __DEBUG
       std::cout<<"String  : "<<this->LastString<<std::endl;
@@ -411,8 +420,8 @@ void vtkJSONParser::processOCB() {
   // Create node
   if(this->CInfoVector.size() >= 1) {    
     if ( !GetMetaNode() && this->Strings.size() > 0 && 
-	 this->Strings.back() &&
-	 strcmp(this->Strings.back(), MD) == 0 ) {
+     this->Strings.back() &&
+     strcmp(this->Strings.back(), MD) == 0 ) {
 #ifdef __DEBUG
       std::cout<<"Create new Meta Node !!!"<<std::endl;
 #endif      
@@ -422,14 +431,14 @@ void vtkJSONParser::processOCB() {
       this->Strings.pop_back();
     } else {
       if(this->CInfoVector.back().type == OSB ) {
-	this->ParseObjectList = true;
+    this->ParseObjectList = true;
       }
 #ifdef __DEBUG
       std::cout<<"Create new Node with name '"<<(this->Strings.size() == 0 ? "" : this->Strings.back())<<"' !!!"<<std::endl;
 #endif          
       this->CurrentNode = new vtkJSONInfoNode(this->Strings.size() == 0 ? "" : this->Strings.back());
       if(!this->ParseObjectList && this->Strings.size() == 1) {
-	this->Strings.pop_back();
+    this->Strings.pop_back();
       }
     }
   }
@@ -569,30 +578,30 @@ void vtkJSONParser::processMetaNode() {
     
     if( strings ) {
       if ( strcmp(this->Strings[0], CMT) == 0 ) {
-	mn->SetComment(this->Strings[1]);
+    mn->SetComment(this->Strings[1]);
 #ifdef __DEBUG
       std::cout<<"Table Comment  : "<<this->Strings[1]<<std::endl;
 #endif
       } else if ( strcmp(this->Strings[0], TBN) == 0 ) { 
-	mn->SetTableName(this->Strings[1]);
+    mn->SetTableName(this->Strings[1]);
 #ifdef __DEBUG
       std::cout<<"Table Name  : "<<this->Strings[1]<<std::endl;
 #endif
       } else if ( strcmp(this->Strings[0], TBD) == 0 ) {
-	mn->SetTableDescription(this->Strings[1]);
+    mn->SetTableDescription(this->Strings[1]);
 #ifdef __DEBUG
-	std::cout<<"Table Description  : "<<this->Strings[1]<<std::endl;
+    std::cout<<"Table Description  : "<<this->Strings[1]<<std::endl;
 #endif
       } else if ( strcmp(this->Strings[0], DT) == 0 ) {
-	mn->SetDate(this->Strings[1]);
+    mn->SetDate(this->Strings[1]);
 #ifdef __DEBUG
       std::cout<<"Date  : "<<this->Strings[1]<<std::endl;
 #endif
       } else {
-	std::stringstream s;
-	s << "File : "<< this->FileName;
-	s << ", line "<<this->LineNumber;
-	s << " unexpected key world: '"<<this->Strings[0]<<"'";
+    std::stringstream s;
+    s << "File : "<< this->FileName;
+    s << ", line "<<this->LineNumber;
+    s << " unexpected key word: '"<<this->Strings[0]<<"'";
       }
       delete this->Strings[0];
       this->Strings[0] = 0;
@@ -601,29 +610,29 @@ void vtkJSONParser::processMetaNode() {
       
     } else if(str_and_list) {
       if ( strcmp(this->Strings[0], SHT) == 0 ) { 
-	std::vector<const char*>::const_iterator it = this->CurrentList.begin();
-	for( ;it != this->CurrentList.end(); it++) {
-	  checkShortName(*it);
-	}
-	mn->SetShortNames(this->CurrentList);
+    std::vector<const char*>::const_iterator it = this->CurrentList.begin();
+    for( ;it != this->CurrentList.end(); it++) {
+      checkShortName(*it);
+    }
+    mn->SetShortNames(this->CurrentList);
 #ifdef __DEBUG
-	std::cout<<"Short Names : "<<std::endl;
+    std::cout<<"Short Names : "<<std::endl;
 #endif
       } else if ( strcmp(this->Strings[0], LNG) == 0 ) { 
-	mn->SetLongNames(this->CurrentList);
+    mn->SetLongNames(this->CurrentList);
 #ifdef __DEBUG
-	std::cout<<"Long Names : "<<std::endl;
+    std::cout<<"Long Names : "<<std::endl;
 #endif
       } else if ( strcmp(this->Strings[0], UNT) == 0 ) { 
-	mn->SetUnits(this->CurrentList);
+    mn->SetUnits(this->CurrentList);
 #ifdef __DEBUG
-	std::cout<<"Units : ";
+    std::cout<<"Units : ";
 #endif
       } else {
-	std::stringstream s;
-	s << "File : "<< this->FileName;
-	s << ", line "<<this->LineNumber;
-	s << " unexpected key world: '"<<this->Strings[0]<<"'";
+    std::stringstream s;
+    s << "File : "<< this->FileName;
+    s << ", line "<<this->LineNumber;
+    s << " unexpected key word: '"<<this->Strings[0]<<"'";
       }
       delete this->Strings[0];
       this->Strings[0] = 0;
@@ -633,8 +642,8 @@ void vtkJSONParser::processMetaNode() {
       std::cout<<"[ ";
       for( ;it != this->CurrentList.end(); it++) {
         std::cout<<"'"<<*it<<"'";
-	if ( it+1 != this->CurrentList.end() )
-	  std::cout<<", ";
+    if ( it+1 != this->CurrentList.end() )
+      std::cout<<", ";
       }
       std::cout<<" ]"<<std::endl;
 #endif
@@ -644,18 +653,42 @@ void vtkJSONParser::processMetaNode() {
 }
 //---------------------------------------------------
 void vtkJSONParser::processInfoNode() { 
- vtkJSONInfoNode* in = GetInfoNode();
+  vtkJSONInfoNode* in = GetInfoNode();
   if(in) {
-    if(this->Strings.size() == 1 && !isnan(this->LastValue)) {
-      in->AddValue(this->Strings[0],this->LastValue);
-      if(!ShortNamesFilled) {
-	char* name = new char[strlen(Strings[0])];
-	strcpy(name, Strings[0]);
-	this->ShortNames.push_back(name);
+      if(this->Strings.size() == 1 && !isnan(this->LastValue)) {
+          in->AddValue(this->Strings[0],this->LastValue);
+          if(!ShortNamesFilled) {
+              char* name = new char[strlen(Strings[0])];
+              strcpy(name, Strings[0]);
+              this->ShortNames.push_back(name);
+          }
+          this->Strings.pop_back();
+          this->LastValue = NAN;
       }
-      this->Strings.pop_back();
-      this->LastValue = NAN;
-    }
+      if(this->Strings.size() == 2)     {
+          std::string s("Item with name '");
+          s+=in->GetName();
+          s+="' has not a numerical value for key '";
+          s+=Strings[0];
+          s+="'! Value set to 0.0.";
+          //throwSimpleException(s.c_str());
+          std::ostringstream oss;
+          oss << "vtkJSONParser::processInfoNode(): " << s << std::endl;
+          if(this->HasObserver("ErrorEvent") )
+            this->InvokeEvent("ErrorEvent",const_cast<char *>(oss.str().c_str()));
+          else
+            vtkOutputWindowDisplayErrorText(const_cast<char *>(oss.str().c_str()));
+          vtkObject::BreakOnError();
+
+          in->AddValue(this->Strings[0],0.0);
+          if(!ShortNamesFilled) {
+              char* name = new char[strlen(Strings[0])];
+              strcpy(name, Strings[0]);
+              this->ShortNames.push_back(name);
+          }
+          this->Strings.clear();
+          this->LastValue = NAN;
+        }
   }
 }
 
@@ -670,8 +703,8 @@ void vtkJSONParser::processCharacter(const char ch) {
     return;
   
   std::vector<char>::const_iterator it = std::find(this->ExpectedCharacters.begin(),
-						   this->ExpectedCharacters.end(),
-						   ch);  
+                           this->ExpectedCharacters.end(),
+                           ch);
   
   // Unexpected character is found
   if(it == this->ExpectedCharacters.end()) {
@@ -711,8 +744,8 @@ void vtkJSONParser::allowsDigits() {
 //---------------------------------------------------
 bool vtkJSONParser::isDigitsAllowed() {
   std::vector<char>::const_iterator it = std::find(this->ExpectedCharacters.begin(),
-						   this->ExpectedCharacters.end(),
-						   '0');
+                           this->ExpectedCharacters.end(),
+                           '0');
   return (it != this->ExpectedCharacters.end());
 }
 
@@ -751,11 +784,11 @@ void vtkJSONParser::checkShortName(const char* name) {
       // a - z
       if(!(name[i] >= 'a' &&  name[i] <= 'z') && 
       // A - Z
-	 !(name[i] >= 'A' &&  name[i] <= 'Z') ) {
-	std::string s("wrong short name '");
-	s += name;
-	s += "' !";
-	throwException(s.c_str(), this->LineNumber);
+     !(name[i] >= 'A' &&  name[i] <= 'Z') ) {
+    std::string s("wrong short name '");
+    s += name;
+    s += "' !";
+    throwException(s.c_str(), this->LineNumber);
       }
     }
   }
