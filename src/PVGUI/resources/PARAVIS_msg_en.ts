@@ -1215,11 +1215,11 @@
     </message>
     <message>
         <source>PREF_SAVE_TYPE_0</source>
-        <translation>Save referenced files only for builtin server</translation>
+        <translation>Always save referenced files when they are accessible</translation>
     </message>
     <message>
         <source>PREF_SAVE_TYPE_1</source>
-        <translation>Always save referenced files when they are accessible</translation>
+        <translation>Save referenced files only for builtin server</translation>
     </message>
     <message>
         <source>PREF_SAVE_TYPE_2</source>

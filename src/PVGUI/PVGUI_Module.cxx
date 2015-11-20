@@ -361,6 +361,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
       }
     }
   }
+  connect( application(), SIGNAL( appClosed() ), this, SLOT( onStopTrace() ) );
 }
 
 /*!
@@ -837,9 +838,9 @@ void PVGUI_Module::saveTrace( const char* theName )
 /*!
   \brief Saves ParaView state to a disk file
 */
-void PVGUI_Module::saveParaviewState( const char* theFileName )
+void PVGUI_Module::saveParaviewState( const QString& theFileName )
 {
-  pqApplicationCore::instance()->saveState( theFileName );
+  pqApplicationCore::instance()->saveState( theFileName.toStdString().c_str() );
 }
 
 /*!
@@ -856,9 +857,9 @@ void PVGUI_Module::clearParaviewState()
 /*!
   \brief Restores ParaView state from a disk file
 */
-void PVGUI_Module::loadParaviewState( const char* theFileName )
+void PVGUI_Module::loadParaviewState( const QString& theFileName )
 {
-  pqApplicationCore::instance()->loadState( theFileName, getActiveServer() );
+  pqApplicationCore::instance()->loadState( theFileName.toStdString().c_str(), getActiveServer() );
 }
 
 /*!
@@ -893,7 +894,6 @@ void PVGUI_Module::createPreferences()
   addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab, 
                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "no_ext_pv_server" );
 
-  /* VSR: not used
   int aSaveType = addPreference( tr( "PREF_SAVE_TYPE_LBL" ), aParaVisSettingsTab,
                                  LightApp_Preferences::Selector,
                                  PARAVIS_MODULE_NAME, "savestate_type" );
@@ -904,7 +904,6 @@ void PVGUI_Module::createPreferences()
   aStrings << tr("PREF_SAVE_TYPE_0") << tr("PREF_SAVE_TYPE_1") << tr("PREF_SAVE_TYPE_2");
   setPreferenceProperty( aSaveType, "strings", aStrings );
   setPreferenceProperty( aSaveType, "indexes", aIndices );
-  */
 
   // ... "Language" group <<start>>
   int traceGroup = addPreference( tr( "PREF_GROUP_TRACE" ), aParaVisSettingsTab );
@@ -949,6 +948,13 @@ void PVGUI_Module::onRestartTrace()
   startTrace();
 }
 
+/*!
+  \brief. Close ParaView python trace.
+*/
+void PVGUI_Module::onStopTrace()
+{
+  stopTrace();
+}
 /*!
   \brief Called when view manager is added
 */

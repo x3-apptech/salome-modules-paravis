@@ -1215,12 +1215,12 @@
     </message>
     <message>
       <source>PREF_SAVE_TYPE_0</source>
-      <translation>掲示板サーバーだけに参照ファイルを保存します。</translation>
+      <translation>アクセス可能な場合は常に参照のファイルを保存します。</translation>
     </message>
     <message>
       <source>PREF_SAVE_TYPE_1</source>
-      <translation>アクセス可能な場合は常に参照のファイルを保存します。</translation>
-    </message>
+      <translation>掲示板サーバーだけに参照ファイルを保存します。</translation>
+    </message>    
     <message>
       <source>PREF_SAVE_TYPE_2</source>
       <translation>参照ファイルを保存します。</translation>
