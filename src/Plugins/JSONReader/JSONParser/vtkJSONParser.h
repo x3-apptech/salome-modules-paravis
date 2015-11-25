@@ -34,7 +34,7 @@ class vtkJSONMetaNode;
 class vtkJSONInfoNode;
 
 //---------------------------------------------------
-class vtkJSONException : public std::exception {
+class VTK_EXPORT vtkJSONException : public std::exception {
  public:
     vtkJSONException(const char *reason);
     ~vtkJSONException() throw ();
@@ -43,7 +43,7 @@ class vtkJSONException : public std::exception {
   std::string Reason;
 }; 
 
-class vtkJSONParser : public vtkObject
+class VTK_EXPORT vtkJSONParser : public vtkObject
 {
 public:
   static vtkJSONParser* New();

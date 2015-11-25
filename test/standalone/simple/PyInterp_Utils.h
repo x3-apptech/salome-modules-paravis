@@ -41,7 +41,7 @@
  * When the class is instanciated the lock is acquired. It is released at destruction time.
  * Copy construction (and hence assignation) is forbidden.
  */
-class PYINTERP_EXPORT PyLockWrapper
+class PyLockWrapper
 {
 
 public:
@@ -85,7 +85,7 @@ private:
  * \class PyObjWrapper
  * \brief Utility class to properly handle the reference counting required on Python objects.
  */
-class PYINTERP_EXPORT PyObjWrapper
+class PyObjWrapper
 {
   PyObject* myObject;
 public:
