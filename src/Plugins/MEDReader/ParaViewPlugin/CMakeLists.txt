@@ -21,7 +21,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../IO )
 
 IF(PARAVIEW_BUILD_QT_GUI)
 
-  QT4_WRAP_UI(CLIENT_UI_SRCS
+  QT_WRAP_UIC(CLIENT_UI_SRCS
     Resources/UI/MEDReaderVectorsWidget.ui
     Resources/UI/MEDReaderTimeModeWidget.ui)
 
@@ -41,7 +41,7 @@ IF(PARAVIEW_BUILD_QT_GUI)
     pqMEDReaderTimesFlagsWidget.cxx
     pqMEDReaderFieldsWidget.cxx)
 
-  QT4_WRAP_CPP(MOC_SRCS
+  QT_WRAP_MOC(MOC_SRCS
     pqExtractGroupFieldsWidget.h
     pqAbstractFieldsWidget.h
     VectBoolSpreadSheet.h

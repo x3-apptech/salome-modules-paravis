@@ -435,9 +435,13 @@ pqEditComponents::pqEditComponents( pqComponentsModel* model, QWidget* parent ) 
   QTableView* componentsTable = new QTableView( this );
   componentsTable->setModel( model );
   aCompsLayout->addWidget( componentsTable );
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   componentsTable->horizontalHeader()->setResizeMode( pqComponentsModel::COMPONENT_NAME,  QHeaderView::Stretch );
   componentsTable->horizontalHeader()->setResizeMode( pqComponentsModel::NEW_COMPONENT_NAME, QHeaderView::Stretch );
-  
+#else
+  componentsTable->horizontalHeader()->setSectionResizeMode( pqComponentsModel::COMPONENT_NAME,  QHeaderView::Stretch );
+  componentsTable->horizontalHeader()->setSectionResizeMode( pqComponentsModel::NEW_COMPONENT_NAME, QHeaderView::Stretch );
+#endif
   /// Parameters
   QVBoxLayout *aParamsLayout = new QVBoxLayout( aParams );
   myRenameAllComps = new QCheckBox( "Rename all similar Components", aParams );
@@ -486,10 +490,17 @@ pqArraysEditorPropertyWidget::pqArraysEditorPropertyWidget( vtkSMProxy* smproxy,
   // Layout
   QVBoxLayout* lay = new QVBoxLayout(this);
   lay->addWidget(myArraysTable);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   myArraysTable->horizontalHeader()->setResizeMode( pqArraysModel::PROCESSING, QHeaderView::ResizeToContents );
   myArraysTable->horizontalHeader()->setResizeMode( pqArraysModel::NAME,  QHeaderView::Stretch);
   myArraysTable->horizontalHeader()->setResizeMode( pqArraysModel::NEW_NAME, QHeaderView::Stretch );
   myArraysTable->horizontalHeader()->setResizeMode( pqArraysModel::COMPONENTS, QHeaderView::ResizeToContents );
+#else
+  myArraysTable->horizontalHeader()->setSectionResizeMode( pqArraysModel::PROCESSING, QHeaderView::ResizeToContents );
+  myArraysTable->horizontalHeader()->setSectionResizeMode( pqArraysModel::NAME,  QHeaderView::Stretch);
+  myArraysTable->horizontalHeader()->setSectionResizeMode( pqArraysModel::NEW_NAME, QHeaderView::Stretch );
+  myArraysTable->horizontalHeader()->setSectionResizeMode( pqArraysModel::COMPONENTS, QHeaderView::ResizeToContents );
+#endif
   myArraysTable->resizeColumnsToContents();
 
   // Connections

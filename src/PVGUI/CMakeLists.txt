@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-INCLUDE(UseQt4Ext)
+INCLUDE(UseQtExt)
 
 # --- options ---
 
@@ -57,7 +57,7 @@ SET(_ui_files
     resources/pqCustomSettingsWidget.ui
     )
 
-QT4_WRAP_UI(_ui_FORMS_HEADERS ${_ui_files})
+QT_WRAP_UIC(_ui_FORMS_HEADERS ${_ui_files})
 
 # header files / to be processed by moc
 SET(_moc_HEADERS
@@ -105,10 +105,10 @@ ENDIF()
 # --- sources ---
 
 # sources / rcc wrappings
-QT4_ADD_RESOURCES(_rcc_SOURCES ${_rcc_RESOURCES})
+QT_ADD_RESOURCES(_rcc_SOURCES ${_rcc_RESOURCES})
 
 # sources / moc wrappings
-QT4_WRAP_CPP(_moc_SOURCES ${_moc_HEADERS})
+QT_WRAP_MOC(_moc_SOURCES ${_moc_HEADERS})
 
 # sources / static
 SET(_other_SOURCES
@@ -135,5 +135,5 @@ INSTALL(TARGETS PARAVIS EXPORT ${PROJECT_NAME}TargetGroup DESTINATION ${SALOME_I
 
 # --- header and resources installation ---
 INSTALL(FILES ${PVGUI_HEADERS} DESTINATION ${SALOME_INSTALL_HEADERS})
-QT4_INSTALL_TS_RESOURCES("${_ts_RESOURCES}" "${SALOME_PARAVIS_INSTALL_RES_DATA}")
+QT_INSTALL_TS_RESOURCES("${_ts_RESOURCES}" "${SALOME_PARAVIS_INSTALL_RES_DATA}")
 INSTALL(FILES ${_other_RESOURCES} DESTINATION ${SALOME_PARAVIS_INSTALL_RES_DATA})

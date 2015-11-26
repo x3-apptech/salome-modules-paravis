@@ -476,7 +476,7 @@ void PVGUI_Module::showView( bool toShow )
     // this also connects to the pvserver and instantiates relevant PV behaviors
   }
 
-  pvWnd->setShown( toShow );
+  pvWnd->setVisible( toShow );
   if ( toShow ) pvWnd->setFocus();
 }
 
@@ -513,7 +513,7 @@ void PVGUI_Module::endWaitCursor()
 {
   QApplication::restoreOverrideCursor();
 }
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 /*!
   \brief Handler method for the output of messages.
 */
@@ -535,7 +535,29 @@ static void ParavisMessageOutput(QtMsgType type, const char *msg)
     break;
     }
 }
-
+#else
+/*!
+  \brief Handler method for the output of messages.
+*/
+static void ParavisMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+  switch(type)
+    {
+  case QtDebugMsg:
+    vtkOutputWindow::GetInstance()->DisplayText(msg.toLatin1().constData());
+    break;
+  case QtWarningMsg:
+    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
+    break;
+  case QtCriticalMsg:
+    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
+    break;
+  case QtFatalMsg:
+    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
+    break;
+    }
+}
+#endif
 /*!
   \brief Activate module.
   \param study current study
@@ -544,8 +566,11 @@ static void ParavisMessageOutput(QtMsgType type, const char *msg)
 */
 bool PVGUI_Module::activateModule( SUIT_Study* study )
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   myOldMsgHandler = qInstallMsgHandler(ParavisMessageOutput);
-  
+#else
+  myOldMsgHandler = qInstallMessageHandler(ParavisMessageOutput);
+#endif  
   SUIT_ExceptionHandler::addCleanUpRoutine( paravisCleanUp );
 
   storeCommonWindowsState();
@@ -643,8 +668,11 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
   SUIT_ExceptionHandler::removeCleanUpRoutine( paravisCleanUp );
 
   if (myOldMsgHandler)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     qInstallMsgHandler(myOldMsgHandler);
-
+#else
+    qInstallMessageHandler(myOldMsgHandler);
+#endif
   restoreCommonWindowsState();
   
   return LightApp_Module::deactivateModule( study );
