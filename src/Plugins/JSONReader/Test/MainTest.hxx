@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 
   std::ofstream testFile;
   testFile.open("UnitTestsResult.txt", std::ios::out |  std::ios::trunc);
-  //CPPUNIT_NS::CompilerOutputter outputter( &result, std::cerr );
+//  CPPUNIT_NS::CompilerOutputter outputter( &result, std::cerr );
   CPPUNIT_NS::CompilerOutputter outputter( &result, testFile );
   outputter.write(); 
 
