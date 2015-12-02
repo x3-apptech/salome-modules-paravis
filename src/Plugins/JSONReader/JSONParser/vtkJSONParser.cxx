@@ -33,6 +33,11 @@
 //DEBUG macro
 //#define __DEBUG
 
+#ifdef WIN32
+#include <limits>
+#define NAN std::numeric_limits<double>::quiet_NaN()
+#define isnan _isnan
+#endif
 
 // Key words
 #define MD  "_metadata"
@@ -319,9 +324,9 @@ void vtkJSONParser::finalize( vtkTable *t ) {
           vtkJSONMap::iterator mit = vl.find(this->ShortNames[col]);
           if(mit != vl.end()) {
               newCol->SetValue(row, mit->second);
-              vl.erase(mit);
-              delete mit->first;
               const char* c = mit->first;
+              vl.erase(mit);
+              delete c;             
               c = 0;
               row++;
           } else {
@@ -723,7 +728,7 @@ char* vtkJSONParser::getString(long b, long e) {
   long old_pos = ftell(this->File);
   fseek(this->File, b, SEEK_SET);
   long data_s = e - b;
-  result = new char[data_s];
+  result = new char[data_s + 1]; // + 1 for the '\0' symbol
   result[0] = 0;
   size_t nb_read = fread(result, sizeof(char), data_s, this->File);  
   result[nb_read] = '\0';
