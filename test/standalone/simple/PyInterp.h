@@ -27,18 +27,6 @@
 #define PYINTERP_H
 
 // ========================================================
-// set dllexport type for Win platform 
-#ifdef WIN32
-# if defined PYINTERP_EXPORTS || defined PyInterp_EXPORTS
-#  define PYINTERP_EXPORT __declspec(dllexport)
-# else
-#  define PYINTERP_EXPORT __declspec(dllimport)
-# endif
-#else   // WIN32
-# define PYINTERP_EXPORT
-#endif  // WIN32
-
-// ========================================================
 // little trick - if we do not have debug python libraries
 #ifdef _DEBUG
  #ifndef HAVE_DEBUG_PYTHON

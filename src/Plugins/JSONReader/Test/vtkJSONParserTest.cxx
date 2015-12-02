@@ -75,16 +75,17 @@ void vtkJSONParserTest::testParseBadFiles() {
     vtkTable* table = vtkTable::New();
     Parser->SetFileName(s.c_str());
     bool expected_exception_thrown = false;
-    try{
-      Parser->Parse(table);
-    } catch(vtkJSONException e) {
-      expected_exception_thrown = true;
-    }
+    CPPUNIT_ASSERT_THROW(Parser->Parse(table), vtkJSONException);
+//    try{
+//      ;
+//    } catch(vtkJSONException e) {
+//      expected_exception_thrown = true;
+//    }
     Parser->Delete();
     table->Delete();
-    if(!expected_exception_thrown) {
-      CPPUNIT_FAIL("Expected exception is not thrown !!! ");
-    }
+//    if(!expected_exception_thrown) {
+//      CPPUNIT_FAIL("Expected exception is not thrown !!! ");
+//    }
   }
 }
 
@@ -104,18 +105,18 @@ void vtkJSONParserTest::testParseGoodFiles() {
     vtkJSONParser* Parser = vtkJSONParser::New();
     vtkTable* table = vtkTable::New();
     Parser->SetFileName(s.c_str());
-    bool exception_thrown = false;
-    try{
+//    bool exception_thrown = false;
+//    try{
       Parser->Parse(table);
-    } catch(vtkJSONException e) {
-      exception_thrown = true;
-    }
+//    } catch(vtkJSONException e) {
+//      exception_thrown = true;
+//    }
     Parser->Delete();
     table->Delete();
     
-    if(exception_thrown) {
-      CPPUNIT_FAIL("Unexpected exception has been thrown !!! ");
-    }
+//    if(exception_thrown) {
+//      CPPUNIT_FAIL("Unexpected exception has been thrown !!! ");
+//    }
   }
 
   vtkJSONParser* Parser = vtkJSONParser::New();
@@ -128,14 +129,14 @@ void vtkJSONParserTest::testParseGoodFiles() {
   s += "_wo_metadata.json";
   Parser->SetFileName(s.c_str());
   bool exception_thrown = false;
-  try{
+//  try{
     Parser->Parse(table);
-  } catch(vtkJSONException e) {
-    exception_thrown = true;      
-  }    
-  if(exception_thrown) {
-    CPPUNIT_FAIL("Unexpected exception has been thrown !!! ");
-  }
+//  } catch(vtkJSONException e) {
+//    exception_thrown = true;
+//  }
+//  if(exception_thrown) {
+//    CPPUNIT_FAIL("Unexpected exception has been thrown !!! ");
+//  }
 
   double v = table->GetValue(2,0).ToDouble();
   double v1 = table->GetValue(2,1).ToDouble();
