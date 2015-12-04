@@ -18,6 +18,7 @@
 #
 
 INCLUDE_DIRECTORIES(
+  ${MEDCOUPLING_INCLUDE_DIRS}
   ${MEDFILE_INCLUDE_DIRS}
   ${HDF5_INCLUDE_DIRS}
   ${MED_ROOT_DIR}/include/salome
@@ -40,13 +41,13 @@ ENDFOREACH(class)
 ADD_LIBRARY(MEDLoaderForPV SHARED MEDFileFieldRepresentationTree.cxx MEDTimeReq.cxx MEDUtilities.cxx vtkGenerateVectors.cxx)
 
 IF(HDF5_IS_PARALLEL)
-  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MED_paramedloader} ${MEDFILE_C_LIBRARIES})
+  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDCoupling_paramedloader} ${MEDFILE_C_LIBRARIES})
 ELSE(HDF5_IS_PARALLEL)
-  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MED_medloader} ${MEDFILE_C_LIBRARIES})
+  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDCoupling_medloader} ${MEDFILE_C_LIBRARIES})
 ENDIF(HDF5_IS_PARALLEL)
 
 VTK_MODULE_LIBRARY(vtkMEDReader ${MEDReader_SRCS})
-TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkRenderingFreeType vtkRenderingOpenGL vtkRenderingFreeTypeOpenGL vtkInteractionStyle vtkFiltersCore vtkFiltersGeneral MEDLoaderForPV ${MEDFILE_C_LIBRARIES}) 
+TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkRenderingFreeType vtkRenderingOpenGL vtkRenderingFreeTypeOpenGL vtkInteractionStyle vtkFiltersCore vtkFiltersGeneral MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
 
 INSTALL(
   TARGETS vtkMEDReader MEDLoaderForPV

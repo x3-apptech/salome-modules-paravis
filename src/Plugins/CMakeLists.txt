@@ -20,8 +20,8 @@
 INCLUDE(${PARAVIEW_USE_FILE})
 
 SET(_subdirs
-  MEDReader 
-#  TableReader  
+  MEDReader
+#  TableReader
   ElevationSurface
   ScaleVector
   EllipseBuilder
@@ -29,12 +29,13 @@ SET(_subdirs
   ArrayRenamer
   JSONReader
   )
-  
+
 IF(NOT SALOME_LIGHT_ONLY)
   LIST(APPEND _subdirs
-    ParaMEDCorba 
+    ParaMEDCorba
   )
-ENDIF()   
+ENDIF()
+
 IF(SALOME_PARAVIS_USE_GEOM_SOURCE)
   LIST(APPEND _subdirs ParaGEOMCorba)
 ENDIF()
