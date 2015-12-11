@@ -28,7 +28,8 @@ IF(HDF5_IS_PARALLEL)
   ADD_DEFINITIONS("-DMEDREADER_USE_MPI")
 ENDIF(HDF5_IS_PARALLEL)
 
-SET(MEDReader_CLASSES vtkMEDReader vtkExtractGroup vtkELNOMeshFilter vtkELNOSurfaceFilter vtkELNOFilter vtkExtractCellType vtkMEDQuadraturePointsGenerator)
+SET(MEDReader_CLASSES vtkMEDReader vtkExtractGroup vtkELNOMeshFilter vtkELNOSurfaceFilter vtkELNOFilter 
+                                   vtkExtractCellType vtkMEDQuadraturePointsGenerator)
 
 SET(MEDReader_SRCS)
 SET(MEDReader_HDRS)
@@ -41,13 +42,15 @@ ENDFOREACH(class)
 ADD_LIBRARY(MEDLoaderForPV SHARED MEDFileFieldRepresentationTree.cxx MEDTimeReq.cxx MEDUtilities.cxx vtkGenerateVectors.cxx)
 
 IF(HDF5_IS_PARALLEL)
-  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${PARAMEDLOADER_LIBRARY} ${MEDFILE_C_LIBRARIES})
+  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDCoupling_paramedloader} ${MEDFILE_C_LIBRARIES})
 ELSE(HDF5_IS_PARALLEL)
-  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDLOADER_LIBRARY} ${MEDFILE_C_LIBRARIES})
+  TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDCoupling_medloader} ${MEDFILE_C_LIBRARIES})
 ENDIF(HDF5_IS_PARALLEL)
 
 VTK_MODULE_LIBRARY(vtkMEDReader ${MEDReader_SRCS})
-TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkRenderingFreeType vtkRenderingOpenGL vtkRenderingFreeTypeOpenGL vtkInteractionStyle vtkFiltersCore vtkFiltersGeneral MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
+TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkRenderingFreeType vtkRenderingOpenGL 
+                                   vtkRenderingFreeTypeOpenGL vtkInteractionStyle vtkFiltersCore vtkFiltersGeneral 
+                                   MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
 
 INSTALL(
   TARGETS vtkMEDReader MEDLoaderForPV

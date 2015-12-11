@@ -31,9 +31,11 @@ SET(_subdirs
   )
 
 IF(NOT SALOME_LIGHT_ONLY)
-  LIST(APPEND _subdirs
-    ParaMEDCorba
-  )
+  IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
+    LIST(APPEND _subdirs
+      ParaMEDCorba
+    )
+  ENDIF()
 ENDIF()
 
 IF(SALOME_PARAVIS_USE_GEOM_SOURCE)

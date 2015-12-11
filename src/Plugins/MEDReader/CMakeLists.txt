@@ -25,7 +25,9 @@
 #setenv LD_LIBRARY_PATH ...MEDReader_INSTALL/lib/salome:${LD_LIBRARY_PATH}
 
 # Typical cmake command
-# env MED_ROOT_DIR=... cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=PATH_TO/MEDReader_INSTALL ../MEDReader_SRC -DMEDFILE_ROOT_DIR=/where/is/med-3.0.7_install -DMEDCOUPLING_ROOT_DIR=/where/is/medcoupling_install
+# cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=PATH_TO/MEDReader_INSTALL ../MEDReader_SRC  \ 
+#       -DMEDFILE_ROOT_DIR=/where/is/med-3.0.7_install -DMEDCOUPLING_ROOT_DIR=/where/is/medcoupling_install \ 
+#       -DParaView_DIR=<PARAVIEW_INSTALL>/lib/cmake/paraview-4.3 
 
 PROJECT(MEDReader)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
@@ -66,16 +68,15 @@ OPTION(BUILD_SHARED_LIBS "Build with shared libraries." ${VTK_BUILD_SHARED_LIBS}
 # Find dependant Library
 #
 SET(KERNEL_ROOT_DIR $ENV{KERNEL_ROOT_DIR} CACHE PATH "KERNEL_ROOT_DIR")
-SET(MED_ROOT_DIR $ENV{MED_ROOT_DIR} CACHE PATH "MED_ROOT_DIR")
+SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "MEDCOUPLING_ROOT_DIR")
 #LIST(APPEND CMAKE_MODULE_PATH "${MED_ROOT_DIR}/adm_local_without_kernel/cmake_files")
 LIST(APPEND CMAKE_MODULE_PATH "${KERNEL_ROOT_DIR}/salome_adm/cmake_files")
-LIST(APPEND CMAKE_MODULE_PATH "${MED_ROOT_DIR}/adm_local/cmake_files")
+LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
 INCLUDE(SalomeMacros)
 INCLUDE(SalomeSetupPlatform)
-INCLUDE(SalomeMEDConfig)
 FIND_PACKAGE(SalomePython REQUIRED)
 FIND_PACKAGE(SalomeHDF5 REQUIRED)
-FIND_PACKAGE(SalomeMED REQUIRED)
+FIND_PACKAGE(SalomeMEDCoupling REQUIRED)
 FIND_PACKAGE(SalomeMEDFile REQUIRED)
 
 # Accumulate environment variables for PARAVIS module
