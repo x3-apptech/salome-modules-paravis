@@ -188,10 +188,11 @@ void pqMEDReaderTimesFlagsWidget::UpdateTimeSteps()
         const char* leafString = prop->GetElement(i - 1);
         const char* tmp = strchr(leafString, '/');
         size_t num = tmp - leafString;
-        char dest[num];
+        char* dest = new char[num];
         strncpy(dest, leafString, num);
         dest[num] = '\0';
         tsId = strtol(dest + 2, NULL, 10);
+        delete dest;
         break;
         }
       }

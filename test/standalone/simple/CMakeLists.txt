@@ -32,5 +32,5 @@ INCLUDE_DIRECTORIES(
   )
 
 ADD_EXECUTABLE(paraCmdLine ${pl_SOURCES})
-TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents)
+TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType)
 
