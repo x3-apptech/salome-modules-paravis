@@ -21,15 +21,15 @@
 #ifndef vtkExtractGroup_h__
 #define vtkExtractGroup_h__
 
-#include "vtkUnstructuredGridAlgorithm.h"
+#include "vtkMultiBlockDataSetAlgorithm.h"
 
 class vtkMutableDirectedGraph;
 
-class VTK_EXPORT vtkExtractGroup: public vtkUnstructuredGridAlgorithm
+class VTK_EXPORT vtkExtractGroup: public vtkMultiBlockDataSetAlgorithm
 {
 public:
   static vtkExtractGroup* New();
-  vtkTypeMacro(vtkExtractGroup, vtkUnstructuredGridAlgorithm)
+  vtkTypeMacro(vtkExtractGroup, vtkMultiBlockDataSetAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent);
   virtual int GetNumberOfGroupsFlagsArrays();
   const char *GetGroupsFlagsArrayName(int index);
