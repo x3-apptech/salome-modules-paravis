@@ -23,6 +23,7 @@ SET(_subdirs
   MEDReader
 #  TableReader
   ElevationSurface
+  GhostCellsGenerator
   ScaleVector
   EllipseBuilder
   DifferenceTimesteps
