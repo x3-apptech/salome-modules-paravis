@@ -20,7 +20,7 @@
 #define __VTKJSONPARSERTEST_HXX__
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <string.h>
+#include <string>
 
 class vtkJSONParserTest : public CppUnit::TestFixture
 {
