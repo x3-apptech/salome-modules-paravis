@@ -23,9 +23,9 @@ mm.write(fname,2)
 #
 #### import the simple module from the paraview
 from paraview.simple import *
+import vtk.test.Testing # this line must be here. If not SIGSEGV ! KW10658
 #### disable automatic camera reset on 'Show'
 paraview.simple._DisableFirstRenderCameraReset()
-
 # create a new 'MED Reader'
 testMEDReader19med = MEDReader(FileName=fname)
 testMEDReader19med.AllArrays = ['TS0/mesh/ComSup0/mesh@@][@@P0']
@@ -73,7 +73,7 @@ renderView1.CameraParallelScale = 0.7071067811865476
 res=servermanager.Fetch(extractCellType1,0)
 assert(res.GetBlock(0).GetNumberOfCells()==2) # problem was here in PV4.3.1
 
-"""# compare with baseline image # Waiting KW return to uncomment this part because SIGSEGV in PV5.
+# compare with baseline image # Waiting KW return to uncomment this part because SIGSEGV in PV5.
 import os
 import sys
 try:
@@ -87,4 +87,4 @@ import vtk.test.Testing
 vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
 vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=25)
 vtk.test.Testing.interact()
-"""
+
