@@ -1440,7 +1440,7 @@ void MEDFileFieldRepresentationTree::AppendFieldFromMeshes(const ParaMEDMEM::MED
               std::vector<int> levsExt(mm->getNonEmptyLevelsExt());
               if(levsExt.size()==levs.size()+1)
                 {
-                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(1));
+                  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getMeshAtLevel(1));
                   ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_NODES));
                   f->setMesh(m);
                   ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(m->getNumberOfNodes());
@@ -1455,7 +1455,7 @@ void MEDFileFieldRepresentationTree::AppendFieldFromMeshes(const ParaMEDMEM::MED
         }
       else
         {
-          ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getGenMeshAtLevel(0));
+          ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingMesh> m(mm->getMeshAtLevel(0));
           ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDCouplingFieldDouble> f(ParaMEDMEM::MEDCouplingFieldDouble::New(ParaMEDMEM::ON_CELLS));
           f->setMesh(m);
           ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::DataArrayDouble> arr(ParaMEDMEM::DataArrayDouble::New()); arr->alloc(f->getNumberOfTuplesExpected());
