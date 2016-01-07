@@ -42,6 +42,7 @@ public:
   // Manage a serialized version of the information.
   virtual void CopyToStream(vtkClientServerStream*);
   virtual void CopyFromStream(const vtkClientServerStream*);
+  virtual void AddInformation(vtkPVInformation*);
   //ETX
 
   // Description:

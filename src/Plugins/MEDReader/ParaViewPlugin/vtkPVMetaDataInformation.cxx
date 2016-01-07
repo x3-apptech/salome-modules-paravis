@@ -130,6 +130,10 @@ void vtkPVMetaDataInformation::CopyFromStream(const vtkClientServerStream* css)
     }
 }
 
+void vtkPVMetaDataInformation::AddInformation(vtkPVInformation*)
+{
+}
+
 //----------------------------------------------------------------------------
 void vtkPVMetaDataInformation::PrintSelf(ostream& os, vtkIndent indent)
 {
