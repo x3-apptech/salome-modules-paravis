@@ -21,10 +21,21 @@
 #ifndef __vtkJSONReader_h_
 #define __vtkJSONReader_h_
 
+#include "vtk_jsoncpp.h" // For json parser
 #include "vtkTableAlgorithm.h"
 
+
+//---------------------------------------------------
+class VTK_EXPORT vtkJSONException : public std::exception {
+ public:
+    vtkJSONException(const char *reason);
+    ~vtkJSONException() throw ();
+    const char* what() const throw();
+ protected:
+  std::string Reason;
+};
+
 class vtkStringArray;
-class vtkJSONParser;
 
 class VTK_EXPORT vtkJSONReader: public vtkTableAlgorithm
 {
@@ -38,24 +49,26 @@ public:
   vtkGetStringMacro(FileName);
   vtkSetStringMacro(FileName);
 
-  // Description:
-  // Determine whether the given file can be read
-  virtual int CanReadFile(const char* fname);
 
   // Description:
   // Request Data
   virtual int RequestData(vtkInformation*, 
 			  vtkInformationVector**,
 			  vtkInformationVector*);
+  // Decription:
+  // Parse the Json Value corresponding to the root data from the file
+  virtual int Parse(Json::Value& root, vtkTable *theTable);
 
+  // Decription:
+  // Verify if file exists and can be read by the parser
+  // If exists, parse into Jsoncpp data structure
+  int CanParseFile(const char *fname, Json::Value &root);
 
 protected:
   vtkJSONReader();
   ~vtkJSONReader();  
   // name of the file to read from
   char*            FileName;
-
-  vtkJSONParser*   Parser;
 
 private:
   vtkJSONReader(const vtkJSONReader&); // Not implemented.
