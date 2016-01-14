@@ -97,7 +97,7 @@ public:
     }
     if(!found) {
       std::ostringstream oss;
-      oss<<"Bad key value '"<<key<"'";
+      oss<<"Bad key value '"<<key<<"'";
       err = oss.str();
     }
   }
