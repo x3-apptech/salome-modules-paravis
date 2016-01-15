@@ -19,14 +19,15 @@
 
 IF(PARAVIEW_BUILD_QT_GUI)
    
+    INCLUDE(UseQtExt)
     # Custom object panel for the reader and 
     # custom display panel for line chart view
-    QT4_WRAP_UI(CLIENT_UI_SRCS
+    QT_WRAP_UIC(CLIENT_UI_SRCS
         Resources/UI/TableReaderPanel.ui
 	Resources/UI/CustomXYChartDisplayPanel.ui
     )
 
-    QT4_WRAP_CPP(MOC_SRCS 
+    QT_WRAP_MOC(MOC_SRCS 
 	pqTableReaderPanel.h
 	pqTableTo3DPanel.h
 	pqCustomChartDisplayPanelImplementation.h

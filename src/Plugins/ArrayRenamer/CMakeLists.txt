@@ -22,13 +22,14 @@ PROJECT(ArrayRenamer)
 
 cmake_minimum_required(VERSION 2.8)
 
+INCLUDE(UseQtExt)
 FIND_PACKAGE(ParaView REQUIRED)
 INCLUDE(${PARAVIEW_USE_FILE})
 
 SET (outifaces)	
 SET (outsrcs)
 
-QT4_WRAP_CPP(moc_srcs pqArraysEditorPropertyWidget.h pqEditComponents.h)
+QT_WRAP_MOC(moc_srcs pqArraysEditorPropertyWidget.h pqEditComponents.h)
 
   ADD_PARAVIEW_PROPERTY_GROUP_WIDGET(outifaces outsrcs
     TYPE "custom_arrays_editor"

@@ -61,15 +61,6 @@ SET(BUILD_SHARED_LIBS TRUE)
 # Local macros:
 LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/adm_local/cmake_files")
 
-# Detect GUI root dir (but doesn't find GUI yet! See below)
-# ===================
-SET(GUI_ROOT_DIR $ENV{GUI_ROOT_DIR} CACHE PATH "Path to the Salome GUI")
-IF(EXISTS ${GUI_ROOT_DIR})
-  LIST(APPEND CMAKE_MODULE_PATH "${GUI_ROOT_DIR}/adm_local/cmake_files")
-ELSE()
-  MESSAGE(FATAL_ERROR "We absolutely need a Salome GUI, please define GUI_ROOT_DIR")
-ENDIF()
-
 # User options
 # ============
 OPTION(SALOME_BUILD_DOC "Generate SALOME GUI documentation" ON)
@@ -107,35 +98,43 @@ IF(SALOME_BUILD_DOC)
   SALOME_LOG_OPTIONAL_PACKAGE(Sphinx SALOME_BUILD_DOC)
 ENDIF()
 
+# Find GUI
+# ===================
+SET(GUI_ROOT_DIR $ENV{GUI_ROOT_DIR} CACHE PATH "Path to the Salome GUI")
+IF(EXISTS ${GUI_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${GUI_ROOT_DIR}/adm_local/cmake_files")
+  # We should skip detection of VTK (done automatically from GUI) as we need to detect ParaView instead;
+  # otherwise ParaView targets are not found
+  SET(OMIT_DETECT_PACKAGE_VTK ON)
+  FIND_PACKAGE(SalomeGUI REQUIRED)
+  SALOME_GUI_WITH_CORBA() # check whether GUI builded with CORBA
+  SALOME_GUI_MODE(SALOME_USE_SALOMEOBJECT SALOME_USE_PVVIEWER)
+  ADD_DEFINITIONS(${GUI_DEFINITIONS})
+  INCLUDE_DIRECTORIES(${GUI_INCLUDE_DIRS})
+ELSE()
+  MESSAGE(FATAL_ERROR "We absolutely need a Salome GUI, please define GUI_ROOT_DIR")
+ENDIF()
+
 ##
-## From GUI: part 1 (Qt must be checked before ParaView)
+## From GUI
 ##
-FIND_PACKAGE(SalomeQt4 REQUIRED COMPONENTS QtCore QtGui QtXml QtHelp)
-# This search for qhelpgenerator is required here
-# to avoid detecting native one due to bug in ParaViewMacros.cmake
-FIND_PROGRAM(QT_HELP_GENERATOR
-    qhelpgenerator
-    PATHS "${QT_BINARY_DIR}"
-    NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-    DOC "qhelpgenerator used to compile Qt help project files")
-MARK_AS_ADVANCED(QT_HELP_GENERATOR)
+
+IF (NOT SALOME_GUI_BUILD_WITH_QT5)
+  FIND_PACKAGE(SalomeQt4 REQUIRED COMPONENTS QtCore QtGui QtXml QtHelp)
+ELSE()
+  FIND_PACKAGE(SalomeQt5 REQUIRED)
+ENDIF()
 
 ##
 ## Specific to ParaViS:
 ##
-FIND_PACKAGE(SalomeParaView REQUIRED)
 
-# GUI itself has to be loaded AFTER ParaView: the ParaView config doesn't mix
-# well with the VTK one (and GUI loads VTK):
-FIND_PACKAGE(SalomeGUI REQUIRED)
-SALOME_GUI_WITH_CORBA() # check whether GUI builded with CORBA
-SALOME_GUI_MODE(SALOME_USE_SALOMEOBJECT SALOME_USE_PVVIEWER)
-ADD_DEFINITIONS(${GUI_DEFINITIONS})
-INCLUDE_DIRECTORIES(${GUI_INCLUDE_DIRS})
+FIND_PACKAGE(SalomeParaView REQUIRED)
 
 ##
 ## From MEDCoupling / MEDFile / or MEDModule (if CORBA plugin required):
 ##
+
 IF(SALOME_PARAVIS_BUILD_PLUGINS)
    # If CORBA plugins required, take in MED module 
    IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
@@ -158,6 +157,7 @@ ENDIF(SALOME_PARAVIS_BUILD_PLUGINS)
 ##
 ## From GEOM
 ##
+
 IF(SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_GEOM_SOURCE)
   SET(GEOM_ROOT_DIR $ENV{GEOM_ROOT_DIR} CACHE PATH "Path to the Salome GEOM")
   IF(EXISTS ${GEOM_ROOT_DIR})
@@ -179,6 +179,7 @@ ENDIF()
 ##
 ## From SMESH
 ##
+
 IF(SALOME_PARAVIS_BUILD_PLUGINS AND SALOME_PARAVIS_USE_SMESH_SOURCE)
   IF(NOT SALOME_PARAVIS_USE_GEOM_SOURCE)
     SET(GEOM_ROOT_DIR $ENV{GEOM_ROOT_DIR} CACHE PATH "Path to the Salome GEOM")

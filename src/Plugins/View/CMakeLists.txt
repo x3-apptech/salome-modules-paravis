@@ -17,11 +17,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+INCLUDE(UseQtExt)
+
 # create a plugin with a custom view that shows up in ParaView's multi-view
 # manager.  this plugin also contains a custom display panel
 
 # moc the Qt based .h files
-QT4_WRAP_CPP(MOC_SRCS MyView.h MyDisplay.h MyViewActiveOptions.h MyViewOptions.h)
+QT_WRAP_MOC(MOC_SRCS MyView.h MyDisplay.h MyViewActiveOptions.h MyViewOptions.h)
 
 # invoke macro to create sources for our custom view and display panel
 ADD_PARAVIEW_VIEW_MODULE(

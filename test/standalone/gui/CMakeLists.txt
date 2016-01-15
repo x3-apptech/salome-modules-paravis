@@ -18,6 +18,8 @@
 #
 # Author: Adrien Bruneton (CEA)
 
+INCLUDE(UseQtExt)
+
 SET(pl_HEADERS
     PLMainWindow.hxx
     PLViewTab.hxx
@@ -47,7 +49,6 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${PARAVIEW_INCLUDE_DIRS})
 
-INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 # Generate resources that will embedded 
@@ -59,11 +60,11 @@ GENERATE_QT_RESOURCE_FROM_FILES(
     "/LightPara/Configuration"
     "${PROJECT_SOURCE_DIR}/gui/xml/ParaViewReaders.xml")
 
-QT4_ADD_RESOURCES(rcs_sources
+QT_ADD_RESOURCES(rcs_sources
     ${ui_resources}
     )
-QT4_WRAP_UI(pl_FORMS_HEADERS ${pl_FORMS})
-QT4_WRAP_CPP(pl_HEADERS_MOC  ${pl_HEADERS})
+QT_WRAP_UIC(pl_FORMS_HEADERS ${pl_FORMS})
+QT_WRAP_MOC(pl_HEADERS_MOC  ${pl_HEADERS})
 
 ADD_EXECUTABLE(paraLight
     ${pl_SOURCES} 
