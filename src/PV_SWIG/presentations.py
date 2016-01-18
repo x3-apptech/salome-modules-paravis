@@ -955,7 +955,12 @@ def get_lookup_table(field_name, nb_components, vector_mode='Magnitude'):
 
     lookup_table.Discretize = 0
     lookup_table.ColorSpace = 'HSV'
-    lookup_table.LockScalarRange = 0
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 0
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 0
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
 
     return lookup_table
 
@@ -1109,7 +1114,13 @@ def ScalarMapOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
     # Set properties
     scalarmap.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
@@ -1192,7 +1203,14 @@ def CutPlanesOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1333,7 +1351,13 @@ def CutLinesOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1406,7 +1430,13 @@ def CutSegmentOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1522,7 +1552,13 @@ def VectorsOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+    
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1620,7 +1656,13 @@ def DeformedShapeOnField(proxy, entity, field_name,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1738,7 +1780,13 @@ def DeformedShapeAndScalarMapOnField(proxy, entity, field_name,
     # Set field range if necessary
     data_range = get_data_range(proxy, scalar_field_entity,
                                 scalar_field, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -1907,7 +1955,13 @@ def Plot3DOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -2008,7 +2062,13 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set display properties
@@ -2131,7 +2191,13 @@ def GaussPointsOnField(proxy, entity, field_name,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set display properties
@@ -2263,7 +2329,13 @@ def GaussPointsOnField1(proxy, entity, field_name,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set display properties
@@ -2416,7 +2488,13 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
     # Set field range if necessary
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
