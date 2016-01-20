@@ -198,7 +198,7 @@ void PLMainWindow::insertSingleView(PLViewTab * tab)
   std::cout << "Created: " << pqview << "!" << std::endl;
 
   // Retrieve its widget and pass it to the Qt tab:
-  QWidget* viewWidget = pqview->getWidget();
+  QWidget* viewWidget = pqview->widget();
 
 //  QWidget* viewWidget = new QPushButton("toto");
   tab->hideAndReplace(viewWidget, pqview);
