@@ -35,7 +35,7 @@ f=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f.setName("fieldELNO") ; f.setMesh(m)
 arr=DataArrayDouble([0.2,1.1,0.7,0.5,-0.3,0.4])
 f.setArray(DataArrayDouble.Meld(4*[arr]))
 f.checkCoherency()
-MEDLoader.WriteField(fname,f,True)
+WriteField(fname,f,True)
 
 ################### MED write is done -> Go to MEDReader
 

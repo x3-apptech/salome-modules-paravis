@@ -47,11 +47,11 @@ arr=DataArrayDouble.Aggregate(arr,arr2) ; arr3=DataArrayDouble(16) ; arr3.iota()
 arr.setInfoOnComponents(["1st","2nd","3rd","4th"])
 f3.setArray(arr)
 #
-MEDLoader.WriteMesh(fname,m,True)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f0)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f1)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f2)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f3)
+WriteMesh(fname,m,True)
+WriteFieldUsingAlreadyWrittenMesh(fname,f0)
+WriteFieldUsingAlreadyWrittenMesh(fname,f1)
+WriteFieldUsingAlreadyWrittenMesh(fname,f2)
+WriteFieldUsingAlreadyWrittenMesh(fname,f3)
 ################### MED write is done -> Go to MEDReader
 from paraview.simple import *
 

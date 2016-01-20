@@ -38,7 +38,7 @@ f.setName(zeName)
 f.setArray(DataArrayDouble([(-1.,1.,0.),(0.,1.,0.),(1.,1.,0.)]))
 tmp=MEDCouplingUMesh.Build0DMeshFromCoords(m.getCoords()) ; tmp.setName(zeName)
 f.setMesh(tmp)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f)
+WriteFieldUsingAlreadyWrittenMesh(fname,f)
 #
 
 from paraview.simple import *

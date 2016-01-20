@@ -37,7 +37,7 @@ f=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f.setMesh(m) ; f.setName("MyField") ; f.
 arr2=DataArrayDouble(4*4*2) ; arr2.iota() ; arr2.rearrange(2) ; arr2.setInfoOnComponents(["aa","bbb"])
 f.setArray(arr2) ; arr2+=0.1 ; f.checkCoherency()
 mm.write(fname,2)
-MEDLoader.WriteFieldUsingAlreadyWrittenMesh(fname,f)
+WriteFieldUsingAlreadyWrittenMesh(fname,f)
 #
 from paraview.simple import *
 from paraview import servermanager

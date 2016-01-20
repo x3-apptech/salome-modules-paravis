@@ -46,12 +46,12 @@ class MEDTimeReq;
 class ELGACmp
 {
 public:
-  vtkIdTypeArray *findOrCreate(const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew) const;
+  vtkIdTypeArray *findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew) const;
   void appendELGAIfAny(vtkDataSet *ds) const;
   ~ELGACmp();
 private:
   vtkIdTypeArray *isExisting(const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd) const;
-  vtkIdTypeArray *createNew(const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds) const;
+  vtkIdTypeArray *createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds) const;
 private:
   //! size of _loc_names is equal to _elgas.
   mutable std::vector< std::vector<std::string> > _loc_names;
@@ -61,11 +61,11 @@ private:
   mutable std::vector< std::vector< std::pair< vtkQuadratureSchemeDefinition *, unsigned char > > > _defs;
 };
 
-class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeavesArrays : public ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileAnyTypeFieldMultiTS>
+class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeavesArrays : public MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS>
 {
 public:
   MEDFileFieldRepresentationLeavesArrays();
-  MEDFileFieldRepresentationLeavesArrays(const ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileAnyTypeFieldMultiTS>& arr);
+  MEDFileFieldRepresentationLeavesArrays(const MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS>& arr);
   MEDFileFieldRepresentationLeavesArrays& operator=(const MEDFileFieldRepresentationLeavesArrays& other);
   int getId() const;
   void setId(int& id) const;
@@ -75,7 +75,7 @@ public:
   bool setStatus(bool status) const;
   std::string getZeName() const;
   const char *getZeNameC() const;
-  void appendFields(const MEDTimeReq *tr, const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const ParaMEDMEM::MEDMeshMultiLev *mml, const ParaMEDMEM::MEDFileMeshStruct *mst, vtkDataSet *ds) const;
+  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds) const;
   void appendELGAIfAny(vtkDataSet *ds) const;
 public:
   static const char ZE_SEP[];
@@ -97,15 +97,15 @@ class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeaves
 {
 public:
   MEDFileFieldRepresentationLeaves();
-  MEDFileFieldRepresentationLeaves(const std::vector< ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileAnyTypeFieldMultiTS> >& arr,
-                                   const ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileFastCellSupportComparator>& fsp);
+  MEDFileFieldRepresentationLeaves(const std::vector< MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS> >& arr,
+                                   const MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFastCellSupportComparator>& fsp);
   ~MEDFileFieldRepresentationLeaves();
   bool empty() const;
   void setId(int& id) const;
   std::string getMeshName() const;
   int getNumberOfArrays() const;
   int getNumberOfTS() const;
-  void feedSIL(const ParaMEDMEM::MEDFileMeshes *ms, const std::string& meshName, vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const;
+  void feedSIL(const MEDCoupling::MEDFileMeshes *ms, const std::string& meshName, vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const;
   void computeFullNameInLeaves(const std::string& tsName, const std::string& meshName, const std::string& comSupStr) const;
   bool containId(int id) const;
   bool containZeName(const char *name, int& id) const;
@@ -117,15 +117,15 @@ public:
   std::vector<double> getTimeSteps(const TimeKeeper& tk) const;
   std::vector< std::pair<int,int> > getTimeStepsInCoarseMEDFileFormat(std::vector<double>& ts) const;
   std::string getHumanReadableOverviewOfTS() const;
-  vtkDataSet *buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const ParaMEDMEM::MEDFileMeshes *meshes) const;
+  vtkDataSet *buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDFileMeshes *meshes) const;
 private:
-  vtkUnstructuredGrid *buildVTKInstanceNoTimeInterpolationUnstructured(ParaMEDMEM::MEDUMeshMultiLev *mm) const;
-  vtkRectilinearGrid *buildVTKInstanceNoTimeInterpolationCartesian(ParaMEDMEM::MEDCMeshMultiLev *mm) const;
-  vtkStructuredGrid *buildVTKInstanceNoTimeInterpolationCurveLinear(ParaMEDMEM::MEDCurveLinearMeshMultiLev *mm) const;
-  void appendFields(const MEDTimeReq *tr, const ParaMEDMEM::MEDFileFieldGlobsReal *globs, const ParaMEDMEM::MEDMeshMultiLev *mml, const ParaMEDMEM::MEDFileMeshes *meshes, vtkDataSet *ds) const;
+  vtkUnstructuredGrid *buildVTKInstanceNoTimeInterpolationUnstructured(MEDCoupling::MEDUMeshMultiLev *mm) const;
+  vtkRectilinearGrid *buildVTKInstanceNoTimeInterpolationCartesian(MEDCoupling::MEDCMeshMultiLev *mm) const;
+  vtkStructuredGrid *buildVTKInstanceNoTimeInterpolationCurveLinear(MEDCoupling::MEDCurveLinearMeshMultiLev *mm) const;
+  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds) const;
 private:
   std::vector<MEDFileFieldRepresentationLeavesArrays> _arrays;
-  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileFastCellSupportComparator> _fsp;
+  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFastCellSupportComparator> _fsp;
   mutable vtkDataSet *_cached_ds;
 };
 
@@ -164,15 +164,15 @@ public:
 private:
   const MEDFileFieldRepresentationLeavesArrays& getLeafArr(int id) const;
   const MEDFileFieldRepresentationLeaves& getTheSingleActivated(int& lev0, int& lev1, int& lev2) const;
-  static ParaMEDMEM::MEDFileFields *BuildFieldFromMeshes(const ParaMEDMEM::MEDFileMeshes *ms);
-  static void AppendFieldFromMeshes(const ParaMEDMEM::MEDFileMeshes *ms, ParaMEDMEM::MEDFileFields *ret);
-  static std::string BuildAUniqueArrayNameForMesh(const std::string& meshName, const ParaMEDMEM::MEDFileFields *ret);
+  static MEDCoupling::MEDFileFields *BuildFieldFromMeshes(const MEDCoupling::MEDFileMeshes *ms);
+  static void AppendFieldFromMeshes(const MEDCoupling::MEDFileMeshes *ms, MEDCoupling::MEDFileFields *ret);
+  static std::string BuildAUniqueArrayNameForMesh(const std::string& meshName, const MEDCoupling::MEDFileFields *ret);
   static std::vector<std::string> SplitFieldNameIntoParts(const std::string& fullFieldName, char sep);
 private:
   // 1st : timesteps, 2nd : meshName, 3rd : common support
   std::vector< std::vector< std::vector< MEDFileFieldRepresentationLeaves > > > _data_structure;
-  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileMeshes> _ms;
-  ParaMEDMEM::MEDCouplingAutoRefCountObjectPtr<ParaMEDMEM::MEDFileFields> _fields;
+  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileMeshes> _ms;
+  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFields> _fields;
 };
 
 class MEDLOADERFORPV_EXPORT TimeKeeper

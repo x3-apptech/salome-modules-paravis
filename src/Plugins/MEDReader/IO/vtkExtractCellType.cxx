@@ -340,13 +340,13 @@ int vtkExtractCellType::RequestInformation(vtkInformation *request, vtkInformati
 	      const std::map<int,INTERP_KERNEL::NormalizedCellType>::const_iterator it(m.find(vtkCt));
 	      if(it==m.end())
 		{
-		  const unsigned char *pos(std::find(ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH,vtkCt));
-		  if(pos==ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH)
+		  const unsigned char *pos(std::find(MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH,vtkCt));
+		  if(pos==MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH)
 		    {
 		      vtkDebugMacro("vtkExtractCellType::RequestInformation : cell #" << cellId << " has unrecognized type !");
 		      return 0;
 		    }
-		  m[vtkCt]=(INTERP_KERNEL::NormalizedCellType)std::distance(ParaMEDMEM::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,pos);
+		  m[vtkCt]=(INTERP_KERNEL::NormalizedCellType)std::distance(MEDCoupling::MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,pos);
             }
 	    }
 	  this->Internal->loadFrom(m);
