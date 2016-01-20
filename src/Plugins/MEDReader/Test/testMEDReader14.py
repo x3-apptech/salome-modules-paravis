@@ -78,7 +78,7 @@ for i in xrange(5):
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(0,12,1),[0.,0.,1.,0.,0.,1.],[0.1,0.1,0.8,0.1,0.1,0.8],3*[0.16666666666666666])
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(12,24,1),[-1.,-1.,1.,-1.,1.,1.,-1.,1.],[-0.577350,-0.577350,0.577350,-0.577350,0.577350,0.577350,-0.577350,0.577350],4*[1.])
     arr=DataArrayDouble(2*(12*3+12*4)) ; arr.iota(0+1000*i) ; arr.rearrange(2)
-    fNode.setArray(arr) ; arr.setInfoOnComponents(["Comp1_2 [m]","Com2_2 [s^2]"]) ; fNode.checkCoherency()
+    fNode.setArray(arr) ; arr.setInfoOnComponents(["Comp1_2 [m]","Com2_2 [s^2]"]) ; fNode.checkConsistencyLight()
     fNode.setName(fieldName0)
     f.setFieldProfile(fNode,mm,0,zePfl0)
     #
@@ -91,7 +91,7 @@ for i in xrange(5):
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(4,10,1),[-1.,1.],[-0.5,0.,0.5],[1.,1.,1.])
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(10,14,1),[-1.,1.],[-0.6,-0.2,0.2,0.6],[1.,1.,1.,1.])
     arr=DataArrayDouble(2*(4*2+6*3+4*4)) ; arr.iota(100+1000*i) ; arr.rearrange(2)
-    fNode.setArray(arr) ; arr.setInfoOnComponents(["Comp1_2 [m]","Com2_2 [s^2]"]) ; fNode.checkCoherency()
+    fNode.setArray(arr) ; arr.setInfoOnComponents(["Comp1_2 [m]","Com2_2 [s^2]"]) ; fNode.checkConsistencyLight()
     fNode.setName(fieldName0)
     f.setFieldProfile(fNode,mm,-1,zePfl1)
     fs0.pushBackTimeStep(f)
@@ -104,7 +104,7 @@ for i in xrange(5):
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(0,4,1),[-1.,1.],[-0.6,-0.2,0.2,0.6],[1.,1.,1.,1.])
     fNode.setGaussLocalizationOnCells(DataArrayInt.Range(4,10,1),[-1.,1.],[-0.6666666666666667,-0.33333333333333337,0.,0.33333333333333337,0.6666666666666667],[1.,1.,1.,1.,1.])
     arr=DataArrayDouble(2*(4*4+6*5)) ; arr.iota(500+1000*i) ; arr.rearrange(2)
-    fNode.setArray(arr) ; arr.setInfoOnComponents(["C1 [m]","C2 [s^2]"]) ; fNode.checkCoherency()
+    fNode.setArray(arr) ; arr.setInfoOnComponents(["C1 [m]","C2 [s^2]"]) ; fNode.checkConsistencyLight()
     f.setFieldProfile(fNode,mm,-1,zePfl2)
     fs1.pushBackTimeStep(f)
     #

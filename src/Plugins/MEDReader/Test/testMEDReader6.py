@@ -47,7 +47,7 @@ fGauss.setGaussLocalizationOnType(NORM_TRI3,[0.,0.,1.,0.,0.,1.],[0.1,0.1,0.05,0.
 fGauss.setGaussLocalizationOnType(NORM_QUAD4,[-1.,-1.,1.,-1.,1.,1.,-1.,1.],[-0.9,-0.9,0.,0.,0.9,0.9],[0.2,0.3,0.5])
 fGauss.setArray(DataArrayDouble([0.9,1.3,0.22,1.3,1.62,2.21,1.62,2.72,2.95,2.54,2.25,2.16,1.58,1.05,3.13,2.91,2.82,1.41,1.58,1.95,3.59,3.53,3.59,2.82,2.91,3.13,2.25,2.54,2.95]))
 fGauss.getArray().setInfoOnComponent(0,"C0")
-fGauss.checkCoherency()
+fGauss.checkConsistencyLight()
 #
 f1ts=MEDFileField1TS()
 f1ts.setFieldNoProfileSBT(fGauss)

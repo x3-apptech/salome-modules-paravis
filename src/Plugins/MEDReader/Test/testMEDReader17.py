@@ -35,7 +35,7 @@ grp3=DataArrayInt([0,1,2,3]) ; grp3.setName("grp3")
 mm.setGroupsAtLevel(0,[grp0,grp1,grp2,grp3])
 f=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f.setMesh(m) ; f.setName("MyField") ; f.setTime(0.,0,0)
 arr2=DataArrayDouble(4*4*2) ; arr2.iota() ; arr2.rearrange(2) ; arr2.setInfoOnComponents(["aa","bbb"])
-f.setArray(arr2) ; arr2+=0.1 ; f.checkCoherency()
+f.setArray(arr2) ; arr2+=0.1 ; f.checkConsistencyLight()
 mm.write(fname,2)
 WriteFieldUsingAlreadyWrittenMesh(fname,f)
 #

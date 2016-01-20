@@ -42,7 +42,7 @@ f1ts1=MEDFileField1TS()
 f0=MEDCouplingFieldDouble(ON_NODES) ; f0.setMesh(m0) ; f0.setName("f0NoPfl")
 arr0=DataArrayDouble([0.,1.,2.,3.,1.,1.5,2.2,3.1,2.,2.2,3.,3.1,3.,3.1,3.5,4.])
 f0.setArray(arr0)
-f0.checkCoherency()
+f0.checkConsistencyLight()
 f1ts0.setFieldNoProfileSBT(f0)
 #
 pfl1=DataArrayInt([0,1,2,3,4,5,6,8,9,12]) ; pfl1.setName("pfl1")

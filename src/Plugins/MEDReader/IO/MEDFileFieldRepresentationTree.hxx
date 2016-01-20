@@ -61,11 +61,11 @@ private:
   mutable std::vector< std::vector< std::pair< vtkQuadratureSchemeDefinition *, unsigned char > > > _defs;
 };
 
-class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeavesArrays : public MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS>
+class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeavesArrays : public MEDCoupling::MCAuto<MEDCoupling::MEDFileAnyTypeFieldMultiTS>
 {
 public:
   MEDFileFieldRepresentationLeavesArrays();
-  MEDFileFieldRepresentationLeavesArrays(const MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS>& arr);
+  MEDFileFieldRepresentationLeavesArrays(const MEDCoupling::MCAuto<MEDCoupling::MEDFileAnyTypeFieldMultiTS>& arr);
   MEDFileFieldRepresentationLeavesArrays& operator=(const MEDFileFieldRepresentationLeavesArrays& other);
   int getId() const;
   void setId(int& id) const;
@@ -97,8 +97,8 @@ class MEDLOADERFORPV_EXPORT MEDFileFieldRepresentationLeaves
 {
 public:
   MEDFileFieldRepresentationLeaves();
-  MEDFileFieldRepresentationLeaves(const std::vector< MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileAnyTypeFieldMultiTS> >& arr,
-                                   const MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFastCellSupportComparator>& fsp);
+  MEDFileFieldRepresentationLeaves(const std::vector< MEDCoupling::MCAuto<MEDCoupling::MEDFileAnyTypeFieldMultiTS> >& arr,
+                                   const MEDCoupling::MCAuto<MEDCoupling::MEDFileFastCellSupportComparator>& fsp);
   ~MEDFileFieldRepresentationLeaves();
   bool empty() const;
   void setId(int& id) const;
@@ -125,7 +125,7 @@ private:
   void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds) const;
 private:
   std::vector<MEDFileFieldRepresentationLeavesArrays> _arrays;
-  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFastCellSupportComparator> _fsp;
+  MEDCoupling::MCAuto<MEDCoupling::MEDFileFastCellSupportComparator> _fsp;
   mutable vtkDataSet *_cached_ds;
 };
 
@@ -171,8 +171,8 @@ private:
 private:
   // 1st : timesteps, 2nd : meshName, 3rd : common support
   std::vector< std::vector< std::vector< MEDFileFieldRepresentationLeaves > > > _data_structure;
-  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileMeshes> _ms;
-  MEDCoupling::MEDCouplingAutoRefCountObjectPtr<MEDCoupling::MEDFileFields> _fields;
+  MEDCoupling::MCAuto<MEDCoupling::MEDFileMeshes> _ms;
+  MEDCoupling::MCAuto<MEDCoupling::MEDFileFields> _fields;
 };
 
 class MEDLOADERFORPV_EXPORT TimeKeeper

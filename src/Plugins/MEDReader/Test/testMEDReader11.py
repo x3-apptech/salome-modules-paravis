@@ -85,7 +85,7 @@ for name,arrs in [("ENERGIE RECUE",(nrj_0_1,nrj_0_1)),("ENTHALPIE",(h_0,h_1)),("
         f1ts0=MEDFileField1TS()
         f=MEDCouplingFieldDouble(ON_CELLS) ; f.setName(name) ; f.setTime(ft,dt,it) ; f.setMesh(sup)
         f.setArray(arrs[its])
-        f.checkCoherency()
+        f.checkConsistencyLight()
         f1ts0.setFieldProfile(f,mm,0,pfl0)
         fmts0.pushBackTimeStep(f1ts0)
         pass
