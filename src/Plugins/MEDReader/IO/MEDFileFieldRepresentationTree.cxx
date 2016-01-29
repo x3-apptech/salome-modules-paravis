@@ -68,6 +68,8 @@ const char MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME[]="Family
 
 const char MEDFileFieldRepresentationLeavesArrays::NUM_ID_NODE_NAME[]="NumIdNode";
 
+const char MEDFileFieldRepresentationLeavesArrays::GLOBAL_NODE_ID_NAME[]="GlobalNodeIds";// WARNING DO NOT CHANGE IT BEFORE HAVING CHECKED IN PV SOURCES !
+
 const char MEDFileFieldRepresentationTree::ROOT_OF_GRPS_IN_TREE[]="zeGrps";
 
 const char MEDFileFieldRepresentationTree::ROOT_OF_FAM_IDS_IN_TREE[]="zeFamIds";
@@ -878,6 +880,17 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
       ret->GetPointData()->AddArray(vtkTab);
       vtkTab->Delete();
       numNodes->decrRef();
+    }
+  // Global Node Ids if any ! (In // mode)
+  DataArrayInt *gni(ptMML2->retrieveGlobalNodeIdsIfAny());
+  if(gni)
+    {
+      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkTab->SetNumberOfComponents(1);
+      vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::GLOBAL_NODE_ID_NAME);
+      vtkTab->SetArray(gni->getPointer(),gni->getNbOfElems(),0,VTK_DATA_ARRAY_FREE);
+      gni->accessToMemArray().setSpecificDeallocator(0);
+      gni->decrRef();
     }
   return ret;
 }

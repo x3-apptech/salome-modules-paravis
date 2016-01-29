@@ -85,6 +85,7 @@ public:
   static const char NUM_ID_CELL_NAME[];
   static const char FAMILY_ID_NODE_NAME[];
   static const char NUM_ID_NODE_NAME[];
+  static const char GLOBAL_NODE_ID_NAME[];
 private:
   mutable bool _activated;
   mutable int _id;
