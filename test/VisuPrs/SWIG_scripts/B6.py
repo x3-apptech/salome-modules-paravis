@@ -98,7 +98,8 @@ if cur_view:
 
 xy_view1 = pvsimple.CreateXYPlotView()
 xy_view1.ChartTitle = 'TEST table of real'
-xy_view1.AxisTitle = ['[ Wt ]', 'Row 0 [ Hz ]']
+xy_view1.BottomAxisTitle = '[ Wt ]'
+xy_view1.LeftAxisTitle = 'Row 0 [ Hz ]'
 
 # Display curves for the table of real
 tr_rep = pvsimple.Show(ps_tr)
@@ -124,7 +125,7 @@ tr_rep.SeriesColor = ['Row 10', '0.2', '0.2', '0.9']
 # Create another chart line view
 xy_view2 = pvsimple.CreateXYPlotView()
 xy_view2.ChartTitle = 'TEST table of integer'
-xy_view2.AxisTitle = ['', 'FR [ m/h ]']
+xy_view2.LeftAxisTitle = 'FR [ m/h ]'
 
 # Display curves for the table of integer
 ti_rep = pvsimple.Show(ps_ti, xy_view2)

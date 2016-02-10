@@ -41,7 +41,12 @@ def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
     # Set field range
     data_range = get_data_range(proxy, entity,
                                 field_name, vector_mode)
-    lookup_table.LockScalarRange = 1
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 1
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 1
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties

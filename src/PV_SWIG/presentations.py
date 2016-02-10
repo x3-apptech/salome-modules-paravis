@@ -972,7 +972,6 @@ def get_group_mesh_name(full_group_name):
         group_name = full_group_name.split('/')[1]
         return group_name
 
-
 def get_group_entity(full_group_name):
     """Return entity type of the group by its full name."""
     aList = full_group_name.split('/')
@@ -2475,6 +2474,7 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
     stream.Vectors = ['POINTS', vector_array]
     stream.IntegrationDirection = direction
     stream.IntegratorType = 'Runge-Kutta 2'
+    stream.SeedType = 'High Resolution Line Source'
     stream.UpdatePipeline()
 
     # Get Stream Lines representation object

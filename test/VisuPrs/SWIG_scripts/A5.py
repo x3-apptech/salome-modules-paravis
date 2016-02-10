@@ -69,7 +69,8 @@ if cur_view:
     pvsimple.Delete(cur_view)
 xy_view = pvsimple.CreateXYPlotView()
 xy_view.ChartTitle = 'Very useful data'
-xy_view.AxisTitle = ['[ Wt ]', 'Frequency [ Hz ]']
+xy_view.BottomAxisTitle = '[ Wt ]'
+xy_view.LeftAxisTitle = 'Frequency [ Hz ]'
 
 xy_rep = pvsimple.Show(ps)
 xy_rep.AttributeType = 'Row Data'

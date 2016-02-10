@@ -21,7 +21,7 @@
 
 import sys
 import os
-from paravistest import datadir, pictureext, get_picture_dir
+from paravistest import datadir, pictureext, get_picture_dir, get_png_picture_resolution
 from presentations import *
 import pvsimple
 
@@ -36,7 +36,8 @@ if med_reader1 is None:
 
 # 2. Creation of a set of "DeformedShape and ScalarMap" presentations, based on time stamps of "MODES_DEPL" field
 errors=0
-sizes=[]
+sizew=[]
+sizeh=[]
 
 for i in range(1,11):
     presentation = DeformedShapeAndScalarMapOnField(med_reader1, EntityType.NODE, "MODES___DEPL____________________", i)
@@ -46,14 +47,24 @@ for i in range(1,11):
     pic_path = os.path.join(picturedir, "npal19999_1_time_stamp_" + str(i) + "." + pictureext)
     process_prs_for_test(presentation, pvsimple.GetRenderView(), pic_path)
 
-    sizes.append(os.path.getsize(pic_path))
+    (h,w) = get_png_picture_resolution(pic_path)
+    sizew.append(w)
+    sizeh.append(h)
 
-if abs(max(sizes)-min(sizes)) > 0.01*max(sizes):
-    print "WARNING!!! Pictures have different sizes!!!"
+if abs(max(sizeh)-min(sizeh)) > 0.01*max(sizeh):
+    print "WARNING!!! Pictures have different height !!!"
     errors += 1
     for i in range(1,11):
-        picture_name = "npal19999_1_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; size: " + str(sizes[i-1])
+        picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
+        print "Picture: " + picture_name + "; height : " + str(sizeh[i-1])
+    raise RuntimeError
+
+if abs(max(sizew)-min(sizew)) > 0.01*max(sizew):
+    print "WARNING!!! Pictures have different width !!!"
+    errors += 1
+    for i in range(1,11):
+        picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
+        print "Picture: " + picture_name + "; width : " + str(sizew[i-1])
     raise RuntimeError
 
 # 3. Import of the "Bug829_resu_mode.med" file at second time
@@ -64,7 +75,8 @@ if med_reader2 is None:
 
 # 4. Creation of a set of "DeformedShape and ScalarMap" presentations, based on time stamps of "MODES_DEPL" field
 errors = 0
-sizes=[]
+sizew=[]
+sizeh=[]
 
 for i in range(1,11):
     presentation = DeformedShapeAndScalarMapOnField(med_reader2, EntityType.NODE, "MODES___DEPL____________________", 11-i)
@@ -73,13 +85,23 @@ for i in range(1,11):
 
     pic_path = os.path.join(picturedir, "npal19999_2_time_stamp_" + str(i) + "." + pictureext)
     process_prs_for_test(presentation, pvsimple.GetRenderView(), pic_path)
+    (h,w) = get_png_picture_resolution(pic_path)
+    sizew.append(w)
+    sizeh.append(h)
 
-    sizes.append(os.path.getsize(pic_path))
-
-if abs(max(sizes)-min(sizes)) > 0.01*max(sizes):
-    print "WARNING!!! Pictures have different sizes!!!"
+if abs(max(sizeh)-min(sizeh)) > 0.01*max(sizeh):
+    print "WARNING!!! Pictures have different height !!!"
     errors += 1
     for i in range(1,11):
         picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; size: " + str(sizes[i-1])
+        print "Picture: " + picture_name + "; height : " + str(sizeh[i-1])
     raise RuntimeError
+
+if abs(max(sizew)-min(sizew)) > 0.01*max(sizew):
+    print "WARNING!!! Pictures have different width !!!"
+    errors += 1
+    for i in range(1,11):
+        picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
+        print "Picture: " + picture_name + "; width : " + str(sizew[i-1])
+    raise RuntimeError
+

@@ -45,7 +45,7 @@ view = pvsimple.GetRenderView()
 print "BREAKPOINT_1"
 
 for i in range(1, 11):
-    prs = StreamLinesOnField(med_reader, EntityType.NODE, "MODES_DEPL", i)
+    prs = StreamLinesOnField(med_reader, EntityType.NODE, "MODES___DEPL____________________", i)
     if prs is None:
         raise RuntimeError("Presentation on timestamp {0} is None!!!".
                            format(i))

@@ -22,6 +22,14 @@
 from paravistest import datadir, delete_with_inputs
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal'}
 
@@ -52,9 +60,10 @@ bar.NumberOfLabels = settings["NbLabels"]
 bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
+text  = smtrace.stop_trace()
 # 3. Dump Study
 path_to_save = os.path.join(os.getenv("HOME"), "ScalarMap.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(scalarmap)
