@@ -22,6 +22,14 @@
 from paravistest import datadir
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 # 1. TimeStamps.med import
 file_path = datadir + "TimeStamps.med"
@@ -57,8 +65,9 @@ for name in prs_names:
         prs_list.append(prs)
 
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "AllPresentations.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 source_list = GetSources().values()

@@ -22,6 +22,14 @@
 from paravistest import datadir, delete_with_inputs
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.12929}
 
@@ -36,6 +44,8 @@ if med_reader is None:
 med_field = "vitesse"
 
 prs = DeformedShapeAndScalarMapOnField(med_reader, EntityType.NODE, med_field, 1)
+prs.Visibility = 1
+prs.SetScalarBarVisibility(GetActiveView(),1)
 
 # apply settings
 prs.Position = settings["Offset"]
@@ -57,8 +67,9 @@ bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "ScalarMapOnDeformedShape.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(prs)
@@ -69,8 +80,8 @@ view = CreateRenderView()
 execfile(path_to_save)
 
 # 6. Checking of the settings done before dump
-recreated_bar = view.Representations[0]
-recreated_prs = view.Representations[1]
+recreated_bar = view.Representations[1]
+recreated_prs = view.Representations[0]
 
 errors = 0
 tolerance = 1e-05

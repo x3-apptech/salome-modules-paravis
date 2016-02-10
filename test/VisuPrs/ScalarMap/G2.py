@@ -22,7 +22,7 @@
 
 import sys
 import os
-from paravistest import datadir, pictureext, get_picture_dir
+from paravistest import datadir, pictureext, get_picture_dir, get_png_picture_resolution
 from pvsimple import GetActiveSource, GetRenderView, Render, OpenDataFile
 from presentations import ScalarMapOnField, hide_all, EntityType, PrsTypeEnum,reset_view,process_prs_for_test
 
@@ -44,10 +44,13 @@ else: print "OK"
 aView = GetRenderView()
 
 
+import time
+
 aFieldEntity = EntityType.NODE
 aFieldName = "MODES___DEPL____________________"
 #create list to store picture files sizes
-sizes=[]
+sizesw=[]
+sizesh=[]
 #create Scalar Map presentations for 10 timestamps
 for i in range(1,11):
     hide_all(aView, True)
@@ -72,12 +75,23 @@ for i in range(1,11):
 
     # Show and record the presentation
     process_prs_for_test(aPrs, aView, pic_name)
-    sizes.append(os.path.getsize(pic_name))
+    (w,h) = get_png_picture_resolution(pic_name)
+    sizesw.append(w)
+    sizesh.append(h)
 
-# check sizes of pictures
-if abs(max(sizes)-min(sizes)) > 0.01*max(sizes):
-    print "<b>WARNING!!! Pictures have different sizes!!!</b>";
+# check sizes of pictures: width
+if abs(max(sizesw)-min(sizesw)) > 0:
+    print "<b>ERROR!!! Pictures have different width !!!</b>";
     for i in range(1,11):
         picture_name = "time_stamp_"+str(i)+"."+pictureext
-        print "Picture: "+picture_name+"; size: "+str(sizes[i-1])
+        print "Picture: "+picture_name+"; width : "+str(sizesw[i-1])
     raise RuntimeError
+
+# check sizes of pictures: height
+if abs(max(sizesh)-min(sizesh)) > 0:
+    print "<b>WARNING!!! Pictures have different height !!!</b>";
+    for i in range(1,11):
+        picture_name = "time_stamp_"+str(i)+"."+pictureext
+        print "Picture: "+picture_name+"; height : "+str(sizesh[i-1])
+    raise RuntimeError
+

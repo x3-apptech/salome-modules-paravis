@@ -28,6 +28,7 @@ import os
 import tempfile
 import getpass
 from datetime import date
+import struct
 
 # Auxiliary variables
 
@@ -349,3 +350,22 @@ def delete_with_inputs(obj):
             obj_to_delete = tmp_obj.Input
 
         pvsimple.Delete(tmp_obj)
+
+def get_png_picture_resolution(infile):
+    """Returns size (width, height) of the PNG image"""    
+    f = open(infile, 'rb')    
+    data = f.read(24)
+    f.close()
+    if not (data[:8] == '\211PNG\r\n\032\n'and (data[12:16] == 'IHDR')):
+        raise RuntimeError("File '%s' is not PNG image"%(infile))
+
+    w, h = struct.unpack('>LL', data[16:24])
+    width = int(w)
+    height = int(h)
+    return (width,height)
+
+def save_trace(afile,atrace):    
+    """Saves atrace in afile"""        
+    f = open(afile, 'w')
+    f.write(atrace)
+    f.close()

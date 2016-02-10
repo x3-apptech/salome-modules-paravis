@@ -56,6 +56,8 @@ print "Maximum Step Length: ", stream_tracer.MaximumStepLength
 print "Maximum Steps: ", stream_tracer.MaximumSteps
 print "Maximum Streamline Length: ", stream_tracer.MaximumStreamlineLength
 print "Seed Type: ", type(stream_tracer.SeedType)
-print "Center: ", stream_tracer.SeedType.Center
-print "Number Of Points: ", stream_tracer.SeedType.NumberOfPoints
-print "Radius: ", stream_tracer.SeedType.Radius
+print "Point1: ", stream_tracer.SeedType.Point1
+print "Point2: ", stream_tracer.SeedType.Point2
+# print "Center: ", stream_tracer.SeedType.Center
+# print "Number Of Points: ", stream_tracer.SeedType.NumberOfPoints
+# print "Radius: ", stream_tracer.SeedType.Radius

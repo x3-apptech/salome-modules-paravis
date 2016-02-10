@@ -48,9 +48,8 @@ title = xy_view.ChartTitle
 xy_view.ChartTitle = "Change the title from python"
 pvsimple.Render(xy_view)
 
-axis_title = xy_view.AxisTitle
-xy_view.AxisTitle[0] = "Y axis"
-xy_view.AxisTitle[1] = "X axis"
+xy_view.LeftAxisTitle = "Y axis"
+xy_view.BottomAxisTitle = "X axis"
 pvsimple.Render(xy_view)
 
 xy_view.ShowLegend = 0

@@ -17,9 +17,9 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(BASE_TESTS A0 B1 C3 D0 E0)
-SET(ALL_TESTS  A0 A1 A2 A3 A4 A5 A6 A7 A9 B1 C3 C4 C5 C6 C7 C8 C9
-               D0 D1 D3 D5 D6 D7 E0)
+SET(BASE_TESTS A0 B1 C3 E0)
+SET(ALL_TESTS  A0 A1 A2 A3 A4 A5 A6 A7 A9 B1 C3 C5 C6 C9
+               D1 D3 D6 D7 E0)
 
 # For make test
 IF(SALOME_PARAVIS_ALL_TEST)

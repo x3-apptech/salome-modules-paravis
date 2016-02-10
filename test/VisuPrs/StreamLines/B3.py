@@ -26,7 +26,7 @@ from paravistest import datadir, pictureext, get_picture_dir
 from presentations import CreatePrsForFile, PrsTypeEnum
 
 # Directory for saving snapshots
-picturedir = get_picture_dir(sys.argv[1], "StreamLines/B3")
+picturedir = get_picture_dir("StreamLines/B3")
 
 # Create presentations
 files = ["fra", "TimeStamps", "pointe", "Fields_group3D", "Hexa8", "Penta6", "Quad4", "Tetra4", "Tria3", "clo", "carre_en_quad4_seg2", "carre_en_quad4_seg2_fields", "cube_hexa8_quad4"]

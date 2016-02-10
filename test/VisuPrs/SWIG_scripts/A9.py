@@ -58,7 +58,7 @@ pvs.Render()
 
 # Load MED reader plugin
 pv_root_dir = os.getenv("PARAVIS_ROOT_DIR")
-pvs.LoadPlugin(pv_root_dir + "/lib/paraview/libMedReaderPlugin.so")
+pvs.LoadPlugin(pv_root_dir + "/lib/paraview/libMEDReaderPlugin.so")
 
 # Import MED file
 med_file = datadir + "pointe.med"

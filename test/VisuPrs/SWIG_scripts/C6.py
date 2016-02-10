@@ -26,7 +26,7 @@ import pvsimple
 
 # 1. Import tables from file
 file_path = tablesdir + "tables_test.xls"
-table_reader = pvsimple.TableReader(FileName=file_path)
+table_reader = pvsimple.CSVReader(FileName=file_path)
 if table_reader is None:
     print "FAILED to import tables from tables_test.xls file."
 
@@ -37,7 +37,6 @@ if cur_view:
 xy_view = pvsimple.CreateXYPlotView()
 
 # 3. Display curves in the viewer
-table_reader.TableNumber = 1
 xy_rep = pvsimple.Show(table_reader)
 xy_rep.AttributeType = 'Row Data'
 xy_rep.UseIndexForXAxis = 0

@@ -48,7 +48,12 @@ for table_nb in range(0, tables_count):
 
     # Get lookup table
     lookup_table = get_lookup_table(field_name, nb_components, vector_mode)
-    lookup_table.LockScalarRange = 0
+    if hasattr(lookup_table,"LockDataRange"):
+        lookup_table.LockDataRange = 0
+    elif hasattr(lookup_table,"LockScalarRange"):
+        lookup_table.LockScalarRange = 0
+    else:
+        raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
 
     # Set properties
     prs.ColorArrayName = (EntityType.get_pvtype(EntityType.NODE), field_name)
