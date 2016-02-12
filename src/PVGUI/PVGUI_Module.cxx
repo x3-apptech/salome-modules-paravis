@@ -476,7 +476,7 @@ void PVGUI_Module::showView( bool toShow )
     // this also connects to the pvserver and instantiates relevant PV behaviors
   }
 
-  pvWnd->setShown( toShow );
+  pvWnd->setVisible( toShow );
   if ( toShow ) pvWnd->setFocus();
 }
 

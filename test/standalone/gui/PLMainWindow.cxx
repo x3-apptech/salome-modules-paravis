@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <QObject>
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 #include <QMessageBox>
 
 #include <pqTabbedMultiViewWidget.h>
