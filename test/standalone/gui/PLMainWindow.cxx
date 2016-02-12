@@ -25,11 +25,7 @@
 
 #include <iostream>
 #include <QObject>
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QtGui/QFileDialog>
-#else
-#include <QtWidgets/QFileDialog>
-#endif
+#include <QFileDialog>
 #include <QMessageBox>
 
 #include <pqTabbedMultiViewWidget.h>
