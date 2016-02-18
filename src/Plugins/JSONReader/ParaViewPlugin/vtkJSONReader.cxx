@@ -66,7 +66,7 @@ const char* vtkJSONException::what() const throw() {
 //---------------------------------------------------
 class Container {
 public:
-  typedef std::vector<std::pair<std::string,std::vector<double>>> DataType;
+  typedef std::vector<std::pair<std::string,std::vector<double> > > DataType;
   Container(){}
   void initKeys(std::vector<std::string> &keys, std::string &err) {
     for(int i = 0; i < keys.size(); i++) {
