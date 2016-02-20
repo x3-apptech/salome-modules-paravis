@@ -35,6 +35,7 @@
 #include "GEOM_Client.hxx"
 #include "OCC2VTK_Tools.h"
 
+#include <algorithm>
 
 //----------------------------------------------
 vtkStandardNewMacro(vtkParaGEOMCorbaSource);
@@ -72,7 +73,7 @@ void vtkParaGEOMCorbaSource::SetIORCorba(char *ior) {
     return;
   int length=strlen(ior);
   IOR.resize(length+1);
-  vtksys_stl::copy(ior,ior+length+1,&IOR[0]);
+  std::copy(ior,ior+length+1,&IOR[0]);
   this->Modified();
 }
 

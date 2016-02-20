@@ -22,7 +22,7 @@
 #define __vtkParaGEOMCorbaSource_h
 
 #include "vtkUnstructuredGridAlgorithm.h"
-#include <vtksys/stl/vector>
+#include <vector>
 
 class vtkParaGEOMCorbaSource : public vtkAlgorithm {
  public:
@@ -41,7 +41,7 @@ class vtkParaGEOMCorbaSource : public vtkAlgorithm {
   int ProcessRequest(vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);
   virtual int RequestData( vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outInfo );
 
-  vtksys_stl::vector<char> IOR;
+  std::vector<char> IOR;
   static void *Orb;
   double Deflection;
   
