@@ -181,6 +181,7 @@ public:
       emit dataChanged( index( 1, min ) , index( 1, max ) );
       return true;
     }
+    return Superclass::setData(idx,value,role);
   }
 
   //------------------------------------------------------------------
@@ -357,6 +358,7 @@ public:
 	return true;
       }
     }
+    return Superclass::setData(idx,value,role);
   }
 
   //------------------------------------------------------------------
