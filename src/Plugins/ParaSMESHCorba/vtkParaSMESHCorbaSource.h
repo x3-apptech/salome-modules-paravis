@@ -22,7 +22,7 @@
 #define __vtkParaSMESHCorbaSource_h
 
 #include "vtkUnstructuredGridAlgorithm.h"
-#include <vtksys/stl/vector>
+#include <vector>
 
 class vtkParaSMESHCorbaSource: public vtkAlgorithm {
  public:
@@ -39,7 +39,7 @@ protected:
   int FillOutputPortInformation(int vtkNotUsed(port), vtkInformation* info);
   int ProcessRequest(vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);
   virtual int RequestData( vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outInfo );
-  vtksys_stl::vector<char> IOR;
+  std::vector<char> IOR;
   static void *Orb;
  private:
   vtkParaSMESHCorbaSource( const vtkParaSMESHCorbaSource& ); // Not implemented.
