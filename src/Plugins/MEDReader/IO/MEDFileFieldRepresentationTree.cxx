@@ -856,7 +856,7 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
       vtkIntArray *vtkTab(vtkIntArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,famNodes,noCpyNumNodes);
+      AssignDataPointerToVTK<int>(vtkTab,famNodes,noCpyFamNodes);
       ret->GetPointData()->AddArray(vtkTab);
       vtkTab->Delete();
       famNodes->decrRef();

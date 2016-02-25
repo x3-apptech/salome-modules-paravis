@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)
+SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
 
 SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/MEDReader)
 SET(BASELINES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Baselines")
