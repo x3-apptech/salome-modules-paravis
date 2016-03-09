@@ -55,9 +55,11 @@ public:
   virtual int RequestData(vtkInformation*, 
 			  vtkInformationVector**,
 			  vtkInformationVector*);
+
+protected:
   // Decription:
   // Parse the Json Value corresponding to the root data from the file
-  virtual int Parse(Json::Value& root, vtkTable *theTable);
+  virtual void Parse(Json::Value& root, vtkTable *theTable);
 
   // Decription:
   // Verify if file exists and can be read by the parser

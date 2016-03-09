@@ -66,7 +66,7 @@ const char* vtkJSONException::what() const throw() {
 //---------------------------------------------------
 class Container {
 public:
-  typedef std::vector<std::pair<std::string,std::vector<double>>> DataType;
+  typedef std::vector<std::pair<std::string,std::vector<double> > > DataType;
   Container(){}
   void initKeys(std::vector<std::string> &keys, std::string &err) {
     for(int i = 0; i < keys.size(); i++) {
@@ -156,7 +156,7 @@ int vtkJSONReader::RequestData(vtkInformation*,
     return 0;
 
   try {
-    return this->Parse(root, output_table);
+    this->Parse(root, output_table);
     return 1;
   } 
   catch(vtkJSONException e)  {
@@ -213,7 +213,7 @@ int vtkJSONReader::CanParseFile(const char *fname, Json::Value &root)
 }
 
 //---------------------------------------------------
-int vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
+void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
   bool hasShortNames = false;
   bool hasUnits = false;
   Container container;

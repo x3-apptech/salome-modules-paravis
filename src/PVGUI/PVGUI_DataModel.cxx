@@ -349,7 +349,7 @@ bool PVGUI_DataModel::save( QStringList& theListOfFiles)
         case 1: // Save referenced files only if this is the builtin server
           aServer = pqApplicationCore::instance()->getActiveServer();
           if (aServer)
-            isBuiltIn != aServer->isRemote();
+            isBuiltIn = !aServer->isRemote();
           if(isBuiltIn)
             {
               createAndCheckRestoreFlag(aTmpDir, theListOfFiles, unused);

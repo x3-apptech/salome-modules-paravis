@@ -177,6 +177,7 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
   _loc_names=locNames;
   _elgas=elgas;
   _defs.push_back(defs);
+  return elga;
 }
 
 void ELGACmp::appendELGAIfAny(vtkDataSet *ds) const
