@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -131,12 +131,23 @@ ENDIF()
 
 FIND_PACKAGE(SalomeParaView REQUIRED)
 
+FIND_PACKAGE(ParaView COMPONENTS vtkPVCatalyst vtkPVPythonCatalyst)
+LIST(FIND VTK_MODULES_ENABLED vtkPVCatalyst vtkPVCatalyst_index)
+LIST(FIND VTK_MODULES_ENABLED vtkPVPythonCatalyst vtkPVPythonCatalyst_index)
+IF (${vtkPVCatalyst_index} GREATER -1 AND
+    ${vtkPVPythonCatalyst_index} GREATER -1)
+  SET(PVCATALYST_ENABLED yes)
+ENDIF()
+IF (PVCATALYST_ENABLED)
+  ADD_DEFINITIONS("-DPVCATALYST_ENABLED")
+ENDIF()
+
 ##
 ## From MEDCoupling / MEDFile / or MEDModule (if CORBA plugin required):
 ##
 
 IF(SALOME_PARAVIS_BUILD_PLUGINS)
-   # If CORBA plugins required, take in MED module 
+   # If CORBA plugins required, take in MED module
    IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
       SET(MED_ROOT_DIR $ENV{MED_ROOT_DIR} CACHE PATH "Path to the SALOME MED module")
       IF(EXISTS ${MED_ROOT_DIR})
@@ -147,11 +158,11 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS)
     ELSE(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
        SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "Path to the MEDCoupling tool")
        IF(EXISTS ${MEDCOUPLING_ROOT_DIR})
-          LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")   
+          LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
        ENDIF()
        FIND_PACKAGE(SalomeMEDCoupling)            # will load MEDFile
        SALOME_LOG_OPTIONAL_PACKAGE(MEDCoupling SALOME_PARAVIS_BUILD_PLUGINS)
-    ENDIF()        
+    ENDIF()
 ENDIF(SALOME_PARAVIS_BUILD_PLUGINS)
 
 ##

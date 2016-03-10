@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ SET(pl_HEADERS
     PVViewer_Behaviors.h
     PVViewer_GUIElements.h
     )
-    
+
 SET(pl_OTHER_HEADERS
     PVViewer_Core.h
     )
@@ -44,17 +44,17 @@ SET(pl_FORMS
     ui/light_para.ui
     ui/view_tab.ui
     )
-    
+
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${PARAVIEW_INCLUDE_DIRS})
 
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
-# Generate resources that will embedded 
+# Generate resources that will embedded
 SET(ui_resources
   "${CMAKE_CURRENT_BINARY_DIR}/LightPara_configuration.qrc")
-  
+
 GENERATE_QT_RESOURCE_FROM_FILES(
     "${ui_resources}"
     "/LightPara/Configuration"
@@ -67,11 +67,11 @@ QT_WRAP_UIC(pl_FORMS_HEADERS ${pl_FORMS})
 QT_WRAP_MOC(pl_HEADERS_MOC  ${pl_HEADERS})
 
 ADD_EXECUTABLE(paraLight
-    ${pl_SOURCES} 
-    ${pl_HEADERS_MOC} 
+    ${pl_SOURCES}
+    ${pl_HEADERS_MOC}
     ${pl_FORMS_HEADERS}
     ${rcs_sources})
-    
+
 TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType)#vtkRenderingFreeTypeOpenGL)
 #INSTALL(TARGET paraLight bin)
 

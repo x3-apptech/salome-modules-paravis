@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,17 @@ ELSE()
 ENDIF()
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{PARAVIEW_ROOT_DIR}")
 FIND_PACKAGE(ParaView REQUIRED)
+
+FIND_PACKAGE(ParaView COMPONENTS vtkPVCatalyst vtkPVPythonCatalyst)
+LIST(FIND VTK_MODULES_ENABLED vtkPVCatalyst vtkPVCatalyst_index)
+LIST(FIND VTK_MODULES_ENABLED vtkPVPythonCatalyst vtkPVPythonCatalyst_index)
+IF (${vtkPVCatalyst_index} GREATER -1 AND
+    ${vtkPVPythonCatalyst_index} GREATER -1)
+  SET(PVCATALYST_ENABLED yes)
+ENDIF()
+IF (PVCATALYST_ENABLED)
+  ADD_DEFINITIONS("-DPVCATALYST_ENABLED")
+ENDIF()
 
 INCLUDE(${PARAVIEW_USE_FILE})
 INCLUDE(ParaViewMacros)

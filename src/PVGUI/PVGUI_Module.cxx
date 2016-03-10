@@ -1,6 +1,6 @@
 // PARAVIS : ParaView wrapper SALOME module
 //
-// Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+// Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -141,7 +141,7 @@ PVGUI_Module* ParavisModule = 0;
 
 /*!
   \class PVGUI_Module
-  \brief Implementation 
+  \brief Implementation
          SALOME module wrapping ParaView GUI.
 */
 
@@ -166,6 +166,9 @@ PVGUI_Module::PVGUI_Module()
   : LightApp_Module( PARAVIS_MODULE_NAME ),
     mySourcesMenuId( -1 ),
     myFiltersMenuId( -1 ),
+#ifdef PVCATALYST_ENABLED
+    myCatalystMenuId(-1),
+#endif
     myMacrosMenuId(-1),
     myRecentMenuId(-1),
     myOldMsgHandler(0),
@@ -333,7 +336,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
   }
 
   updateMacros();
- 
+
   SUIT_ResourceMgr* aResourceMgr = SUIT_Session::session()->resourceMgr();
   bool isStop = aResourceMgr->booleanValue( PARAVIS_MODULE_NAME, "stop_trace", false );
   if(!isStop)
@@ -347,7 +350,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
     }
 
   this->VTKConnect = vtkEventQtSlotConnect::New();
-  
+
   vtkProcessModule* pm = vtkProcessModule::GetProcessModule();
   if(pm) {
     vtkPVSession* pvs = dynamic_cast<vtkPVSession*>(pm->GetSession());
@@ -389,7 +392,7 @@ void PVGUI_Module::onEndProgress()
 void PVGUI_Module::onDataRepresentationUpdated() {
   LightApp_Study* activeStudy = dynamic_cast<LightApp_Study*>(application()->activeStudy());
   if(!activeStudy) return;
-  
+
   activeStudy->Modified();
 }
 
@@ -400,7 +403,7 @@ void PVGUI_Module::onInitTimer()
 {
   startTrace();
 }
-  
+
 /*!
   \brief Get list of embedded macros files
 */
@@ -431,7 +434,7 @@ void PVGUI_Module::updateMacros()
   if(!aPythonManager)  {
     return;
   }
-  
+
   foreach (QString aStr, getEmbeddedMacrosList()) {
     aPythonManager->addMacro(aStr);
   }
@@ -570,7 +573,7 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
   myOldMsgHandler = qInstallMsgHandler(ParavisMessageOutput);
 #else
   myOldMsgHandler = qInstallMessageHandler(ParavisMessageOutput);
-#endif  
+#endif
   SUIT_ExceptionHandler::addCleanUpRoutine( paravisCleanUp );
 
   storeCommonWindowsState();
@@ -581,6 +584,9 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
   showView( true );
   if ( mySourcesMenuId != -1 ) menuMgr()->show(mySourcesMenuId);
   if ( myFiltersMenuId != -1 ) menuMgr()->show(myFiltersMenuId);
+#ifdef PVCATALYST_ENABLED
+  if ( myCatalystMenuId != -1 ) menuMgr()->show(myCatalystMenuId);
+#endif
   if ( myMacrosMenuId != -1 ) menuMgr()->show(myMacrosMenuId);
 
   // Update the various menus with the content pre-loaded in myGuiElements
@@ -588,6 +594,10 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
 //  myGuiElements->updateSourcesMenu(srcMenu);
 //  QMenu* filtMenu = menuMgr()->findMenu( myFiltersMenuId );
 //  myGuiElements->updateFiltersMenu(filtMenu);
+//#ifdef PVCATALYST_ENABLED
+//  QMenu* catalystMenu = menuMgr()->findMenu( myCatalystMenuId );
+//  myGuiElements->updateCatalystMenu(catalystMenu);
+//#endif
 //  QMenu* macMenu = menuMgr()->findMenu( myMacrosMenuId );
 //  myGuiElements->updateMacrosMenu(macMenu);
 
@@ -614,7 +624,7 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
   }
 
   if ( myRecentMenuId != -1 ) menuMgr()->show(myRecentMenuId);
-  
+
   return isDone;
 }
 
@@ -659,6 +669,9 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
   menuMgr()->hide(myRecentMenuId);
   menuMgr()->hide(mySourcesMenuId);
   menuMgr()->hide(myFiltersMenuId);
+#ifdef PVCATALYST_ENABLED
+  menuMgr()->hide(myCatalystMenuId);
+#endif
   menuMgr()->hide(myMacrosMenuId);
   setMenuShown( false );
   setToolShown( false );
@@ -674,7 +687,7 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
     qInstallMessageHandler(myOldMsgHandler);
 #endif
   restoreCommonWindowsState();
-  
+
   return LightApp_Module::deactivateModule( study );
 }
 
@@ -704,7 +717,7 @@ void PVGUI_Module::studyClosed(SUIT_Study* study)
 {
   showView(false); // VSR: this seems to be not needed (all views are automatically closed)
   clearParaviewState();
-  //Re-start trace 
+  //Re-start trace
   onRestartTrace();
 
   LightApp_Module::studyClosed(study);
@@ -722,7 +735,7 @@ void PVGUI_Module::openFile( const char* theName )
 
 /*!
   \brief Starts Python trace.
- 
+
   Start trace invoking the newly introduced C++ API (PV 4.2)
   (inspired from pqTraceReaction::start())
 */
@@ -766,7 +779,7 @@ void PVGUI_Module::executeScript( const char* script )
   if ( manager )  {
     pqPythonDialog* pyDiag = manager->pythonShellDialog();
     if ( pyDiag ) {
-      pyDiag->runString(script);  
+      pyDiag->runString(script);
     }
   }
 #endif
@@ -844,7 +857,7 @@ QString PVGUI_Module::getTraceString()
                 + end_line + end_line + camera_qs + end_line;
           }
       }
-  } 
+  }
 
   return traceString;
 }
@@ -920,7 +933,7 @@ void PVGUI_Module::createPreferences()
   // Paravis settings tab
   int aParaVisSettingsTab = addPreference( tr( "TIT_PVISSETTINGS" ) );
 
-  addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab, 
+  addPreference( tr( "PREF_NO_EXT_PVSERVER" ), aParaVisSettingsTab,
                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "no_ext_pv_server" );
 
   int aSaveType = addPreference( tr( "PREF_SAVE_TYPE_LBL" ), aParaVisSettingsTab,
@@ -937,7 +950,7 @@ void PVGUI_Module::createPreferences()
   // ... "Language" group <<start>>
   int traceGroup = addPreference( tr( "PREF_GROUP_TRACE" ), aParaVisSettingsTab );
 
-  int stopTrace = addPreference( tr( "PREF_STOP_TRACE" ), traceGroup, 
+  int stopTrace = addPreference( tr( "PREF_STOP_TRACE" ), traceGroup,
                                  LightApp_Preferences::Bool, PARAVIS_MODULE_NAME, "stop_trace" );
   setPreferenceProperty( stopTrace, "restart",  true );
 
@@ -990,7 +1003,7 @@ void PVGUI_Module::onStopTrace()
 void PVGUI_Module::onViewManagerAdded( SUIT_ViewManager* vm )
 {
   if ( PVViewer_ViewManager* pvvm = dynamic_cast<PVViewer_ViewManager*>( vm ) ) {
-    connect( pvvm, SIGNAL( viewCreated( SUIT_ViewWindow* ) ), 
+    connect( pvvm, SIGNAL( viewCreated( SUIT_ViewWindow* ) ),
              this, SLOT( onPVViewCreated( SUIT_ViewWindow* ) ) );
     connect( pvvm, SIGNAL( deleteView( SUIT_ViewWindow* ) ),
              this,  SLOT( onPVViewDelete( SUIT_ViewWindow* ) ) );
@@ -1043,7 +1056,7 @@ extern "C" {
   PVGUI_EXPORT CAM_Module* createModule() {
     return new PVGUI_Module();
   }
-  
+
   PVGUI_EXPORT char* getModuleVersion() {
     return (char*)PARAVIS_VERSION_STR;
   }
