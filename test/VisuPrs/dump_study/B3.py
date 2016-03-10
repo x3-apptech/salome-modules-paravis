@@ -22,6 +22,12 @@
 import paravistest
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 # 1. Table creation
 title = "My Table"
@@ -69,8 +75,9 @@ table.UpdatePipeline()
 orig_script = table.Script
 
 # 2. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "table.py")
-SaveTrace(path_to_save)
+save_trace( path_to_save, text )
 
 # 3. Delete the table
 Delete(table)

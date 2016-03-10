@@ -22,8 +22,17 @@
 from paravistest import datadir, delete_with_inputs
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
 
-settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.333, "ColorArray": "", "ColorComponents": [0.111, 0.222, 0.333],  "LineWidth": 2, "GlyphType": 'Cone', "GlyphPos": [-0.5, 0.0, 0.0]}
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
+
+
+settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.333, "ColorComponents": [0.111, 0.222, 0.333],  "LineWidth": 2, "GlyphType": 'Cone', "GlyphPos": [-0.5, 0.0, 0.0]}
 
 # 1. TimeStamps.med import
 file_path = datadir + "TimeStamps.med"
@@ -35,7 +44,9 @@ if med_reader is None :
 # 2. Vectors creation
 med_field = "vitesse"
 
-vectors = VectorsOnField(med_reader, EntityType.NODE, med_field, 1)
+vectors = VectorsOnField(med_reader, EntityType.NODE, med_field, 1,is_colored=True)
+vectors.Visibility = 1
+vectors.SetScalarBarVisibility(GetActiveView(),1)
 
 # apply settings
 vectors.Position = settings["Offset"]
@@ -45,8 +56,7 @@ vectors.LookupTable.Discretize = settings["Discretize"]
 vectors.LookupTable.NumberOfTableValues = settings["NbColors"]
 vectors.LookupTable.UseLogScale = settings["UseLogScale"]
 
-vectors.Input.SetScaleFactor = settings["Scale"]
-vectors.ColorArrayName = (None, '')
+vectors.Input.ScaleFactor = settings["Scale"]
 vectors.AmbientColor = settings["ColorComponents"]
 
 vectors.LineWidth = settings["LineWidth"]
@@ -63,8 +73,9 @@ bar.Orientation = settings["Orientation"]
 cone_glyth_type = type(vectors.Input.GlyphType)
 
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "Vectors.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(vectors)
@@ -75,8 +86,8 @@ view = CreateRenderView()
 execfile(path_to_save)
 
 # 6. Checking of the settings done before dump
-recreated_bar = view.Representations[0]
-recreated_vectors = view.Representations[1]
+recreated_bar = view.Representations[1]
+recreated_vectors = view.Representations[0]
 
 errors = 0
 tolerance = 1e-05
@@ -158,15 +169,15 @@ if orientation != settings["Orientation"]:
     errors += 1
 
 # Scale factor
-scale = recreated_vectors.Input.SetScaleFactor
+scale = recreated_vectors.Input.ScaleFactor
 if abs(scale - settings["Scale"]) > tolerance:
     print "ERROR!!! Scale of presentation is incorrect: ",  scale, " instead of ", settings["Scale"]
     errors += 1
 
 # Color array name
 array_name = recreated_vectors.ColorArrayName[1]
-if array_name != settings["ColorArray"]:
-    print "ERROR!!! Color array name of presentation is incorrect: ",  array_name, " instead of ", settings["arrayName"]
+if array_name != med_field:
+    print "ERROR!!! Color array name of presentation is incorrect: ",  array_name, " instead of ", med_field
     errors += 1
 
 # Color

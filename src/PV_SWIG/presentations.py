@@ -1122,7 +1122,7 @@ def ScalarMapOnField(proxy, entity, field_name, timestamp_nb,
 
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
     # Set properties
-    scalarmap.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+    pvs.ColorBy(scalarmap, (EntityType.get_pvtype(entity), field_name))
     scalarmap.LookupTable = lookup_table
 
     # Add scalar bar
@@ -1213,7 +1213,7 @@ def CutPlanesOnField(proxy, entity, field_name, timestamp_nb,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    cut_planes.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+    pvs.ColorBy(cut_planes, (EntityType.get_pvtype(entity), field_name))
     cut_planes.LookupTable = lookup_table
 
     # Add scalar bar
@@ -1360,7 +1360,7 @@ def CutLinesOnField(proxy, entity, field_name, timestamp_nb,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    cut_lines.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+    pvs.ColorBy(cut_lines, (EntityType.get_pvtype(entity), field_name))
     cut_lines.LookupTable = lookup_table
 
     # Set wireframe represenatation mode
@@ -1439,7 +1439,7 @@ def CutSegmentOnField(proxy, entity, field_name, timestamp_nb,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    cut_segment.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+    pvs.ColorBy(cut_segment, (EntityType.get_pvtype(entity), field_name))
     cut_segment.LookupTable = lookup_table
 
     # Set wireframe represenatation mode
@@ -1562,9 +1562,9 @@ def VectorsOnField(proxy, entity, field_name, timestamp_nb,
 
     # Set properties
     if (is_colored):
-        vectors.ColorArrayName = (EntityType.get_pvtype(entity), 'GlyphVector')
+        pvs.ColorBy(vectors, (EntityType.get_pvtype(entity), 'GlyphVector'))
     else:
-        vectors.ColorArrayName = (None, '')
+        pvs.ColorBy(vectors, (EntityType.get_pvtype(entity), None))
     vectors.LookupTable = lookup_table
 
     vectors.LineWidth = 1.0
@@ -1666,9 +1666,9 @@ def DeformedShapeOnField(proxy, entity, field_name,
 
     # Set properties
     if is_colored:
-        defshape.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+        pvs.ColorBy(defshape, (EntityType.get_pvtype(entity), field_name))
     else:
-        defshape.ColorArrayName = (None, '')
+        pvs.ColorBy(defshape, (EntityType.get_pvtype(entity), None))
     defshape.LookupTable = lookup_table
 
     # Set wireframe represenatation mode
@@ -1789,7 +1789,7 @@ def DeformedShapeAndScalarMapOnField(proxy, entity, field_name,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    defshapemap.ColorArrayName = (EntityType.get_pvtype(scalar_field_entity), scalar_field)
+    pvs.ColorBy(defshapemap, (EntityType.get_pvtype(scalar_field_entity), scalar_field))
     defshapemap.LookupTable = lookup_table
 
     # Add scalar bar
@@ -1964,7 +1964,7 @@ def Plot3DOnField(proxy, entity, field_name, timestamp_nb,
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
-    plot3d.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+    pvs.ColorBy(plot3d, (EntityType.get_pvtype(entity), field_name))
     plot3d.LookupTable = lookup_table
 
     # Add scalar bar
@@ -2045,7 +2045,7 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
     if (scalar_range is None):
         scalar_range = get_data_range(proxy, entity,
                                       field_name, cut_off=True)
-
+        
     # Get contour values for the range
     surfaces = get_contours(scalar_range, nb_surfaces)
 
@@ -2072,9 +2072,9 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
 
     # Set display properties
     if (is_colored):
-        isosurfaces.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+        pvs.ColorBy(isosurfaces, (EntityType.get_pvtype(entity), field_name))
     else:
-        isosurfaces.ColorArrayName = (None, '')
+        pvs.ColorBy(isosurfaces, (EntityType.get_pvtype(entity), None))
         if color:
             isosurfaces.DiffuseColor = color
     isosurfaces.LookupTable = lookup_table
@@ -2201,9 +2201,9 @@ def GaussPointsOnField(proxy, entity, field_name,
 
     # Set display properties
     if is_colored:
-        gausspnt.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+        pvs.ColorBy(gausspnt, (EntityType.get_pvtype(entity), field_name))
     else:
-        gausspnt.ColorArrayName = (None, '')
+        pvs.ColorBy(gausspnt, (EntityType.get_pvtype(entity), None))
         if color:
             gausspnt.DiffuseColor = color
 
@@ -2339,9 +2339,9 @@ def GaussPointsOnField1(proxy, entity, field_name,
 
     # Set display properties
     if is_colored:
-        gausspnt.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+        pvs.ColorBy(gausspnt, (EntityType.get_pvtype(entity), field_name))
     else:
-        gausspnt.ColorArrayName = (None, '')
+        pvs.ColorBy(gausspnt, (EntityType.get_pvtype(entity), None))
         if color:
             gausspnt.DiffuseColor = color
 
@@ -2499,9 +2499,9 @@ def StreamLinesOnField(proxy, entity, field_name, timestamp_nb,
 
     # Set properties
     if is_colored:
-        streamlines.ColorArrayName = (EntityType.get_pvtype(entity), field_name)
+        pvs.ColorBy(streamlines, (EntityType.get_pvtype(entity), field_name))
     else:
-        streamlines.ColorArrayName = (None, '')
+        pvs.ColorBy(streamlines, (EntityType.get_pvtype(entity), None))
         if color:
             streamlines.DiffuseColor = color
 
@@ -2544,7 +2544,7 @@ def MeshOnEntity(proxy, mesh_name, entity):
         proxy.GetDataInformation().GetNumberOfCells()):
         my_view = pvs.GetRenderView()
         prs = pvs.GetRepresentation(proxy, view=my_view)
-        prs.ColorArrayName = (None, '')
+        pvs.ColorBy(prs, (EntityType.get_pvtype(entity), None))
 
     return prs
 
@@ -2583,7 +2583,7 @@ def MeshOnGroup(proxy, extrGroups, group_name):
         if nb_points or nb_cells:
 #            prs = pvs.GetRepresentation(proxy)
             prs = pvs.Show()
-            prs.ColorArrayName = ''
+            prs.ColorArrayName = (None, '')
             display_only(prs)
 
     return prs

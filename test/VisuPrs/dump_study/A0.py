@@ -44,6 +44,8 @@ if med_reader is None :
 med_field = "vitesse"
 
 scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, med_field, 1)
+scalarmap.Visibility = 1
+scalarmap.SetScalarBarVisibility(GetActiveView(),1)
 
 # apply settings
 scalarmap.Position = settings["Offset"]
@@ -60,8 +62,9 @@ bar.NumberOfLabels = settings["NbLabels"]
 bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
-text  = smtrace.stop_trace()
+
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "ScalarMap.py")
 save_trace( path_to_save, text )
 
@@ -74,8 +77,8 @@ view = CreateRenderView()
 execfile(path_to_save)
 
 # 6. Checking of the settings done before dump
-recreated_bar = view.Representations[0]
-recreated_scalarmap = view.Representations[1]
+recreated_bar = view.Representations[1]
+recreated_scalarmap = view.Representations[0]
 
 errors = 0
 tolerance = 1e-05

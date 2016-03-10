@@ -22,6 +22,14 @@
 from paravistest import datadir, delete_with_inputs
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Scale": 0.333, "ColorArray": "", "ColorComponents": [0.111, 0.222, 0.333]}
 
@@ -35,7 +43,9 @@ if med_reader is None :
 # 2. DeformedShape creation
 med_field = "vitesse"
 
-deformedshape = DeformedShapeOnField(med_reader, EntityType.NODE, med_field, 1)
+deformedshape = DeformedShapeOnField(med_reader, EntityType.NODE, med_field, 1, None, True)
+deformedshape.Visibility = 1
+deformedshape.SetScalarBarVisibility(GetActiveView(),1)
 
 # apply settings
 deformedshape.Position = settings["Offset"]
@@ -57,8 +67,9 @@ bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "DeformedShape.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(deformedshape)
@@ -69,8 +80,8 @@ view = CreateRenderView()
 execfile(path_to_save)
 
 # 6. Checking of the settings done before dump
-recreated_bar = view.Representations[0]
-recreated_deformedshape = view.Representations[1]
+recreated_bar = view.Representations[1]
+recreated_deformedshape = view.Representations[0]
 
 errors = 0
 tolerance = 1e-05
@@ -159,8 +170,8 @@ if abs(scale - settings["Scale"]) > tolerance:
 
 # Color array name
 array_name = recreated_deformedshape.ColorArrayName[1]
-if array_name != settings["ColorArray"]:
-    print "ERROR!!! Color array name of presentation is incorrect: ",  array_name, " instead of ", settings["arrayName"]
+if array_name != med_field:
+    print "ERROR!!! Color array name of presentation is incorrect: ",  array_name , " instead of ", med_field
     errors += 1
 
 # Color
