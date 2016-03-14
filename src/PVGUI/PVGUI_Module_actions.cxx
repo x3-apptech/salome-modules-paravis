@@ -1,6 +1,6 @@
 // PARAVIS : ParaView wrapper SALOME module
 //
-// Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+// Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -88,7 +88,7 @@ void PVGUI_Module::pvCreateActions()
 
   QPixmap aPixmap;
   QAction* anAction;
-  
+
   // --- Menu "File"
 
   // Open File
@@ -98,14 +98,14 @@ void PVGUI_Module::pvCreateActions()
   anAction->setStatusTip(tr("STB_OPEN_FILE"));
   registerAction(OpenFileId, anAction);
   new pqLoadDataReaction(anAction);
-  
+
   // Load State
   anAction = new QAction(tr("MEN_LOAD_STATE"), this);
   anAction->setToolTip(tr("TOP_LOAD_STATE"));
   anAction->setStatusTip(tr("STB_LOAD_STATE"));
   registerAction(LoadStateId, anAction);
   new pqLoadStateReaction(anAction);
-  
+
   // Save State
   anAction = new QAction(tr("MEN_SAVE_STATE"), this);
   anAction->setToolTip(tr("TOP_SAVE_STATE"));
@@ -193,7 +193,7 @@ void PVGUI_Module::pvCreateActions()
   anAction->setStatusTip(tr("STB_CAMERA_UNDO"));
   registerAction(CameraUndoId, anAction);
   new pqCameraUndoRedoReaction(anAction, true);
-  
+
   // Camera Redo
   aPixmap = resMgr->loadPixmap( "ParaView", tr("ICON_CAMERA_REDO"), false );
   anAction = new QAction(QIcon(aPixmap), tr("MEN_CAMERA_REDO"), this);
@@ -208,7 +208,7 @@ void PVGUI_Module::pvCreateActions()
   anAction->setStatusTip("");
   registerAction(FindDataId, anAction);
   new pqDataQueryReaction(anAction);
-  
+
   // Change Input
   anAction = new QAction(tr("MEN_CHANGE_INPUT"), this);
   anAction->setToolTip(tr("TOP_CHANGE_INPUT"));
@@ -245,7 +245,7 @@ void PVGUI_Module::pvCreateActions()
   anAction->setStatusTip(tr("STB_SETTINGS"));
   registerAction(SettingsId, anAction);
   new pqApplicationSettingsReaction(anAction);*/
-  
+
   // View Settings
 //  anAction = new QAction(tr("MEN_VIEW_SETTINGS"), this);
 //  anAction->setToolTip(tr("TOP_VIEW_SETTINGS"));
@@ -257,7 +257,7 @@ void PVGUI_Module::pvCreateActions()
   //pqViewManager* viewManager = qobject_cast<pqViewManager*>(
   //                             pqApplicationCore::instance()->manager("MULTIVIEW_WIDGET"));
 
-  //rnv: Commented to implement issue 
+  //rnv: Commented to implement issue
   //21318: EDF 1615 ALL: Display in full screen mode
   //Switching to the "Full screen" mode added in the SALOME GUI module.
   //if (viewManager) {
@@ -350,7 +350,7 @@ void PVGUI_Module::pvCreateActions()
   registerAction(OutputWindowId, anAction);
   anAction << pqSetName("actionToolsOutputWindow");
   connect(anAction, SIGNAL(triggered()), pqApplicationCore::instance(), SLOT(showOutputWindow()));
-  
+
  // Python Shell
   anAction = new QAction(tr("MEN_PYTHON_SHELL"), this);
   anAction->setToolTip(tr("TOP_PYTHON_SHELL"));
@@ -396,14 +396,14 @@ void PVGUI_Module::pvCreateActions()
   \brief Create menus for ParaView GUI operations
   duplicating menus in pqMainWindow ParaView class
 
-  In particular, ParaView is responsible for updating "Sources" and "Filters" menus. 
+  In particular, ParaView is responsible for updating "Sources" and "Filters" menus.
   For this, specific menu managers created by pqMainWindowCore class are used, and PVGUI_Module
   is responsible for creation of corresponding QMenu objects only.
 */
 void PVGUI_Module::pvCreateMenus()
 {
   SUIT_Desktop* desk = application()->desktop();
-  
+
   // --- Menu "File"
   int aPVMnu = createMenu( tr( "MEN_DESK_FILE" ), -1, -1 );
 
@@ -462,23 +462,30 @@ void PVGUI_Module::pvCreateMenus()
   aPVMnu = createMenu( tr( "MEN_DESK_VIEW" ), -1, -1 );
 
   createMenu( FullScreenId, aPVMnu );
-  
+
   // --- Menu "Sources"
   // Install ParaView managers for "Sources" menu
   QMenu* aRes = 0;
   PVViewer_GUIElements * guiElements = PVViewer_GUIElements::GetInstance(desk);
   aRes = guiElements->getSourcesMenu();
   mySourcesMenuId = createMenu( tr( "MEN_DESK_SOURCES" ), -1, -1, 60, -1, aRes);
-  
+
   // --- Menu "Filters"
   // Install ParaView managers for "Filters" menu
   aRes = guiElements->getFiltersMenu();
   myFiltersMenuId = createMenu( tr( "MEN_DESK_FILTERS" ), -1, -1, 70, -1, aRes);
 
+  // --- Menu "Catalyst"
+  // Install ParaView managers for "Catalyst" menu
+#ifdef PVCATALYST_ENABLED
+  aRes = guiElements->getCatalystMenu();
+  myCatalystMenuId = createMenu( tr( "MEN_DESK_CATALYST" ), -1, -1, 75, -1, aRes);
+#endif
+
    // --- Menu "Macros"
   aRes = guiElements->getMacrosMenu();
   myMacrosMenuId = createMenu( tr( "MEN_MACROS" ), -1, -1, 80, -1, aRes);
- 
+
   // --- Menu "Tools"
   int aToolsMnu = createMenu( tr( "MEN_DESK_TOOLS" ), -1, -1, 90 );
 

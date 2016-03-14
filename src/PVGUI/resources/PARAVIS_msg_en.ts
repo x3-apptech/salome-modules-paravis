@@ -818,6 +818,10 @@
         <translation>F&amp;ilters</translation>
     </message>
     <message>
+        <source>MEN_DESK_CATALYST</source>
+        <translation>Catalyst</translation>
+    </message>
+    <message>
         <source>MEN_DESK_ANIMATION</source>
         <translation>A&amp;nimation</translation>
     </message>

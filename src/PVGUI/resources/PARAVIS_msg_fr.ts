@@ -260,7 +260,7 @@
     <message>
         <source>TTL_VIEW_PANEL</source>
         <translation>Vue</translation>
-    </message>    
+    </message>
     <message>
         <source>TOP_OPEN_FILE</source>
         <translation>Ouvrir un fichier ParaView</translation>
@@ -820,6 +820,10 @@
     <message>
         <source>MEN_DESK_FILTERS</source>
         <translation>F&amp;iltres</translation>
+    </message>
+    <message>
+        <source>MEN_DESK_CATALYST</source>
+        <translation>Catalyst</translation>
     </message>
     <message>
         <source>MEN_DESK_ANIMATION</source>
