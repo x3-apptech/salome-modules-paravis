@@ -2544,7 +2544,7 @@ def MeshOnEntity(proxy, mesh_name, entity):
         proxy.GetDataInformation().GetNumberOfCells()):
         my_view = pvs.GetRenderView()
         prs = pvs.GetRepresentation(proxy, view=my_view)
-        pvs.ColorBy(prs, (EntityType.get_pvtype(entity), None))
+        prs.ColorArrayName = (None, '')
 
     return prs
 
