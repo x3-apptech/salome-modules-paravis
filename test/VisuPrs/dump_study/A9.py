@@ -22,6 +22,14 @@
 from paravistest import datadir, delete_with_inputs
 from presentations import *
 from pvsimple import *
+from paravistest import save_trace
+from paraview import smtrace
+
+GetActiveViewOrCreate('RenderView')
+
+config = smtrace.start_trace()
+config.SetFullyTraceSupplementalProxies(True)
+config.SetPropertiesToTraceOnCreate(config.RECORD_ALL_PROPERTIES)
 
 settings = {"Offset": [0.0001, 0.0002, 0], "ScalarMode": ("Component", 2), "Position": [0.1, 0.2], "Size": [0.15, 0.25], "Discretize": 1, "NbColors": 44, "NbLabels": 22, "Title": "My presentation", "UseLogScale": 1, "Orientation": 'Horizontal', "Orientation_BasePlane": [Orientation.ZX, 22, 33], "Orientation_CuttingPlanes": [Orientation.YZ, 44, 55], "Displacement": 0.1, "Displacement2": 0.2, "BasePlane_Position": 0.1, "NbLines": 3}
 
@@ -46,6 +54,9 @@ d1 = settings["Displacement"]
 d2 = settings["Displacement2"]
 
 cutlines = CutLinesOnField(med_reader, EntityType.NODE, med_field, 1, nb_lines, orient1, base_ang1, base_ang2, orient2, cut_ang1, cut_ang2, d1, d2)
+cutlines.Visibility = 1
+cutlines.SetScalarBarVisibility(GetActiveView(),1)
+
 
 # apply settings
 cutlines.Position = settings["Offset"]
@@ -70,8 +81,9 @@ bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
 # 3. Dump Study
+text  = smtrace.stop_trace()
 path_to_save = os.path.join(os.getenv("HOME"), "CutLines.py")
-SaveTrace( path_to_save )
+save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(cutlines)
