@@ -65,7 +65,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/adm_local/cmake_files")
 # ============
 OPTION(SALOME_BUILD_DOC "Generate SALOME GUI documentation" ON)
 OPTION(SALOME_BUILD_TESTS "Build SALOME tests" ON)
-OPTION(SALOME_PARAVIS_ALL_TEST "Add all tests for Salome PARAVIS module" ON)
+OPTION(SALOME_PARAVIS_ALL_TEST "Add all tests for Salome PARAVIS module" OFF)
 OPTION(SALOME_PARAVIS_BUILD_PLUGINS "Build PARAVIS plugins (MEDReader, etc ...)" ON)
 OPTION(SALOME_PARAVIS_BUILD_CORBA_PLUGINS "Build PARAVIS CORBA plugins (ParaMEDCorba -- this requires the SALOME MED module)" ON)
 OPTION(SALOME_PARAVIS_USE_GEOM_SOURCE "Import a GEOMETRY object to PARAVIS via its Corba IOR" OFF)
