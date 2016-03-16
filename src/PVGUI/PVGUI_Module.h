@@ -1,6 +1,6 @@
 // PARAVIS : ParaView wrapper SALOME module
 //
-// Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+// Copyright (C) 2010-2015  CEA/DEN, EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,7 @@ class SUIT_ViewWindow;
 class PVGUI_Module: public LightApp_Module
 {
   Q_OBJECT
-
+   
   //! Menu actions
   enum {
     //-----------
@@ -161,7 +161,7 @@ private:
   void restoreDockWidgetsState();
 
   //! Shows or hides ParaView view window
-  void showView( bool );
+  void showView( bool );    
 
   //! Get list of embedded macros files
   QStringList getEmbeddedMacrosList();
@@ -177,7 +177,7 @@ private:
 
 private slots:
   void showHelpForProxy( const QString&, const QString& );
-
+  
   void onPreAccept();    // not used inside PARAVIS
   void onPostAccept();   // not used inside PARAVIS
   void endWaitCursor();  // not used inside PARAVIS
@@ -206,25 +206,22 @@ protected slots:
 private:
   int                    mySourcesMenuId;
   int                    myFiltersMenuId;
-#ifdef PVCATALYST_ENABLED
-  int                    myCatalystMenuId;
-#endif
   int                    myMacrosMenuId;
   int                    myRecentMenuId;
-
+  
   typedef QMap<QWidget*, bool> WgMap;
   WgMap                  myDockWidgets;
   WgMap                  myToolbars;
   WgMap                  myToolbarBreaks;
   QList<QMenu*>          myMenus;
 
-  typedef QMap<int, bool> DockWindowMap;
-  DockWindowMap           myCommonMap;
+  typedef QMap<int, bool> DockWindowMap;         
+  DockWindowMap           myCommonMap; 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QtMsgHandler            myOldMsgHandler;
-#else
+#else  
   QtMessageHandler        myOldMsgHandler;
-#endif
+#endif  
   vtkEventQtSlotConnect*  VTKConnect;
 
   pqPythonScriptEditor*   myTraceWindow;
