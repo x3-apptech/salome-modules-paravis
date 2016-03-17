@@ -57,7 +57,8 @@ SET(TEST_DIRECTORIES
   united
   bugs
   imps
-  dump_study
+#  dump_study    Save trace functionality of ParaView is now working
+#                as expected: switch off dump_study tests until it will be corrected.
 )
 
 FOREACH(test_dir ${TEST_DIRECTORIES})
