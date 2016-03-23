@@ -1,4 +1,4 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015, 2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 SET(TEST_NAMES A1 A2 A3 A4 A6 A9 B1 B2)
 
 FOREACH(tfile ${TEST_NAMES})
-  SET(TEST_NAME IMPS_${tfile})
+  SET(TEST_NAME ${COMPONENT_NAME}_IMPS_${tfile})
   ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
 ENDFOREACH()

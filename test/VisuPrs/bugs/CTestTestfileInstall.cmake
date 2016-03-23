@@ -1,4 +1,4 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015, 2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,11 +17,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A7 A9 B1 C3 C4 C5 C6 C7 C8 C9
-  D0 D1 D3 D5 D6 D7 E0)
+SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A7 A9 B1 C3 C5 C6 C8 C9
+  D1 D3 D5 D6 D7 E0)
 
 FOREACH(tfile ${TEST_NAMES})
-  SET(TEST_NAME BUGS_${tfile})
+  SET(TEST_NAME ${COMPONENT_NAME}_BUGS_${tfile})
   ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
 ENDFOREACH()

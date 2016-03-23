@@ -1,4 +1,4 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015, 2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,10 +17,10 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 C0 C1 C2)
+SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 B0 B1 B2 B4 B5 B6 B7 B8 B9 C0 C1 C2)
 
 FOREACH(tfile ${TEST_NAMES})
-  SET(TEST_NAME IMPORTMEDFIELD_${tfile})
+  SET(TEST_NAME ${COMPONENT_NAME}_IMPORTMEDFIELD_${tfile})
   ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
 ENDFOREACH()

@@ -1,4 +1,4 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+# Copyright (C) 2015, 2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,10 @@
 #
 
 SET(TEST_NAMES A0 A1 A3 A4 A5 A6 A7 A9 B0 B1 B2 B3 B4 B5 B6 B7 B8 B9
-  C0 C1 C2 C3 C4 C5 C6 C7 C8 C9)
+  C0 C1 C2 C3 C4 C6 C7 C8 C9)
 
 FOREACH(tfile ${TEST_NAMES})
-  SET(TEST_NAME GAUSSPOINTS_${tfile})
+  SET(TEST_NAME ${COMPONENT_NAME}_GAUSSPOINTS_${tfile})
   ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
 ENDFOREACH()
