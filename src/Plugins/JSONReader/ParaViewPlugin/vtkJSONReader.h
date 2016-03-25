@@ -1,4 +1,4 @@
-//  Copyright (C) 2015 CEA/DEN, EDF R&D, OPEN CASCADE
+// Copyright (C) 2015-2016  CEA/DEN, EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
-// Autor: Roman NIKOLAEV (roman.nikolaev@opencascade.com)
+// Author: Roman NIKOLAEV (roman.nikolaev@opencascade.com)
 
 #ifndef __vtkJSONReader_h_
 #define __vtkJSONReader_h_

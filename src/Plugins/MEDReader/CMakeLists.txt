@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -76,7 +76,8 @@ LIST(APPEND CMAKE_MODULE_PATH "${KERNEL_ROOT_DIR}/salome_adm/cmake_files")
 LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
 INCLUDE(SalomeMacros)
 INCLUDE(SalomeSetupPlatform)
-FIND_PACKAGE(SalomePython REQUIRED)
+FIND_PACKAGE(SalomePythonInterp REQUIRED)
+FIND_PACKAGE(SalomePythonLibs REQUIRED)
 FIND_PACKAGE(SalomeHDF5 REQUIRED)
 FIND_PACKAGE(SalomeMEDCoupling REQUIRED)
 FIND_PACKAGE(SalomeMEDFile REQUIRED)

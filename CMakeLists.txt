@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -82,8 +82,8 @@ CMAKE_DEPENDENT_OPTION(SALOME_LIGHT_ONLY "Build SALOME Light only (no CORBA)" OF
 ##
 ## From KERNEL:
 ##
-
-FIND_PACKAGE(SalomePython REQUIRED)
+FIND_PACKAGE(SalomePythonInterp REQUIRED)
+FIND_PACKAGE(SalomePythonLibs REQUIRED)
 
 IF(NOT SALOME_LIGHT_ONLY)
   FIND_PACKAGE(SalomeOmniORB REQUIRED)
