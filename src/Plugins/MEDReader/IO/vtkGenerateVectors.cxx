@@ -19,6 +19,7 @@
 // Author : Anthony Geay
 
 #include "vtkGenerateVectors.h"
+#include "vtkDataArrayTemplate.h"
 #include "vtkDoubleArray.h"
 #include "vtkInformation.h"
 #include "vtkQuadratureSchemeDefinition.h"
