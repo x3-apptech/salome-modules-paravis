@@ -23,6 +23,7 @@
 #include "MEDFileFieldOverView.hxx"
 
 #include "vtkAdjacentVertexIterator.h"
+#include "vtkDataArrayTemplate.h"
 #include "vtkIntArray.h"
 #include "vtkCellData.h"
 #include "vtkPointData.h"

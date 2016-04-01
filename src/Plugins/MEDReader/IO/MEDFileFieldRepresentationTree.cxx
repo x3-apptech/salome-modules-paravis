@@ -42,6 +42,7 @@
 #include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
 #include "vtkInformationIntegerKey.h"
 #include "vtkInformation.h"
+#include "vtkDataArrayTemplate.h"
 #include "vtkIdTypeArray.h"
 #include "vtkDoubleArray.h"
 #include "vtkIntArray.h"
