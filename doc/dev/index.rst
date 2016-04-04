@@ -256,9 +256,9 @@ doesn't save PARAVIS module trace.
 **Application options**
 
 If it is necessary to define a spcific command line parameter for ParaView application,
-then it can be defined with the help of the PARAVIS_OPTIONS environment variable. For example: ::
+then it can be defined with the help of the PARAVIEW_OPTIONS environment variable. For example: ::
 
-	export PARAVIS_OPTIONS=--server=myServer
+	export PARAVIEW_OPTIONS=--server=myServer
 
 If it is necessary to define several command line parameters, these parameters have to be separated by the “:” character.
 
