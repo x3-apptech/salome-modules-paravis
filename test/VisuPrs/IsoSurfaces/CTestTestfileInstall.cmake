@@ -17,8 +17,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A8 A9 B0 B1 B2
-  E0 E1 E2 E3 E4 E5 E6 E7 E8 E9 F1 F2 F3 F4 F5 F6 F7 F8 F9 G0 G1 G2)
+SET(TEST_NAMES A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 B0 B1 B2
+  E0 E1 E2 E3 E4 E5 E6 E7 E8 E9 F1 F2 F3 F4 F5 F6 F8 F9 G0 G1 G2)
 
 FOREACH(tfile ${TEST_NAMES})
   SET(TEST_NAME ${COMPONENT_NAME}_ISOSURFACES_${tfile})
