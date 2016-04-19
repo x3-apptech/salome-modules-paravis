@@ -197,7 +197,24 @@ private:
 };
 
 vtkStandardNewMacro(vtkMEDReader);
-vtkInformationKeyMacro(vtkMEDReader, META_DATA, DataObjectMetaData);
+
+// vtkInformationKeyMacro(vtkMEDReader, META_DATA, DataObjectMetaData); // Here we need to customize vtkMEDReader::META_DATA method
+// start of overload of vtkInformationKeyMacro
+static vtkInformationDataObjectMetaDataKey *vtkMEDReader_META_DATA=new vtkInformationDataObjectMetaDataKey("META_DATA","vtkMEDReader");
+
+vtkInformationDataObjectMetaDataKey *vtkMEDReader::META_DATA()  
+{
+  static const char ZE_KEY[]="vtkMEDReader::META_DATA";
+  vtkInformationDataObjectMetaDataKey *ret(vtkMEDReader_META_DATA);
+  ParaMEDMEM::GlobalDict *gd(ParaMEDMEM::GlobalDict::GetInstance());
+  if(!gd->hasKey(ZE_KEY))
+    {// here META_DATA is put on global var to be exchanged with other filters without dependancy of MEDReader. Please do not change ZE_KEY !
+      std::ostringstream oss; oss << ret;
+      gd->setKeyValue(ZE_KEY,oss.str());
+    }
+  return ret;
+}
+// end of overload of vtkInformationKeyMacro
 
 vtkMEDReader::vtkMEDReader():Internal(new vtkMEDReaderInternal(this))
 {
