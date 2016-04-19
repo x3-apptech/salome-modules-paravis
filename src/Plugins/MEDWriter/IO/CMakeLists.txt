@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2016  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,38 +16,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Anthony Geay (EDF R&D)
 
-INCLUDE(${PARAVIEW_USE_FILE})
+INCLUDE_DIRECTORIES(
+  ${MEDCOUPLING_INCLUDE_DIRS}
+  ${MEDFILE_INCLUDE_DIRS}
+  ${HDF5_INCLUDE_DIRS})
 
-SET(_subdirs
-  MEDReader
-  MEDWriter
-#  TableReader
-  ElevationSurface
-  GhostCellsGenerator
-  ScaleVector
-  EllipseBuilder
-  DifferenceTimesteps
-  ArrayRenamer
-  JSONReader
-  )
-
-IF(NOT SALOME_LIGHT_ONLY)
-  IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
-    LIST(APPEND _subdirs
-      ParaMEDCorba
-    )
-  ENDIF()
-ENDIF()
-
-IF(SALOME_PARAVIS_USE_GEOM_SOURCE)
-  LIST(APPEND _subdirs ParaGEOMCorba)
-ENDIF()
-
-IF(SALOME_PARAVIS_USE_SMESH_SOURCE)
-  LIST(APPEND _subdirs ParaSMESHCorba)
-ENDIF()
-
-FOREACH(_dir ${_subdirs})
-  ADD_SUBDIRECTORY(${_dir})
-ENDFOREACH()
+VTK_MODULE_LIBRARY(vtkMEDWriter vtkMEDWriter.cxx)
+TARGET_LINK_LIBRARIES(vtkMEDWriter vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore vtkRenderingOpenGL ${PARAVIEW_LIBRARIES} ${MEDCoupling_medloader} ${MEDFILE_C_LIBRARIES})
+INSTALL(TARGETS vtkMEDWriter RUNTIME DESTINATION ${VTK_INSTALL_RUNTIME_DIR} LIBRARY DESTINATION ${VTK_INSTALL_LIBRARY_DIR} ARCHIVE DESTINATION ${VTK_INSTALL_ARCHIVE_DIR})

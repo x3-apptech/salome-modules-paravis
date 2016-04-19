@@ -1,0 +1,32 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="writers">
+    <WriterProxy name="MEDWriter" class="vtkMEDWriter" label="MED Writer" file_name_method="SetFileName">
+     <InputProperty name="Input" command="SetInputConnection">
+       <ProxyGroupDomain name="groups">
+         <Group name="sources"/>
+         <Group name="filters"/>
+       </ProxyGroupDomain>
+       <DataTypeDomain name="input_type">
+         <DataType value="vtkDataObject"/>
+       </DataTypeDomain>
+       <Documentation>
+         The input filter/source whose output dataset is written to the MED file.
+       </Documentation>
+     </InputProperty>
+     <StringVectorProperty command="SetFileName"
+			   name="FileName"
+			   number_of_elements="1">
+       <Documentation>The name of the MED file to be written.</Documentation>
+     </StringVectorProperty>
+     <IntVectorProperty command="SetWriteAllTimeSteps" default_values="0" name="WriteAllTimeSteps" number_of_elements="1">
+       <BooleanDomain name="bool" />
+       <Documentation>When WriteAllTimeSteps is turned ON, the writer is executed once for each timestep available from the reader.</Documentation>
+     </IntVectorProperty>
+     <Hints>
+       <Property name="Input" show="0" />
+       <Property name="FileName" show="0" />
+       <WriterFactory extensions="med" file_description="MED Files" />
+     </Hints>
+    </WriterProxy>
+  </ProxyGroup>
+</ServerManagerConfiguration>
