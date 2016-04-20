@@ -25,6 +25,7 @@
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 #include "vtkFloatArray.h"
+#include "vtkCellArray.h"
 
 #include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkInformationDataObjectMetaDataKey.h"
