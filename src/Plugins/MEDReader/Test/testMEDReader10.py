@@ -74,7 +74,6 @@ DataRepresentation1.ScaleFactor = 0.3
 RenderView1.CenterOfRotation = [1.5, 0.5, 0.5]
 RenderView1.CameraPosition = [1.5, 0.5, 6.907227082229696]
 RenderView1.CameraFocalPoint = [1.5, 0.5, 0.5]
-RenderView1.CameraClippingRange = [5.348154811407399, 7.755835488463141]
 RenderView1.CameraParallelScale = 1.6583123951777
 DataRepresentation1.Representation = 'Wireframe'
 #
@@ -91,10 +90,8 @@ DataRepresentation2.ScalarOpacityUnitDistance = 4.546673931685981
 #DataRepresentation2.ExtractedBlockIndex = 1
 DataRepresentation2.ScaleFactor = 0.5
 DataRepresentation1.Visibility = 0
-RenderView1.CameraClippingRange = [3.358154811407399, 10.26083548846314]
 DataRepresentation1.ColorArrayName = ('POINT_DATA', '')
 DataRepresentation1.Visibility = 1
-RenderView1.CameraClippingRange = [5.149154811407399, 8.00633548846314]
 a4_f3NbComp4_PVLookupTable = GetLookupTableForArray( "f3NbComp4", 4, RGBPoints=[1.118033988749895, 0.23, 0.299, 0.754, 8.108851429645696, 0.865, 0.865, 0.865, 15.0996688705415, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0 )
 a4_f3NbComp4_PiecewiseFunction = CreatePiecewiseFunction( Points=[1.118033988749895, 0.0, 0.5, 0.0, 15.0996688705415, 1.0, 0.5, 0.0] )
 DataRepresentation1.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
@@ -105,7 +102,6 @@ DataRepresentation2.ColorArrayName = ('POINT_DATA', 'f3NbComp4')
 DataRepresentation2.LookupTable = a4_f3NbComp4_PVLookupTable
 RenderView1.CameraViewUp = [0.32310237626907823, -0.28721735329781684, -0.901726702728644]
 RenderView1.CameraPosition = [0.17151044563787257, 6.31903262423349, -1.8294921560963984]
-RenderView1.CameraClippingRange = [4.164482329590951, 9.24583527085017]
 RenderView1.CameraFocalPoint = [1.4999999999999996, 0.49999999999999944, 0.4999999999999996]
 #
 RenderView1.ViewSize =[300,300]
