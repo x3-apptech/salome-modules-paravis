@@ -95,7 +95,6 @@ RenderView1=GetRenderView()
 RenderView1.CenterOfRotation=[2.,2.,2.]
 RenderView1.CameraViewUp=[0.24562884954787187,0.6907950752417243,-0.680050463047831]
 RenderView1.CameraPosition=[-2.5085697461776486,11.6185941755061,10.14210560568201]
-RenderView1.CameraClippingRange=[5.269050059274764,23.64024625330183]
 RenderView1.CameraFocalPoint=[2.,2.,2.]
 RenderView1.CameraParallelScale=5.071791174723188
 
