@@ -77,6 +77,9 @@ pqMEDReaderTimesFlagsWidget::pqMEDReaderTimesFlagsWidget(
   this->addPropertyLink(this, "timeSteps", SIGNAL(timeStepsChanged()),
                         smproxy, smproperty);
 
+  if(!this->TimesVectWidget) // In case of error right at the begining of loading process (empty MED file)
+    return ;
+
   const QMap<QString, VectBoolItem*>& items(this->TimesVectWidget->getItems());
   QMap<QString, VectBoolItem*>::const_iterator it;
   for (it = items.begin(); it != items.end(); it++)
@@ -103,6 +106,8 @@ QList< QList< QVariant> > pqMEDReaderTimesFlagsWidget::getTimeSteps() const
   // Put together a TimeStep list, using ItemMap
   QList< QList< QVariant> > ret;
   QList< QVariant > timeStep;
+  if(!this->TimesVectWidget) // In case of error right at the begining of loading process (empty MED file)
+    return ret;
   const QMap<QString, VectBoolItem*>& items(this->TimesVectWidget->getItems());
   QMap<QString, VectBoolItem*>::const_iterator it;
   for (it = items.begin(); it != items.end(); it++)
@@ -164,6 +169,9 @@ void pqMEDReaderTimesFlagsWidget::CreateTimesVectWidget()
     {
     delete this->TimesVectWidget;
     }
+
+  if(!graph)
+    return ;// In case of error right at the begining of loading process (empty MED file)
 
   // (Re)cretate widget
   this->TimesVectWidget = new VectBoolWidget(this,

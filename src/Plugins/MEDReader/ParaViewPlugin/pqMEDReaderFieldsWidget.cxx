@@ -73,6 +73,9 @@ void pqMEDReaderFieldsWidget::loadTreeWidgetItems()
   vtkStringArray* names =
     vtkStringArray::SafeDownCast(tree->GetVertexData()->GetAbstractArray("Names"));
 
+  if(!names)// In case of error right at the begining of loading process (empty MED file)
+    return ;
+
   vtkIdType root = tree->GetRoot();
   vtkIdType fst = tree->GetChild(root, 0); // FieldsStatusTree
 
