@@ -218,7 +218,10 @@ MEDCouplingUMesh *BuildMeshFromCellArray(vtkCellArray *ca, DataArrayDouble *coor
   for(int i=0;i<nbCells;i++)
     {
       int sz(*conn++);
-      subMesh->insertNextCell(type,sz,conn);
+      std::vector<int> conn2(sz);
+      for(int jj=0;jj<sz;jj++)
+        conn2[jj]=conn[jj];
+      subMesh->insertNextCell(type,sz,&conn2[0]);
       conn+=sz;
     }
   return subMesh.retn();
@@ -242,7 +245,8 @@ MEDCouplingUMesh *BuildMeshFromCellArrayTriangleStrip(vtkCellArray *ca, DataArra
         {
           for(int j=0;j<nbTri;j++,conn++)
             {
-              subMesh->insertNextCell(INTERP_KERNEL::NORM_TRI3,3,conn);
+              int conn2[3]; conn2[0]=conn[0] ; conn2[1]=conn[1] ; conn2[2]=conn[2];
+              subMesh->insertNextCell(INTERP_KERNEL::NORM_TRI3,3,conn2);
               ids->pushBackSilent(i);
             }
         }
@@ -711,7 +715,12 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
           vtkIdType sz(caPtr[offset]);
           INTERP_KERNEL::NormalizedCellType ct((INTERP_KERNEL::NormalizedCellType)(*it).second);
           if(ct!=INTERP_KERNEL::NORM_POLYHED)
-            m0->insertNextCell(ct,sz,caPtr+offset+1);
+            {
+              std::vector<int> conn2(sz);
+              for(int kk=0;kk<sz;kk++)
+                conn2[kk]=caPtr[offset+1+kk];
+              m0->insertNextCell(ct,sz,&conn2[0]);
+            }
           else
             {
               if(!faces || !faceLoc)
