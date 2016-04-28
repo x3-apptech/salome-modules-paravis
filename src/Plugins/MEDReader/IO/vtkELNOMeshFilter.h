@@ -29,15 +29,18 @@ public:
   vtkTypeMacro(vtkELNOMeshFilter,vtkUnstructuredGridAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
 
+  vtkGetMacro(ShrinkFactor, double);
+  vtkSetMacro(ShrinkFactor, double);
 protected:
   vtkELNOMeshFilter();
   ~vtkELNOMeshFilter();
 
   int RequestData(vtkInformation *, vtkInformationVector **,
       vtkInformationVector *);
-
 private:
   vtkELNOMeshFilter(const vtkELNOMeshFilter&);
   void operator =(const vtkELNOMeshFilter&);
+private:
+  double ShrinkFactor;
 };
 #endif

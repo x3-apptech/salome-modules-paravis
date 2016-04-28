@@ -235,6 +235,7 @@
           short_help="Create a Mesh with ELNO values mapped at each vertex.">
         "Create a Mesh with ELNO values mapped at each vertex."
       </Documentation>
+
       <InputProperty name="Input" command="SetInputConnection">
         <ProxyGroupDomain name="groups">
           <Group name="sources" />
@@ -245,6 +246,16 @@
         </DataTypeDomain>
         <InputArrayDomain name="input_array" attribute_type="cell" />
       </InputProperty>
+
+      <DoubleVectorProperty animateable="1"
+                            command="SetShrinkFactor"
+                            default_values="0.9999"
+                            name="ShrinkFactor"
+                            number_of_elements="1">
+        <DoubleRangeDomain max="1" min="0" name="range" />
+        <Documentation>The value of this property determines how far the points
+        will move in the mesh before to be colored using ELNO fields on it. A value of 0 positions the points at the centroid of the cell; a value of 1 leaves them at their original positions.</Documentation>
+      </DoubleVectorProperty>
     </SourceProxy>
 
     <SourceProxy name="ELNOSurface" class="vtkELNOSurfaceFilter" label="ELNO Surface">
