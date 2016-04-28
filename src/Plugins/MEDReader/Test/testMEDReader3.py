@@ -96,7 +96,6 @@ assert(list(testMEDReader3.TimestepValues)==[1.,2.,3.,4.,5.]) ## <- the test is 
 RenderView1=GetRenderView()
 RenderView1.ViewTime=3.0
 RenderView1.CameraPosition=[0.5,0.5,5.7320508075688776]
-RenderView1.CameraClippingRange=[2.704730299493189,2.7730315696824106]
 RenderView1.ViewSize=[300,300]
 
 DataRepresentation2=Show()

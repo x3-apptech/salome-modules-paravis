@@ -95,107 +95,109 @@ void pqMEDReaderFieldsWidget::loadTreeWidgetItems()
     ts->setData(0, Qt::ToolTipRole, QString(names->GetValue(tsId)));
 
     // MAIL Node
-    vtkIdType mailId = tree->GetChild(tsxId, 0);
-    pqTreeWidgetItemObject *mail = new pqTreeWidgetItemObject(ts, QStringList());
-    this->NItems++;
-    QString mailName = QString(names->GetValue(mailId));
-    mail->setText(0, mailName);
-    mail->setData(0, Qt::ToolTipRole, QString(names->GetValue(mailId)));
-
-    QString propertyBaseName = tsxName + "/" + mailName + "/";
-
-    // ComsupX node
-    for (int comsupi = 0; comsupi < tree->GetNumberOfChildren(mailId); comsupi++)
+    for (int maili = 0; maili < tree->GetNumberOfChildren(tsxId); maili++)
       {
-      vtkIdType comSupId = tree->GetChild(mailId, comsupi);
-      pqTreeWidgetItemObject *comsup = new pqTreeWidgetItemObject(mail, QStringList());
+      vtkIdType mailId = tree->GetChild(tsxId, maili);
+      pqTreeWidgetItemObject *mail = new pqTreeWidgetItemObject(ts, QStringList());
       this->NItems++;
-      QString comsupName = QString(names->GetValue(comSupId));
-      comsup->setText(0, comsupName);
+      QString mailName = QString(names->GetValue(mailId));
+      mail->setText(0, mailName);
+      mail->setData(0, Qt::ToolTipRole, QString(names->GetValue(mailId)));
 
-      // ComSup tooltip
-      vtkIdType geoTypeId = tree->GetChild(comSupId, 1);
-      QString comSupToolTipName(names->GetValue(comSupId));
-      for (int geoi = 0; geoi < tree->GetNumberOfChildren(geoTypeId); geoi++)
+      QString propertyBaseName = tsxName + "/" + mailName + "/";
+
+      // ComsupX node
+      for (int comsupi = 0; comsupi < tree->GetNumberOfChildren(mailId); comsupi++)
         {
-        comSupToolTipName += QString("\n- %1").arg(
-          QString(names->GetValue(tree->GetChild(geoTypeId, geoi))));
-        }
-      comsup->setData(0, Qt::ToolTipRole, comSupToolTipName);
-
-      comsup->setFlags(comsup->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
-      comsup->setChecked(true);
-      QObject::connect(comsup, SIGNAL(checkedStateChanged(bool)), this, SLOT(updateChecks()));
-      this->UniqueCheckedItems.push_back(comsup);
-
-      QString fullComsupName = propertyBaseName + comsupName + "/";
-      // Arrs node
-      vtkIdType arrId = tree->GetChild(comSupId, 0);
-      for (int arri = 0; arri < tree->GetNumberOfChildren(arrId); arri++)
-        {
-        pqTreeWidgetItemObject *array = new pqTreeWidgetItemObject(comsup, QStringList());
+        vtkIdType comSupId = tree->GetChild(mailId, comsupi);
+        pqTreeWidgetItemObject *comsup = new pqTreeWidgetItemObject(mail, QStringList());
         this->NItems++;
+        QString comsupName = QString(names->GetValue(comSupId));
+        comsup->setText(0, comsupName);
 
-        vtkIdType arrayId = tree->GetChild(arrId, arri);
-        std::string str = names->GetValue(arrayId);
-        this->ItemMap[fullComsupName + QString(str.c_str())] = array;
-
-        const char* separator = vtkMEDReader::GetSeparator();
-        size_t pos = str.find(separator);
-        std::string name = str.substr(0, pos);
-
-        array->setText(0, QString(name.c_str()));
-        array->setFlags(array->flags() | Qt::ItemIsUserCheckable);
-        array->setChecked(true);
-
-        // Special Field
-        if (tree->GetNumberOfChildren(arrayId) != 0)
+        // ComSup tooltip
+        vtkIdType geoTypeId = tree->GetChild(comSupId, 1);
+        QString comSupToolTipName(names->GetValue(comSupId));
+        for (int geoi = 0; geoi < tree->GetNumberOfChildren(geoTypeId); geoi++)
           {
-          QFont font;
-          font.setItalic(true);
-          font.setUnderline(true);
-          array->setData(0, Qt::FontRole, QVariant(font));
-
-          array->setData(0, Qt::ToolTipRole,
-                         QString("Whole \" %1\" mesh").arg(name.c_str()));
-          array->setData(0, Qt::DecorationRole,
-            QPixmap(":/ParaViewResources/Icons/pqCellDataForWholeMesh16.png"));
+          comSupToolTipName += QString("\n- %1").arg(
+            QString(names->GetValue(tree->GetChild(geoTypeId, geoi))));
           }
-        // Standard Field
-        else
+        comsup->setData(0, Qt::ToolTipRole, comSupToolTipName);
+
+        comsup->setFlags(comsup->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+        comsup->setChecked(true);
+        QObject::connect(comsup, SIGNAL(checkedStateChanged(bool)), this, SLOT(updateChecks()));
+        this->UniqueCheckedItems.push_back(comsup);
+
+        QString fullComsupName = propertyBaseName + comsupName + "/";
+        // Arrs node
+        vtkIdType arrId = tree->GetChild(comSupId, 0);
+        for (int arri = 0; arri < tree->GetNumberOfChildren(arrId); arri++)
           {
-          std::string spatialDiscr = str.substr(pos + strlen(separator));
-          QString tooltip = QString(name.c_str() + QString(" (") +
-                                    spatialDiscr.c_str() + QString(")"));
-          array->setData(0, Qt::ToolTipRole, tooltip);
+          pqTreeWidgetItemObject *array = new pqTreeWidgetItemObject(comsup, QStringList());
+          this->NItems++;
 
-          QPixmap pix;
-          if (spatialDiscr == "P0")
+          vtkIdType arrayId = tree->GetChild(arrId, arri);
+          std::string str = names->GetValue(arrayId);
+          this->ItemMap[fullComsupName + QString(str.c_str())] = array;
+
+          const char* separator = vtkMEDReader::GetSeparator();
+          size_t pos = str.find(separator);
+          std::string name = str.substr(0, pos);
+
+          array->setText(0, QString(name.c_str()));
+          array->setFlags(array->flags() | Qt::ItemIsUserCheckable);
+          array->setChecked(true);
+
+          // Special Field
+          if (tree->GetNumberOfChildren(arrayId) != 0)
             {
-            pix.load(":/ParaViewResources/Icons/pqCellData16.png");
+            QFont font;
+            font.setItalic(true);
+            font.setUnderline(true);
+            array->setData(0, Qt::FontRole, QVariant(font));
+
+  array->setData(0, Qt::ToolTipRole,
+    QString("Whole \" %1\" mesh").arg(name.c_str()));
+  array->setData(0, Qt::DecorationRole,
+    QPixmap(":/ParaViewResources/Icons/pqCellDataForWholeMesh16.png"));
             }
-          else if (spatialDiscr == "P1")
+          // Standard Field
+          else
             {
-            pix.load(":/ParaViewResources/Icons/pqPointData16.png");
+            std::string spatialDiscr = str.substr(pos + strlen(separator));
+            QString tooltip = QString(name.c_str() + QString(" (") +
+              spatialDiscr.c_str() + QString(")"));
+            array->setData(0, Qt::ToolTipRole, tooltip);
+
+            QPixmap pix;
+            if (spatialDiscr == "P0")
+              {
+              pix.load(":/ParaViewResources/Icons/pqCellData16.png");
+              }
+            else if (spatialDiscr == "P1")
+              {
+              pix.load(":/ParaViewResources/Icons/pqPointData16.png");
+              }
+            else if (spatialDiscr == "GAUSS")
+              {
+              pix.load(":/ParaViewResources/Icons/pqQuadratureData16.png");
+              }
+            else if (spatialDiscr == "GSSNE")
+              {
+              pix.load(":/ParaViewResources/Icons/pqElnoData16.png");
+              }
+            array->setData(0, Qt::DecorationRole, pix);
             }
-          else if (spatialDiscr == "GAUSS")
-            {
-            pix.load(":/ParaViewResources/Icons/pqQuadratureData16.png");
-            }
-          else if (spatialDiscr == "GSSNE")
-            {
-            pix.load(":/ParaViewResources/Icons/pqElnoData16.png");
-            }
-          array->setData(0, Qt::DecorationRole, pix);
+
+          // Connection and updating checks for each item
+          QObject::connect(array, SIGNAL(checkedStateChanged(bool)), this, SLOT(updateChecks()));
+          nLeaves++;
           }
-
-        // Connection and updating checks for each item
-        QObject::connect(array, SIGNAL(checkedStateChanged(bool)), this, SLOT(updateChecks()));
-        nLeaves++;
         }
       }
     }
-
   // Expand tree
   this->TreeWidget->expandAll();
 }

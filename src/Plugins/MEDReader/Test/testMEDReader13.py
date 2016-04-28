@@ -50,7 +50,6 @@ RenderView1 = GetRenderView()
 RenderView1.CameraPosition = [1.0, 0.5, 10000.0]
 
 RenderView1.CameraPosition = [1.0, 0.5, 4.319751617610021]
-RenderView1.CameraClippingRange = [4.276554101433921, 4.384547891874171]
 
 ELNOMesh3 = ELNOMesh(Input=testMEDReader13_med)
 

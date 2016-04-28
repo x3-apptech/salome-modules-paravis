@@ -65,7 +65,6 @@ DataRepresentation1.SelectionCellFieldDataArrayName = 'FamilyIdCell'
 
 RenderView1.CameraPosition = [0.10751999914646149, 0.10751999914646149, 5.409578268564619]
 RenderView1.CameraFocalPoint = [0.10751999914646149, 0.10751999914646149, 4.703749895095825]
-RenderView1.CameraClippingRange = [0.4972827225809383, 0.9700468818440346]
 RenderView1.CameraParallelScale = 0.18268182562745858
 
 ExtractGroup1 = ExtractGroup(Input=testMEDReader12_med)

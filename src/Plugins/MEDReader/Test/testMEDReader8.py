@@ -85,7 +85,6 @@ RenderView1.CameraFocalPoint = [1.5, 1.5, 0.0]
 RenderView1.CameraPosition = [1.5, 1.5, 10000.0]
 RenderView1.InteractionMode = '3D'
 RenderView1.CameraPosition = [1.5, 1.5, 8.196152422706632]
-RenderView1.CameraClippingRange = [7.825640906782493, 8.682319698595558]
 RenderView1.CameraParallelScale = 2.1213203435596424
 RenderView1.CenterOfRotation = [1.5, 1.5, 0.0]
 

@@ -87,7 +87,6 @@ DataRepresentation1.LookupTable = lookupTable
 RenderView1 = GetRenderView()
 RenderView1.CameraViewUp = [0.06254683966704512, 0.9980420295997885, 0.0]
 RenderView1.CameraPosition = [0.8087292125440382, 1.3325993334207897, 12.692130429902462]
-RenderView1.CameraClippingRange = [6.326709113742113, 7.168262401281963]
 RenderView1.CameraFocalPoint = [0.8087292125440382, 1.3325993334207897, 0.0]
 RenderView1.CameraParallelScale = 3.712804729456109
 
