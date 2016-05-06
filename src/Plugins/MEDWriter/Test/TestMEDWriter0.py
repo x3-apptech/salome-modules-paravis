@@ -139,7 +139,7 @@ mergeBlocks1 = MergeBlocks(Input=test3)
 extractSurface1 = ExtractSurface(Input=mergeBlocks1)
 SaveData(fname4_vtp,proxy=extractSurface1)
 test4vtp = XMLPolyDataReader(FileName=[fname4_vtp])
-test4vtp.CellArrayStatus = ['F0', 'FamilyIdCell', 'Mesh']
+test4vtp.CellArrayStatus = ['F0', 'FamilyIdCell']
 SaveData(fname5,proxy=test4vtp,WriteAllTimeSteps=1)
 ### test content of fname5
 mfd5=ml.MEDFileData(fname5)
