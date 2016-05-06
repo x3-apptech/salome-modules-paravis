@@ -41,7 +41,7 @@
 
 vtkStandardNewMacro(vtkELNOMeshFilter);
 
-vtkELNOMeshFilter::vtkELNOMeshFilter()
+vtkELNOMeshFilter::vtkELNOMeshFilter():ShrinkFactor(0.9999)
 {
 }
 
@@ -71,7 +71,7 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
   usgInClone->ShallowCopy(usgIn);
   vtkSmartPointer<vtkShrinkFilter> shrink(vtkSmartPointer<vtkShrinkFilter>::New());
   shrink->SetInputData(usgInClone);
-  shrink->SetShrinkFactor(0.9999);
+  shrink->SetShrinkFactor(this->ShrinkFactor);
   shrink->Update();
   vtkUnstructuredGrid *shrinked(shrink->GetOutput());
   usgInClone->Delete();
