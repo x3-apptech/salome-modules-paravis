@@ -421,7 +421,7 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
                   vtkQuadratureSchemeDefinition *def(vtkQuadratureSchemeDefinition::New());
                   double *shape(new double[nbGaussPt*nbGaussPt]);
                   std::size_t dummy;
-                  const double *gsCoords(MEDCouplingFieldDiscretizationGaussNE::GetLocsFromGeometricType(ct,dummy));
+                  const double *gsCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));//GetLocsFromGeometricType
                   const double *refCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));
                   const double *weights(MEDCouplingFieldDiscretizationGaussNE::GetWeightArrayFromGeometricType(ct,dummy));
                   std::vector<double> gsCoords2(gsCoords,gsCoords+nbGaussPt*dim),refCoords2(refCoords,refCoords+nbGaussPt*dim);
