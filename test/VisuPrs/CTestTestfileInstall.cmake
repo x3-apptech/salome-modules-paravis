@@ -17,6 +17,17 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+# Define a label for base tests only: PARAVIS_BASE
+# Define a label for extra tests only: PARAVIS_EXTRA
+# Then calling ctest with the label PARAVIS will automatically use both PARAVIS_BASE and PARAVIS_EXTRA
+MACRO(DEFINE_PARAVIS_TEST test_files name label)
+  FOREACH(tfile ${test_files})
+    SET(TEST_NAME ${COMPONENT_NAME}_${name}_${tfile})
+    ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}_${label}")
+  ENDFOREACH()
+ENDMACRO()
+
 SET(TEST_DIRECTORIES
   2D_viewer
   3D_viewer

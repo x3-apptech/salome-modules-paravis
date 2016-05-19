@@ -17,17 +17,9 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(BASE_TESTS A0 B1 C3 E0)
-SET(ALL_TESTS  A0 A1 A2 A3 A4 A5 A6 A7 A9 B1 C3 C5 C6 C9
-               D1 D3 D6 D7 E0)
+INCLUDE(tests.set)
 
 # For make test
-IF(SALOME_PARAVIS_ALL_TEST)
-  SET(TEST_NAMES ${ALL_TESTS})
-ELSE()
-  SET(TEST_NAMES ${BASE_TESTS})
-ENDIF()
-
 FOREACH(tfile ${TEST_NAMES})
   SET(TEST_NAME BUGS_${tfile})
   ADD_TEST(${TEST_NAME} ${PYTHON_EXECUTABLE} ${SALOME_TEST_DRIVER} ${TIMEOUT}
@@ -36,7 +28,7 @@ FOREACH(tfile ${TEST_NAMES})
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "${tests_env}")
 ENDFOREACH()
 
-# Application tests
+# For salome test
 SET(APPLICATION_TESTS ${ALL_TESTS})
 SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/VisuPrs/bugs)
 
@@ -48,3 +40,4 @@ ENDFOREACH()
 INSTALL(FILES CTestTestfileInstall.cmake
         DESTINATION ${TEST_INSTALL_DIRECTORY}
         RENAME CTestTestfile.cmake)
+INSTALL(FILES tests.set DESTINATION ${TEST_INSTALL_DIRECTORY})

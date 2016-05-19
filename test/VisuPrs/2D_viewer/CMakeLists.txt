@@ -17,16 +17,9 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(BASE_TESTS A0)
-SET(ALL_TESTS  A0 A1)
+INCLUDE(tests.set)
 
 # For make test
-IF(SALOME_PARAVIS_ALL_TEST)
-  SET(TEST_NAMES ${ALL_TESTS})
-ELSE()
-  SET(TEST_NAMES ${BASE_TESTS})
-ENDIF()
-
 FOREACH(tfile ${TEST_NAMES})
   SET(TEST_NAME 2DVIEWER_${tfile})
   ADD_TEST(${TEST_NAME} ${PYTHON_EXECUTABLE} ${SALOME_TEST_DRIVER} ${TIMEOUT}
@@ -35,7 +28,7 @@ FOREACH(tfile ${TEST_NAMES})
   SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "${tests_env}")
 ENDFOREACH()
 
-# Application tests
+# For salome test
 SET(APPLICATION_TESTS ${ALL_TESTS})
 SET(TEST_INSTALL_DIRECTORY ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test/VisuPrs/2D_viewer)
 
@@ -47,3 +40,4 @@ ENDFOREACH()
 INSTALL(FILES CTestTestfileInstall.cmake
         DESTINATION ${TEST_INSTALL_DIRECTORY}
         RENAME CTestTestfile.cmake)
+INSTALL(FILES tests.set DESTINATION ${TEST_INSTALL_DIRECTORY})
