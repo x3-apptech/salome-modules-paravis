@@ -98,7 +98,13 @@ for reprCode in represents:
 
                 # save picture in file
                 # Construct image file name
-                pic_name = picturedir + "params_" + repr.replace(' ', '_') + "_any_" +  \
+                base_name = "params_" + repr.replace(' ', '_') + "_any_" +  \
                     str(sha) + "_" + str(opa) + "_" + str(lwi) + "." + pictureext
+                pic_name = os.path.join(picturedir, base_name)
                 # Show and record the presentation
                 process_prs_for_test(plot3d, my_view, pic_name)
+
+                # Compare to baseline
+                current_dir = os.path.dirname(os.path.realpath(__file__))
+                baseline = os.path.join(current_dir, "_refs", base_name)
+                compare_view_to_ref_image(my_view, baseline, threshold=1)

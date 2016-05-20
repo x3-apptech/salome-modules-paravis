@@ -29,6 +29,7 @@ import tempfile
 import getpass
 from datetime import date
 import struct
+import sys
 
 # Auxiliary variables
 
@@ -352,8 +353,8 @@ def delete_with_inputs(obj):
         pvsimple.Delete(tmp_obj)
 
 def get_png_picture_resolution(infile):
-    """Returns size (width, height) of the PNG image"""    
-    f = open(infile, 'rb')    
+    """Returns size (width, height) of the PNG image"""
+    f = open(infile, 'rb')
     data = f.read(24)
     f.close()
     if not (data[:8] == '\211PNG\r\n\032\n'and (data[12:16] == 'IHDR')):
@@ -364,8 +365,28 @@ def get_png_picture_resolution(infile):
     height = int(h)
     return (width,height)
 
-def save_trace(afile,atrace):    
-    """Saves atrace in afile"""        
+def save_trace(afile,atrace):
+    """Saves atrace in afile"""
     f = open(afile, 'w')
     f.write(atrace)
     f.close()
+
+def compare_view_to_ref_image(view, image_file, threshold=10):
+  import vtk.test.Testing
+  # warning: vtkGetTempDir looks at sys.argv contents...
+  save_sys_argv = sys.argv
+  sys.argv = []
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+
+  try:
+    vtk.test.Testing.compareImage(view.GetRenderWindow(),
+                                  image_file,
+                                  threshold=threshold)
+    vtk.test.Testing.interact()
+  except:
+    sys.argv = save_sys_argv
+    print "<b>ERROR!!! Pictures differs from reference image !!!</b>";
+    print "Picture: "+image_file
+    raise
+    pass
+  sys.argv = save_sys_argv

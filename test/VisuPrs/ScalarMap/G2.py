@@ -22,7 +22,7 @@
 
 import sys
 import os
-from paravistest import datadir, pictureext, get_picture_dir, get_png_picture_resolution
+from paravistest import datadir, pictureext, get_picture_dir, compare_view_to_ref_image
 from pvsimple import GetActiveSource, GetRenderView, Render, OpenDataFile
 from presentations import ScalarMapOnField, hide_all, EntityType, PrsTypeEnum,reset_view,process_prs_for_test
 
@@ -48,9 +48,6 @@ import time
 
 aFieldEntity = EntityType.NODE
 aFieldName = "MODES___DEPL____________________"
-#create list to store picture files sizes
-sizesw=[]
-sizesh=[]
 #create Scalar Map presentations for 10 timestamps
 for i in range(1,11):
     hide_all(aView, True)
@@ -62,36 +59,19 @@ for i in range(1,11):
     reset_view(aView)
     Render(aView)
 
-    # Add path separator to the end of picture path if necessery
-    if not picturedir.endswith(os.sep):
-            picturedir += os.sep
     prs_type = PrsTypeEnum.SCALARMAP
 
     # Get name of presentation type
     prs_name = PrsTypeEnum.get_name(prs_type)
     f_prs_type = prs_name.replace(' ', '').upper()
     # Construct image file name
-    pic_name = picturedir + aFieldName + "_" + str(i) + "_" + f_prs_type + "." + pictureext
+    base_name = aFieldName + "_" + str(i) + "_" + f_prs_type + "." + pictureext
+    pic_name = os.path.join(picturedir, base_name)
 
     # Show and record the presentation
     process_prs_for_test(aPrs, aView, pic_name)
-    (w,h) = get_png_picture_resolution(pic_name)
-    sizesw.append(w)
-    sizesh.append(h)
 
-# check sizes of pictures: width
-if abs(max(sizesw)-min(sizesw)) > 0:
-    print "<b>ERROR!!! Pictures have different width !!!</b>";
-    for i in range(1,11):
-        picture_name = "time_stamp_"+str(i)+"."+pictureext
-        print "Picture: "+picture_name+"; width : "+str(sizesw[i-1])
-    raise RuntimeError
-
-# check sizes of pictures: height
-if abs(max(sizesh)-min(sizesh)) > 0:
-    print "<b>WARNING!!! Pictures have different height !!!</b>";
-    for i in range(1,11):
-        picture_name = "time_stamp_"+str(i)+"."+pictureext
-        print "Picture: "+picture_name+"; height : "+str(sizesh[i-1])
-    raise RuntimeError
-
+    # Compare to baseline
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    baseline = os.path.join(current_dir, "_refs", base_name)
+    compare_view_to_ref_image(aView, baseline, threshold=1)
