@@ -32,10 +32,6 @@
         <translation>Unrecognized command!</translation>
     </message>
     <message>
-        <source>BUT_OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>WRN_ADD_FAILED</source>
         <translation>Can&apos;t insert line!</translation>
     </message>

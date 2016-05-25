@@ -44,10 +44,6 @@
         <translation>Commande inconnue !</translation>
     </message>
     <message>
-        <source>BUT_OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>WRN_ADD_FAILED</source>
         <translation>Impossible d&apos;insérer la ligne !</translation>
     </message>

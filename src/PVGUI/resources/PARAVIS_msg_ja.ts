@@ -32,10 +32,6 @@
       <translation>不明なコマンド ！</translation>
     </message>
     <message>
-      <source>BUT_OK</source>
-      <translation>わかりました(&amp;O)</translation>
-    </message>
-    <message>
       <source>WRN_ADD_FAILED</source>
       <translation>行を挿入できません。</translation>
     </message>
