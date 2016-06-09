@@ -56,6 +56,8 @@
 #include <pqProgressWidget.h>
 #include <pqProgressManager.h>
 #include <pqPropertiesPanel.h>
+#include <pqPVApplicationCore.h>
+#include <pqAnimationManager.h>
 
 #include <pqApplicationCore.h>
 #include <pqPluginManager.h>
@@ -238,6 +240,11 @@ void PVGUI_Module::setupDockWidgets()
   animationViewDock->setObjectName("animationViewDock");
   desk->addDockWidget( Qt::BottomDockWidgetArea, animationViewDock );
   pqPVAnimationWidget* animation_panel = new ResizeHelper(animationViewDock); // [ABN] was resizeHelper
+
+  // RNV: Emit signal in order to make sure that animation scene is set
+  emit pqPVApplicationCore::instance()->animationManager()->activeSceneChanged(
+     pqPVApplicationCore::instance()->animationManager()->getActiveScene());
+
   animationViewDock->setWidget(animation_panel);
   myDockWidgets[animationViewDock] = false; // hidden by default
 
