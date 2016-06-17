@@ -242,8 +242,9 @@ void PVGUI_Module::setupDockWidgets()
   pqPVAnimationWidget* animation_panel = new ResizeHelper(animationViewDock); // [ABN] was resizeHelper
 
   // RNV: Emit signal in order to make sure that animation scene is set
-  emit pqPVApplicationCore::instance()->animationManager()->activeSceneChanged(
-     pqPVApplicationCore::instance()->animationManager()->getActiveScene());
+  QMetaObject::invokeMethod( pqPVApplicationCore::instance()->animationManager(),
+			     "activeSceneChanged",
+			     Q_ARG( pqAnimationScene*, pqPVApplicationCore::instance()->animationManager()->getActiveScene() ) );
 
   animationViewDock->setWidget(animation_panel);
   myDockWidgets[animationViewDock] = false; // hidden by default
