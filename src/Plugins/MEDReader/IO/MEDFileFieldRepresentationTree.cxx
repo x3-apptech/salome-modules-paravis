@@ -995,6 +995,13 @@ void MEDFileFieldRepresentationTree::feedSIL(vtkMutableDirectedGraph* sil, vtkId
     }
 }
 
+std::string MEDFileFieldRepresentationTree::getActiveMeshName() const
+{
+  int dummy0(0),dummy1(0),dummy2(0);
+  const MEDFileFieldRepresentationLeaves& leaf(getTheSingleActivated(dummy0,dummy1,dummy2));
+  return leaf.getMeshName();
+}
+
 std::string MEDFileFieldRepresentationTree::feedSILForFamsAndGrps(vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const
 {
   int dummy0(0),dummy1(0),dummy2(0);

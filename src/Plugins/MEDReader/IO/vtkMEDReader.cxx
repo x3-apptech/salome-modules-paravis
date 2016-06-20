@@ -509,20 +509,15 @@ void vtkMEDReader::UpdateSIL(vtkInformation* request, vtkInformation *info)
 {
   if(!this->Internal)
       return;
-  vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::New());
-
-  // This Should be more clever, TODO
-  std::string meshName(this->BuildSIL(sil));
-  if(meshName!=this->Internal->DftMeshName)
+  std::string meshName(this->Internal->Tree.getActiveMeshName());
+  if(!this->Internal->SIL || meshName!=this->Internal->DftMeshName)
     {
+      vtkMutableDirectedGraph *sil(vtkMutableDirectedGraph::New());
+      this->BuildSIL(sil);
       if(this->Internal->SIL)
         this->Internal->SIL->Delete();
       this->Internal->SIL=sil;
       this->Internal->DftMeshName=meshName;
-    }
-  else
-    {
-      sil->Delete();
     }
 }
 

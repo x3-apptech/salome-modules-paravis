@@ -139,6 +139,7 @@ public:
   void activateTheFirst() const;
   void computeFullNameInLeaves() const;
   void feedSIL(vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const;
+  std::string getActiveMeshName() const;
   std::string feedSILForFamsAndGrps(vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const;
   std::string getNameOf(int id) const;
   const char *getNameOfC(int id) const;
