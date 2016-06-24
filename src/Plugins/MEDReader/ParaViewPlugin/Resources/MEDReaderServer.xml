@@ -256,6 +256,9 @@
         <Documentation>The value of this property determines how far the points
         will move in the mesh before to be colored using ELNO fields on it. A value of 0 positions the points at the centroid of the cell; a value of 1 leaves them at their original positions.</Documentation>
       </DoubleVectorProperty>
+      <Hints>
+        <ShowInMenu category="Mechanics" />
+      </Hints>
     </SourceProxy>
 
     <SourceProxy name="ELNOSurface" class="vtkELNOSurfaceFilter" label="ELNO Surface">
@@ -299,6 +302,7 @@
       </StringVectorProperty>
       <Hints>
         <Property name="SelectSourceArray" show="0"/>
+        <ShowInMenu category="Mechanics" />
       </Hints>
     </SourceProxy>
 
@@ -359,6 +363,7 @@
 
       <Hints>
         <Property name="SelectSourceArray" show="1"/>
+        <ShowInMenu category="Mechanics" />
       </Hints>
 
     </SourceProxy>
@@ -418,6 +423,7 @@
 
       <Hints>
         <Property name="SelectSourceArray" show="0"/>
+        <ShowInMenu category="Mechanics" />
       </Hints>
     </SourceProxy>
 
