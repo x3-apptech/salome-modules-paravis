@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+// Copyright (C) 2010-2015  CEA/DEN, EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,6 @@ public:
   static const char NUM_ID_CELL_NAME[];
   static const char FAMILY_ID_NODE_NAME[];
   static const char NUM_ID_NODE_NAME[];
-  static const char GLOBAL_NODE_ID_NAME[];
 private:
   mutable bool _activated;
   mutable int _id;
@@ -155,6 +154,7 @@ public:
   std::map<std::string,bool> dumpState() const;
   //non const methods
   void loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts);
+  void loadInMemory(MEDCoupling::MEDFileFields *fields, MEDCoupling::MEDFileMeshes *meshes);
   void removeEmptyLeaves();
   // static methods
   static bool IsFieldMeshRegardingInfo(const std::vector<std::string>& compInfos);
