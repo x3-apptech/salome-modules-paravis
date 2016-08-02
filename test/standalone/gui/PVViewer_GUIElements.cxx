@@ -70,7 +70,7 @@ PVViewer_GUIElements::PVViewer_GUIElements(QMainWindow* desk) :
   macrosMenu = new QMenu(0);
   pqParaViewMenuBuilders::buildMacrosMenu(*macrosMenu);
 
-  //myBuildToolbars(desk);
+//  myBuildToolbars(desk);
 }
 
 PVViewer_GUIElements * PVViewer_GUIElements::GetInstance(QMainWindow* desk)

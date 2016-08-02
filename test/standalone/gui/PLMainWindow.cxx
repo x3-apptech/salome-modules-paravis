@@ -50,7 +50,8 @@ PLMainWindow::PLMainWindow(QWidget *parent) :
   QMainWindow(parent),
   _pAppC(0),
   _simplePipeline(),
-  _autoApply(true)
+  _autoApply(true),
+  _filterMenu(0)
 {
   _mainWindow.setupUi(this);
   _autoApply = _mainWindow.actionAuto_apply->isChecked();
@@ -63,25 +64,23 @@ PLMainWindow::PLMainWindow(QWidget *parent) :
 void PLMainWindow::finishUISetup()
 {
   _pAppC = PVViewer_Core::GetPVApplication();
-  PVViewer_GUIElements * pvgui = PVViewer_GUIElements::GetInstance(this);
-  QWidget * wprop = pvgui->getPropertiesPanel();
-  QWidget * wpipe = pvgui->getPipelineBrowserWidget();
+  _pvgui = PVViewer_GUIElements::GetInstance(this);
+
+  QWidget * wprop = _pvgui->getPropertiesPanel();
+  QWidget * wpipe = _pvgui->getPipelineBrowserWidget();
   wprop->setParent(_mainWindow.propFrame);
   _mainWindow.verticalLayoutProp->addWidget(wprop);
   wpipe->setParent(_mainWindow.pipelineFrame);
   _mainWindow.verticalLayoutPipe->addWidget(wpipe);
 
-  PVViewer_GUIElements * pvge = PVViewer_GUIElements::GetInstance(this);
-//  pvge->setToolBarVisible(false);
-
   // In this mockup, we play on the parent widget visibility (a QFrame), so show these:
-  pvge->getPipelineBrowserWidget()->show();
-  pvge->getPropertiesPanel()->show();
+  _pvgui->getPipelineBrowserWidget()->show();
+  _pvgui->getPropertiesPanel()->show();
   // and hide these:
   _mainWindow.propFrame->hide();
   _mainWindow.pipelineFrame->hide();
-//  pvge->setToolBarEnabled(false);
-//  pvge->setToolBarVisible(false);
+//  _pvgui->setToolBarEnabled(false);
+//  _pvgui->setToolBarVisible(false);
 
 }
 
@@ -110,6 +109,19 @@ void PLMainWindow::showPipeline(bool isChecked)
   isChecked ? _mainWindow.pipelineFrame->show() : _mainWindow.pipelineFrame->hide();
 }
 
+void PLMainWindow::onBuildFilterMenu()
+{
+  if(_filterMenu == 0)
+    {
+      _filterMenu = _pvgui->getFiltersMenu();
+//      _filterMenu = new QMenu();
+      _filterMenu->setTitle("Filters");
+      this->menuBar()->addMenu(_filterMenu);
+    }
+  else
+    QMessageBox::warning(this, "Warning", "Filter menu already added!");
+}
+
 void PLMainWindow::addTab()
 {
   int c = _mainWindow.tabWidget->count();
@@ -120,6 +132,7 @@ void PLMainWindow::addTab()
   // Connect buttons
   QObject::connect(newTab, SIGNAL(onInsertSingleView(PLViewTab *)), this, SLOT(insertSingleView(PLViewTab *)));
   QObject::connect(newTab, SIGNAL(onInsertMultiView(PLViewTab *)), this, SLOT(insertMultiView(PLViewTab *)));
+  QObject::connect(newTab, SIGNAL(onInsertSpreadsheetView(PLViewTab *)), this, SLOT(insertSpreadsheetView(PLViewTab *)));
 }
 
 void PLMainWindow::deleteTab()
@@ -202,6 +215,26 @@ void PLMainWindow::insertSingleView(PLViewTab * tab)
   pqActiveObjects::instance().setActiveView(pqview);
 }
 
+void PLMainWindow::insertSpreadsheetView(PLViewTab * tab)
+{
+  // Create a new view proxy on the server
+  pqObjectBuilder* builder = _pAppC->getObjectBuilder();
+  pqServer* active_serv = pqActiveObjects::instance().activeServer();
+
+  std::cout << "About to create spreadsheet view ..." << std::endl;
+  pqView * pqview = builder->createView(QString("SpreadSheetView"), active_serv);
+  std::cout << "Created: " << pqview << "!" << std::endl;
+
+  // Retrieve its widget and pass it to the Qt tab:
+  QWidget* viewWidget = pqview->widget();
+
+//  QWidget* viewWidget = new QPushButton("toto");
+  tab->hideAndReplace(viewWidget, pqview);
+
+  pqActiveObjects::instance().setActiveView(pqview);
+}
+
+
 void PLMainWindow::insertMultiView(PLViewTab * tab)
 {
   // Retrieve TabbedMultiView and see if it is already attached to someone:
@@ -220,7 +253,6 @@ void PLMainWindow::insertMultiView(PLViewTab * tab)
       tab->hideAndReplace(multiv, NULL);
     }
 }
-
 
 void PLMainWindow::doShrink()
 {

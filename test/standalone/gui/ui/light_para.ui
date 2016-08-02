@@ -276,6 +276,7 @@
     <addaction name="actionAuto_apply"/>
     <addaction name="actionShow_prop_widget"/>
     <addaction name="actionShow_pipeline"/>
+    <addaction name="actionBuild_filter_menu"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSimple_actions"/>
@@ -344,6 +345,11 @@
    </property>
    <property name="text">
     <string>Show pipeline</string>
+   </property>
+  </action>
+  <action name="actionBuild_filter_menu">
+   <property name="text">
+    <string>Build filter menu</string>
    </property>
   </action>
  </widget>
@@ -637,6 +643,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionBuild_filter_menu</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onBuildFilterMenu()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>504</x>
+     <y>338</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>changedCurrentFile(QString)</signal>
@@ -650,5 +672,6 @@
   <slot>showPipeline(bool)</slot>
   <slot>showProp(bool)</slot>
   <slot>currentTabChanged(int)</slot>
+  <slot>onBuildFilterMenu()</slot>
  </slots>
 </ui>

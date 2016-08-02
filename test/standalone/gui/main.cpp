@@ -58,8 +58,8 @@ int main(int argc, char ** argv)
 
   //para_widget->updateActiveServer();
 
-  //std::cout << "Load config ..." << std::endl;
-  //PVViewer_Core::ParaviewLoadConfigurations(QString(":/LightPara/Configuration/"));
+  std::cout << "Load config ..." << std::endl;
+  PVViewer_Core::ParaviewLoadConfigurations(QString(":/LightPara/Configuration"));
 
   /* Inspired from ParaView source code:
    * leave time for the GUI to update itself before displaying the main window: */
