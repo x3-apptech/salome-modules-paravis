@@ -1105,6 +1105,8 @@ int MEDFileFieldRepresentationTree::getMaxNumberOfTimeSteps() const
 
 void MEDFileFieldRepresentationTree::loadInMemory(MEDFileFields *fields, MEDFileMeshes *meshes)
 {
+  _ms=meshes;  meshes->incrRef();
+  _fields=fields; fields->incrRef();
   if(!((MEDCoupling::MEDFileFields *)fields))
     {
       fields=BuildFieldFromMeshes(meshes);
