@@ -155,6 +155,7 @@ public:
   std::map<std::string,bool> dumpState() const;
   //non const methods
   void loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts);
+  void loadInMemory(MEDCoupling::MEDFileFields *fields, MEDCoupling::MEDFileMeshes *meshes);
   void removeEmptyLeaves();
   // static methods
   static bool IsFieldMeshRegardingInfo(const std::vector<std::string>& compInfos);

@@ -1108,52 +1108,15 @@ int MEDFileFieldRepresentationTree::getMaxNumberOfTimeSteps() const
 /*!
  * 
  */
-void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts)
+void MEDFileFieldRepresentationTree::loadInMemory(MEDCoupling::MEDFileFields *fields, MEDCoupling::MEDFileMeshes *meshes)
 {
-  if(isMEDOrSauv)
-    {
-      if((iPart==-1 && nbOfParts==-1) || (iPart==0 && nbOfParts==1))
-        {
-          _ms=MEDFileMeshes::New(fileName);
-          _fields=MEDFileFields::New(fileName,false);//false is important to not read the values
-        }
-      else
-        {
-#ifdef MEDREADER_USE_MPI
-          _ms=ParaMEDFileMeshes::New(iPart,nbOfParts,fileName);
-          int nbMeshes(_ms->getNumberOfMeshes());
-          for(int i=0;i<nbMeshes;i++)
-            {
-              MEDCoupling::MEDFileMesh *tmp(_ms->getMeshAtPos(i));
-              MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
-              if(tmp2)
-                MCAuto<DataArrayInt> tmp3(tmp2->zipCoords());
-            }
-          _fields=MEDFileFields::LoadPartOf(fileName,false,_ms);//false is important to not read the values
-#else
-          std::ostringstream oss; oss << "MEDFileFieldRepresentationTree::loadMainStructureOfFile : request for iPart/nbOfParts=" << iPart << "/" << nbOfParts << " whereas Plugin not compiled with MPI !";
-          throw INTERP_KERNEL::Exception(oss.str().c_str());
-#endif
-        }
-    }
-  else
-    {
-      MCAuto<MEDCoupling::SauvReader> sr(MEDCoupling::SauvReader::New(fileName));
-      MCAuto<MEDCoupling::MEDFileData> mfd(sr->loadInMEDFileDS());
-      _ms=mfd->getMeshes(); _ms->incrRef();
-      int nbMeshes(_ms->getNumberOfMeshes());
-      for(int i=0;i<nbMeshes;i++)
-        {
-          MEDCoupling::MEDFileMesh *tmp(_ms->getMeshAtPos(i));
-          MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
-          if(tmp2)
-            tmp2->forceComputationOfParts();
-        }
-      _fields=mfd->getFields();
-      if((MEDCoupling::MEDFileFields *)_fields)
-        _fields->incrRef();
-    }
-  if(!((MEDCoupling::MEDFileFields *)_fields))
+  _fields=fields; _ms=meshes;
+  if(_fields.isNotNull())
+    _fields->incrRef();
+  if(_ms.isNotNull())
+    _ms->incrRef();
+  //
+  if(_fields.isNull())
     {
       _fields=BuildFieldFromMeshes(_ms);
     }
@@ -1261,6 +1224,56 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
   this->removeEmptyLeaves();
   this->assignIds();
   this->computeFullNameInLeaves();
+}
+
+void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts)
+{
+  MCAuto<MEDFileMeshes> ms;
+  MCAuto<MEDFileFields> fields;
+  if(isMEDOrSauv)
+    {
+      if((iPart==-1 && nbOfParts==-1) || (iPart==0 && nbOfParts==1))
+        {
+          ms=MEDFileMeshes::New(fileName);
+          fields=MEDFileFields::New(fileName,false);//false is important to not read the values
+        }
+      else
+        {
+#ifdef MEDREADER_USE_MPI
+          ms=ParaMEDFileMeshes::New(iPart,nbOfParts,fileName);
+          int nbMeshes(ms->getNumberOfMeshes());
+          for(int i=0;i<nbMeshes;i++)
+            {
+              MEDCoupling::MEDFileMesh *tmp(ms->getMeshAtPos(i));
+              MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
+              if(tmp2)
+                MCAuto<DataArrayInt> tmp3(tmp2->zipCoords());
+            }
+          fields=MEDFileFields::LoadPartOf(fileName,false,ms);//false is important to not read the values
+#else
+          std::ostringstream oss; oss << "MEDFileFieldRepresentationTree::loadMainStructureOfFile : request for iPart/nbOfParts=" << iPart << "/" << nbOfParts << " whereas Plugin not compiled with MPI !";
+          throw INTERP_KERNEL::Exception(oss.str().c_str());
+#endif
+        }
+    }
+  else
+    {
+      MCAuto<MEDCoupling::SauvReader> sr(MEDCoupling::SauvReader::New(fileName));
+      MCAuto<MEDCoupling::MEDFileData> mfd(sr->loadInMEDFileDS());
+      ms=mfd->getMeshes(); ms->incrRef();
+      int nbMeshes(ms->getNumberOfMeshes());
+      for(int i=0;i<nbMeshes;i++)
+        {
+          MEDCoupling::MEDFileMesh *tmp(ms->getMeshAtPos(i));
+          MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
+          if(tmp2)
+            tmp2->forceComputationOfParts();
+        }
+      fields=mfd->getFields();
+      if(fields.isNotNull())
+        fields->incrRef();
+    }
+  loadInMemory(fields,ms);
 }
 
 void MEDFileFieldRepresentationTree::removeEmptyLeaves()
