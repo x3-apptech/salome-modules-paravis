@@ -144,7 +144,8 @@ theDuration = 20
 NbOfLoops = 4
 #thePath = os.getenv("TMP_DIR")
 thePrefix = "TestPngFromAnim"
-thePath = os.path.join("/tmp", thePrefix)
+import tempfile
+thePath = os.path.join(tempfile.mkdtemp(), thePrefix)
 thePath += ".png"
 
 displayMng = DisplayManager()
