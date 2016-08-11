@@ -164,6 +164,34 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS)
     ENDIF()        
 ENDIF(SALOME_PARAVIS_BUILD_PLUGINS)
 
+#####################################
+# FIND MED
+#####################################
+SET(MED_ROOT_DIR $ENV{MED_ROOT_DIR} CACHE PATH "Path to MED module")
+IF(EXISTS ${MED_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${MED_ROOT_DIR}/adm_local/cmake_files")
+  FIND_PACKAGE(SalomeMED REQUIRED)
+  ADD_DEFINITIONS(${MED_DEFINITIONS})
+  INCLUDE_DIRECTORIES(${MED_INCLUDE_DIRS})
+ELSE(EXISTS ${MED_ROOT_DIR})
+  MESSAGE(FATAL_ERROR "We absolutely need MED module, please define MED_ROOT_DIR")
+ENDIF(EXISTS ${MED_ROOT_DIR})
+#####################################
+
+#####################################
+# FIND MEDCOUPLING
+#####################################
+SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "Path to MEDCOUPLING module")
+IF(EXISTS ${MEDCOUPLING_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
+  FIND_PACKAGE(SalomeMEDCoupling REQUIRED)
+  ADD_DEFINITIONS(${MEDCOUPLING_DEFINITIONS})
+  INCLUDE_DIRECTORIES(${MEDCOUPLING_INCLUDE_DIRS})
+ELSE(EXISTS ${MEDCOUPLING_ROOT_DIR})
+  MESSAGE(FATAL_ERROR "We absolutely need MEDCOUPLING module, please define MEDCOUPLING_ROOT_DIR")
+ENDIF(EXISTS ${MEDCOUPLING_ROOT_DIR})
+#####################################
+
 ##
 ## From GEOM
 ##

@@ -15,7 +15,7 @@ ADD_DEFINITIONS(
 )
 
 # find additional libraries
-FIND_LIBRARY( _userlib_visulib visulib PATH /home/I35256/salome/install/V7_main_git/modules/install/PARAVIS_master/lib/salome)
+#FIND_LIBRARY( _userlib_visulib visulib PATH /home/I35256/salome/install/V7_main_git/modules/install/PARAVIS_master/lib/salome)
 #FIND_LIBRARY( _userlib_MEDLoaderForPV MEDLoaderForPV PATH /home/I35256/salome/install/V7_main_git/modules/install/PARAVIS_master/lib/salome)
 
 

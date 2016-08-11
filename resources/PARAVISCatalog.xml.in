@@ -88,22 +88,16 @@
                           <inParameter-list>
                               <inParameter>
                                 <inParameter-name>field</inParameter-name>
-                                <inParameter-type>
-SALOME_MED/ParaMEDCouplingFieldDoubleCorbaInterface
-                                </inParameter-type>
+                                <inParameter-type>SALOME_MED/ParaMEDCouplingFieldDoubleCorbaInterface</inParameter-type>
                             </inParameter>
                               <inParameter>
-                                <inParameter-name>
-                                  path_python_file
-                                </inParameter-name>
+                                <inParameter-name>path_python_file</inParameter-name>
                                 <inParameter-type>string</inParameter-type>
                             </inParameter>
                           </inParameter-list>
                           <outParameter-list>
-
                           </outParameter-list>
                           <DataStream-list>
-
                           </DataStream-list>
                       </component-service>
                   </component-service-list>
