@@ -16,11 +16,12 @@ class Visualization
 {
   vtkCPProcessor* Processor;
 
-  private :
+  //private :
+  public :
     void CatalystInitialize(const std::string& pipeline);
     void CatalystFinalize();
     void CatalystCoProcess(vtkDataSet *VTKGrid, double time, unsigned int timeStep);
-    void ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtkDataSet *VTKGrid);
+    void ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtkDataSet *&VTKGrid);
   public :
     Visualization();
     void run(MEDCoupling::MEDCouplingFieldDouble*, const std::string& pathPipeline);

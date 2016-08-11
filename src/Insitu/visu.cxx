@@ -1,5 +1,4 @@
 #include "visu.hxx"
-// #include "MEDCouplingFieldDouble.hxx"
 #include "MEDFileField.hxx"
 #include "MEDCouplingUMesh.hxx"
 #include "MEDCouplingCMesh.hxx"
@@ -14,13 +13,18 @@
 #include <vtkCPPythonScriptPipeline.h>
 #include <vtkCPProcessor.h>
 #include "vtkDataSet.h"
+#include "vtkCellData.h"
 
+#include <vtkSmartPointer.h>
+#include <vtkXMLUnstructuredGridWriter.h>
+#include <vtkUnstructuredGrid.h>
 
 using namespace MEDCoupling;
 
 
 void Visualization::CatalystInitialize(const std::string& script)
 {
+
   if(Processor == NULL)
     {
     Processor = vtkCPProcessor::New();
@@ -46,13 +50,7 @@ void Visualization::CatalystFinalize()
     Processor->Delete();
     Processor = NULL;
     }
-/* uuuuuuuh ... maybe cleaning vtkDataSet  
-if(VTKGrid)
-    {
-    VTKGrid->Delete();
-    VTKGrid = NULL;
-    }
-*/
+
   return;
 }
 
@@ -75,9 +73,9 @@ void Visualization::CatalystCoProcess(vtkDataSet *VTKGrid, double time,
   dataDescription->Delete();
 }
 
-void Visualization::ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtkDataSet *VTKGrid)
+void Visualization::ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtkDataSet *&VTKGrid)
+//vtkDataSet * Visualization::ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field)
 {
-
   MEDCoupling::MEDCouplingFieldDouble *f = field;
   MEDCoupling::MCAuto<MEDFileField1TS> ff(MEDFileField1TS::New());
   ff->setFieldNoProfileSBT(f);
@@ -92,6 +90,7 @@ void Visualization::ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtk
     {
       MCAuto<MEDFileUMesh> mmu(MEDFileUMesh::New()); 
       mmu->setMeshAtLevel(0,dynamic_cast<MEDCouplingUMesh *>(m));
+      mmu->forceComputationOfParts();
       mm=DynamicCast<MEDFileUMesh,MEDFileMesh>(mmu);
     }
   else if(dynamic_cast<MEDCouplingCMesh *>(m))
@@ -108,16 +107,28 @@ void Visualization::ConvertToVTK(MEDCoupling::MEDCouplingFieldDouble* field, vtk
       //mm=DynamicCast<MEDCouplingCurveLinearMesh,MEDFileMesh>(mmc);
       mm=0;
     }
-  throw ;
+  else
+    {
+    throw ;
+    }
   MCAuto<MEDFileMeshes> ms(MEDFileMeshes::New());
   ms->pushMesh(mm);
+  ms->getMeshesNames();
+  //
+  int proc_id;
+  MPI_Comm_rank(MPI_COMM_WORLD,&proc_id);
+  //
   MEDFileFieldRepresentationTree Tree;
   Tree.loadInMemory(fs,ms);
+  
+  Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(0,true);
+  Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(1,false);
+  Tree.activateTheFirst();//"TS0/Fluid domain/ComSup0/TempC@@][@@P0"
   std::string meshName;
   TimeKeeper TK(0);
   int tmp1,tmp2;
   double tmp3(f->getTime(tmp1,tmp2));
-  vtkDataSet *ret(Tree.buildVTKInstance(true,tmp3,meshName,TK));
+  vtkDataSet *ret(Tree.buildVTKInstance(false,tmp3,meshName,TK));
   VTKGrid = ret;
 }
 
@@ -133,6 +144,7 @@ void Visualization::run(MEDCoupling::MEDCouplingFieldDouble* field, const std::s
 {
   int proc_id;
   MPI_Comm_rank(MPI_COMM_WORLD,&proc_id);
+
   if( field == NULL)
   {
     std::cerr << "Description n° " << proc_id << ": NULL pointer" << std::endl;
@@ -141,20 +153,14 @@ void Visualization::run(MEDCoupling::MEDCouplingFieldDouble* field, const std::s
             << field->getDescription() << std::endl;
 
 
-  CatalystInitialize(pathPipeline);
-
   vtkDataSet *VTKGrid = 0;
   ConvertToVTK(field, VTKGrid);
 
-  // Time information for CatalystCoProcess
-  int iteration = 0;
-  int order = 0;
-  double time = field->getTime(iteration, order);
-
-  CatalystCoProcess(VTKGrid, time, iteration);
-  
+  const char *fileName = pathPipeline.c_str();
+  CatalystInitialize(fileName);
+  CatalystCoProcess(VTKGrid, 0.0, 0);
   CatalystFinalize();
-
+  
   return ;
 }
 
