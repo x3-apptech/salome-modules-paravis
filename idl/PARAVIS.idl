@@ -1,0 +1,28 @@
+
+#ifndef _PARAVIS_IDL_
+#define _PARAVIS_IDL_
+
+#include "SALOME_Exception.idl"
+#include "SALOME_Component.idl"
+#include "SALOME_Comm.idl"
+
+
+#include "MEDCouplingCorbaServant.idl"
+#include "SALOME_MPIObject.idl"
+#include "ParaMEDCouplingCorbaServant.idl"
+
+module PARAVIS_ORB
+{
+typedef sequence<string> stringvec;
+typedef sequence<double> dblevec;
+typedef sequence<long> intvec;
+typedef Engines::dataref dataref;
+
+  interface VisualizationComponent: Engines::MPIObject, Engines::EngineComponent
+  {
+    void Visualize(in SALOME_MED::ParaMEDCouplingFieldDoubleCorbaInterface field,in string path_python_file) raises (SALOME::SALOME_Exception);
+  };
+
+};
+
+#endif

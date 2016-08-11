@@ -145,14 +145,6 @@ void Visualization::run(MEDCoupling::MEDCouplingFieldDouble* field, const std::s
   int proc_id;
   MPI_Comm_rank(MPI_COMM_WORLD,&proc_id);
 
-  if( field == NULL)
-  {
-    std::cerr << "Description n° " << proc_id << ": NULL pointer" << std::endl;
-  }
-  std::cerr << "Description n° " << proc_id << ":"
-            << field->getDescription() << std::endl;
-
-
   vtkDataSet *VTKGrid = 0;
   ConvertToVTK(field, VTKGrid);
 
