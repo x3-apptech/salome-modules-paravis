@@ -34,9 +34,10 @@ data_file = datadir + "TimeStamps.med"
 
 tmp_dir = os.getenv("TmpDir")
 if tmp_dir == None:
-    tmp_dir = "/tmp"
+  import tempfile
+  tmp_dir = tempfile.mkdtemp()
 
-save_file = tmp_dir + "/TimeStamps_save.hdf"
+save_file = os.path.join(tmp_dir, "TimeStamps_save.hdf")
 print "Save to file ", save_file
 
 pvsimple.OpenDataFile(data_file)

@@ -20,6 +20,10 @@
 PROJECT( ParaMEDCorba )
 
   CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
+  IF(WIN32)
+    CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib 
+  ENDIF(WIN32)
+
   ## !!! This definition corrupts wrapping process
   #SET( LIBRARY_OUTPUT_PATH ${ParaMEDCorba_BINARY_DIR}/bin CACHE INTERNAL "Single place for output" )
   #SET( EXECUTABLE_OUTPUT_PATH ${ParaMEDCorba_BINARY_DIR}/bin  CACHE INTERNAL "Single place for output" )

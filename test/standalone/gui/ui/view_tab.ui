@@ -70,6 +70,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="spreadsheetViewButton">
+        <property name="text">
+         <string>Spreadsheet view</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -136,9 +143,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>spreadsheetViewButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ViewTab</receiver>
+   <slot>insertSpreadsheetView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>274</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>insertMultiView()</slot>
   <slot>insertSingleView()</slot>
+  <slot>insertSpreadsheetView()</slot>
  </slots>
 </ui>

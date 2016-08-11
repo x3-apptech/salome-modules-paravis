@@ -27,6 +27,9 @@ ENDIF(WIN32)
 
 # Ensure a proper linker behavior:
 CMAKE_POLICY(SET CMP0003 NEW)
+IF(WIN32)
+  CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib 
+ENDIF(WIN32)
 
 # Versioning
 # ===========
@@ -40,12 +43,21 @@ SET(${PROJECT_NAME_UC}_VERSION
   ${${PROJECT_NAME_UC}_MAJOR_VERSION}.${${PROJECT_NAME_UC}_MINOR_VERSION}.${${PROJECT_NAME_UC}_PATCH_VERSION})
 SET(${PROJECT_NAME_UC}_VERSION_DEV 1)
 
+# Common CMake macros
+# ===================
+SET(CONFIGURATION_ROOT_DIR $ENV{CONFIGURATION_ROOT_DIR} CACHE PATH "Path to the Salome CMake configuration files")
+IF(EXISTS ${CONFIGURATION_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${CONFIGURATION_ROOT_DIR}/cmake")
+  INCLUDE(SalomeMacros)
+ELSE()
+  MESSAGE(FATAL_ERROR "We absolutely need the Salome CMake configuration files, please define CONFIGURATION_ROOT_DIR !")
+ENDIF()
+
 # Find KERNEL
 # ===========
 SET(KERNEL_ROOT_DIR $ENV{KERNEL_ROOT_DIR} CACHE PATH "Path to the Salome KERNEL")
 IF(EXISTS ${KERNEL_ROOT_DIR})
   LIST(APPEND CMAKE_MODULE_PATH "${KERNEL_ROOT_DIR}/salome_adm/cmake_files")
-  INCLUDE(SalomeMacros)
   FIND_PACKAGE(SalomeKERNEL REQUIRED)
   ADD_DEFINITIONS(${KERNEL_DEFINITIONS})
   INCLUDE_DIRECTORIES(${KERNEL_INCLUDE_DIRS})
@@ -58,8 +70,6 @@ ENDIF(EXISTS ${KERNEL_ROOT_DIR})
 INCLUDE(SalomeSetupPlatform)   # From KERNEL
 # Always build libraries as shared objects:
 SET(BUILD_SHARED_LIBS TRUE)
-# Local macros:
-LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/adm_local/cmake_files")
 
 # User options
 # ============
@@ -263,7 +273,6 @@ SALOME_ACCUMULATE_ENVIRONMENT(PV_PLUGIN_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/lib
 # Sources
 # ========
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(adm_local)
 ADD_SUBDIRECTORY(resources)
 
 IF(SALOME_BUILD_DOC)

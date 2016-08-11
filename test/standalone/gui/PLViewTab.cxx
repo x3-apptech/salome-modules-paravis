@@ -28,6 +28,11 @@ _renderView(0)
   _viewTab.setupUi(this);
 }
 
+void PLViewTab::insertSpreadsheetView()
+{
+  emit onInsertSpreadsheetView(this);
+}
+
 void PLViewTab::insertSingleView()
 {
   emit onInsertSingleView(this);

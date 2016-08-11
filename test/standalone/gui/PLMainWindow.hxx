@@ -31,6 +31,7 @@ class pqServer;
 class pqProxy;
 
 class PLViewTab;
+class PVViewer_GUIElements;
 
 /** Main window of the application.
  */
@@ -73,11 +74,16 @@ private slots:
 
   void insertSingleView(PLViewTab *);
   void insertMultiView(PLViewTab *);
+  void insertSpreadsheetView(PLViewTab *);
 
   void currentTabChanged(int);
 
+  void onBuildFilterMenu();
+
 private:
   Ui::MainWindow _mainWindow;
+
+  PVViewer_GUIElements * _pvgui;
 
   pqPVApplicationCore * _pAppC;
   //pqServer * _activeServer;
@@ -85,6 +91,8 @@ private:
   QStack<pqPipelineSource *> _simplePipeline;
 
   bool _autoApply;
+
+  QMenu * _filterMenu;
 };
 
 #endif /* PLVIEWWIDGET_H_ */

@@ -42,11 +42,13 @@ public:
 private slots:
   void insertSingleView();
   void insertMultiView();
+  void insertSpreadsheetView();
   void viewDestroyed();
 
 signals:
   void onInsertSingleView(PLViewTab *);
   void onInsertMultiView(PLViewTab *);
+  void onInsertSpreadsheetView(PLViewTab *);
 
 private:
   Ui::ViewTab _viewTab;
