@@ -1,3 +1,4 @@
-ADD_SUBDIRECTORY(VisualizationComponent)
-ADD_SUBDIRECTORY(VisualizationLibrary)
-
+IF(SALOME_PARAVIS_BUILD_INSITU)
+  ADD_SUBDIRECTORY(VisualizationComponent)
+  ADD_SUBDIRECTORY(VisualizationLibrary)
+ENDIF(SALOME_PARAVIS_BUILD_INSITU)
