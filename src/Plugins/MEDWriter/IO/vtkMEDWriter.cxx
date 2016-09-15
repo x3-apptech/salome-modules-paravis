@@ -60,6 +60,7 @@
 #include "MEDFileField.hxx"
 #include "MEDFileData.hxx"
 #include "MEDCouplingMemArray.hxx"
+#include "MEDCouplingFieldInt.hxx"
 #include "MEDCouplingFieldDouble.hxx"
 #include "MEDCouplingRefCountObject.hxx"
 
@@ -86,6 +87,7 @@ using MEDCoupling::MEDCouplingMesh;
 using MEDCoupling::MEDCouplingUMesh;
 using MEDCoupling::MEDCouplingCMesh;
 using MEDCoupling::MEDCouplingFieldDouble;
+using MEDCoupling::MEDCouplingFieldInt;
 using MEDCoupling::MCAuto;
 
 vtkStandardNewMacro(vtkMEDWriter);
@@ -343,17 +345,21 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
       fieldName=daiPtr->getName();
       if((fieldName!=FAMFIELD_FOR_CELLS || tf!=MEDCoupling::ON_CELLS) && (fieldName!=FAMFIELD_FOR_NODES || tf!=MEDCoupling::ON_NODES))
         {
-          MCAuto<MEDCouplingFieldDouble> f(MEDCouplingFieldDouble::New(tf));
+          MCAuto<MEDCouplingFieldInt> f(MEDCouplingFieldInt::New(tf));
           f->setName(fieldName);
           f->setMesh(mesh);
           MCAuto<MEDFileIntFieldMultiTS> fmts(MEDFileIntFieldMultiTS::New());
           MCAuto<MEDFileIntField1TS> f1ts(MEDFileIntField1TS::New());
           if(!n2oPtr)
-            f1ts->setFieldNoProfileSBT(f,daiPtr);
+            {
+              f->setArray(dai);
+              f1ts->setFieldNoProfileSBT(f);
+            }
           else
             {
               MCAuto<DataArrayInt> dai2(daiPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
-              f1ts->setFieldNoProfileSBT(f,dai2);
+              f->setArray(dai2);
+              f1ts->setFieldNoProfileSBT(f);
             }
           fmts->pushBackTimeStep(f1ts);
           fs->pushField(fmts);
