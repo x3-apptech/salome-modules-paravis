@@ -77,14 +77,6 @@ extractCellType1Display = Show(extractCellType1, renderView1)
 # trace defaults for the display properties.
 extractCellType1Display.ColorArrayName = [None, '']
 extractCellType1Display.ScalarOpacityUnitDistance = 0.5
-extractCellType1Display.OpacityArray = [None, '']
-extractCellType1Display.RadiusArray = [None, '']
-extractCellType1Display.RadiusRange = [0.2, 0.7]
-extractCellType1Display.ConstantRadius = 0.7
-extractCellType1Display.PointSpriteDefaultsInitialized = 1
-extractCellType1Display.SelectInputVectors = [None, '']
-extractCellType1Display.WriteLog = ''
-
 
 renderView1.InteractionMode = '2D'
 renderView1.CameraPosition = [0.2, 0.2, 10000.0]

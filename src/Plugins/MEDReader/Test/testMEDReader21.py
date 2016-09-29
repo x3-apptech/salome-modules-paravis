@@ -54,15 +54,6 @@ testTotomedDisplay = Show(testTotomed, renderView1)
 testTotomedDisplay.ColorArrayName = [None, '']
 testTotomedDisplay.GlyphType = 'Arrow'
 testTotomedDisplay.ScalarOpacityUnitDistance = 1.5874010519681994
-testTotomedDisplay.SelectUncertaintyArray = [None, '']
-testTotomedDisplay.UncertaintyTransferFunction = 'PiecewiseFunction'
-testTotomedDisplay.OpacityArray = [None, '']
-testTotomedDisplay.RadiusArray = [None, '']
-testTotomedDisplay.RadiusRange = [0.0, 2.0]
-testTotomedDisplay.ConstantRadius = 2.0
-testTotomedDisplay.PointSpriteDefaultsInitialized = 1
-testTotomedDisplay.SelectInputVectors = [None, '']
-testTotomedDisplay.WriteLog = ''
 
 # reset view to fit data
 renderView1.ResetCamera()
@@ -97,15 +88,6 @@ eLNOMesh1Display = Show(eLNOMesh1, renderView1)
 eLNOMesh1Display.ColorArrayName = [None, '']
 eLNOMesh1Display.GlyphType = 'Arrow'
 eLNOMesh1Display.ScalarOpacityUnitDistance = 1.1905507889761495
-eLNOMesh1Display.SelectUncertaintyArray = ['POINTS', 'MyField']
-eLNOMesh1Display.UncertaintyTransferFunction = 'PiecewiseFunction'
-eLNOMesh1Display.OpacityArray = [None, '']
-eLNOMesh1Display.RadiusArray = [None, '']
-eLNOMesh1Display.RadiusRange = [0.25, 1.75]
-eLNOMesh1Display.ConstantRadius = 1.75
-eLNOMesh1Display.PointSpriteDefaultsInitialized = 1
-eLNOMesh1Display.SelectInputVectors = [None, '']
-eLNOMesh1Display.WriteLog = ''
 
 # hide data in view
 Hide(testTotomed, renderView1)
@@ -152,15 +134,6 @@ glyph1Display = Show(glyph1, renderView1)
 glyph1Display.ColorArrayName = ['POINTS', 'MyField']
 glyph1Display.LookupTable = myFieldLUT
 glyph1Display.GlyphType = 'Arrow'
-glyph1Display.SelectUncertaintyArray = ['POINTS', 'MyField']
-glyph1Display.UncertaintyTransferFunction = 'PiecewiseFunction'
-glyph1Display.OpacityArray = [None, '']
-glyph1Display.RadiusArray = [None, '']
-glyph1Display.RadiusRange = [0.17688040435314178, 1.8231196403503418]
-glyph1Display.ConstantRadius = 1.8231196403503418
-glyph1Display.PointSpriteDefaultsInitialized = 1
-glyph1Display.SelectInputVectors = ['POINTS', 'Normals']
-glyph1Display.WriteLog = ''
 
 # show color bar/color legend
 glyph1Display.SetScalarBarVisibility(renderView1, True)

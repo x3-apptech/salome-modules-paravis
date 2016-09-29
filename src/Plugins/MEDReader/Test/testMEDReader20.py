@@ -85,15 +85,6 @@ testMEDReader20medDisplay = Show(testMEDReader20med, renderView1)
 testMEDReader20medDisplay.ColorArrayName = [None, '']
 testMEDReader20medDisplay.GlyphType = 'Arrow'
 testMEDReader20medDisplay.ScalarOpacityUnitDistance = 4.664739046219201
-testMEDReader20medDisplay.SelectUncertaintyArray = [None, '']
-testMEDReader20medDisplay.UncertaintyTransferFunction = 'PiecewiseFunction'
-testMEDReader20medDisplay.OpacityArray = [None, '']
-testMEDReader20medDisplay.RadiusArray = [None, '']
-testMEDReader20medDisplay.RadiusRange = [0.0, 10.0]
-testMEDReader20medDisplay.ConstantRadius = 10.0
-testMEDReader20medDisplay.PointSpriteDefaultsInitialized = 1
-testMEDReader20medDisplay.SelectInputVectors = [None, '']
-testMEDReader20medDisplay.WriteLog = ''
 
 # reset view to fit data
 renderView1.ResetCamera()
