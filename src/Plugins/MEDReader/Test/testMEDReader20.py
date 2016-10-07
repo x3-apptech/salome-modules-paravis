@@ -95,18 +95,6 @@ renderView1.CameraPosition = [5.0, 0.5, 10000.0]
 renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
 
 # set scalar coloring
-ColorBy(testMEDReader20medDisplay, ('FIELD', 'vtkBlockColors'))
-
-# show color bar/color legend
-testMEDReader20medDisplay.SetScalarBarVisibility(renderView1, True)
-
-# get color transfer function/color map for 'vtkBlockColors'
-vtkBlockColorsLUT = GetColorTransferFunction('vtkBlockColors')
-
-# get opacity transfer function/opacity map for 'vtkBlockColors'
-vtkBlockColorsPWF = GetOpacityTransferFunction('vtkBlockColors')
-
-# set scalar coloring
 ColorBy(testMEDReader20medDisplay, ('CELLS', 'Field'))
 
 # rescale color and/or opacity maps used to include current data range
