@@ -21,6 +21,8 @@
 
 # non regression test that emulates https://ageay@git.salome-platform.org/gitpub/samples/datafiles.git Med/ResOK_0000.med
 # This test point error during commit efd9331a9455785d0f04b75 in PARAVIS
+# Commit of the correction : a4e89b15c2faff6341ab9c3d78abc in PARAVIS
+# Due to mistake in MEDReader, the family field array on nodes was deleted twice when changing time step
 
 from MEDLoader import *
 fname="testMEDReader20.med"
