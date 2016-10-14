@@ -47,7 +47,7 @@ vtkDataArray* DataTempDiffArray(vtkDataArray* theDataArray,
   // Initialize and appoint a new name
   anOutput->SetNumberOfComponents(theNumComp);
   anOutput->SetNumberOfTuples(theNumTuple);
-  vtkstd::string aNewName = vtkstd::string(thePrefix) + theDataArray->GetName();
+  std::string aNewName = std::string(thePrefix) + theDataArray->GetName();
   anOutput->SetName(aNewName.c_str());
 
   return anOutput;
@@ -401,7 +401,7 @@ vtkDataSet* vtkDifferenceTimestepsFilter::DifferenceDataSet(vtkDataSet* theInput
   vtkDataSet *anOutput = anInput[0]->NewInstance();
   anOutput->CopyStructure(anInput[0]);
 
-  vtkstd::vector<vtkDataArray*> anArrays;
+  std::vector<vtkDataArray*> anArrays;
   vtkDataArray *anOutputArray;
 
   // Compute the difference of the the specified point or cell data array

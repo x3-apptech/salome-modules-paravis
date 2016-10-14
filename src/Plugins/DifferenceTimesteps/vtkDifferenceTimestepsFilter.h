@@ -125,7 +125,7 @@ protected:
 
   // Description:
   // Array of time step values.
-  vtkstd::vector<double> TimeStepValues;
+  std::vector<double> TimeStepValues;
 
   // Description:
   // Prefix of array name.
