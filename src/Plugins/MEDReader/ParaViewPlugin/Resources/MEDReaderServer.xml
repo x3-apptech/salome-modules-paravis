@@ -125,6 +125,18 @@
         </Hints>
      </StringVectorProperty>
 
+     <IntVectorProperty name="GhostCellGeneratorCallForPara"
+                        label="Ghost Computation In Parallel Case"
+                        command="GhostCellGeneratorCallForPara"
+                        number_of_elements="1"
+                        default_values="1"
+			panel_visibility="advanced">
+        <Documentation>
+          This property tells if ghost cell generator is applied in parallel mode right after MED file read. This call has a CPU cost but it avoids viz artefacts (interfaces inside dataset on domain borders) you can experiment during usage of filters sensitive to ghost cells in // mode (Ex transparency, contour...). 
+        </Documentation>
+        <BooleanDomain name="bool"/>
+      </IntVectorProperty>
+
    </SourceProxy>
   </ProxyGroup>
 

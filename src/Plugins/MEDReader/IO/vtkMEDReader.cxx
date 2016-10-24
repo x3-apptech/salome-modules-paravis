@@ -48,6 +48,7 @@
 
 #ifdef MEDREADER_USE_MPI
 #include "vtkMultiProcessController.h"
+#include "vtkPUnstructuredGridGhostCellsGenerator.h"
 #endif
 
 #include "MEDFileFieldRepresentationTree.hxx"
@@ -66,7 +67,7 @@
 class PropertyKeeper
 {
 public:
-  PropertyKeeper(vtkMEDReader *master):_master(master),IsGVActivated(false),GVValue(0),IsCMActivated(false),CMValue(0) { }
+  PropertyKeeper(vtkMEDReader *master):_master(master),IsGVActivated(false),GVValue(0),IsCMActivated(false),CMValue(0),IsGhostActivated(false),GCGCP(1) { }
   void assignPropertiesIfNeeded();
   bool arePropertiesOnTreeToSetAfter() const;
   //
@@ -74,6 +75,7 @@ public:
   void pushGenerateVectorsValue(int value);
   void pushChangeModeValue(int value);
   void pushTimesFlagsStatusEntry(const char* name, int status);
+  void pushGhost(int value);
 protected:
   // pool of pairs to assign in SetFieldsStatus if needed. The use case is the load using pvsm.
   std::vector< std::pair<std::string,int> > SetFieldsStatusPairs;
@@ -83,6 +85,9 @@ protected:
   // change mode
   bool IsCMActivated;
   int CMValue;
+  // ghost cells
+  bool IsGhostActivated;
+  int GCGCP;
   //
   std::vector< std::pair<std::string,int> > TimesFlagsStatusPairs;
   vtkMEDReader *_master;
@@ -111,6 +116,11 @@ void PropertyKeeper::assignPropertiesIfNeeded()
     {
       _master->ChangeMode(this->CMValue);
       this->IsCMActivated=false;
+    }
+  if(this->IsGhostActivated)
+    {
+      _master->GhostCellGeneratorCallForPara(this->GCGCP);
+      this->IsGhostActivated=false;
     }
 }
 
@@ -144,6 +154,12 @@ void PropertyKeeper::pushChangeModeValue(int value)
   this->CMValue=value;
 }
 
+void PropertyKeeper::pushGhost(int value)
+{
+  this->IsGhostActivated=true;
+  this->GCGCP=value;
+}
+
 bool PropertyKeeper::arePropertiesOnTreeToSetAfter() const
 {
   return !SetFieldsStatusPairs.empty();
@@ -153,7 +169,7 @@ class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0),GCGCP(true)
   {
   }
 
@@ -191,6 +207,7 @@ public:
   int MyMTime;
   std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great Items are not sorted ! Why ?
   std::map<std::string,bool> _wonderful_ref;// this map stores the state before a SetFieldsStatus status.
+  bool GCGCP;
 
 private:
   unsigned char FirstCall0;
@@ -275,6 +292,19 @@ void vtkMEDReader::ChangeMode(int newMode)
   //not pvsm mode (general case)
   this->Internal->IsStdOrMode=newMode!=0;
   this->Modified();
+}
+
+void vtkMEDReader::GhostCellGeneratorCallForPara(int gcgcp)
+{
+  if ( !this->Internal )
+    return;
+  
+  if(this->Internal->FileName.empty())
+    {//pvsm mode
+      this->Internal->PK.pushGhost(gcgcp);
+      return ;
+    }
+  this->Internal->GCGCP=gcgcp!=0;
 }
 
 const char *vtkMEDReader::GetSeparator()

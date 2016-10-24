@@ -62,6 +62,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   //
   virtual void GenerateVectors(int);
   virtual void ChangeMode(int);
+  virtual void GhostCellGeneratorCallForPara(int);
   static const char *GetSeparator();
 
   // Description
