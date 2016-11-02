@@ -66,7 +66,7 @@ ps.UpdatePipeline()
 # Display curves
 cur_view = pvsimple.GetRenderView()
 if cur_view:
-    pvsimple.Delete(cur_view)
+    delete_pv_object(cur_view)
 xy_view = pvsimple.CreateXYPlotView()
 xy_view.ChartTitle = 'Very useful data'
 xy_view.BottomAxisTitle = '[ Wt ]'

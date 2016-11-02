@@ -64,4 +64,4 @@ for table_nb in range(0, tables_count):
                          lookup_table, "")
 
     reset_view()
-    pvsimple.Delete(bar)
+    delete_pv_object(bar)

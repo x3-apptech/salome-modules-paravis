@@ -20,7 +20,7 @@
 # This case corresponds to: /visu/SWIG_scripts/A9 case
 # Import MED file; create Scalar Map, Cut Planes, Cut Lines,
 # Cut Segment, Iso Surfaces, Animation; display curves.
- 
+
 import math
 import random
 from time import sleep
@@ -45,7 +45,7 @@ view = pvs.GetRenderView()
 sleep(DELAY)
 
 # Destroy the view
-pvs.Delete(view)
+delete_pv_object(view)
 
 
 # Create view and set background

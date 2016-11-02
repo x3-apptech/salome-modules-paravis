@@ -45,8 +45,8 @@ pvsimple.ResetCamera(view2)
 
 # Delete
 source = cutlines.Input
-pvsimple.Delete(source)
-pvsimple.Delete(med_reader)
+delete_pv_object(source)
+delete_pv_object(med_reader)
 
 # Clear views from scalar bar and update views
 for rview in pvsimple.GetRenderViews():

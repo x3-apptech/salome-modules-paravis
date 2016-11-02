@@ -70,7 +70,7 @@ save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
 delete_with_inputs(scalarmap)
-Delete(GetActiveView())
+delete_pv_object(GetActiveView())
 view = CreateRenderView()
 
 # 5. Execution of the created script

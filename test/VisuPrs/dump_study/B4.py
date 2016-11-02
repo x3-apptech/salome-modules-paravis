@@ -81,7 +81,7 @@ path_to_save = os.path.join(os.getenv("HOME"), "table.py")
 save_trace( path_to_save, text )
 
 # 3. Delete the table
-Delete(table)
+delete_pv_object(table)
 
 # 4. Execution of the created script
 execfile(path_to_save)

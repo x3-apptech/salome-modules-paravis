@@ -49,8 +49,8 @@ print "view1 = pvsimple.GetRenderView()"
 
 sleep(DELAY)
 
-pvsimple.Delete(view1)
-print "pvsimple.Delete(view1)"
+delete_pv_object(view1)
+print "delete_pv_object(view1)"
 
 
 # Step 3

@@ -37,7 +37,7 @@ path_to_save = os.path.join(os.getenv("HOME"), "table.py")
 SaveTrace(path_to_save)
 
 # 3. Delete the created objects
-Delete(table_reader)
+delete_pv_object(table_reader)
 
 # 4. Execution of the created script
 execfile(path_to_save)
