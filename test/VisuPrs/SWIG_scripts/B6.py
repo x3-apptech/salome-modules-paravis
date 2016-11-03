@@ -22,6 +22,7 @@
 
 from paravistest import tablesdir
 import pvsimple
+from presentations import delete_pv_object
 
 # Define script for table of integer creation
 script_ti = """

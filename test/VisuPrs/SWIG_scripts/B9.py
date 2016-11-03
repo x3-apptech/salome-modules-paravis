@@ -20,7 +20,7 @@
 # This case corresponds to: /visu/SWIG_scripts/B9 case
 
 from paravistest import datadir
-from presentations import EntityType, ScalarMapOnField, CutPlanesOnField
+from presentations import EntityType, ScalarMapOnField, CutPlanesOnField, delete_pv_object
 import pvsimple
 
 # Get view

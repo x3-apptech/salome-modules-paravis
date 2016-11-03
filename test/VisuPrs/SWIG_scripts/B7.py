@@ -55,17 +55,26 @@ pvsimple.Render(xy_view)
 xy_view.ShowLegend = 0
 pvsimple.Render(xy_view)
 
-xy_view.ShowAxis = [0, 0, 0, 0]
+xy_view.ShowLeftAxisGrid = 0
+xy_view.ShowLeftAxisLabels = 0
+xy_view.ShowBottomAxisGrid = 0
+xy_view.ShowBottomAxisLabels = 0
+xy_view.ShowRightAxisGrid = 0
+xy_view.ShowRightAxisLabels = 0
+xy_view.ShowTopAxisGrid = 0
+xy_view.ShowTopAxisLabels = 0
 pvsimple.Render(xy_view)
-xy_view.ShowAxis = [1, 0, 0, 0]
+xy_view.ShowLeftAxisGrid = 1
+xy_view.ShowLeftAxisLabels = 1
 pvsimple.Render(xy_view)
-xy_view.ShowAxis[1] = 1
+xy_view.ShowBottomAxisGrid = 1
+xy_view.ShowBottomAxisLabels = 1
 pvsimple.Render(xy_view)
 
 # Set logarithmic scaling
-xy_view.AxisLogScale[0] = 1
+xy_view.LeftAxisLogScale = 1
 pvsimple.Render(xy_view)
-xy_view.AxisLogScale[1] = 1
+xy_view.BottomAxisLogScale = 1
 pvsimple.Render(xy_view)
 
 # Set representation properties
