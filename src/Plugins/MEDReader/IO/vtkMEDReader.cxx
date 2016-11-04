@@ -304,7 +304,12 @@ void vtkMEDReader::GhostCellGeneratorCallForPara(int gcgcp)
       this->Internal->PK.pushGhost(gcgcp);
       return ;
     }
-  this->Internal->GCGCP=gcgcp!=0;
+  bool newVal(gcgcp!=0);
+  if(newVal!=this->Internal->GCGCP)
+    {
+      this->Internal->GCGCP=newVal;
+      this->Modified();
+    }
 }
 
 const char *vtkMEDReader::GetSeparator()
@@ -413,9 +418,26 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
       double reqTS(0.);
       if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
         reqTS=outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
+#ifndef MEDREADER_USE_MPI
       this->FillMultiBlockDataSetInstance(output,reqTS);
+#else
+      if(this->Internal->GCGCP)
+	{
+	  vtkSmartPointer<vtkPUnstructuredGridGhostCellsGenerator> gcg(vtkSmartPointer<vtkPUnstructuredGridGhostCellsGenerator>::New());
+	  {
+	    vtkDataSet *ret(RetrieveDataSetAtTime(reqTS));
+	    gcg->SetInputData(ret);
+	    ret->Delete();
+	  }
+	  gcg->SetUseGlobalPointIds(true);
+	  gcg->SetBuildIfRequired(false);
+	  gcg->Update();
+	  output->SetBlock(0,gcg->GetOutput());
+	}
+      else
+	this->FillMultiBlockDataSetInstance(output,reqTS);
+#endif
       output->GetInformation()->Set(vtkDataObject::DATA_TIME_STEP(),reqTS);
-
       // Is it really needed ? TODO
       this->UpdateSIL(request, outInfo);
     }
@@ -621,6 +643,15 @@ void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, d
 {
   if( !this->Internal )
     return;
+  vtkDataSet *ret(RetrieveDataSetAtTime(reqTS));
+  output->SetBlock(0,ret);
+  ret->Delete();
+}
+
+vtkDataSet *vtkMEDReader::RetrieveDataSetAtTime(double reqTS)
+{
+  if( !this->Internal )
+    return 0;
   std::string meshName;
   vtkDataSet *ret(this->Internal->Tree.buildVTKInstance(this->Internal->IsStdOrMode,reqTS,meshName,this->Internal->TK));
   if(this->Internal->GenerateVect)
@@ -629,8 +660,7 @@ void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, d
       vtkGenerateVectors::Operate(ret->GetCellData());
       vtkGenerateVectors::Operate(ret->GetFieldData());
     }
-  output->SetBlock(0,ret);
-  ret->Delete();
+  return ret;
 }
 
 void vtkMEDReader::PrintSelf(ostream& os, vtkIndent indent)

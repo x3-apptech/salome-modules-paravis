@@ -25,6 +25,7 @@
 
 #include "vtkMultiBlockDataSetAlgorithm.h"
 
+class vtkDataSet;
 class vtkMutableDirectedGraph;
 class vtkInformationDataObjectMetaDataKey;
 
@@ -78,6 +79,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   void UpdateSIL(vtkInformation *request, vtkInformation *info);
   virtual double PublishTimeStepsIfNeeded(vtkInformation*, bool& isUpdated);
   virtual void FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS);
+  vtkDataSet *RetrieveDataSetAtTime(double reqTS);
  private:
   //BTX
   //ETX
