@@ -93,10 +93,6 @@ pvsimple.RenameSource("TEST table of real", ps_tr)
 ps_tr.UpdatePipeline()
 
 # Replace the current view with chart line one
-cur_view = pvsimple.GetRenderView()
-if cur_view:
-    delete_pv_object(cur_view)
-
 xy_view1 = pvsimple.CreateXYPlotView()
 xy_view1.ChartTitle = 'TEST table of real'
 xy_view1.BottomAxisTitle = '[ Wt ]'

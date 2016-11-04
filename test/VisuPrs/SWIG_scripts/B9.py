@@ -24,7 +24,9 @@ from presentations import EntityType, ScalarMapOnField, CutPlanesOnField, delete
 import pvsimple
 
 # Get view
-view1 = pvsimple.GetRenderView()
+view = pvsimple.GetRenderView()
+if view:
+    delete_pv_object(view)
 
 # Import MED file
 med_file = datadir + "pointe.med"
@@ -36,6 +38,7 @@ pvsimple.OpenDataFile(med_file)
 med_reader = pvsimple.GetActiveSource()
 
 # Create presentations
+view1 = pvsimple.CreateRenderView()
 scalarmap = ScalarMapOnField(med_reader, entity, field_name, timestamp)
 pvsimple.ResetCamera(view1)
 
@@ -48,7 +51,6 @@ source = cutlines.Input
 delete_pv_object(source)
 delete_pv_object(med_reader)
 
-# Clear views from scalar bar and update views
-for rview in pvsimple.GetRenderViews():
-    rview.Representations.Clear()
-    pvsimple.Render(rview)
+# Render views
+pvsimple.Render(view1)
+pvsimple.Render(view2)
