@@ -41,15 +41,15 @@ Render(my_view)
 
 # Split
 a_view_r = CreateRenderView()
-delete_pv_object(a_view_r)
+Delete(a_view_r)
 
 # Split
 a_view_l = CreateRenderView()
-delete_pv_object(a_view_l)
+Delete(a_view_l)
 
 # Split
 a_view_t = CreateRenderView()
-delete_pv_object(a_view_t)
+Delete(a_view_t)
 
 # Split
 a_view_b = CreateRenderView()
