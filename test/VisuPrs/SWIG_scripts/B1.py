@@ -34,7 +34,7 @@ view = pvsimple.GetRenderView()
 sleep(DELAY)
 
 # Destroy the view
-pvsimple.Delete(view)
+delete_pv_object(view)
 
 
 # Create view and set background
@@ -96,7 +96,7 @@ sleep(DELAY)
 
 # Destroy the view
 print "Destroy the view with Scalar Map"
-pvsimple.Delete(view)
+delete_pv_object(view)
 
 
 # Create another view for cut planes
@@ -159,7 +159,7 @@ sleep(DELAY)
 
 # Destroy the view
 print "Destroy the view with Cut Planes"
-pvsimple.Delete(view)
+delete_pv_object(view)
 
 
 # Create one more view for isosurfaces
@@ -196,7 +196,7 @@ sleep(DELAY)
 
 # Destroy the view
 print "Destroy the view with Iso Surfaces"
-pvsimple.Delete(view)
+delete_pv_object(view)
 
 
 # Create one more view for cut lines
@@ -240,8 +240,8 @@ sleep(DELAY)
 
 # Destroy two views
 #print "Destroy two views: with Cut Lines and the curves"
-#pvsimple.Delete(view)
-#pvsimple.Delete(xy_view)
+#delete_pv_object(view)
+#delete_pv_object(xy_view)
 
 
 # Create one more view for cut segment

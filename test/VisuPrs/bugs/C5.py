@@ -123,12 +123,12 @@ class DisplayManager:
 
         return scene
 
-    def XYPlot(self, myView, txtFile, theTableName, theDelay, theColor):
-        table = TableReader(FileName=txtFile)
+    # def XYPlot(self, myView, txtFile, theTableName, theDelay, theColor):
+    #     table = TableReader(FileName=txtFile)
 
-        # >>> Create curve
-        myView = CreateXYPlotView()
-        myCurve = Show(table, view = myView)
+    #     # >>> Create curve
+    #     myView = CreateXYPlotView()
+    #     myCurve = Show(table, view = myView)
 
 def createView():
     aView=pvsimple.GetRenderView()

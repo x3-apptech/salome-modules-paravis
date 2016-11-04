@@ -50,13 +50,14 @@ salome.myStudy = opened_study
 
 # 3. Find IsoSurfaces
 from pvsimple import *
+import presentations
 obj = FindSource('IsoSurfaces')
 if obj is None:
     print "FAILED: can't find IsoSurfaces!!!"
 
 # 4. Remove med reader object and all other sources
 for obj in GetSources().values():
-    Delete(obj)
+    presentations.delete_pv_object(obj)
 
 # 5. Check results
 obj = FindSource('ScalarMap')

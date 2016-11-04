@@ -342,6 +342,7 @@ def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
 def delete_with_inputs(obj):
     """Deletes the given object with all its inputs"""
     import pvsimple
+    import presentations
 
     obj_to_delete = obj
     while obj_to_delete is not None:
@@ -350,7 +351,7 @@ def delete_with_inputs(obj):
         if hasattr(tmp_obj, 'Input'):
             obj_to_delete = tmp_obj.Input
 
-        pvsimple.Delete(tmp_obj)
+        presentations.delete_pv_object(tmp_obj)
 
 def get_png_picture_resolution(infile):
     """Returns size (width, height) of the PNG image"""

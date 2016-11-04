@@ -1557,7 +1557,7 @@ def VectorsOnField(proxy, entity, field_name, timestamp_nb,
         lookup_table.LockScalarRange = 1
     else:
         raise RuntimeError("Object %s has no 'LockDataRange' or 'LockScalarRange' attribute!"%(lookup_table))
-    
+
     lookup_table.RGBPoints = [data_range[0], 0, 0, 1, data_range[1], 1, 0, 0]
 
     # Set properties
@@ -2045,7 +2045,7 @@ def IsoSurfacesOnField(proxy, entity, field_name, timestamp_nb,
     if (scalar_range is None):
         scalar_range = get_data_range(proxy, entity,
                                       field_name, cut_off=True)
-        
+
     # Get contour values for the range
     surfaces = get_contours(scalar_range, nb_surfaces)
 
@@ -2747,3 +2747,11 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                     # Show and dump the presentation into a graphics file
                     process_prs_for_test(prs, view, pic_name)
     return
+
+
+def delete_pv_object(obj):
+  # There is a bug when repeating CreateRenderView/Delete calls
+  # Here is a workaround proposed by KW (#10744)
+  import gc
+  del obj
+  gc.collect()

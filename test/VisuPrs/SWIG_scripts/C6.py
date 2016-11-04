@@ -33,7 +33,7 @@ if table_reader is None:
 # 2. Create curves viewer
 cur_view = pvsimple.GetRenderView()
 if cur_view:
-    pvsimple.Delete(cur_view)
+    delete_pv_object(cur_view)
 xy_view = pvsimple.CreateXYPlotView()
 
 # 3. Display curves in the viewer

@@ -50,5 +50,5 @@ if scalar_map is None :
 scalar_map.Visibility = 1
 pvsimple.Render()
 
-pvsimple.Delete(scalar_map)
+delete_pv_object(scalar_map)
 pvsimple.Render()

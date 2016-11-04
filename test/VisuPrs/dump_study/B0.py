@@ -54,7 +54,7 @@ for name in prs_names:
         prs = eval(name + "OnField(med_reader, EntityType.NODE, med_field, 1)")
     if prs is None:
         print "ERROR!!! ", name," presentation wasn't created..."
-	# StreamLines presentation is empty for "vitesse" field defined in the loaded MED file.
+        # StreamLines presentation is empty for "vitesse" field defined in the loaded MED file.
         # TODO: check why stream lines prs is empty
         if name == "StreamLines":
             print "WARNING: Stream lines presentation is empty!"
@@ -72,9 +72,9 @@ save_trace( path_to_save, text )
 # 4. Delete the created objects, recreate the view
 source_list = GetSources().values()
 for source in source_list:
-    Delete(source)
+    delete_pv_object(source)
 
-Delete(GetActiveView())
+delete_pv_object(GetActiveView())
 view = CreateRenderView()
 
 # 5. Execution of the created script
@@ -91,5 +91,3 @@ for name in prs_names:
 
 if errors > 0:
     raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
-
-

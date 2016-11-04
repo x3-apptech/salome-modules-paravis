@@ -37,7 +37,7 @@ sinus_csv.HaveHeaders = 1
 # Display curve
 cur_view = pvsimple.GetRenderView()
 if cur_view:
-    pvsimple.Delete(cur_view)
+    delete_pv_object(cur_view)
 xy_view = pvsimple.CreateXYPlotView()
 
 xy_rep = pvsimple.Show(sinus_csv)
