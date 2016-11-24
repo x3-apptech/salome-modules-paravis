@@ -72,6 +72,6 @@ ADD_EXECUTABLE(paraLight
     ${pl_FORMS_HEADERS}
     ${rcs_sources})
     
-TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType)#vtkRenderingFreeTypeOpenGL)
+TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle)#vtkRenderingFreeTypeOpenGL)
 #INSTALL(TARGET paraLight bin)
 
