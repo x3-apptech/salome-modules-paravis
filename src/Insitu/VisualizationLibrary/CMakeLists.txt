@@ -1,0 +1,42 @@
+
+SET(BUILD_SHARED_LIBS TRUE)
+
+ADD_DEFINITIONS(${MEDCOUPLING_DEFINITIONS})
+
+INCLUDE_DIRECTORIES(
+  ${MEDCOUPLING_INCLUDE_DIRS}
+  ${MPI_INCLUDE_PATH}
+  ${PARAVIS_INCLUDE_DIRS}
+  ${MEDCOUPLING_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../Plugins/MEDReader/IO/
+)
+
+SET(_link_LIBRARIES
+  ${MEDCoupling_medcoupling}
+  ${MEDCoupling_interpkernel}
+  ${MPI_LIBRARIES}
+  ${VTK_LIBRARIES}
+  ${PARAVIS_MEDLoaderForPV}
+  ${MEDCoupling_medloader}
+  ${MEDFILE_C_LIBRARIES}
+  vtkPVCatalyst
+  vtkPVPythonCatalyst
+)
+
+SET(_lib_HEADERS
+  visu.hxx
+)
+
+SET(_lib_SOURCES
+  visu.cxx
+)
+
+ADD_LIBRARY(visulib ${_lib_SOURCES})
+TARGET_LINK_LIBRARIES(visulib ${_link_LIBRARIES} )
+
+INSTALL(TARGETS visulib
+        EXPORT ${PROJECT_NAME}TargetGroup
+        DESTINATION ${SALOME_INSTALL_LIBS})
+INSTALL(FILES ${_lib_HEADERS} DESTINATION include/salome )
+
+

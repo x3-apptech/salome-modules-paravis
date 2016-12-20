@@ -59,5 +59,50 @@
                 </component-service-list>
             </component-interface-list>
         </component>
+
+        <component>
+              <!-- Component identification -->
+              <component-name>VisualizationComponent</component-name>
+              <component-username>VisualizationComponent</component-username>
+              <component-type>Data</component-type>
+              <component-author>EDF-RD</component-author>
+              <component-version>@SALOMEPARAVIS_VERSION@</component-version>
+              <component-comment></component-comment>
+              <component-multistudy>0</component-multistudy>
+              <component-impltype>SO</component-impltype>
+              <component-implname></component-implname>
+              <component-interface-list>
+                  <component-interface-name>
+                    VisualizationComponent
+                  </component-interface-name>
+                  <component-interface-comment></component-interface-comment>
+                  <component-service-list>
+                      <component-service>
+                          <!-- service-identification -->
+                          <service-name>Visualize</service-name>
+                          <service-author>EDF-RD</service-author>
+                          <service-version>1.0</service-version>
+                          <service-comment></service-comment>
+                          <service-by-default>0</service-by-default>
+                          <!-- service-connexion -->
+                          <inParameter-list>
+                              <inParameter>
+                                <inParameter-name>field</inParameter-name>
+                                <inParameter-type>SALOME_MED/ParaMEDCouplingFieldDoubleCorbaInterface</inParameter-type>
+                            </inParameter>
+                              <inParameter>
+                                <inParameter-name>path_python_file</inParameter-name>
+                                <inParameter-type>string</inParameter-type>
+                            </inParameter>
+                          </inParameter-list>
+                          <outParameter-list>
+                          </outParameter-list>
+                          <DataStream-list>
+                          </DataStream-list>
+                      </component-service>
+                  </component-service-list>
+              </component-interface-list>
+  </component>
+
     </component-list>
 </begin-catalog>

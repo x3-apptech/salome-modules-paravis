@@ -18,6 +18,7 @@
 #
 
 SET(_subdirs
+  Insitu
   PV_SWIG
   Macro
 )
