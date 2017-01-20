@@ -23,6 +23,7 @@
 
 import math
 import random
+import sys
 from time import sleep
 
 from presentations import *
@@ -58,7 +59,12 @@ pvs.Render()
 
 # Load MED reader plugin
 pv_root_dir = os.getenv("PARAVIS_ROOT_DIR")
-pvs.LoadPlugin(pv_root_dir + "/lib/paraview/libMEDReaderPlugin.so")
+if sys.platform == "win32":
+    pvs.LoadPlugin(pv_root_dir + "/lib/paraview/MEDReaderPlugin.dll")
+elif sys.platform == "darwin":
+    pvs.LoadPlugin(pv_root_dir + "/lib/paraview/libMEDReaderPlugin.dylib")
+else:
+    pvs.LoadPlugin(pv_root_dir + "/lib/paraview/libMEDReaderPlugin.so")
 
 # Import MED file
 med_file = datadir + "pointe.med"
