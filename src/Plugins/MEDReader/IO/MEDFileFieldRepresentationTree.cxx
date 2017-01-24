@@ -25,6 +25,7 @@
 #include "MEDCouplingFieldDiscretization.hxx"
 #include "MEDCouplingFieldDouble.hxx"
 #include "InterpKernelGaussCoords.hxx"
+#include "MEDFileBlowStrEltUp.hxx"
 #include "MEDFileData.hxx"
 #include "SauvReader.hxx"
 
@@ -1234,8 +1235,23 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
     {
       if((iPart==-1 && nbOfParts==-1) || (iPart==0 && nbOfParts==1))
         {
+          MCAuto<MEDFileMeshSupports> msups(MEDFileMeshSupports::New(fileName));
+          MCAuto<MEDFileStructureElements> mse(MEDFileStructureElements::New(fileName,msups));
           ms=MEDFileMeshes::New(fileName);
-          fields=MEDFileFields::New(fileName,false);//false is important to not read the values
+          fields=MEDFileFields::NewWithDynGT(fileName,mse,false);//false is important to not read the values
+          if(ms->presenceOfStructureElements())
+            {// pre traitement
+              fields->loadArrays();
+              MEDFileBlowStrEltUp::DealWithSE(fields,ms,mse);
+            }
+          int nbMeshes(ms->getNumberOfMeshes());
+          for(int i=0;i<nbMeshes;i++)
+            {
+              MEDCoupling::MEDFileMesh *tmp(ms->getMeshAtPos(i));
+              MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
+              if(tmp2)
+                tmp2->forceComputationOfParts();
+            }
         }
       else
         {
