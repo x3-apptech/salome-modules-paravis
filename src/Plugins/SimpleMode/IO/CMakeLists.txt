@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Anthony Geay (EDF R&D)
 
-SET(_PYFILES_TO_INSTALL
-  annotate_groups.py
-  ShowSalomeObject.py
-  )
-
-SALOME_INSTALL_SCRIPTS("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_SCRIPT_PYTHON}/Macro)
+VTK_MODULE_LIBRARY(vtkSimpleMode vtkSimpleMode.cxx)
+TARGET_LINK_LIBRARIES(vtkSimpleMode vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore vtkRenderingOpenGL ${PARAVIEW_LIBRARIES})
+INSTALL(TARGETS vtkSimpleMode RUNTIME DESTINATION lib/salome LIBRARY DESTINATION lib/salome ARCHIVE DESTINATION lib/salome)

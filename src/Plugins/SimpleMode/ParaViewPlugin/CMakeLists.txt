@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Anthony Geay (EDF R&D)
 
-SET(_PYFILES_TO_INSTALL
-  annotate_groups.py
-  ShowSalomeObject.py
-  )
-
-SALOME_INSTALL_SCRIPTS("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_SCRIPT_PYTHON}/Macro)
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../IO )
+ADD_PARAVIEW_PLUGIN(SimpleModePlugin "4.0"
+  SERVER_MANAGER_SOURCES ${SM_SRCS}
+  SERVER_MANAGER_XML Resources/SimpleModeServer.xml
+  CS_KITS
+  vtkSimpleMode)
+TARGET_LINK_LIBRARIES(SimpleModePlugin vtkSimpleMode vtkSimpleModeCS)
+INSTALL(TARGETS SimpleModePlugin RUNTIME DESTINATION lib/paraview LIBRARY DESTINATION lib/paraview ARCHIVE DESTINATION lib/paraview)

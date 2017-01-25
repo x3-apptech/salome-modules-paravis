@@ -23,6 +23,7 @@ SET(_subdirs
   MEDReader
   MEDWriter
 #  TableReader
+  SimpleMode
   ElevationSurface
   ScaleVector
   EllipseBuilder
