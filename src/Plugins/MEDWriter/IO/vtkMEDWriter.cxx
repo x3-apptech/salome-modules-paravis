@@ -22,6 +22,7 @@
 
 #include "vtkAdjacentVertexIterator.h"
 #include "vtkIntArray.h"
+#include "vtkLongArray.h"
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 #include "vtkFloatArray.h"
@@ -152,6 +153,13 @@ DataArrayInt *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
       std::copy(pt,pt+nbElts,ptOut);
       return ret.retn();
     }
+  vtkLongArray *d1(vtkLongArray::SafeDownCast(data));
+  if(d1)
+    {
+      const long *pt(d1->GetPointer(0));
+      std::copy(pt,pt+nbElts,ptOut);
+      return ret.retn();
+    }
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArrayInt : unrecognized array \"" << typeid(*data).name() << "\" type !";
   throw MZCException(oss.str());
@@ -201,7 +209,8 @@ DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
   if(d0 || d1)
     return ConvertVTKArrayToMCArrayDouble(data);
   vtkIntArray *d2(vtkIntArray::SafeDownCast(data));
-  if(d2)
+  vtkLongArray *d3(vtkLongArray::SafeDownCast(data));
+  if(d2 || d3)
     return ConvertVTKArrayToMCArrayInt(data);
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArray : unrecognized array \"" << typeid(*data).name() << "\" type !";
