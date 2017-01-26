@@ -192,14 +192,14 @@ vtkUnstructuredGrid *ExtractInfo1(vtkInformationVector *inputVector)
   return usgIn;
 }
 
-void ExtractInfo(vtkInformationVector *inputVector, vtkUnstructuredGrid *& usgIn, const std::string& arrName, vtkDoubleArray *& arr)
+void ExtractInfo3(vtkDataSet *ds, const std::string& arrName, vtkDataArray *& arr, int& idx)
 {
-  usgIn=ExtractInfo1(inputVector);
-  vtkPointData *att(usgIn->GetPointData());
+  vtkPointData *att(ds->GetPointData());
   if(!att)
     throw MZCException("Input dataset has no point data attribute ! Impossible to move mesh !");
   vtkDataArray *zeArr(0);
-  for(int i=0;i<att->GetNumberOfArrays();i++)
+  int i(0);
+  for(;i<att->GetNumberOfArrays();i++)
     {
       vtkDataArray *locArr(att->GetArray(i));
       std::string s(locArr->GetName());
@@ -215,6 +215,16 @@ void ExtractInfo(vtkInformationVector *inputVector, vtkUnstructuredGrid *& usgIn
       oss << "Impossible to locate the array called \"" << arrName << "\" used to move mesh !";
       throw MZCException(oss.str());
     }
+  arr=zeArr;
+  idx=i;
+}
+
+  
+void ExtractInfo2(vtkDataSet *ds, const std::string& arrName, vtkDoubleArray *& arr)
+{
+  vtkDataArray *zeArr(0);
+  int dummy;
+  ExtractInfo3(ds,arrName,zeArr,dummy);
   arr=vtkDoubleArray::SafeDownCast(zeArr);
   if(!arr)
     {
@@ -228,10 +238,10 @@ void ExtractInfo(vtkInformationVector *inputVector, vtkUnstructuredGrid *& usgIn
       oss << "Float64 array called \"" << arrName << "\" has been located but this array has not exactly 3 or 6 components as it should !";
       throw MZCException(oss.str());
     }
-  if(arr->GetNumberOfTuples()!=usgIn->GetNumberOfPoints())
+  if(arr->GetNumberOfTuples()!=ds->GetNumberOfPoints())
     {
       std::ostringstream oss;
-      oss << "Float64-1 components array called \"" << arrName << "\" has been located but the number of tuples is invalid ! Should be " << usgIn->GetNumberOfPoints() << " instead of " << arr->GetNumberOfTuples() << " !";
+      oss << "Float64-1 components array called \"" << arrName << "\" has been located but the number of tuples is invalid ! Should be " << ds->GetNumberOfPoints() << " instead of " << arr->GetNumberOfTuples() << " !";
       throw MZCException(oss.str());
     }
 }
@@ -241,11 +251,33 @@ void ExtractInfo(vtkInformationVector *inputVector, vtkUnstructuredGrid *& usgIn
 class vtkSimpleMode::vtkSimpleModeInternal
 {
 public:
+  vtkSimpleModeInternal():_surface(0) { }
+  vtkPolyData *performConnection(vtkDataSet *ds);
   void setFieldForReal(const std::string& st) { _real=st; }
   std::string getFieldForReal() const { return _real; }
+  ~vtkSimpleModeInternal();
+private:
+  vtkDataSetSurfaceFilter *_surface;
 private:
   std::string _real;
 };
+
+vtkPolyData *vtkSimpleMode::vtkSimpleModeInternal::performConnection(vtkDataSet *ds)
+{
+  if(!_surface)
+    {
+      _surface=vtkDataSetSurfaceFilter::New();
+      _surface->SetInputData(ds);
+    }
+  _surface->Update();
+  return _surface->GetOutput();
+}
+
+vtkSimpleMode::vtkSimpleModeInternal::~vtkSimpleModeInternal()
+{
+  if(_surface)
+    _surface->Delete();
+}
 
 vtkSimpleMode::vtkSimpleMode():Factor(1.),AnimationTime(0.),Internal(new vtkSimpleMode::vtkSimpleModeInternal)
 {
@@ -304,14 +336,14 @@ int vtkSimpleMode::RequestInformation(vtkInformation *request, vtkInformationVec
     {
       if(this->Internal->getFieldForReal().empty())
         return 1;
-      vtkUnstructuredGrid *usgIn(0);
+      /*vtkUnstructuredGrid *usgIn(0);
       vtkDoubleArray *arr(0);
       ExtractInfo(inputVector[0],usgIn,this->Internal->getFieldForReal(),arr);
       std::vector<std::string> candidatesArrName(GetPossibleArrayNames(usgIn));
       //
       double ratio(GetOptimalRatioFrom(usgIn,arr));
       std::string optArrNameForReal(FindBestRealAmong(candidatesArrName));
-      std::string optArrNameForImag(FindBestImagAmong(candidatesArrName));
+      std::string optArrNameForImag(FindBestImagAmong(candidatesArrName));*/
       //std::cerr << ratio << std::endl;
       //std::cerr << optArrNameForReal << " * " << optArrNameForImag << std::endl;
     }
@@ -335,13 +367,13 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
   try
     {
       vtkUnstructuredGrid *usgIn(0);
-      vtkDoubleArray *arrRealBase(0),*arrImagBase(0);
-      ExtractInfo(inputVector[0],usgIn,this->Internal->getFieldForReal(),arrRealBase);
-      vtkSmartPointer<vtkDoubleArray> arrReal(ForceTo3Compo(arrRealBase));
+      usgIn=ExtractInfo1(inputVector[0]);
       //
       int nbPts(usgIn->GetNumberOfPoints());
-      vtkSmartPointer<vtkUnstructuredGrid> step1(vtkSmartPointer<vtkUnstructuredGrid>::New());
-      step1->DeepCopy(usgIn);
+      vtkPolyData *outSurface(this->Internal->performConnection(usgIn));
+      vtkDoubleArray *arrRealBase(0);
+      ExtractInfo2(outSurface,this->Internal->getFieldForReal(),arrRealBase);
+      vtkSmartPointer<vtkDoubleArray> arrReal(ForceTo3Compo(arrRealBase));
       vtkSmartPointer<vtkDoubleArray> arr1(vtkSmartPointer<vtkDoubleArray>::New());
       arr1->SetName(ZE_DISPLACEMENT_NAME1);
       arr1->SetNumberOfComponents(3);
@@ -350,23 +382,29 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
       const double *srcPt1(arrReal->Begin());
       double cst1(Factor*sin(AnimationTime*2*M_PI));
       std::transform(srcPt1,srcPt1+3*nbPts,ptToFeed1,std::bind2nd(std::multiplies<double>(),cst1));
+      int idx1(outSurface->GetPointData()->AddArray(arr1));
+      outSurface->GetPointData()->SetActiveAttribute(idx1,vtkDataSetAttributes::VECTORS);
       //
-      int idx1(step1->GetPointData()->AddArray(arr1));
-      step1->GetPointData()->SetActiveAttribute(idx1,vtkDataSetAttributes::VECTORS);
-      //
-      vtkSmartPointer<vtkDataSetSurfaceFilter> surface(vtkSmartPointer<vtkDataSetSurfaceFilter>::New());
-      surface->SetInputData(step1);
       //
       vtkSmartPointer<vtkWarpVector> ws(vtkSmartPointer<vtkWarpVector>::New());//vtkNew
-      ws->SetInputConnection(surface->GetOutputPort());
+      ws->SetInputData(outSurface);
       ws->SetScaleFactor(1.);
       ws->SetInputArrayToProcess(idx1,0,0,"vtkDataObject::FIELD_ASSOCIATION_POINTS",ZE_DISPLACEMENT_NAME1);
       ws->Update();
       vtkSmartPointer<vtkDataSet> ds(ws->GetOutput());
       ds->GetPointData()->RemoveArray(idx1);
+      //
+      int idx2(0);
+      {
+        vtkDataArray *dummy(0);
+        ExtractInfo3(ds,this->Internal->getFieldForReal(),dummy,idx2);
+      }
+      ds->GetPointData()->SetActiveAttribute(idx2,vtkDataSetAttributes::SCALARS);
+      //
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkPolyData *output(vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       output->ShallowCopy(ds);
+      
     }
   catch(MZCException& e)
     {

@@ -21,7 +21,7 @@
                             default_values="0;0;0;3"
                             default_values_delimiter=";"
                             element_types="0 0 0 0 2"
-                            name="Real"
+                            name="Mode Array Selection"
                             number_of_elements="5">
         <!-- default value=1 so normals go to the right place -->
         <ArrayListDomain attribute_type="Vectors"
@@ -39,7 +39,7 @@
           </RequiredProperties>
         </FieldDataDomain>
         <Documentation>
-Select the array that represent the real part of the complex mode.
+Select the array that represents the requested mode.
         </Documentation>
       </StringVectorProperty>
 
@@ -51,7 +51,7 @@ Select the array that represent the real part of the complex mode.
         <BoundsDomain name="range" mode="array_scaled_extent">
           <RequiredProperties>
             <Property function="Input" name="Input" />
-            <Property function="ArraySelection" name="Real" />
+            <Property function="ArraySelection" name="Mode Array Selection" />
           </RequiredProperties>
         </BoundsDomain>
         <Documentation>The value of this property sets the scale factor applied for all nodes displacement.</Documentation>
