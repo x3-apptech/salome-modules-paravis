@@ -20,6 +20,7 @@
 
 #include "vtkMEDReader.h"
 #include "vtkGenerateVectors.h"
+#include "MEDUtilities.hxx"
 
 #include "vtkMultiBlockDataSet.h"
 #include "vtkInformation.h"
@@ -37,6 +38,7 @@
 #include "vtkMultiTimeStepAlgorithm.h"
 #include "vtkUnstructuredGrid.h"
 #include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
+#include "vtkInformationDoubleVectorKey.h"
 #include "vtkQuadratureSchemeDefinition.h"
 #include "vtkPointData.h"
 #include "vtkCellData.h"
@@ -223,6 +225,21 @@ vtkInformationDataObjectMetaDataKey *vtkMEDReader::META_DATA()
 {
   static const char ZE_KEY[]="vtkMEDReader::META_DATA";
   vtkInformationDataObjectMetaDataKey *ret(vtkMEDReader_META_DATA);
+  MEDCoupling::GlobalDict *gd(MEDCoupling::GlobalDict::GetInstance());
+  if(!gd->hasKey(ZE_KEY))
+    {// here META_DATA is put on global var to be exchanged with other filters without dependancy of MEDReader. Please do not change ZE_KEY !
+      std::ostringstream oss; oss << ret;
+      gd->setKeyValue(ZE_KEY,oss.str());
+    }
+  return ret;
+}
+
+static vtkInformationDoubleVectorKey *vtkMEDReader_GAUSS_DATA=new vtkInformationDoubleVectorKey("GAUSS_DATA","vtkMEDReader");
+
+vtkInformationDoubleVectorKey *vtkMEDReader::GAUSS_DATA()  
+{
+  static const char ZE_KEY[]="vtkMEDReader::GAUSS_DATA";
+  vtkInformationDoubleVectorKey *ret(vtkMEDReader_GAUSS_DATA);
   MEDCoupling::GlobalDict *gd(MEDCoupling::GlobalDict::GetInstance());
   if(!gd->hasKey(ZE_KEY))
     {// here META_DATA is put on global var to be exchanged with other filters without dependancy of MEDReader. Please do not change ZE_KEY !
@@ -419,7 +436,14 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
       if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
         reqTS=outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
 #ifndef MEDREADER_USE_MPI
-      this->FillMultiBlockDataSetInstance(output,reqTS);
+      ExportedTinyInfo ti;
+      this->FillMultiBlockDataSetInstance(output,reqTS,&ti);
+      if(!ti.empty())
+        {
+          const std::vector<double>& data(ti.getData());
+          outInfo->Set(vtkMEDReader::GAUSS_DATA(),&data[0],data.size());
+          request->Append(vtkExecutive::KEYS_TO_COPY(),vtkMEDReader::GAUSS_DATA());// Thank you to SciberQuest and DIPOLE_CENTER ! Don't understand why ! In RequestInformation it does not work !
+        }
 #else
       if(this->Internal->GCGCP)
 	{
@@ -639,21 +663,21 @@ double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isU
   return tsteps.front();
 }
 
-void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS)
+void vtkMEDReader::FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS, ExportedTinyInfo *internalInfo)
 {
   if( !this->Internal )
     return;
-  vtkDataSet *ret(RetrieveDataSetAtTime(reqTS));
+  vtkDataSet *ret(RetrieveDataSetAtTime(reqTS,internalInfo));
   output->SetBlock(0,ret);
   ret->Delete();
 }
 
-vtkDataSet *vtkMEDReader::RetrieveDataSetAtTime(double reqTS)
+vtkDataSet *vtkMEDReader::RetrieveDataSetAtTime(double reqTS, ExportedTinyInfo *internalInfo)
 {
   if( !this->Internal )
     return 0;
   std::string meshName;
-  vtkDataSet *ret(this->Internal->Tree.buildVTKInstance(this->Internal->IsStdOrMode,reqTS,meshName,this->Internal->TK));
+  vtkDataSet *ret(this->Internal->Tree.buildVTKInstance(this->Internal->IsStdOrMode,reqTS,meshName,this->Internal->TK,internalInfo));
   if(this->Internal->GenerateVect)
     {
       vtkGenerateVectors::Operate(ret->GetPointData());

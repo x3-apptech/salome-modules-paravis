@@ -23,5 +23,30 @@
 #include "vtkInformationIntegerKey.h"
 #include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
 
+#include <algorithm>
+
 vtkInformationKeyMacro(MEDUtilities,ELGA,Integer);
 vtkInformationKeyMacro(MEDUtilities,ELNO,Integer);
+
+void ExportedTinyInfo::pushGaussAdditionnalInfo(int ct, int dim, const std::vector<double>& refCoo, const std::vector<double>& posInRefCoo)
+{
+  prepareForAppend();
+  std::vector<double> tmp(1,(double)ct);
+  tmp.push_back((double)dim);
+  tmp.insert(tmp.end(),refCoo.begin(),refCoo.end());
+  tmp.insert(tmp.end(),posInRefCoo.begin(),posInRefCoo.end());
+  _data.push_back((double)tmp.size());
+  _data.insert(_data.end(),tmp.begin(),tmp.end());
+}
+
+void ExportedTinyInfo::prepareForAppend()
+{
+  if(_data.empty())
+    _data.push_back(1.);
+  else
+    {
+      double val(_data[0]);
+      int val2((int) val);
+      _data[0]=++val2;
+    }
+}

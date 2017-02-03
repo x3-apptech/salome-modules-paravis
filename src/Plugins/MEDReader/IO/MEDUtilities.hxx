@@ -22,6 +22,9 @@
 #define __MEDUTILITIES_HXX__
 
 #include "MEDLoaderForPV.h"
+#include "vtkCellType.h"
+
+#include <vector>
 
 class vtkInformationIntegerKey;
 
@@ -30,6 +33,27 @@ class MEDLOADERFORPV_EXPORT MEDUtilities
 public:
   static vtkInformationIntegerKey *ELGA();
   static vtkInformationIntegerKey *ELNO();
+};
+
+class ExportedTinyInfo
+{
+public:
+  void pushGaussAdditionnalInfo(int ct, int dim, const std::vector<double>& refCoo, const std::vector<double>& posInRefCoo);
+  const std::vector<double>& getData() const { return _data; }
+  bool empty() const { return _data.empty(); }
+private:
+  void prepareForAppend();
+private:
+  // first place is nb of ct
+  // 2nd place is the size of first ct def (this 2nd place included)
+  // 3rd place is the VTK cell type of first ct def
+  // 4th place is the dimension of first ct def
+  // 5th->n th : ref Coo
+  // nth -> n+p th : posInRefCoo
+  // n+p+1 -> size of second ct def (this n+p+1 place included)
+  // n+p+2 -> VTK cell type of second ct def
+  // ...
+  std::vector<double> _data;
 };
 
 #endif

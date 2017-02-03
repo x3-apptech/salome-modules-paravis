@@ -28,6 +28,8 @@
 class vtkDataSet;
 class vtkMutableDirectedGraph;
 class vtkInformationDataObjectMetaDataKey;
+class vtkInformationDoubleVectorKey;
+class ExportedTinyInfo;
 
 class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
 {
@@ -69,6 +71,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   // Description
   // Static information key used to transfer the meta data graph along the pipeline
   static vtkInformationDataObjectMetaDataKey* META_DATA();
+  static vtkInformationDoubleVectorKey* GAUSS_DATA();
 
  protected:
   vtkMEDReader();
@@ -78,8 +81,8 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
  private:
   void UpdateSIL(vtkInformation *request, vtkInformation *info);
   virtual double PublishTimeStepsIfNeeded(vtkInformation*, bool& isUpdated);
-  virtual void FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS);
-  vtkDataSet *RetrieveDataSetAtTime(double reqTS);
+  virtual void FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS, ExportedTinyInfo *internalInfo=0);
+  vtkDataSet *RetrieveDataSetAtTime(double reqTS, ExportedTinyInfo *internalInfo);
  private:
   //BTX
   //ETX

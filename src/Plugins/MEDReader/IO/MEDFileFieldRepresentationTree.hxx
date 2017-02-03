@@ -42,16 +42,17 @@ class vtkDataSet;
 
 class TimeKeeper;
 class MEDTimeReq;
+class ExportedTinyInfo;
 
 class ELGACmp
 {
 public:
-  vtkIdTypeArray *findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew) const;
+  vtkIdTypeArray *findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const;
   void appendELGAIfAny(vtkDataSet *ds) const;
   ~ELGACmp();
 private:
   vtkIdTypeArray *isExisting(const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd) const;
-  vtkIdTypeArray *createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds) const;
+  vtkIdTypeArray *createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const;
 private:
   //! size of _loc_names is equal to _elgas.
   mutable std::vector< std::vector<std::string> > _loc_names;
@@ -75,7 +76,7 @@ public:
   bool setStatus(bool status) const;
   std::string getZeName() const;
   const char *getZeNameC() const;
-  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds) const;
+  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const;
   void appendELGAIfAny(vtkDataSet *ds) const;
 public:
   static const char ZE_SEP[];
@@ -118,12 +119,12 @@ public:
   std::vector<double> getTimeSteps(const TimeKeeper& tk) const;
   std::vector< std::pair<int,int> > getTimeStepsInCoarseMEDFileFormat(std::vector<double>& ts) const;
   std::string getHumanReadableOverviewOfTS() const;
-  vtkDataSet *buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDFileMeshes *meshes) const;
+  vtkDataSet *buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDFileMeshes *meshes, ExportedTinyInfo *internalInfo=0) const;
 private:
   vtkUnstructuredGrid *buildVTKInstanceNoTimeInterpolationUnstructured(MEDCoupling::MEDUMeshMultiLev *mm) const;
   vtkRectilinearGrid *buildVTKInstanceNoTimeInterpolationCartesian(MEDCoupling::MEDCMeshMultiLev *mm) const;
   vtkStructuredGrid *buildVTKInstanceNoTimeInterpolationCurveLinear(MEDCoupling::MEDCurveLinearMeshMultiLev *mm) const;
-  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds) const;
+  void appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds, ExportedTinyInfo *internalInfo=0) const;
 private:
   std::vector<MEDFileFieldRepresentationLeavesArrays> _arrays;
   MEDCoupling::MCAuto<MEDCoupling::MEDFileFastCellSupportComparator> _fsp;
@@ -150,7 +151,7 @@ public:
   //
   std::string getDftMeshName() const;
   std::vector<double> getTimeSteps(int& lev0, const TimeKeeper& tk) const;
-  vtkDataSet *buildVTKInstance(bool isStdOrMode, double timeReq, std::string& meshName, const TimeKeeper& tk) const;
+  vtkDataSet *buildVTKInstance(bool isStdOrMode, double timeReq, std::string& meshName, const TimeKeeper& tk, ExportedTinyInfo *internalInfo=0) const;
   void printMySelf(std::ostream& os) const;
   std::map<std::string,bool> dumpState() const;
   //non const methods

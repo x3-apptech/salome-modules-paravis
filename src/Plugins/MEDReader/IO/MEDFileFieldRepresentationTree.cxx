@@ -78,7 +78,7 @@ const char MEDFileFieldRepresentationTree::ROOT_OF_FAM_IDS_IN_TREE[]="zeFamIds";
 
 const char MEDFileFieldRepresentationTree::COMPO_STR_TO_LOCATE_MESH_DA[]="-@?|*_";
 
-vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew) const
+vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const
 {
   vtkIdTypeArray *try0(isExisting(locsReallyUsed,vtkd));
   if(try0)
@@ -89,7 +89,7 @@ vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *
   else
     {
       isNew=true;
-      return createNew(globs,locsReallyUsed,vtkd,ds);
+      return createNew(globs,locsReallyUsed,vtkd,ds,internalInfo);
     }
 }
 
@@ -109,7 +109,7 @@ vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUs
   return ret;
 }
 
-vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds) const
+vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
   const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   std::vector< std::vector<std::string> > locNames(_loc_names);
@@ -129,11 +129,14 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
       vtkQuadratureSchemeDefinition *def(vtkQuadratureSchemeDefinition::New());
       const MEDFileFieldLoc& loc(globs->getLocalization((*it).c_str()));
       INTERP_KERNEL::NormalizedCellType ct(loc.getGeoType());
+      unsigned char vtkType(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE[ct]);
       const INTERP_KERNEL::CellModel& cm(INTERP_KERNEL::CellModel::GetCellModel(ct));
       int nbGaussPt(loc.getNbOfGaussPtPerCell()),nbPtsPerCell((int)cm.getNumberOfNodes()),dimLoc(loc.getDimension());
       // WARNING : these 2 lines are a workaround, due to users that write a ref element with dimension not equal to dimension of the geometric element.
       std::vector<double> gsCoods2(INTERP_KERNEL::GaussInfo::NormalizeCoordinatesIfNecessary(ct,dimLoc,loc.getGaussCoords()));
       std::vector<double> refCoods2(INTERP_KERNEL::GaussInfo::NormalizeCoordinatesIfNecessary(ct,dimLoc,loc.getRefCoords()));
+      if(internalInfo)
+        internalInfo->pushGaussAdditionnalInfo(vtkType,dimLoc,gsCoods2,refCoods2);
       double *shape(new double[nbPtsPerCell*nbGaussPt]);
       INTERP_KERNEL::GaussInfo calculator(ct,gsCoods2,nbGaussPt,refCoods2,nbPtsPerCell);
       calculator.initLocalInfo();
@@ -149,7 +152,6 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
                 shape[nbPtsPerCell*i+j]=pt0[MEDMeshMultiLev::HEXA27_PERM_ARRAY[j]];
             }
         }
-      unsigned char vtkType(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE[ct]);
       m[vtkType]=nbGaussPt;
       def->Initialize(vtkType,nbPtsPerCell,nbGaussPt,shape,const_cast<double *>(&wgths[0]));
       delete [] shape;
@@ -318,7 +320,7 @@ bool MEDFileFieldRepresentationLeavesArrays::setStatus(bool status) const
   return ret;
 }
 
-void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds) const
+void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
   const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   tr->setNumberOfTS((operator->())->getNumberOfTS());
@@ -385,7 +387,7 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
           if(discs[0]==ON_GAUSS_PT)
             {
               bool tmp;
-              _elga_cmp.findOrCreate(globs,f1ts->getLocsReallyUsed(),vtkd,ds,tmp);
+              _elga_cmp.findOrCreate(globs,f1ts->getLocsReallyUsed(),vtkd,ds,tmp,internalInfo);
             }
           if(discs[0]==ON_GAUSS_NE)
             {
@@ -649,7 +651,7 @@ std::string MEDFileFieldRepresentationLeaves::getHumanReadableOverviewOfTS() con
   return oss.str();
 }
 
-void MEDFileFieldRepresentationLeaves::appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds) const
+void MEDFileFieldRepresentationLeaves::appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshes *meshes, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
   if(_arrays.size()<1)
     throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationLeaves::appendFields : internal error !");
@@ -657,7 +659,7 @@ void MEDFileFieldRepresentationLeaves::appendFields(const MEDTimeReq *tr, const 
   for(std::vector<MEDFileFieldRepresentationLeavesArrays>::const_iterator it=_arrays.begin();it!=_arrays.end();it++)
     if((*it).getStatus())
       {
-        (*it).appendFields(tr,globs,mml,mst,ds);
+        (*it).appendFields(tr,globs,mml,mst,ds,internalInfo);
         (*it).appendELGAIfAny(ds);
       }
 }
@@ -788,7 +790,7 @@ vtkStructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInter
   return ret;
 }
  
-vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDFileMeshes *meshes) const
+vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolation(const MEDTimeReq *tr, const MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDFileMeshes *meshes, ExportedTinyInfo *internalInfo) const
 {
   vtkDataSet *ret(0);
   //_fsp->isDataSetSupportEqualToThePreviousOne(i,globs);
@@ -824,7 +826,7 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
       ret->ShallowCopy(_cached_ds);
     }
   //
-  appendFields(tr,globs,mml,meshes,ret);
+  appendFields(tr,globs,mml,meshes,ret,internalInfo);
   // The arrays links to mesh
   DataArrayInt *famCells(0),*numCells(0);
   bool noCpyFamCells(false),noCpyNumCells(false);
@@ -1331,7 +1333,7 @@ std::vector<double> MEDFileFieldRepresentationTree::getTimeSteps(int& lev0, cons
   return leaf.getTimeSteps(tk);
 }
 
-vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, double timeReq, std::string& meshName, const TimeKeeper& tk) const
+vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, double timeReq, std::string& meshName, const TimeKeeper& tk, ExportedTinyInfo *internalInfo) const
 {
   int lev0,lev1,lev2;
   const MEDFileFieldRepresentationLeaves& leaf(getTheSingleActivated(lev0,lev1,lev2));
@@ -1387,7 +1389,7 @@ vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, d
     tr=new MEDStdTimeReq((int)zeTimeId);
   else
     tr=new MEDModeTimeReq(tk.getTheVectOfBool(),tk.getPostProcessedTime());
-  vtkDataSet *ret(leaf.buildVTKInstanceNoTimeInterpolation(tr,_fields,_ms));
+  vtkDataSet *ret(leaf.buildVTKInstanceNoTimeInterpolation(tr,_fields,_ms,internalInfo));
   delete tr;
   return ret;
 }
