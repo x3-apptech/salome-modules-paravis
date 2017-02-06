@@ -136,7 +136,7 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
       std::vector<double> gsCoods2(INTERP_KERNEL::GaussInfo::NormalizeCoordinatesIfNecessary(ct,dimLoc,loc.getGaussCoords()));
       std::vector<double> refCoods2(INTERP_KERNEL::GaussInfo::NormalizeCoordinatesIfNecessary(ct,dimLoc,loc.getRefCoords()));
       if(internalInfo)
-        internalInfo->pushGaussAdditionnalInfo(vtkType,dimLoc,gsCoods2,refCoods2);
+        internalInfo->pushGaussAdditionnalInfo(vtkType,dimLoc,refCoods2,gsCoods2);
       double *shape(new double[nbPtsPerCell*nbGaussPt]);
       INTERP_KERNEL::GaussInfo calculator(ct,gsCoods2,nbGaussPt,refCoods2,nbPtsPerCell);
       calculator.initLocalInfo();
