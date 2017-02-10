@@ -25,7 +25,6 @@
 #include "MEDCouplingFieldDiscretization.hxx"
 #include "MEDCouplingFieldDouble.hxx"
 #include "InterpKernelGaussCoords.hxx"
-#include "MEDFileBlowStrEltUp.hxx"
 #include "MEDFileData.hxx"
 #include "SauvReader.hxx"
 
@@ -1244,7 +1243,7 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
           if(ms->presenceOfStructureElements())
             {// pre traitement
               fields->loadArrays();
-              MEDFileBlowStrEltUp::DealWithSE(fields,ms,mse);
+              fields->blowUpSE(ms,mse);
             }
           int nbMeshes(ms->getNumberOfMeshes());
           for(int i=0;i<nbMeshes;i++)
