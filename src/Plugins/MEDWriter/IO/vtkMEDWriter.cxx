@@ -495,7 +495,14 @@ void AddNodeFields(MEDFileData *mfd, vtkDataSetAttributes *dsa)
   MEDFileUMesh *mmu(dynamic_cast<MEDFileUMesh *>(mm));
   if(!mmu)
     throw MZCException("AddNodeFields : internal error 2 !");
-  MCAuto<MEDCouplingUMesh> mesh(mmu->getMeshAtLevel(0));
+  MCAuto<MEDCouplingUMesh> mesh;
+  if(!mmu->getNonEmptyLevels().empty())
+    mesh=mmu->getMeshAtLevel(0);
+  else
+    {
+      mesh=MEDCouplingUMesh::Build0DMeshFromCoords(mmu->getCoords());
+      mesh->setName(mmu->getName());
+    }
   int nba(dsa->GetNumberOfArrays());
   for(int i=0;i<nba;i++)
     {
@@ -714,7 +721,6 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
         }
     }
   int dummy(0);
-  int meshDim(lev->getMaxValue(dummy));
   MCAuto<DataArrayInt> levs(lev->getDifferentValues());
   std::vector< MicroField > ms;
   vtkIdTypeArray *faces(ds->GetFaces()),*faceLoc(ds->GetFaceLocations());
