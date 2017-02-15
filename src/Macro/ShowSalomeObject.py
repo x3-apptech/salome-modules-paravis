@@ -70,7 +70,7 @@ for entry in selection:
             tmpf = tempfile.NamedTemporaryFile(suffix='.med')
             fname = tmpf.name
             tmpf.close()
-            mo.ExportToMEDX(fname, True, SMESH.MED_V2_2, True, True)
+            mo.ExportMED(fname, True, True, True)
             ShowParaviewView()
             p = MEDReader(FileName=fname)
             renderView = GetActiveViewOrCreate('RenderView')

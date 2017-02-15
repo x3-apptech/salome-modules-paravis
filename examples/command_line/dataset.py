@@ -49,10 +49,10 @@ def create_meshes(geometry, out_filename=None):
   isDone = Mesh_quad.Compute()
   smesh.SetName(Mesh_tri, 'Mesh_tri')
   if out_filename:
-    Mesh_tri.ExportMED(out_filename, 0, SMESH.MED_V2_2, 1, None ,1)
+    Mesh_tri.ExportMED(out_filename, overwrite=True)
   smesh.SetName(Mesh_quad, 'Mesh_quad')
   if out_filename:
-    Mesh_quad.ExportMED(out_filename, 0, SMESH.MED_V2_2, 0, None ,1)
+    Mesh_quad.ExportMED(out_filename, overwrite=False)
 
   # Set names of Mesh objects
   smesh.SetName(Regular_1D.GetAlgorithm(), 'Regular_1D')
