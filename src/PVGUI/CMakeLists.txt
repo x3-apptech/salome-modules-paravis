@@ -25,7 +25,6 @@ INCLUDE_DIRECTORIES(
     ${KERNEL_INCLUDE_DIRS}
     ${GUI_INCLUDE_DIRS}  
     ${PROJECT_BINARY_DIR} 
-    ${CAS_INCLUDE_DIRS} 
     ${Boost_INCLUDE_DIRS}
     ${QT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -33,7 +32,6 @@ INCLUDE_DIRECTORIES(
     )
 
 # additional preprocessor / compiler flags
-ADD_DEFINITIONS(${CAS_DEFINITIONS})
 ADD_DEFINITIONS(${KERNEL_DEFINITIONS})
 
 # libraries to link to
