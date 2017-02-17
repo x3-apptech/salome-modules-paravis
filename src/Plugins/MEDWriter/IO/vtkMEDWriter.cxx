@@ -160,6 +160,13 @@ DataArrayInt *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
       std::copy(pt,pt+nbElts,ptOut);
       return ret.retn();
     }
+  vtkUnsignedCharArray *d2(vtkUnsignedCharArray::SafeDownCast(data));
+  if(d2)
+    {
+      const unsigned char *pt(d2->GetPointer(0));
+      std::copy(pt,pt+nbElts,ptOut);
+      return ret.retn();
+    }
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArrayInt : unrecognized array \"" << typeid(*data).name() << "\" type !";
   throw MZCException(oss.str());
@@ -210,7 +217,8 @@ DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
     return ConvertVTKArrayToMCArrayDouble(data);
   vtkIntArray *d2(vtkIntArray::SafeDownCast(data));
   vtkLongArray *d3(vtkLongArray::SafeDownCast(data));
-  if(d2 || d3)
+  vtkUnsignedCharArray *d4(vtkUnsignedCharArray::SafeDownCast(data));
+  if(d2 || d3 || d4)
     return ConvertVTKArrayToMCArrayInt(data);
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArray : unrecognized array \"" << typeid(*data).name() << "\" type !";
