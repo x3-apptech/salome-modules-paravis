@@ -435,21 +435,15 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
       double reqTS(0.);
       if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
         reqTS=outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
-#ifndef MEDREADER_USE_MPI
       ExportedTinyInfo ti;
+#ifndef MEDREADER_USE_MPI
       this->FillMultiBlockDataSetInstance(output,reqTS,&ti);
-      if(!ti.empty())
-        {
-          const std::vector<double>& data(ti.getData());
-          outInfo->Set(vtkMEDReader::GAUSS_DATA(),&data[0],data.size());
-          request->Append(vtkExecutive::KEYS_TO_COPY(),vtkMEDReader::GAUSS_DATA());// Thank you to SciberQuest and DIPOLE_CENTER ! Don't understand why ! In RequestInformation it does not work !
-        }
 #else
       if(this->Internal->GCGCP)
 	{
 	  vtkSmartPointer<vtkPUnstructuredGridGhostCellsGenerator> gcg(vtkSmartPointer<vtkPUnstructuredGridGhostCellsGenerator>::New());
 	  {
-	    vtkDataSet *ret(RetrieveDataSetAtTime(reqTS));
+	    vtkDataSet *ret(RetrieveDataSetAtTime(reqTS,&ti));
 	    gcg->SetInputData(ret);
 	    ret->Delete();
 	  }
@@ -459,8 +453,14 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
 	  output->SetBlock(0,gcg->GetOutput());
 	}
       else
-	this->FillMultiBlockDataSetInstance(output,reqTS);
+	this->FillMultiBlockDataSetInstance(output,reqTS,&ti);
 #endif
+      if(!ti.empty())
+        {
+          const std::vector<double>& data(ti.getData());
+          outInfo->Set(vtkMEDReader::GAUSS_DATA(),&data[0],data.size());
+          request->Append(vtkExecutive::KEYS_TO_COPY(),vtkMEDReader::GAUSS_DATA());// Thank you to SciberQuest and DIPOLE_CENTER ! Don't understand why ! In RequestInformation it does not work !
+        }
       output->GetInformation()->Set(vtkDataObject::DATA_TIME_STEP(),reqTS);
       // Is it really needed ? TODO
       this->UpdateSIL(request, outInfo);
