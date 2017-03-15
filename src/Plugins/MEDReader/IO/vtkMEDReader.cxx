@@ -234,16 +234,17 @@ vtkInformationDataObjectMetaDataKey *vtkMEDReader::META_DATA()
   return ret;
 }
 
-static vtkInformationDoubleVectorKey *vtkMEDReader_GAUSS_DATA=new vtkInformationDoubleVectorKey("GAUSS_DATA","vtkMEDReader");
+static vtkInformationGaussDoubleVectorKey *vtkMEDReader_GAUSS_DATA=new vtkInformationGaussDoubleVectorKey("GAUSS_DATA","vtkMEDReader");
 
-vtkInformationDoubleVectorKey *vtkMEDReader::GAUSS_DATA()  
+vtkInformationGaussDoubleVectorKey *vtkMEDReader::GAUSS_DATA()  
 {
   static const char ZE_KEY[]="vtkMEDReader::GAUSS_DATA";
-  vtkInformationDoubleVectorKey *ret(vtkMEDReader_GAUSS_DATA);
+  vtkInformationGaussDoubleVectorKey *ret(vtkMEDReader_GAUSS_DATA);
   MEDCoupling::GlobalDict *gd(MEDCoupling::GlobalDict::GetInstance());
   if(!gd->hasKey(ZE_KEY))
     {// here META_DATA is put on global var to be exchanged with other filters without dependancy of MEDReader. Please do not change ZE_KEY !
-      std::ostringstream oss; oss << ret;
+      vtkInformationDoubleVectorKey *ret2(ret);
+      std::ostringstream oss; oss << ret2;
       gd->setKeyValue(ZE_KEY,oss.str());
     }
   return ret;

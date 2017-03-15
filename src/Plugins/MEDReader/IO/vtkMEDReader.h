@@ -24,6 +24,7 @@
 #include <string>
 
 #include "vtkMultiBlockDataSetAlgorithm.h"
+#include "vtkInformationGaussDoubleVectorKey.h"
 
 class vtkDataSet;
 class vtkMutableDirectedGraph;
@@ -71,7 +72,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   // Description
   // Static information key used to transfer the meta data graph along the pipeline
   static vtkInformationDataObjectMetaDataKey* META_DATA();
-  static vtkInformationDoubleVectorKey* GAUSS_DATA();
+  static vtkInformationGaussDoubleVectorKey* GAUSS_DATA();
 
  protected:
   vtkMEDReader();

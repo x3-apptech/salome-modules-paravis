@@ -39,7 +39,7 @@ FOREACH(class ${MEDReader_CLASSES})
     SET(MEDReader_HDRS ${MEDReader_HDRS} ${class}.h)
 ENDFOREACH(class)
 
-SET(MEDReader_HDRS ${MEDReader_HDRS} MEDFileFieldRepresentationTree.hxx MEDTimeReq.hxx MEDUtilities.hxx MEDLoaderForPV.h)
+SET(MEDReader_HDRS ${MEDReader_HDRS} MEDFileFieldRepresentationTree.hxx MEDTimeReq.hxx MEDUtilities.hxx MEDLoaderForPV.h vtkInformationGaussDoubleVectorKey.h)
   
 ADD_LIBRARY(MEDLoaderForPV SHARED MEDFileFieldRepresentationTree.cxx MEDTimeReq.cxx MEDUtilities.cxx vtkGenerateVectors.cxx)
 
