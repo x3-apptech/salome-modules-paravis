@@ -53,9 +53,9 @@ public:
     this->ShallowCopy(fromInfo, toInfo);
   }
 
-private:
+  /*private:
   vtkInformationGaussDoubleVectorKey(const vtkInformationGaussDoubleVectorKey&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkInformationGaussDoubleVectorKey&) VTK_DELETE_FUNCTION;
+  void operator=(const vtkInformationGaussDoubleVectorKey&) VTK_DELETE_FUNCTION;*/
 };
 
 #endif
