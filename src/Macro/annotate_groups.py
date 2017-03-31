@@ -243,9 +243,9 @@ if data.GetDataObjectType() == vtkDataObjectTypes.GetTypeIdFromClassName("vtkMul
     
     # Check that PointSprite plugin is available
     if hasattr(representation, "MaxPixelSize"):
-	activeRepresentation = 'Point Sprite'
-	if representation.MaxPixelSize == 64:
-	    representation.MaxPixelSize = 8
+        activeRepresentation = 'Point Sprite'
+        if representation.MaxPixelSize == 64:
+            representation.MaxPixelSize = 8
     else:
         activeRepresentation = 'Points'
 
