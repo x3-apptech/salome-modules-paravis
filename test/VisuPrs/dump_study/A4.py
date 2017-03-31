@@ -39,7 +39,7 @@ file_path = datadir + "TimeStamps.med"
 OpenDataFile(file_path)
 med_reader = GetActiveSource()
 if med_reader is None :
-    raise RuntimeError, "TimeStamps.med wasn't imported..."
+    raise RuntimeError("TimeStamps.med wasn't imported...")
 
 # 2. GaussPoints creation
 med_field = "pression"
@@ -72,7 +72,7 @@ delete_pv_object(GetActiveView())
 view = CreateRenderView()
 
 # 5. Execution of the created script
-execfile(path_to_save)
+exec(compile(open(path_to_save).read(), path_to_save, 'exec'))
 
 # 6. Checking of the settings done before dump
 recreated_bar = view.Representations[1]
@@ -85,7 +85,7 @@ tolerance = 1e-05
 offset = recreated_gausspoints.Position
 for i in range(len(settings["Offset"])):
     if abs(offset[i] - settings["Offset"][i]) > tolerance:
-        print "ERROR!!! Offset value with ", i, " index is incorrect: ", offset[i], " instead of ", settings["Offset"][i]
+        print("ERROR!!! Offset value with ", i, " index is incorrect: ", offset[i], " instead of ", settings["Offset"][i])
         errors += 1
 
 # Scalar mode
@@ -93,10 +93,10 @@ vector_mode = recreated_gausspoints.LookupTable.VectorMode
 vector_component = recreated_gausspoints.LookupTable.VectorComponent
 
 if vector_mode != settings["ScalarMode"][0]:
-    print "ERROR!!! Vector mode value is incorrect: ",  vector_mode, " instead of ", settings["ScalarMode"][0]
+    print("ERROR!!! Vector mode value is incorrect: ",  vector_mode, " instead of ", settings["ScalarMode"][0])
     errors += 1
 if vector_component != settings["ScalarMode"][1]:
-    print "ERROR!!! Vector component value is incorrect: ",  vector_component, " instead of ", settings["ScalarMode"][1]
+    print("ERROR!!! Vector component value is incorrect: ",  vector_component, " instead of ", settings["ScalarMode"][1])
     errors += 1
 
 # Position of scalar bar
@@ -104,10 +104,10 @@ pos_x = recreated_bar.Position[0]
 pos_y = recreated_bar.Position[1]
 
 if abs(pos_x - settings["Position"][0]) > tolerance:
-    print "ERROR!!! X coordinate of position of scalar bar is incorrect: ",  pos_x, " instead of ", settings["Position"][0]
+    print("ERROR!!! X coordinate of position of scalar bar is incorrect: ",  pos_x, " instead of ", settings["Position"][0])
     errors += 1
 if abs(pos_y - settings["Position"][1]) > tolerance:
-    print "ERROR!!! Y coordinate of position of scalar bar is incorrect: ",  pos_y, " instead of ", settings["Position"][1]
+    print("ERROR!!! Y coordinate of position of scalar bar is incorrect: ",  pos_y, " instead of ", settings["Position"][1])
     errors += 1
 
 # Size of scalar bar
@@ -115,35 +115,35 @@ width  = recreated_bar.Position2[0]
 height = recreated_bar.Position2[1]
 
 if abs(width - settings["Size"][0]) > tolerance:
-    print "ERROR!!! Width of scalar bar is incorrect: ",  width, " instead of ", settings["Size"][0]
+    print("ERROR!!! Width of scalar bar is incorrect: ",  width, " instead of ", settings["Size"][0])
     errors += 1
 if abs(height - settings["Size"][1]) > tolerance:
-    print "ERROR!!! Height of scalar bar is incorrect: ",  height, " instead of ", settings["Size"][1]
+    print("ERROR!!! Height of scalar bar is incorrect: ",  height, " instead of ", settings["Size"][1])
     errors += 1
 
 # Discretize
 discretize = recreated_gausspoints.LookupTable.Discretize
 if discretize != settings["Discretize"]:
-    print "ERROR!!! Discretize property is incorrect: ",  discretize, " instead of ", settings["Discretize"]
+    print("ERROR!!! Discretize property is incorrect: ",  discretize, " instead of ", settings["Discretize"])
     errors += 1
 
 # Number of colors
 nb_colors = recreated_gausspoints.LookupTable.NumberOfTableValues
 if nb_colors != settings["NbColors"]:
-    print "ERROR!!! Number of colors of scalar bar is incorrect: ",  nb_colors, " instead of ", settings["NbColors"]
+    print("ERROR!!! Number of colors of scalar bar is incorrect: ",  nb_colors, " instead of ", settings["NbColors"])
     errors += 1
 
 # Number of labels
 nb_labels = recreated_bar.NumberOfLabels
 if nb_labels != settings["NbLabels"]:
-    print "ERROR!!! Number of labels of scalar bar is incorrect: ",  nb_labels, " instead of ", settings["NbLabels"]
+    print("ERROR!!! Number of labels of scalar bar is incorrect: ",  nb_labels, " instead of ", settings["NbLabels"])
     errors += 1
 
 # Title
 title = recreated_bar.Title
 if title != settings["Title"]:
-    print "ERROR!!! Title of presentation is incorrect: ",  title, " instead of ", settings["Title"]
+    print("ERROR!!! Title of presentation is incorrect: ",  title, " instead of ", settings["Title"])
     errors += 1
 
 if errors > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

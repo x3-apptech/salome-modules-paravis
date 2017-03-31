@@ -28,15 +28,15 @@ import pvsimple
 picturedir = get_picture_dir("bugs/A0")
 
 # 1. Import MED file
-print 'Importing "hydro_sea_alv.med"...',
+print('Importing "hydro_sea_alv.med"...', end=' ')
 file_path = datadir + "hydro_sea_alv.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Create cut lines on "Head" field
 mesh_name = "maillage_migr3d"
@@ -44,14 +44,14 @@ field_name = "Head"
 cell_entity = presentations.EntityType.CELL
 timestamps = med_reader.TimestepValues.GetData()
 
-for ts in xrange(1, len(timestamps) + 1):
-    print "Timestamp: ", ts
+for ts in range(1, len(timestamps) + 1):
+    print("Timestamp: ", ts)
     cutlines = presentations.CutLinesOnField(med_reader, cell_entity, field_name, ts,
                                              orientation1=presentations.Orientation.ZX,
                                              orientation2=presentations.Orientation.YZ)
     pic_name = mesh_name + "_" + str(cell_entity) + "_" + field_name + "_" + str(ts) + "_TCUTLINES." + pictureext
     pic_path = os.path.join(picturedir, pic_name)
-    print pic_path
+    print(pic_path)
     presentations.process_prs_for_test(cutlines, pvsimple.GetRenderView(), pic_path)
     nb_lines = len(cutlines.Input.SliceOffsetValues)
-    print "Number of lines = ", nb_lines
+    print("Number of lines = ", nb_lines)

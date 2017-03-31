@@ -42,7 +42,7 @@ if med_reader is None:
 view = pvsimple.GetRenderView()
 
 # Create a set of Stream Lines, based on time stamps of "MODES_DEPL" field
-print "BREAKPOINT_1"
+print("BREAKPOINT_1")
 
 for i in range(1, 11):
     prs = StreamLinesOnField(med_reader, EntityType.NODE, "MODES___DEPL____________________", i)
@@ -53,4 +53,4 @@ for i in range(1, 11):
     picture_path = picturedir + "/" + "time_stamp_" + str(i) + "." + pictureext
     process_prs_for_test(prs, view, picture_path)
 
-print "BREAKPOINT_2"
+print("BREAKPOINT_2")

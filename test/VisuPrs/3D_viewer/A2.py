@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "Penta6.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -60,7 +60,7 @@ compare_prec = 0.00001
 
 field_name = 'vectoriel field'
 
-print "\nCreating Vectors.......",
+print("\nCreating Vectors.......", end=' ')
 vectors = VectorsOnField(proxy, EntityType.CELL, field_name, 1,
                 is_colored=True, glyph_type="Cone")
 if vectors is None:
@@ -70,7 +70,7 @@ display_only(vectors, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 for reprCode in represents:
     repr = RepresentationType.get_name(reprCode)

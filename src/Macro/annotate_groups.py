@@ -154,9 +154,9 @@ def ExctractSILInformation(smProxy, mapFamilies, mapGroups, mapRelations):
       mapGroups[groupName] = familiesOnGroups
 
   # Establish the relations between families and groups
-  for family_name, family_id in mapFamilies.iteritems():
+  for family_name, family_id in mapFamilies.items():
     groupNames = []
-    for group_name, family_name_on_group in mapGroups.iteritems():
+    for group_name, family_name_on_group in mapGroups.items():
       if family_name in family_name_on_group:
         groupNames.append(group_name)
     if len(groupNames) > 0:
@@ -264,8 +264,7 @@ if not ExctractSILInformation(smproxy, mapFamilies, mapGroups, mapRelations):
   raise RuntimeError("Extraction SIL graph failed.")
 
 # Sort families array by ID
-sortedArray = mapFamilies.values()
-sortedArray.sort()
+sortedArray = sorted(list(mapFamilies.values()))
 
 # Prepare 'Annotation' list for lookup-table
 numberValues = 0
@@ -287,9 +286,9 @@ for idFamily in sortedArray:
   numberValues += 1
 
   # Iterate over all families to get group(s) by family name
-  for famName, famID in mapFamilies.iteritems():
+  for famName, famID in mapFamilies.items():
     if idFamily == famID:
-      if mapRelations.has_key(famName):
+      if famName in mapRelations:
         annotationList.append(str(', ').join(mapRelations.get(famName)))
       else:
         annotationList.append(str('No group'))

@@ -31,16 +31,16 @@ pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Create scalar map on deformed shape
 smondefshape = DeformedShapeAndScalarMapOnField(med_reader, EntityType.NODE, 'vitesse', 1)
 if smondefshape is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 3. Make compare
 
@@ -51,7 +51,7 @@ error = error + compare_lists(smondefshape.Position, [0,0,0])
 # Scalar mode
 smondefshape.LookupTable.VectorMode = 'Magnitude'
 if smondefshape.LookupTable.VectorMode != 'Magnitude':
-    print "ScalarMode is wrong..."
+    print("ScalarMode is wrong...")
     error=error+1
 
 # Scalar bar Position
@@ -76,23 +76,23 @@ bar.Title = 'Pression, Pa'
 bar.ComponentTitle = "Comp."
 
 if bar.Title != 'Pression, Pa':
-    print "Title is wrong..."
+    print("Title is wrong...")
     error=error+1
 
 if bar.ComponentTitle!= 'Comp.':
-    print "Component title is wrong..."
+    print("Component title is wrong...")
     error=error+1
 
 # Scaling
 smondefshape.LookupTable.UseLogScale = 0
 if smondefshape.LookupTable.UseLogScale != 0:
-    print "Error!!! Scaling is wrong"
+    print("Error!!! Scaling is wrong")
     error=error+1
 
 # Bar orientation
 bar.Orientation = 'Horizontal'
 if bar.Orientation != 'Horizontal':
-    print "ERROR!!! Scalar Bar orientation is wrong..."
+    print("ERROR!!! Scalar Bar orientation is wrong...")
     error=error+1
 
 # Scale factor
@@ -101,4 +101,4 @@ error = error + compare_lists([smondefshape.Input.ScaleFactor], [0.15])
 
 
 if error > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

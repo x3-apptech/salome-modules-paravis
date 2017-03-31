@@ -39,9 +39,9 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "Penta6.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 #reader = OpenDataFile(file_name)
@@ -59,7 +59,7 @@ proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -72,11 +72,11 @@ compare_prec = 0.00001
 
 field_name = 'vectoriel field'
 
-print "\nCreating stream_lines......."
+print("\nCreating stream_lines.......")
 stream_lines = StreamLinesOnField(proxy, EntityType.CELL,
                                   field_name, 1, is_colored=True)
 stream_tracer = stream_lines.Input
-print "stream_tracer:", stream_tracer
+print("stream_tracer:", stream_tracer)
 #stream_tracer.Input = None
 stream_tracer.InitialStepLength = 0.00940275
 stream_tracer.MaximumStreamlineLength = 140.373
@@ -91,7 +91,7 @@ display_only(stream_lines, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 for reprCode in represents:
     repr = RepresentationType.get_name(reprCode)

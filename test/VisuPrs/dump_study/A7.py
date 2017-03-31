@@ -55,7 +55,7 @@ file_path = datadir + "TimeStamps.med"
 OpenDataFile(file_path)
 med_reader = GetActiveSource()
 if med_reader is None :
-    raise RuntimeError, "TimeStamps.med wasn't imported..."
+    raise RuntimeError("TimeStamps.med wasn't imported...")
 
 # 2. StreamLines creation
 field_name = "vitesse"
@@ -91,88 +91,88 @@ save_trace( path_to_save, text )
 delete_with_inputs(stream)
 
 # 5. Execution of the created script
-execfile(path_to_save)
+exec(compile(open(path_to_save).read(), path_to_save, 'exec'))
 
 # 6. Find the recreated StreamTracer object
 recreated_stream = FindSource(settings['name'])
 if recreated_stream is None:
-    raise RuntimeError, "There is no StreamLines in the study (must be created by executed python script)!!!"
+    raise RuntimeError("There is no StreamLines in the study (must be created by executed python script)!!!")
 
-print settings['name'] + " was found!!!"
+print(settings['name'] + " was found!!!")
 
 # 7. Check settings
 
 # IntegrationDirection
 param = stream.IntegrationDirection
 if param != settings['IntegrationDirection']:
-    print "ERROR!!! IntegrationDirection of presentation is incorrect: ",  param, " instead of ", settings["IntegrationDirection"]
+    print("ERROR!!! IntegrationDirection of presentation is incorrect: ",  param, " instead of ", settings["IntegrationDirection"])
     errors += 1
 
 # InitialStepLength
 param = stream.InitialStepLength
 if param != settings['InitialStepLength']:
-    print "ERROR!!! InitialStepLength of presentation is incorrect: ",  param, " instead of ", settings["InitialStepLength"]
+    print("ERROR!!! InitialStepLength of presentation is incorrect: ",  param, " instead of ", settings["InitialStepLength"])
     errors += 1
 
 # IntegrationStepUnit
 param = stream.IntegrationStepUnit
 if param != settings['IntegrationStepUnit']:
-    print "ERROR!!! IntegrationStepUnit of presentation is incorrect: ",  param, " instead of ", settings["IntegrationStepUnit"]
+    print("ERROR!!! IntegrationStepUnit of presentation is incorrect: ",  param, " instead of ", settings["IntegrationStepUnit"])
     errors += 1
 
 # IntegratorType
 param = stream.IntegratorType
 if param != settings['IntegratorType']:
-    print "ERROR!!! IntegratorType of presentation is incorrect: ",  param, " instead of ", settings["IntegratorType"]
+    print("ERROR!!! IntegratorType of presentation is incorrect: ",  param, " instead of ", settings["IntegratorType"])
     errors += 1
 
 # MaximumError
 param = stream.MaximumError
 if param != settings['MaximumError']:
-    print "ERROR!!! MaximumError of presentation is incorrect: ",  param, " instead of ", settings["MaximumError"]
+    print("ERROR!!! MaximumError of presentation is incorrect: ",  param, " instead of ", settings["MaximumError"])
     errors += 1
 
 # MinimumStepLength
 param = stream.MinimumStepLength
 if param != settings['MinimumStepLength']:
-    print "ERROR!!! MinimumStepLength of presentation is incorrect: ",  param, " instead of ", settings["MinimumStepLength"]
+    print("ERROR!!! MinimumStepLength of presentation is incorrect: ",  param, " instead of ", settings["MinimumStepLength"])
     errors += 1
 
 # MaximumStepLength
 param = stream.MaximumStepLength
 if param != settings['MaximumStepLength']:
-    print "ERROR!!! MaximumStepLength of presentation is incorrect: ",  param, " instead of ", settings["MaximumStepLength"]
+    print("ERROR!!! MaximumStepLength of presentation is incorrect: ",  param, " instead of ", settings["MaximumStepLength"])
     errors += 1
 
 # MaximumSteps
 param = stream.MaximumSteps
 if param != settings['MaximumSteps']:
-    print "ERROR!!! MaximumSteps of presentation is incorrect: ",  param, " instead of ", settings["MaximumSteps"]
+    print("ERROR!!! MaximumSteps of presentation is incorrect: ",  param, " instead of ", settings["MaximumSteps"])
     errors += 1
 
 # MaximumStreamlineLength
 param = stream.MaximumStreamlineLength
 if param != settings['MaximumStreamlineLength']:
-    print "ERROR!!! MaximumStreamlineLength of presentation is incorrect: ",  param, " instead of ", settings["MaximumStreamlineLength"]
+    print("ERROR!!! MaximumStreamlineLength of presentation is incorrect: ",  param, " instead of ", settings["MaximumStreamlineLength"])
     errors += 1
 
 # SeedType.Center
 param = list(stream.SeedType.Center)
 if param != settings['SeedType.Center']:
-    print "ERROR!!! SeedType.Center of presentation is incorrect: ",  param, " instead of ", settings["SeedType.Center"]
+    print("ERROR!!! SeedType.Center of presentation is incorrect: ",  param, " instead of ", settings["SeedType.Center"])
     errors += 1
 
 # SeedType.NumberOfPoints
 param = stream.SeedType.NumberOfPoints
 if param != settings['SeedType.NumberOfPoints']:
-    print "ERROR!!! SeedType.NumberOfPoints of presentation is incorrect: ",  param, " instead of ", settings["SeedType.NumberOfPoints"]
+    print("ERROR!!! SeedType.NumberOfPoints of presentation is incorrect: ",  param, " instead of ", settings["SeedType.NumberOfPoints"])
     errors += 1
 
 # SeedType.Radius
 param = stream.SeedType.Radius
 if param != settings['SeedType.Radius']:
-    print "ERROR!!! SeedType.Radius of presentation is incorrect: ",  param, " instead of ", settings["SeedType.Radius"]
+    print("ERROR!!! SeedType.Radius of presentation is incorrect: ",  param, " instead of ", settings["SeedType.Radius"])
     errors += 1
 
 if errors > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

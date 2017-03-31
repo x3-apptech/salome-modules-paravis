@@ -43,13 +43,13 @@ m1.allocateCells()
 for i in [[28,21],[21,14],[14,7],[7,0]]:
     m1.insertNextCell(i)
     pass
-for i in xrange(6):
+for i in range(6):
     m1.insertNextCell([i,i+1])
     pass
 for i in [[6,13],[13,20],[20,27],[27,34]]:
     m1.insertNextCell(i)
     pass
-for i in xrange(6,0,-1):
+for i in range(6,0,-1):
     m1.insertNextCell([28+i,28+i-1])
     pass
 #
@@ -69,7 +69,7 @@ fieldName2="zeField2"
 fs0=MEDFileFieldMultiTS()
 fs1=MEDFileFieldMultiTS()
 fs2=MEDFileFieldMultiTS()
-for i in xrange(5):
+for i in range(5):
     f=MEDFileField1TS()
     zePfl0=DataArrayInt.Aggregate(DataArrayInt.Range(0,12,1),pfl3,0) ; zePfl0.setName("PFL")
     fNode=MEDCouplingFieldDouble(ON_GAUSS_PT) ; fNode.setTime(float(i),i,0)
@@ -166,7 +166,7 @@ try:
   baselineIndex = sys.argv.index('-B')+1
   baselinePath = sys.argv[baselineIndex]
 except:
-  print "Could not get baseline directory. Test failed."
+  print("Could not get baseline directory. Test failed.")
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader14.png")
 import vtk.test.Testing

@@ -28,9 +28,9 @@ aXYPlot = CreateXYPlotView()
 Render(aXYPlot)
 
 # Set title
-print "Default chart title  ...", aXYPlot.ChartTitle
+print("Default chart title  ...", aXYPlot.ChartTitle)
 aXYPlot.ChartTitle = 'title of XY plot'
-print "New chart title      ...", aXYPlot.ChartTitle
+print("New chart title      ...", aXYPlot.ChartTitle)
 
 # Apply custom axes range
 aXYPlot.LeftAxisUseCustomRange = 1
@@ -50,23 +50,23 @@ aXYPlot.BottomAxisRangeMinimum = aMinX
 aXYPlot.BottomAxisRangeMaximum = aMaxX
 
 # Set horizontal scaling for left and bottom axis
-print "Default logarithmic scaling ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale )
+print("Default logarithmic scaling ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale ))
 # Set logarithmic scaling
 aXYPlot.LeftAxisLogScale = 1
 aXYPlot.BottomAxisLogScale = 1
-print "Set logarithmic scaling     ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale )
+print("Set logarithmic scaling     ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale ))
 # Set linear scaling
 aXYPlot.LeftAxisLogScale = 0
 aXYPlot.BottomAxisLogScale = 0
-print "Set linear scaling          ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale )
+print("Set linear scaling          ... left = %s, bottom = %s" % ( aXYPlot.LeftAxisLogScale, aXYPlot.BottomAxisLogScale ))
 
 # Axis titles
-print "Default title of the left axis    ...", aXYPlot.LeftAxisTitle
+print("Default title of the left axis    ...", aXYPlot.LeftAxisTitle)
 aXYPlot.LeftAxisTitle = "Ytitle of XY plot"
-print "New title of the left axis        ...", aXYPlot.LeftAxisTitle
-print "Default title of the bottom axis  ...", aXYPlot.BottomAxisTitle
+print("New title of the left axis        ...", aXYPlot.LeftAxisTitle)
+print("Default title of the bottom axis  ...", aXYPlot.BottomAxisTitle)
 aXYPlot.BottomAxisTitle = "Xtitle of XY plot"
-print "New title of the bottom axis      ...", aXYPlot.BottomAxisTitle
+print("New title of the bottom axis      ...", aXYPlot.BottomAxisTitle)
 
 # Show/hide legend
 aXYPlot.ShowLegend = 1

@@ -28,7 +28,7 @@ import pvsimple
 file_path = tablesdir + "tables_test.xls"
 table_reader = pvsimple.CSVReader(FileName=file_path)
 if table_reader is None:
-    print "FAILED to import tables from tables_test.xls file."
+    print("FAILED to import tables from tables_test.xls file.")
 
 # 2. Create curves viewer
 cur_view = pvsimple.GetRenderView()

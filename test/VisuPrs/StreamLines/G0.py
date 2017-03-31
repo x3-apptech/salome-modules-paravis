@@ -29,9 +29,9 @@ file_path = datadir + "new_case.rmed"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
-    raise RuntimeError, "new_case.rmed was not imported!!!"
+    raise RuntimeError("new_case.rmed was not imported!!!")
 
 # 2. Creation of a set of "StreamLines" presentations, based on time stamps of "RESU_DEPL" field
 streamlines = StreamLinesOnField(med_reader, EntityType.NODE, 'RESU____DEPL____________________', 1)
 if streamlines is None:
-    raise RuntimeError, "Presentation is None!!!"
+    raise RuntimeError("Presentation is None!!!")

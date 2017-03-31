@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "Tetra4.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -60,7 +60,7 @@ compare_prec = 0.00001
 
 field_name = 'scalar field'
 
-print "\nCreating cut planes.......",
+print("\nCreating cut planes.......", end=' ')
 cut_planes = CutPlanesOnField(proxy, EntityType.CELL, field_name, 1,
 nb_planes=10, orientation=Orientation.YZ, displacement=0.5)
 if cut_planes is None:
@@ -70,7 +70,7 @@ display_only(cut_planes, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 for reprCode in represents:
     repr = RepresentationType.get_name(reprCode)

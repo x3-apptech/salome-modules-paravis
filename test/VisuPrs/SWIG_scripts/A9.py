@@ -80,11 +80,11 @@ scalarmap = ScalarMapOnField(med_reader, entity, field_name, timestamp)
 pvs.Show(scalarmap.Input)
 
 # Set view properties
-print "view.CameraFocalPoint = [0, 0, 0]"
+print("view.CameraFocalPoint = [0, 0, 0]")
 view.CameraFocalPoint = [0, 0, 0]
-print "view.CameraParallelScale = 2"
+print("view.CameraParallelScale = 2")
 view.CameraParallelScale = 2
-print "pvs.ResetCamera(view)"
+print("pvs.ResetCamera(view)")
 pvs.ResetCamera(view)
 
 # Play with scalar bar
@@ -97,7 +97,7 @@ delta = (range_max - range_min) / 2.0
 nb_colors = lt.NumberOfTableValues
 nb_colors = 64
 lt.Discretize = 1
-for i in xrange(2, nb_colors):
+for i in range(2, nb_colors):
     lt.NumberOfTableValues = nb_colors
     x = range_min + delta * i / nb_colors
     y = range_max - delta * i / nb_colors
@@ -109,7 +109,7 @@ for i in xrange(2, nb_colors):
 lt.RGBPoints[0] = range_min
 lt.RGBPoints[4] = range_max
 
-print "pvs.ResetCamera(view)"
+print("pvs.ResetCamera(view)")
 pvs.ResetCamera(view)
 
 # Create another view for cut planes
@@ -125,14 +125,14 @@ orient = Orientation.YZ
 cutplanes = CutPlanesOnField(med_reader, entity, field_name, timestamp,
                              orientation=orient,
                              displacement=displacement)
-print "CutPlanesOnField(...)"
+print("CutPlanesOnField(...)")
 
 display_only(cutplanes, view)
-print "display_only(cutplanes, view)"
+print("display_only(cutplanes, view)")
 
 cam_pos = view.CameraPosition
 cam_pos[0] = cam_pos[0] + 10
-print "Set view.CameraPosition"
+print("Set view.CameraPosition")
 cutplanes.Scale[0] = 3
 cutplanes.Scale[1] = 10
 pvs.Render(view)
@@ -145,7 +145,7 @@ offset_vals = slice_filter.SliceOffsetValues
 nb_planes = len(offset_vals)
 nb_planes = 30
 bounds = get_bounds(med_reader)
-for i in xrange(nb_planes, 1, -1):
+for i in range(nb_planes, 1, -1):
     x = math.pi / 2.0 * (nb_planes - i) / nb_planes
     y = math.pi / 2.0 * (nb_planes - i) / nb_planes
     normal = get_normal_by_orientation(orient, x, y)
@@ -158,7 +158,7 @@ for i in xrange(nb_planes, 1, -1):
 nb_planes = 10
 normal = [0, 1, 0]
 slice_filter.SliceType.Normal = normal
-for i in xrange(1, nb_planes):
+for i in range(1, nb_planes):
     pos = get_positions(i, normal, bounds, displacement)
     slice_filter.SliceOffsetValues = pos
     pvs.Render(view)
@@ -166,7 +166,7 @@ for i in xrange(1, nb_planes):
 
 slice_filter.SliceType.Normal = [0, 0, 1]
 slice_filter.UpdatePipeline()
-print "pvs.ResetCamera(view)"
+print("pvs.ResetCamera(view)")
 pvs.ResetCamera(view)
 
 # Create one more view for iso surfaces
@@ -181,14 +181,14 @@ sleep(DELAY)
 isosurf = IsoSurfacesOnField(med_reader, entity, field_name, timestamp)
 display_only(isosurf, view)
 pvs.ResetCamera(view)
-print "display_only(isosurf, view)"
+print("display_only(isosurf, view)")
 sleep(DELAY)
 
 contour = isosurf.Input
 nb_surfaces = len(contour.Isosurfaces)
 nb_surfaces = 32
 scalar_range = get_data_range(med_reader, entity, field_name, cut_off=True)
-for i in xrange(2, nb_surfaces):
+for i in range(2, nb_surfaces):
     contours = get_contours(scalar_range, i)
     contour.Isosurfaces = contours
     pvs.Render(view)
@@ -196,7 +196,7 @@ for i in xrange(2, nb_surfaces):
 
 contour.Isosurfaces = get_contours(scalar_range, 10)
 contour.UpdatePipeline()
-print "pvs.ResetCamera(view)"
+print("pvs.ResetCamera(view)")
 pvs.ResetCamera(view)
 
 # Create one more view for cut lines
@@ -212,14 +212,14 @@ cutlines, curves = CutLinesOnField(med_reader, entity, field_name, timestamp,
                                    orientation1=Orientation.ZX,
                                    orientation2=Orientation.YZ,
                                    generate_curves=True)
-print "CutLinesOnField(...)"
+print("CutLinesOnField(...)")
 display_only(cutlines, view)
 pvs.ResetCamera(view)
-print "display_only(cutlines, view)"
+print("display_only(cutlines, view)")
 sleep(DELAY)
 
 xy_view = pvs.CreateXYPlotView()
-print "pvs.CreateXYPlotView()"
+print("pvs.CreateXYPlotView()")
 index = 0
 for curve in curves:
     xyrep = pvs.Show(curve, xy_view)
@@ -251,10 +251,10 @@ point1 = [0.0, -1.0, 2.5]
 point2 = [0.0, 1.0, 2.5]
 cutsegment = CutSegmentOnField(med_reader, entity, field_name, timestamp,
                                point1, point2)
-print "CutSegmentOnField(...)"
+print("CutSegmentOnField(...)")
 display_only(cutsegment, view)
 pvs.ResetCamera(view)
-print "display_only(cutsegment, view)"
+print("display_only(cutsegment, view)")
 sleep(DELAY)
 
 xy_view = pvs.CreateXYPlotView()
@@ -282,5 +282,5 @@ med_reader = pvs.MEDReader(FileName=med_file)
 isosurf = IsoSurfacesOnField(med_reader, entity, field_name, timestamp)
 pvs.ResetCamera(view)
 
-print "Start Animation"
+print("Start Animation")
 pvs.AnimateReader(med_reader, view)

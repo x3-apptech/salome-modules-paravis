@@ -30,14 +30,14 @@ picturedir = get_picture_dir("bugs/B1")
 # 1. Import MED file
 med_file_path = datadir + "resultat.01.med"
 
-print 'Importing "resultat.01.med"....',
+print('Importing "resultat.01.med"....', end=' ')
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError, "resultat.01.med was not imported!!!"
+    raise RuntimeError("resultat.01.med was not imported!!!")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Creation of presentation of each group
 extGrp = pvs.ExtractGroup()
@@ -49,21 +49,21 @@ i = 0
 for group in groups:
     i += 1
     shor_name = group.split('/')[-1]
-    print "group: ", shor_name
+    print("group: ", shor_name)
     prs = MeshOnGroup(med_reader, extGrp, group)
 
     if prs is None :
-        print "FAILED!!! Created presentation is None!!!"
+        print("FAILED!!! Created presentation is None!!!")
         errors += 1
     else :
-        print "Presentation was created!"
+        print("Presentation was created!")
         pic_path = os.path.join(picturedir, shor_name.strip().split("_")[0]+str(i)+"."+pictureext)
         process_prs_for_test(prs, pvsimple.GetRenderView(), pic_path)
 
 
 # check errors
 if errors == 1:
-    raise RuntimeError, "There is an error was occured... For more info see ERROR message above.."
+    raise RuntimeError("There is an error was occured... For more info see ERROR message above..")
 elif errors > 1:
-    raise RuntimeError, "There are some errors were occured... For more info see ERRORs messages above.."
+    raise RuntimeError("There are some errors were occured... For more info see ERRORs messages above..")
 

@@ -28,16 +28,16 @@ from pvsimple import *
 picturedir = get_picture_dir("MeshPresentation/H2")
 
 theFileName = datadir +  "BoxModSmall2.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-        raise RuntimeError, "Error: can't import file."
-else: print "OK"
+        raise RuntimeError("Error: can't import file.")
+else: print("OK")
 
 aView = GetRenderView()
 
@@ -51,7 +51,7 @@ for entity_type in entity_types:
     mesh = MeshOnEntity(aProxy, mesh_name ,entity_type)
     if mesh is None:
         msg = "ERROR!!!Presentation of mesh on '"+entity_name+"' family wasn't created..."
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     mesh.Visibility=1
     reset_view(aView)
     Render()

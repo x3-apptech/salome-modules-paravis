@@ -42,8 +42,8 @@ def demo3(impth):
     UpdatePipeline()
 
     di = src.GetDataInformation()
-    print "Data type:", di.GetPrettyDataTypeString()
-    print "Extent:", di.GetExtent()
+    print("Data type:", di.GetPrettyDataTypeString())
+    print("Extent:", di.GetExtent())
 
     ##src.Representation = 3 # outline
     Show(src, view=v)
@@ -78,7 +78,7 @@ def demo3(impth):
     # that spans the dataset
     bounds = di.GetBounds()
 
-    print "Bounds: ", bounds
+    print("Bounds: ", bounds)
     line.Point1 = bounds[0:6:2]
     line.Point2 = bounds[1:6:2]
 

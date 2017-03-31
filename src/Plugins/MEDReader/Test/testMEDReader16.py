@@ -60,7 +60,7 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     assert(vtkArrToTest.GetNumberOfComponents()==2)
     assert(vtkArrToTest.GetComponentName(0)==arr2.getInfoOnComponent(0))
     assert(vtkArrToTest.GetComponentName(1)==arr2.getInfoOnComponent(1))
-    vals=[vtkArrToTest.GetValue(i) for i in xrange(16)]
+    vals=[vtkArrToTest.GetValue(i) for i in range(16)]
     assert(arr2[8:].isEqualWithoutConsideringStr(DataArrayDouble(vals,8,2),1e-12))
     pass
 #
@@ -72,7 +72,7 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     assert(vtkArrToTest.GetNumberOfComponents()==2)
     assert(vtkArrToTest.GetComponentName(0)==arr2.getInfoOnComponent(0))
     assert(vtkArrToTest.GetComponentName(1)==arr2.getInfoOnComponent(1))
-    vals=[vtkArrToTest.GetValue(i) for i in xrange(16)]
+    vals=[vtkArrToTest.GetValue(i) for i in range(16)]
     assert(arr2[4:12].isEqualWithoutConsideringStr(DataArrayDouble(vals,8,2),1e-12))
     pass
 # important to check that if all the field is present that it is OK (check of the optimization)
@@ -84,7 +84,7 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     assert(vtkArrToTest.GetNumberOfComponents()==2)
     assert(vtkArrToTest.GetComponentName(0)==arr2.getInfoOnComponent(0))
     assert(vtkArrToTest.GetComponentName(1)==arr2.getInfoOnComponent(1))
-    vals=[vtkArrToTest.GetValue(i) for i in xrange(32)]
+    vals=[vtkArrToTest.GetValue(i) for i in range(32)]
     assert(arr2.isEqualWithoutConsideringStr(DataArrayDouble(vals,16,2),1e-12))
     pass
 ELNOMesh1=ELNOMesh(Input=reader)
@@ -97,6 +97,6 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     assert(vtkArrToTest.GetNumberOfComponents()==2)
     assert(vtkArrToTest.GetComponentName(0)==arr2.getInfoOnComponent(0))
     assert(vtkArrToTest.GetComponentName(1)==arr2.getInfoOnComponent(1))
-    vals=[vtkArrToTest.GetValue(i) for i in xrange(32)]
+    vals=[vtkArrToTest.GetValue(i) for i in range(32)]
     assert(arr2.isEqualWithoutConsideringStr(DataArrayDouble(vals,16,2),1e-12))
     pass

@@ -38,7 +38,7 @@ if tmp_dir == None:
   tmp_dir = tempfile.mkdtemp()
 
 save_file = os.path.join(tmp_dir, "TimeStamps_save.hdf")
-print "Save to file ", save_file
+print("Save to file ", save_file)
 
 pvsimple.OpenDataFile(data_file)
 myStudyManager.SaveAs(save_file, myStudy, 0)
@@ -49,4 +49,4 @@ myStudyManager.Close(openedStudy)
 
 os.remove(save_file)
 
-print "OK"
+print("OK")

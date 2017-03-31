@@ -50,7 +50,7 @@ pvsimple.UpdatePipeline(time=time, proxy=med_reader)
 # Create Gauss Points presentation
 prs = GaussPointsOnField(med_reader, EntityType.CELL, field_name, timestamp_nb)
 if prs is None:
-    raise RuntimeError, "Created presentation is None!!!"
+    raise RuntimeError("Created presentation is None!!!")
 
 # Display presentation and get snapshot
 pic_name = picturedir + field_name + "_" + str(time) + "_GAUSSPOINTS." + pictureext

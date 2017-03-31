@@ -64,20 +64,20 @@ reset_view(my_view)
 Render(my_view)
 
 theFileName = datadir + "cube_hexa8_quad4.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 OpenDataFile(theFileName)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 field_name = 'fieldcelldouble'
 
-print "\nCreating scalar_map.......",
+print("\nCreating scalar_map.......", end=' ')
 scalar_map = ScalarMapOnField(proxy, EntityType.CELL, field_name, 1)
 if scalar_map is None:
     raise RuntimeError("Error!!! Presentation wasn't created...")
@@ -88,10 +88,10 @@ Render(my_view)
 
 compare_prec = 0.00001
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 # Group 1 (SHADED)
 
-print "\nCheck in SURFACE:"
+print("\nCheck in SURFACE:")
 
 call_and_check(scalar_map, "Representation",
 RepresentationType.get_name(RepresentationType.SURFACE))
@@ -192,7 +192,7 @@ call_and_check(shape_to_show, "LineWidth", 1.0, 1, compare_prec)
 
 # Group 2 (WIREFRAME)
 hide_all(my_view)
-print "\nCheck in WIREFRAME:"
+print("\nCheck in WIREFRAME:")
 scalar_map.Visibility = 1
 call_and_check(scalar_map, "Representation",
 RepresentationType.get_name(RepresentationType.WIREFRAME), "Representation")

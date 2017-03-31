@@ -53,13 +53,13 @@ from pvsimple import *
 import presentations
 obj = FindSource('IsoSurfaces')
 if obj is None:
-    print "FAILED: can't find IsoSurfaces!!!"
+    print("FAILED: can't find IsoSurfaces!!!")
 
 # 4. Remove med reader object and all other sources
-for obj in GetSources().values():
+for obj in list(GetSources().values()):
     presentations.delete_pv_object(obj)
 
 # 5. Check results
 obj = FindSource('ScalarMap')
 if obj is not None:
-    print "FAILED: ScalarMap was not deleted!!!"
+    print("FAILED: ScalarMap was not deleted!!!")

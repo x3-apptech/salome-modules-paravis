@@ -30,21 +30,21 @@ reset_view(view)
 delay = 1
 
 def after_set(error_string, prop_name, old_value, new_value):
-    print prop_name, ": old_value = ", old_value, "new_value  = ", new_value
+    print(prop_name, ": old_value = ", old_value, "new_value  = ", new_value)
     if error_string == "":
         time.sleep(delay)
     else:
-        print prop_name, " error = ", error_string
+        print(prop_name, " error = ", error_string)
         pass
     pass
 
 
 def change_representation(prs, repres, opacity, linew):
     if prs is None:
-        print "FAILED"
+        print("FAILED")
         return
     else:
-        print "OK"
+        print("OK")
 
     display_only(prs, view)
     view.ResetCamera()
@@ -81,13 +81,13 @@ def change_representation(prs, repres, opacity, linew):
         after_set(err_str, "LineWidth", old_linew, linew)
         pass
 
-    print ""
+    print("")
     pass
 
 
 # ResOK_0000.med
 
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 file_path = datadir + "ResOK_0000.med"
 field_name = 'vitesse'
 node_entity = EntityType.NODE
@@ -96,34 +96,34 @@ pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 scmap = ScalarMapOnField(med_reader, node_entity, field_name, 1)
 change_representation(scmap, 'Surface With Edges', 0.3, 5)
 
-print "Creating Stream Lines.......",
+print("Creating Stream Lines.......", end=' ')
 slines = StreamLinesOnField(med_reader, node_entity, field_name, 1)
 change_representation(slines, 'Wireframe', 0.5, 3)
 
-print "Creating Vectors..........",
+print("Creating Vectors..........", end=' ')
 vec = VectorsOnField(med_reader, node_entity, field_name, 1)
 change_representation(vec, 'Wireframe', 0.7, 2)
 
-print "Creating Iso Surfaces.....",
+print("Creating Iso Surfaces.....", end=' ')
 iso = IsoSurfacesOnField(med_reader, node_entity, field_name, 1)
 change_representation(iso, 'Surface', 0.4, 8)
 
-print "Creating Cut Planes.......",
+print("Creating Cut Planes.......", end=' ')
 clines = CutPlanesOnField(med_reader, node_entity, field_name, 1)
 change_representation(clines, 'Points', 0.6, 4)
 
 
 # fra.med
 
-print 'Import "fra.med"...............',
+print('Import "fra.med"...............', end=' ')
 file_path = datadir + "fra.med"
 field_name = 'VITESSE'
 
@@ -132,37 +132,37 @@ pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 scmap = ScalarMapOnField(med_reader, node_entity, field_name, 1)
 change_representation(scmap, 'Wireframe', 0.5, 3)
 
-print "Creating Iso Surfaces.....",
+print("Creating Iso Surfaces.....", end=' ')
 iso = IsoSurfacesOnField(med_reader, node_entity, field_name, 1)
 change_representation(iso, 'Wireframe', 0.5, 3)
 
-print "Creating Cut Planes.......",
+print("Creating Cut Planes.......", end=' ')
 cplanes = CutPlanesOnField(med_reader, node_entity, field_name, 1)
 change_representation(cplanes, 'Surface', 0.5, 3)
 
-print "Creating Scalar Map On Deformed Shape.......",
+print("Creating Scalar Map On Deformed Shape.......", end=' ')
 defmap = DeformedShapeAndScalarMapOnField(med_reader, node_entity,
                                           field_name, 1)
 change_representation(defmap, 'Surface', 0.5, 3)
 
-print "Creating Deformed Shape.......",
+print("Creating Deformed Shape.......", end=' ')
 defshape = DeformedShapeOnField(med_reader, node_entity, field_name, 1)
 defshape.ColorArrayName = field_name
 change_representation(defshape, 'Wireframe', 0.5, 3)
 
-print "Creating Cut Lines.......",
+print("Creating Cut Lines.......", end=' ')
 clines = CutLinesOnField(med_reader, node_entity, field_name, 1)
 change_representation(clines, 'Wireframe', 0.5, 3)
 
-print "Creating Plot 3D.......",
+print("Creating Plot 3D.......", end=' ')
 plot3d = Plot3DOnField(med_reader, node_entity, field_name, 1)
 change_representation(plot3d, 'Surface', 0.5, 3)
 change_representation(plot3d, 'Outline', 0.8, 2)

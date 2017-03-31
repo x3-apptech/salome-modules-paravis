@@ -25,39 +25,39 @@ from presentations import *
 import pvsimple
 
 # 1. Import MED file
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 file_path = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Creating StreamLines
-print "Creating Stream Lines.....",
+print("Creating Stream Lines.....", end=' ')
 streamlines = StreamLinesOnField(med_reader, EntityType.NODE, 'vitesse', 1)
 if streamlines is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 3. StreamLines parameters
 stream_tracer = pvsimple.GetActiveSource()
 
-print "Initial Step Length: ", stream_tracer.InitialStepLength
-print "Integration Direction: ", stream_tracer.IntegrationDirection
-print "Integration Step Unit: ", stream_tracer.IntegrationStepUnit
-print "Integrator Type: ", stream_tracer.IntegratorType
-print "Interpolator Type: ", stream_tracer.InterpolatorType
-print "Maximum Error: ", stream_tracer.MaximumError
-print "Minimum Step Length: ", stream_tracer.MinimumStepLength
-print "Maximum Step Length: ", stream_tracer.MaximumStepLength
-print "Maximum Steps: ", stream_tracer.MaximumSteps
-print "Maximum Streamline Length: ", stream_tracer.MaximumStreamlineLength
-print "Seed Type: ", type(stream_tracer.SeedType)
-print "Point1: ", stream_tracer.SeedType.Point1
-print "Point2: ", stream_tracer.SeedType.Point2
+print("Initial Step Length: ", stream_tracer.InitialStepLength)
+print("Integration Direction: ", stream_tracer.IntegrationDirection)
+print("Integration Step Unit: ", stream_tracer.IntegrationStepUnit)
+print("Integrator Type: ", stream_tracer.IntegratorType)
+print("Interpolator Type: ", stream_tracer.InterpolatorType)
+print("Maximum Error: ", stream_tracer.MaximumError)
+print("Minimum Step Length: ", stream_tracer.MinimumStepLength)
+print("Maximum Step Length: ", stream_tracer.MaximumStepLength)
+print("Maximum Steps: ", stream_tracer.MaximumSteps)
+print("Maximum Streamline Length: ", stream_tracer.MaximumStreamlineLength)
+print("Seed Type: ", type(stream_tracer.SeedType))
+print("Point1: ", stream_tracer.SeedType.Point1)
+print("Point2: ", stream_tracer.SeedType.Point2)
 # print "Center: ", stream_tracer.SeedType.Center
 # print "Number Of Points: ", stream_tracer.SeedType.NumberOfPoints
 # print "Radius: ", stream_tracer.SeedType.Radius

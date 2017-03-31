@@ -30,12 +30,12 @@ pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError, "TimeStamps.med was not imported!!!"
+    raise RuntimeError("TimeStamps.med was not imported!!!")
 
 # 2. Creation of presentations
 mesh_on_cells = MeshOnEntity(med_reader, "dom", EntityType.CELL)
 if mesh_on_cells is None :
-    raise RuntimeError, "Mesh presentation is None!!!"
+    raise RuntimeError("Mesh presentation is None!!!")
 
 view = pvsimple.GetRenderView()
 display_only(mesh_on_cells, view)
@@ -45,7 +45,7 @@ mesh_on_cells.Representation = 'Wireframe'
 
 scalar_map = ScalarMapOnField(med_reader, EntityType.NODE, "vitesse", 1)
 if scalar_map is None :
-    raise RuntimeError, "ScalarMap presentation is None!!!"
+    raise RuntimeError("ScalarMap presentation is None!!!")
 
 scalar_map.Visibility = 1
 pvsimple.Render()

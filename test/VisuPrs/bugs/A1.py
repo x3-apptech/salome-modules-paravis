@@ -54,6 +54,6 @@ view.ResetCamera()
 
 pvsimple.Render(view)
 
-print "Picure file name is " + pic_path
+print("Picure file name is " + pic_path)
 pvs.WriteImage(pic_path, view=view, Magnification=1)
 time.sleep(1)

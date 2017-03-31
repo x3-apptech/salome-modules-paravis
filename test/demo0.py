@@ -27,8 +27,8 @@ if not ('servermanager' in dir()):
 import time, sys, os, inspect
 
 def render(ss, v, title, nframes):
-  print '============================================================'
-  print title
+  print('============================================================')
+  print(title)
   res = []
   res.append(title)
   for phires in (500, 1000):
@@ -45,9 +45,9 @@ def render(ss, v, title, nframes):
       sys.stdout.write("\n")
     tpr = (time.time() - c1)/nframes
     ncells = ss.GetDataInformation().GetNumberOfCells()
-    print tpr, " secs/frame"
-    print ncells, " polys"
-    print ncells/tpr, " polys/sec"
+    print(tpr, " secs/frame")
+    print(ncells, " polys")
+    print(ncells/tpr, " polys/sec")
     
     res.append((ncells, ncells/tpr))
 
@@ -146,9 +146,9 @@ def run(filesour, impth, nframes):
     f = open(filesour, "w")
   else:
     f = sys.stdout
-  print >>f, 'configuration, %d, %d' % (results[0][1][0], results[0][2][0])
+  print('configuration, %d, %d' % (results[0][1][0], results[0][2][0]), file=f)
   for i in results:
-    print >>f, '"%s", %g, %g' % (i[0], i[1][1], i[2][1])  
+    print('"%s", %g, %g' % (i[0], i[1][1], i[2][1]), file=f)  
 
 
 

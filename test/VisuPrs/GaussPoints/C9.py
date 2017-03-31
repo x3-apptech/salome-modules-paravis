@@ -48,7 +48,7 @@ time = get_time(med_reader, timestamp_nb)
 
 prs = GaussPointsOnField1(med_reader, EntityType.CELL, field_name, timestamp_nb, multiplier=4E-9)
 if prs is None:
-    raise RuntimeError, "Created presentation is None!!!"
+    raise RuntimeError("Created presentation is None!!!")
 
 # Display presentation and get snapshot
 pic_name = picturedir + field_name + "_" + str(time) + "_GAUSSPOINTS." + pictureext

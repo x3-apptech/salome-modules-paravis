@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "cube_hexa8_quad4.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -62,7 +62,7 @@ shrinked_ds = None
 
 field_name = 'fieldcelldouble'
 
-print "\nCreating deformed shape.......",
+print("\nCreating deformed shape.......", end=' ')
 ds = DeformedShapeOnField(proxy, EntityType.CELL,
 field_name, 1, scale_factor=0.5, is_colored=True)
 if ds is None:
@@ -72,7 +72,7 @@ display_only(ds, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 
 for reprCode in represents:

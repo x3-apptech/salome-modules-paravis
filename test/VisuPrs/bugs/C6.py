@@ -30,24 +30,24 @@ picturedir = get_picture_dir("bugs/C6")
 # 1. Import MED file
 med_file_path = datadir + "relachement_brutal_sans_dudg_gauss.med"
 
-print 'Importing "relachement_brutal_sans_dudg_gauss.med"....',
+print('Importing "relachement_brutal_sans_dudg_gauss.med"....', end=' ')
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError,  "File wasn't imported!!!"
+    raise RuntimeError("File wasn't imported!!!")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Creation of GaussPoints presentations
 mesh_name = "Maillage"
 field_name = "Result__EQUI_ELGA_SIGM__________"
-timestamp_list = range(1, 5)
+timestamp_list = list(range(1, 5))
 
 for timestamp in timestamp_list:
-    print "Creation of the GaussPoints presentation.. Field: ", field_name, "; Timestamp: ", timestamp
+    print("Creation of the GaussPoints presentation.. Field: ", field_name, "; Timestamp: ", timestamp)
     gauss_points = GaussPointsOnField1(med_reader, EntityType.CELL, field_name, timestamp)
     if gauss_points is None:
-        raise RuntimeError,  "Created presentation is None!!!"
+        raise RuntimeError("Created presentation is None!!!")
     pic_path = os.path.join(picturedir, "GaussPoints_" + mesh_name + "_" + field_name + "_" + str(timestamp) + "." + pictureext)
     process_prs_for_test(gauss_points, pvsimple.GetRenderView(), pic_path)

@@ -59,34 +59,34 @@ def set_prs_colored(prs, proxy, entity, field_name, vector_mode, timestamp_nb):
 
 
 # 1. Import of the "Penta6.med" file
-print 'Import "Penta6.med" file........',
+print('Import "Penta6.med" file........', end=' ')
 file_path = datadir + "Penta6.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
-    raise RuntimeError, "Penta6.med was not imported!!!"
+    raise RuntimeError("Penta6.med was not imported!!!")
 else:
-    print "OK"
+    print("OK")
 
 view = pvsimple.GetRenderView()
 
 # 2. Creation of "CutPlanes" presentation, based on time stamp of "scalar field" field
-print 'Creation of "CutPlanes" presentation, based on time stamp of "scalar field" field....'
+print('Creation of "CutPlanes" presentation, based on time stamp of "scalar field" field....')
 cutplanes = CutPlanesOnField(med_reader, EntityType.CELL, "scalar field", 1)
 if cutplanes is None :
-    raise RuntimeError, "Presentation is None!!!"
+    raise RuntimeError("Presentation is None!!!")
 else:
-    print "OK"
+    print("OK")
 
 select_cells_with_data(med_reader, on_cells=["scalar field", "vectoriel field"])
 
-print "Setting of deformation:"
+print("Setting of deformation:")
 warp_vector = pvsimple.WarpByVector(cutplanes.Input)
 warp_vector.Vectors = ["scalar field"]
 warp_vector.ScaleFactor = 5.0
 
-print "Got scale     : ", warp_vector.ScaleFactor
-print "Got field name: ", warp_vector.Vectors
+print("Got scale     : ", warp_vector.ScaleFactor)
+print("Got field name: ", warp_vector.Vectors)
 
 presentation = pvsimple.GetRepresentation(warp_vector)
 set_prs_colored(presentation, med_reader, EntityType.CELL, "scalar field", 'Magnitude', 1)
@@ -95,21 +95,21 @@ pic_path = os.path.join(picturedir, "deformed_cut_planes_scalar" + "." + picture
 process_prs_for_test(presentation, view, pic_path)
 
 # 3. Creation of "CutPlanes" presentation, based on time stamp of "vectoriel field" field
-print 'Creation of "CutPlanes" presentation, based on time stamp of "vectoriel field" field....'
+print('Creation of "CutPlanes" presentation, based on time stamp of "vectoriel field" field....')
 cutplanes = CutPlanesOnField(med_reader, EntityType.CELL, "vectoriel field", 1)
 
 if cutplanes is None :
-    raise RuntimeError, "Presentation is None!!!"
+    raise RuntimeError("Presentation is None!!!")
 else:
-    print "OK"
+    print("OK")
 
-print "Setting of deformation:"
+print("Setting of deformation:")
 warp_vector = pvsimple.WarpByVector(cutplanes.Input)
 warp_vector.Vectors = ["vectoriel field"]
 warp_vector.ScaleFactor = 5.0
 
-print "Got scale     : ", warp_vector.ScaleFactor
-print "Got field name: ", warp_vector.Vectors
+print("Got scale     : ", warp_vector.ScaleFactor)
+print("Got field name: ", warp_vector.Vectors)
 
 presentation = pvsimple.GetRepresentation(warp_vector)
 set_prs_colored(presentation, med_reader, EntityType.CELL, "vectoriel field", 'Magnitude', 1)

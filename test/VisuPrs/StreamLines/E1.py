@@ -29,8 +29,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("StreamLines/E1")
 
 file = datadir +  "H_COUPLEX1.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "\nCreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("\nCreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)

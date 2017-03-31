@@ -31,7 +31,7 @@ pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "Error!!! med file is not imported"
+    print("Error!!! med file is not imported")
     error = error+1
 
 # Create Mesh
@@ -39,7 +39,7 @@ mesh_name = 'LE VOLUME'
 cell_entity = EntityType.CELL
 mesh = MeshOnEntity(med_reader, mesh_name, cell_entity)
 if mesh is None:
-    print "Error!!! Mesh is not created"
+    print("Error!!! Mesh is not created")
     error = error+1
 
 mesh.Visibility = 1
@@ -51,15 +51,15 @@ mesh_shrinked.ShrinkFactor = 0.75
 mesh_shrinked = pvsimple.GetRepresentation(mesh_shrinked)
 
 if mesh_shrinked is None:
-    print "Error!!! Mesh is not shrinked"
+    print("Error!!! Mesh is not shrinked")
     error = error+1
 
 # Create Scalar Map
 scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, 'TAUX_DE_VIDE', 1);
 if scalarmap is None:
-    print "Error!!! ScalarMap is not created"
+    print("Error!!! ScalarMap is not created")
     error = error+1
 display_only(scalarmap)
 
 if error > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

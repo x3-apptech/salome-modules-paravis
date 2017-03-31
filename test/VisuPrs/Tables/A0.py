@@ -28,21 +28,21 @@ from presentations import *
 import pvsimple
 
 # Import table from file
-print 'Import tables_test.xls ....',
+print('Import tables_test.xls ....', end=' ')
 file_path = tablesdir + "tables_test.xls"
 table_reader = pvsimple.TableReader(FileName=file_path)
 if table_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # Get available tables
-print 'Get available tables .....'
+print('Get available tables .....')
 available_tables = table_reader.GetPropertyValue("AvailableTables")
 if (available_tables is None) or (len(available_tables) == 0):
-    print "FAILED"
+    print("FAILED")
 else:
-    print available_tables
+    print(available_tables)
 
 # Choose 'sinus' table
 table_reader.TableNumber = available_tables.GetData().index('sinus')

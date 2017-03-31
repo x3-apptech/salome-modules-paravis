@@ -85,7 +85,7 @@ def test_values(value, et_value, check_error=0):
     et_length = len(et_value)
     if (length != et_length):
         err_msg = "ERROR!!! There is different number of created " + str(length) + " and etalon " + str(et_length) + " values!!!"
-        print err_msg
+        print(err_msg)
         error = error + 1
     else:
         for i in range(et_length):
@@ -93,7 +93,7 @@ def test_values(value, et_value, check_error=0):
                 max_val = abs(0.001 * et_value[i])
                 if abs(et_value[i] - value[i]) > max_val:
                     err_msg = "ERROR!!! Got value " + str(value[i]) + " is not equal to etalon value " + str(ret_value[i]) + "!!!"
-                    print err_msg
+                    print(err_msg)
                     error = error + 1
             else:
                 max_val = 0.001
@@ -152,7 +152,7 @@ def call_and_check(prs, property_name, value, do_raise=1, compare_toler=-1.0):
         if do_raise:
             raise RuntimeError(error_string)
         else:
-            print error_string
+            print(error_string)
     else:
         # compare just set value and the one got from presentation
         really_set_value = prs.GetPropertyValue(property_name)
@@ -166,7 +166,7 @@ def call_and_check(prs, property_name, value, do_raise=1, compare_toler=-1.0):
             if do_raise:
                 raise RuntimeError(msg)
             else:
-                print msg
+                print(msg)
                 is_good = False
 
     return is_good
@@ -187,7 +187,7 @@ def compare_lists(value, et_value, check_error=0, eps=1e-04):
     length = len(value)
     et_length = len(et_value)
     if length != et_length:
-        print "ERROR!!! There is different number of items in created ", length, " and etalon ", et_length, " lists!!!"
+        print("ERROR!!! There is different number of items in created ", length, " and etalon ", et_length, " lists!!!")
         error=error+1
     else:
         for i in range(et_length):
@@ -196,10 +196,10 @@ def compare_lists(value, et_value, check_error=0, eps=1e-04):
             else:
                 MAX = eps
             if abs(et_value[i] - value[i])> MAX:
-                print "ERROR!!!", i, "-th  item", value[i], " is not equal to etalon item", et_value[i], "!!!"
+                print("ERROR!!!", i, "-th  item", value[i], " is not equal to etalon item", et_value[i], "!!!")
                 error=error+1
     if check_error and error > 0:
-        raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+        raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")
     return error
 
 
@@ -258,33 +258,33 @@ def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
 
     nb_errors = 0
 
-    print "File: ", filename
+    print("File: ", filename)
 
     # check the file accessibility
     if not os.access(filename, os.F_OK):
         msg = "File " + filename + " does not exist!!!"
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     # import MED file
     import pvsimple
     pvsimple.OpenDataFile(filename)
     proxy = presentations.pvs.GetActiveSource()
     if proxy is None:
-        raise RuntimeError, "ERROR!!! Can't import file!!!"
+        raise RuntimeError("ERROR!!! Can't import file!!!")
 
     for i in range(len(field_names)):
-        print "Name of the field: ", field_names[i]
+        print("Name of the field: ", field_names[i])
 
         if len(prs) != 0:
             if len(prs[i]) != 0:
                 mesh_name, iterations = TimeStampId(proxy)
 
-                if iterations.has_key(field_names[i]):
+                if field_names[i] in iterations:
                     entity = iterations[field_names[i]][0]
                     iteration = iterations[field_names[i]][1]
                 else:
                     msg="There is no information about TimeStampId of the " + field_names[i] + " field!!!"
-                    raise RuntimeError, msg
+                    raise RuntimeError(msg)
 
                 err = nb_errors
 
@@ -292,34 +292,34 @@ def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
                     try:
                         if type==0:
                             if presentations.GaussPointsOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created GaussPoints presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created GaussPoints presentation is None!!!"); nb_errors+=1
                         if type==1:
                             if presentations.ScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created ScalarMap presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created ScalarMap presentation is None!!!"); nb_errors+=1
                         if type==2:
                             if presentations.IsoSurfacesOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created IsoSurfaces presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created IsoSurfaces presentation is None!!!"); nb_errors+=1
                         if type==3:
                             if presentations.CutPlanesOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created CutPlanes presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created CutPlanes presentation is None!!!"); nb_errors+=1
                         if type==4:
                             if presentations.CutLinesOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created CutLines presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created CutLines presentation is None!!!"); nb_errors+=1
                         if type==5:
                             if presentations.DeformedShapeOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created DeformedShape presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created DeformedShape presentation is None!!!"); nb_errors+=1
                         if type==6:
                             if presentations.VectorsOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created Vectors presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created Vectors presentation is None!!!"); nb_errors+=1
                         if type==7:
                             if presentations.StreamLinesOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created StreamLines presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created StreamLines presentation is None!!!"); nb_errors+=1
                         if type==8:
                             if presentations.Plot3DOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created Plot3D presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created Plot3D presentation is None!!!"); nb_errors+=1
                         if type==9:
                             if presentations.DeformedShapeAndScalarMapOnField(proxy, entity, field_names[i], iteration) is None:
-                                print "ERROR!!! Created ScalarMapOnDeformedShape presentation is None!!!"; nb_errors+=1
+                                print("ERROR!!! Created ScalarMapOnDeformedShape presentation is None!!!"); nb_errors+=1
                     except ValueError:
                         """ This exception comes from get_nb_components(...) function.
                             The reason of exception is an implementation of MEDReader
@@ -327,15 +327,15 @@ def Import_Med_Field(filename, field_names, check_errors=0, prs=[]):
                             MEDFileFieldRepresentationTree::activateTheFirst() and
                             MEDFileFieldRepresentationTree::getTheSingleActivated(...) methods).
                         """
-                        print "ValueError exception is catched"
+                        print("ValueError exception is catched")
                         continue
 
                 # check if number of errors has increased
                 if err == nb_errors:
-                    print "Presentation(s) creation...OK"
+                    print("Presentation(s) creation...OK")
 
     if nb_errors > 0 and check_errors:
-        raise RuntimeError, "Errors occured!!! For more information see ERRORs above..."
+        raise RuntimeError("Errors occured!!! For more information see ERRORs above...")
     else:
         return nb_errors
 
@@ -386,8 +386,8 @@ def compare_view_to_ref_image(view, image_file, threshold=10):
     vtk.test.Testing.interact()
   except:
     sys.argv = save_sys_argv
-    print "<b>ERROR!!! Pictures differs from reference image !!!</b>";
-    print "Picture: "+image_file
+    print("<b>ERROR!!! Pictures differs from reference image !!!</b>");
+    print("Picture: "+image_file)
     raise
     pass
   sys.argv = save_sys_argv

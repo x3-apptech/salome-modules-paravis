@@ -27,7 +27,7 @@ from pvsimple import *
 xls_file = tablesdir + "tables_test.xls"
 table_reader = TableReader(FileName=xls_file)
 if table_reader is None:
-    raise RuntimeError, "Table was not imported..."
+    raise RuntimeError("Table was not imported...")
 
 table_reader.UpdatePipeline()
 RenameSource("tables_test.xls", table_reader)
@@ -40,12 +40,12 @@ SaveTrace(path_to_save)
 delete_pv_object(table_reader)
 
 # 4. Execution of the created script
-execfile(path_to_save)
+exec(compile(open(path_to_save).read(), path_to_save, 'exec'))
 
 # 5. Check the restored table
 restored_obj = FindSource("tables_test.xls")
 if restored_obj is None:
-    raise RuntimeError, "There is no tables_test.xls table in the study (must be created by executed python script)!!!"
+    raise RuntimeError("There is no tables_test.xls table in the study (must be created by executed python script)!!!")
 
 available_tables = restored_obj.GetPropertyValue("AvailableTables")
 
@@ -56,14 +56,14 @@ count_not=0
 for name in tables:
     if name not in available_tables:
         count_not += 1
-        print "ERROR!!! Table with ", name, " name was not found"
+        print("ERROR!!! Table with ", name, " name was not found")
         errors += 1
     else:
-        print "\"" + name + "\" table was found..."
+        print("\"" + name + "\" table was found...")
 
 if count_not > 0:
-    print "ERROR!!! "+str(count_not)+" table(s) was(were) not found!!!"
+    print("ERROR!!! "+str(count_not)+" table(s) was(were) not found!!!")
     errors += 1
 if errors > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")
 

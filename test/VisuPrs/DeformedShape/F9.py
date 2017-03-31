@@ -28,17 +28,17 @@ from pvsimple import *
 picturedir = get_picture_dir("DeformedShape/F9")
 
 theFileName = datadir +  "Bug829_resu_mode.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 """Build presentations of the given types for all fields of the given file."""
 #print "Import %s..." % theFileName.split('/')[-1],
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-        raise RuntimeError, "Error: can't import file."
-else: print "OK"
+        raise RuntimeError("Error: can't import file.")
+else: print("OK")
 # Get view
 aView = GetRenderView()
 
@@ -56,7 +56,7 @@ for colored in [False,True]:
         hide_all(aView, True)
         aPrs = DeformedShapeOnField(aProxy, aFieldEntity, aFieldName, i, is_colored=colored)
         if aPrs is None:
-            raise RuntimeError, "Presentation is None!!!"
+            raise RuntimeError("Presentation is None!!!")
         # display only current deformed shape
         #display_only(aView,aPrs)
         aPrs.Visibility =1

@@ -33,8 +33,8 @@ files = ["fra", "TimeStamps", "pointe", "Fields_group3D", "Hexa8", "Penta6", "Qu
 
 for item in files:
     file = datadir + item + ".med"
-    print " --------------------------------- "
-    print "file ", file
-    print "\nCreatePrsForFile..."
-    print "BREAKPOINT_1"
+    print(" --------------------------------- ")
+    print("file ", file)
+    print("\nCreatePrsForFile...")
+    print("BREAKPOINT_1")
     CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)

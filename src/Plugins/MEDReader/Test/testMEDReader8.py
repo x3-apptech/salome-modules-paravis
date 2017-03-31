@@ -77,7 +77,7 @@ extractCT.AllGeoTypes=['TRI3']
 
 extGrp=ExtractGroup(Input=extractCT)
 extGrp.UpdatePipelineInformation()
-assert(filter(lambda x:x[:4]=="GRP_",list(extGrp.GetProperty("GroupsFlagsInfo")[::2]))==['GRP_grp0'])
+assert([x for x in list(extGrp.GetProperty("GroupsFlagsInfo")[::2]) if x[:4]=="GRP_"]==['GRP_grp0'])
 extGrp.AllGroups="GRP_grp0"
 
 RenderView1 = GetRenderView()
@@ -112,7 +112,7 @@ try:
   baselineIndex = sys.argv.index('-B')+1
   baselinePath = sys.argv[baselineIndex]
 except:
-  print "Could not get baseline directory. Test failed."
+  print("Could not get baseline directory. Test failed.")
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader8.png")
 import vtk.test.Testing

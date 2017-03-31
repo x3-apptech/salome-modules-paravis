@@ -58,8 +58,8 @@ def demo1(impth):
 
     PointData = app.GetDataInformation().GetNumberOfPoints()
     CellData = app.GetDataInformation().GetNumberOfCells()
-    print PointData, " Points"
-    print CellData, " Cells"
+    print(PointData, " Points")
+    print(CellData, " Cells")
 
     # Render the default view.
     Render()

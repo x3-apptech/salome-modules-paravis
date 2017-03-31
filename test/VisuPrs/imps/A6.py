@@ -31,17 +31,17 @@ pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "Error!!! med file is not imported"
+    print("Error!!! med file is not imported")
     error = error+1
 
 # Create Scalar Map
 scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, 'RESUMECAEQUI_ELGA_SIGM__________', 1)
 if scalarmap is None:
-    print "Error!!! ScalarMap is not created"
+    print("Error!!! ScalarMap is not created")
     error = error+1
 
 scalarmap.Visibility = 1
 reset_view()
 
 if error > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

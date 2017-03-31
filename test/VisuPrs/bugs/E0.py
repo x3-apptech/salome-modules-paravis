@@ -27,14 +27,14 @@ import pvsimple
 sleep_delay = 1
 
 # 1. MED file import
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 med_file_path = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
-    raise RuntimeError, "ResOK_0000.med was not imported!!!"
+    raise RuntimeError("ResOK_0000.med was not imported!!!")
 else:
-    print "OK"
+    print("OK")
 
 # TODO: in the original VISU script the timestamp id was equal to 2,
 #       but in PARAVIS it's inly one timestamp accessible
@@ -43,70 +43,70 @@ timestamp_id = 1
 # 2. Create Scalar Map
 field_name = 'vitesse'
 
-print "Creating Scalar Map......."
+print("Creating Scalar Map.......")
 scmap1 = ScalarMapOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
 if scmap1 is None :
-    raise RuntimeError, "ScalarMap presentation is None!!!"
+    raise RuntimeError("ScalarMap presentation is None!!!")
 else:
-    print "OK"
+    print("OK")
 
 display_only(scmap1)
 reset_view()
 
-print "WIREFRAME sur scmap1"
+print("WIREFRAME sur scmap1")
 scmap1.Representation = 'Wireframe'
 time.sleep(sleep_delay)
 
-print "POINT sur scmap1"
+print("POINT sur scmap1")
 scmap1.Representation = 'Points'
 time.sleep(sleep_delay)
 
-print "SURFACEFRAME sur scmap1"
+print("SURFACEFRAME sur scmap1")
 scmap1.Representation = 'Surface With Edges'
 time.sleep(sleep_delay)
 
 # 3. Create Deformed Shape And Scalar Map
-print "Creating DeformedShapeAndScalarMap......."
+print("Creating DeformedShapeAndScalarMap.......")
 scmap2 = DeformedShapeAndScalarMapOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
 if scmap2 is None :
-    raise RuntimeError, "DeformedShapeAndScalarMapOnField presentation is None!!!"
+    raise RuntimeError("DeformedShapeAndScalarMapOnField presentation is None!!!")
 else:
-    print "OK"
+    print("OK")
 
 scmap2.Input.ScaleFactor = 1.0
 
 display_only(scmap2)
 reset_view()
 
-print "WIREFRAME sur scmap2"
+print("WIREFRAME sur scmap2")
 scmap2.Representation = 'Wireframe'
 time.sleep(sleep_delay)
 
-print "POINT sur scmap2"
+print("POINT sur scmap2")
 scmap2.Representation = 'Points'
 time.sleep(sleep_delay)
 
-print "SURFACEFRAME sur scmap2"
+print("SURFACEFRAME sur scmap2")
 scmap2.Representation = 'Surface With Edges'
 time.sleep(sleep_delay)
 
 # 4.Create Deformed Shape
-print "Creating DeformedShape........"
+print("Creating DeformedShape........")
 scmap3 = DeformedShapeOnField(med_reader, EntityType.NODE, field_name, timestamp_id)
 if scmap3 is None :
-    raise RuntimeError, "DeformedShapeOnField presentation is None!!!"
+    raise RuntimeError("DeformedShapeOnField presentation is None!!!")
 else:
-    print "OK"
+    print("OK")
 
-print "WIREFRAME sur scmap3"
+print("WIREFRAME sur scmap3")
 scmap3.Representation = 'Wireframe'
 time.sleep(sleep_delay)
 
-print "POINT sur scmap3"
+print("POINT sur scmap3")
 scmap3.Representation = 'Points'
 time.sleep(sleep_delay)
 
-print "SURFACEFRAME sur scmap3"
+print("SURFACEFRAME sur scmap3")
 scmap3.Representation = 'Surface With Edges'
 time.sleep(sleep_delay)
 

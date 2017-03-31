@@ -29,8 +29,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("StreamLines/B2")
 
 file = datadir +  "cube_hexa8_quad4.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "\nCreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("\nCreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)
