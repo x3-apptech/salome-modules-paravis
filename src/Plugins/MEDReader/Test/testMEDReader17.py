@@ -50,12 +50,12 @@ reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
 ExtractGroup1 = ExtractGroup(Input=reader)
 ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
-ELNOPoints1=ELNOPoints(Input=ExtractGroup1)
-ELNOPoints1.SelectSourceArray=['ELNO@MyField']
+ELNOfieldToPointSprite1=ELNOfieldToPointSprite(Input=ExtractGroup1)
+ELNOfieldToPointSprite1.SelectSourceArray=['ELNO@MyField']
 #
-ELNOPoints1=ELNOPoints(Input=reader)
-ELNOPoints1.SelectSourceArray=['ELNO@MyField']
-ExtractGroup1 = ExtractGroup(Input=ELNOPoints1)
+ELNOfieldToPointSprite1=ELNOfieldToPointSprite(Input=reader)
+ELNOfieldToPointSprite1.SelectSourceArray=['ELNO@MyField']
+ExtractGroup1 = ExtractGroup(Input=ELNOfieldToPointSprite1)
 ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
 ExtractGroup1.UpdatePipeline()

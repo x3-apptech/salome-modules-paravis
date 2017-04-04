@@ -241,7 +241,7 @@
       </IntVectorProperty>
     </SourceProxy>
 
-    <SourceProxy name="ELNOMesh" class="vtkELNOMeshFilter" label="ELNO Mesh">
+    <SourceProxy name="ELNOMesh" class="vtkELNOMeshFilter" label="ELNO field To Surface">
       <Documentation
           long_help="Create a Mesh with ELNO values mapped at each vertex."
           short_help="Create a Mesh with ELNO values mapped at each vertex.">
@@ -273,7 +273,7 @@
       </Hints>
     </SourceProxy>
 
-    <SourceProxy name="ELNOSurface" class="vtkELNOSurfaceFilter" label="ELNO Surface">
+    <SourceProxy name="ELNOSurface" class="vtkELNOSurfaceFilter" label="ELNO field To Surface (skin only)">
       <Documentation
         long_help="Extract the surface of a dataset with ELNO values."
         short_help="Extract the surface of a dataset with ELNO values.">
@@ -318,7 +318,7 @@
       </Hints>
     </SourceProxy>
 
-    <SourceProxy name="GaussPoints" class="vtkMEDQuadraturePointsGenerator" label="Gauss Points">
+    <SourceProxy name="GaussPoints" class="vtkMEDQuadraturePointsGenerator" label="ELGA field To Point Sprite">
       <Documentation
         long_help="Create a point set with data at Gauss points."
         short_help="Create a point set with data at Gauss points.">
@@ -380,7 +380,7 @@
 
     </SourceProxy>
 
-    <SourceProxy name="ELNOPoints" class="vtkELNOFilter" label="ELNO Points">
+    <SourceProxy name="ELNOPoints" class="vtkELNOFilter" label="ELNO field To Point Sprite">
       <Documentation
         long_help="Create a point set with data at ELNO points. Cells are shrinked by a given factor towards the cell center."
         short_help="Create a point set with data at ELNO points. Cells are shrinked by a given factor towards the cell center.">

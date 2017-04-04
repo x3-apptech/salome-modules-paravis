@@ -51,7 +51,7 @@ RenderView1.CameraPosition = [1.0, 0.5, 10000.0]
 
 RenderView1.CameraPosition = [1.0, 0.5, 4.319751617610021]
 
-ELNOMesh3 = ELNOMesh(Input=testMEDReader13_med)
+ELNOfieldToSurface3 = ELNOfieldToSurface(Input=testMEDReader13_med)
 
 DataRepresentation2 = Show()
 #DataRepresentation2.ConstantRadius = 1.9999333620071411
