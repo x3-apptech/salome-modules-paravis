@@ -77,7 +77,7 @@ vtkBlockColorsLUT = GetColorTransferFunction('vtkBlockColors')
 vtkBlockColorsPWF = GetOpacityTransferFunction('vtkBlockColors')
 
 # create a new 'ELNO Mesh'
-eLNOMesh1 = ELNOMesh(Input=testTotomed)
+eLNOMesh1 = ELNOfieldToSurface(Input=testTotomed)
 
 # Properties modified on eLNOMesh1
 eLNOMesh1.ShrinkFactor = 0.5 # <- test is here !!!!!!!!

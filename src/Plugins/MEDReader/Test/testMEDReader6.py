@@ -22,7 +22,7 @@
 from MEDLoader import *
 
 """ This test generate a GaussPoint field on a mesh with groups.
-The aim of this test is to check that the ExtractGroup works well for GaussPoints
+The aim of this test is to check that the ExtractGroup works well for ELGAfieldToPointSprite
 """
 
 fname="testMEDReader6.med"
@@ -65,10 +65,10 @@ ExtractGroup1 = ExtractGroup(Input=myMedReader)
 ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups = ['GRP_grp0']
 
-GaussPoints1 = GaussPoints(Input=ExtractGroup1)
-GaussPoints1.SelectSourceArray = ['CELLS','ELGA@0']
+ELGAfieldToPointSprite1 = ELGAfieldToPointSprite(Input=ExtractGroup1)
+ELGAfieldToPointSprite1.SelectSourceArray = ['CELLS','ELGA@0']
 
-Glyph1 = Glyph( Input=GaussPoints1, GlyphType="Sphere", GlyphTransform="Transform2" )
+Glyph1 = Glyph( Input=ELGAfieldToPointSprite1, GlyphType="Sphere", GlyphTransform="Transform2" )
 Glyph1.GlyphType = "Sphere"
 Glyph1.Vectors = ['POINTS', '']
 Glyph1.ScaleFactor = 0.29

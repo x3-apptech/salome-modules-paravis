@@ -57,6 +57,11 @@
 #include "vtkMultiBlockDataGroupFilter.h"
 #include "vtkCompositeDataToUnstructuredGridFilter.h"
 
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
 #include <map>
 #include <deque>
 #include <sstream>

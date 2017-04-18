@@ -1,6 +1,6 @@
 <ServerManagerConfiguration>
   <ProxyGroup name="filters">
-    <SourceProxy name="SimpleMode" class="vtkSimpleMode" label="Simple Mode">
+    <SourceProxy name="SimpleMode" class="vtkSimpleMode" label="Normal modes animation (real)">
      <InputProperty name="Input" command="SetInputConnection">
        <ProxyGroupDomain name="groups">
          <Group name="sources"/>
@@ -66,7 +66,9 @@ Select the array that represents the requested mode.
         <DoubleRangeDomain max="1" min="0" name="range" />
         <Documentation>The value of this property sets the scale factor applied for all nodes displacement.</Documentation>
       </DoubleVectorProperty>
-
+      <Hints>
+        <ShowInMenu category="Mechanics" />
+      </Hints>
     </SourceProxy>
   </ProxyGroup>
 </ServerManagerConfiguration>
