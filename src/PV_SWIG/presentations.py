@@ -30,7 +30,6 @@ import os
 import re
 import warnings
 from math import sqrt, sin, cos, radians
-from string import upper
 
 # Do not use pv as a short name.
 # It is a name of function from numpy and may be redefined implicitly by 'from numpy import *' call.
