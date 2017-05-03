@@ -100,8 +100,8 @@ ColorBy(testMEDReader20medDisplay, ('CELLS', 'Field'))
 # rescale color and/or opacity maps used to include current data range
 testMEDReader20medDisplay.RescaleTransferFunctionToDataRange(True)
 
-# show color bar/color legend
-testMEDReader20medDisplay.SetScalarBarVisibility(renderView1, True)
+# do not show color bar/color legend
+testMEDReader20medDisplay.SetScalarBarVisibility(renderView1, False)
 
 # get color transfer function/color map for 'Field'
 fieldLUT = GetColorTransferFunction('Field')

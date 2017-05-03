@@ -61,14 +61,12 @@ zeNameLUT.VectorMode = 'Component'
 glyph1Display=Show(glyph1,renderView1)
 glyph1Display.ColorArrayName = ['POINTS', 'FamilyIdNode']
 glyph1Display.LookupTable = zeNameLUT
-# show color bar/color legend
-glyph1Display.SetScalarBarVisibility(renderView1, True)
 # set scalar coloring
 ColorBy(glyph1Display, ('POINTS', 'zeName'))
 # rescale color and/or opacity maps used to include current data range
 glyph1Display.RescaleTransferFunctionToDataRange(True)
-# show color bar/color legend
-glyph1Display.SetScalarBarVisibility(renderView1, True)
+# do not show color bar/color legend
+glyph1Display.SetScalarBarVisibility(renderView1, False)
 #
 renderView1.ViewSize =[300,300]
 renderView1.GetRenderWindow().DoubleBufferOff()

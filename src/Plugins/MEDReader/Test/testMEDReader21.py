@@ -67,8 +67,8 @@ renderView1.CameraViewUp = [1.0, 1.0, 0.0]
 # set scalar coloring
 ColorBy(testTotomedDisplay, ('FIELD', 'vtkBlockColors'))
 
-# show color bar/color legend
-testTotomedDisplay.SetScalarBarVisibility(renderView1, True)
+# hide color bar/color legend
+testTotomedDisplay.SetScalarBarVisibility(renderView1, False)
 
 # get color transfer function/color map for 'vtkBlockColors'
 vtkBlockColorsLUT = GetColorTransferFunction('vtkBlockColors')
@@ -135,8 +135,8 @@ glyph1Display.ColorArrayName = ['POINTS', 'MyField']
 glyph1Display.LookupTable = myFieldLUT
 glyph1Display.GlyphType = 'Arrow'
 
-# show color bar/color legend
-glyph1Display.SetScalarBarVisibility(renderView1, True)
+# hide color bar/color legend
+glyph1Display.SetScalarBarVisibility(renderView1, False)
 
 #### saving camera placements for all active views
 
