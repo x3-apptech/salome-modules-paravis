@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,21 +17,12 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-# Patch for ParaView
-# cp ParaView-3.98.1/VTK/CMake/*.cmake ParaView-3.98.1_INSTALL/lib/cmake/paraview-3.98
-
-# Env for MEDReader
-#setenv PV_PLUGIN_PATH ".../MEDReader_INSTALL/lib/paraview"
-#setenv LD_LIBRARY_PATH ...MEDReader_INSTALL/lib/salome:${LD_LIBRARY_PATH}
-
-# Typical cmake command
-# cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=PATH_TO/MEDReader_INSTALL ../MEDReader_SRC  \ 
-#       -DMEDFILE_ROOT_DIR=/where/is/med-3.0.7_install -DMEDCOUPLING_ROOT_DIR=/where/is/medcoupling_install \ 
-#       -DParaView_DIR=<PARAVIEW_INSTALL>/lib/cmake/paraview-4.3 
+# (cd /home/H87074/salome/DEV/modules/build/MEDReader ; export CURRENT_SOFTWARE_SRC_DIR=/home/H87074/salome/DEV/modules/src/PARAVIS ; export CURRENT_SOFTWARE_BUILD_DIR=/home/H87074/salome/DEV/modules/build/PARAVIS_master ; export CURRENT_SOFTWARE_INSTALL_DIR=/home/H87074/salome/DEV/modules/install/PARAVIS_master ; export PYTHON_VERSION="2.7" ; . /home/H87074/salome/DEV/modules/build/PARAVIS_master/.yamm/env_build.sh >/dev/null 2>&1 ; . /home/H87074/salome/DEV/salome_modules.sh >/dev/null 2>&1 ; . /home/H87074/salome/DEV/salome_prerequisites.sh >/dev/null 2>&1 ; export PARAVIEW_INSTALL_DIR="/home/H87074/salome/prerequisites/install/Paraview-v512_EDF-cm362-dox1831-gl2ps139-gr2380-hd1814-xml2290-py2710-qt561" ;  cmake -DCMAKE_INSTALL_PREFIX=/home/H87074/salome/DEV/modules/install/PARAVIS_master  -DPYTHON_ROOT_DIR=${PYTHONHOME}  -DSALOME_PARAVIS_MINIMAL_CORBA=ON   -DCMAKE_BUILD_TYPE=Debug -DSALOME_PARAVIS_MINIMAL_CORBA=ON -DMEDCOUPLING_ROOT_DIR=/home/H87074/salome/DEV/tools/install/Medcoupling-master /home/H87074/salome/DEV/modules/src/PARAVIS/src/Plugins/MEDReader)
 
 IF(NOT KW_TESTING_PLATFORM)
-PROJECT(MEDReader)
+PROJECT(MEDReader C CXX)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+INCLUDE(CMakeDependentOption)
 ENDIF(NOT KW_TESTING_PLATFORM)
 
 IF(COMMAND cmake_policy)
@@ -48,6 +39,47 @@ SET(MED_READER_VERSION "${MED_READER_MAJOR_VERSION}.${MED_READER_MINOR_VERSION}.
 #
 SET(MEDReader_BUILD_ParaView_Plugin ON CACHE BOOL "Build the ParaView plugin")
 
+  
+# Ensure a proper linker behavior:
+CMAKE_POLICY(SET CMP0003 NEW)
+CMAKE_POLICY(SET CMP0045 OLD)
+CMAKE_POLICY(SET CMP0023 OLD)
+CMAKE_POLICY(SET CMP0022 OLD)
+IF(WIN32)
+  CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib 
+ENDIF(WIN32)
+
+# Common CMake macros
+# ===================
+SET(CONFIGURATION_ROOT_DIR $ENV{CONFIGURATION_ROOT_DIR} CACHE PATH "Path to the Salome CMake configuration files")
+IF(EXISTS ${CONFIGURATION_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${CONFIGURATION_ROOT_DIR}/cmake")
+  INCLUDE(SalomeMacros)
+ELSE()
+  MESSAGE(FATAL_ERROR "We absolutely need the Salome CMake configuration files, please define CONFIGURATION_ROOT_DIR !")
+ENDIF()
+
+SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "Path to the MEDCoupling tool")
+IF(EXISTS ${MEDCOUPLING_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")   
+ENDIF()
+	
+# Platform setup
+# ==============
+INCLUDE(SalomeSetupPlatform)
+SET(BUILD_SHARED_LIBS TRUE)
+
+FIND_PACKAGE(SalomePythonInterp REQUIRED)
+FIND_PACKAGE(SalomePythonLibs REQUIRED)
+FIND_PACKAGE(SalomeHDF5 REQUIRED)
+FIND_PACKAGE(SalomeMEDCoupling REQUIRED)
+FIND_PACKAGE(SalomeMEDFile REQUIRED)
+
+SALOME_ACCUMULATE_ENVIRONMENT(PYTHONPATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_BINS}
+                                                 ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_PYTHON})
+SALOME_ACCUMULATE_ENVIRONMENT(LD_LIBRARY_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_LIBS})
+SALOME_ACCUMULATE_ENVIRONMENT(PV_PLUGIN_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/lib/paraview)
+
 IF(MEDReader_BUILD_ParaView_Plugin)
     FIND_PACKAGE(ParaView REQUIRED)
     IF(NOT ParaView_FOUND)
@@ -63,24 +95,9 @@ ELSE(MEDReader_BUILD_ParaView_Plugin)
     ENDIF(NOT VTK_FOUND)
     INCLUDE(${VTK_USE_FILE})
 ENDIF(MEDReader_BUILD_ParaView_Plugin)
-
-# Standard CMake option for building libraries shared or static by default.
-OPTION(BUILD_SHARED_LIBS "Build with shared libraries." ${VTK_BUILD_SHARED_LIBS})
-#
-# Find dependant Library
-#
-SET(KERNEL_ROOT_DIR $ENV{KERNEL_ROOT_DIR} CACHE PATH "KERNEL_ROOT_DIR")
-SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "MEDCOUPLING_ROOT_DIR")
-#LIST(APPEND CMAKE_MODULE_PATH "${MED_ROOT_DIR}/adm_local_without_kernel/cmake_files")
-LIST(APPEND CMAKE_MODULE_PATH "${KERNEL_ROOT_DIR}/salome_adm/cmake_files")
-LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
-INCLUDE(SalomeMacros)
-INCLUDE(SalomeSetupPlatform)
-FIND_PACKAGE(SalomePythonInterp REQUIRED)
-FIND_PACKAGE(SalomePythonLibs REQUIRED)
-FIND_PACKAGE(SalomeHDF5 REQUIRED)
-FIND_PACKAGE(SalomeMEDCoupling REQUIRED)
-FIND_PACKAGE(SalomeMEDFile REQUIRED)
+ 
+FIND_PACKAGE(SalomeQt5 REQUIRED)
+INCLUDE(UseQtExt)
 
 # Accumulate environment variables for PARAVIS module
 SALOME_ACCUMULATE_ENVIRONMENT(PYTHONPATH NOCHECK ${CMAKE_INSTALL_PREFIX}/${SALOME_INSTALL_BINS}
