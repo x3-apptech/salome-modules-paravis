@@ -133,7 +133,7 @@ renderView1=GetActiveViewOrCreate('RenderView')
 for entry in [[ExpectedEntries[0]],[ExpectedEntries[1]],[ExpectedEntries[2],ExpectedEntries[3]],[ExpectedEntries[4]]]:
     reader=MEDReader(FileName=fname)
     reader.AllArrays=entry
-    gaussPoints=GaussPoints(Input=reader)
+    gaussPoints=ELGAfieldToPointSprite(Input=reader)
     gaussPoints.SelectSourceArray="ELGA@0"
     Show(gaussPoints,renderView1)
     pass

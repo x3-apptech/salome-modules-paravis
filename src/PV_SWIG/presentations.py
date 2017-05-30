@@ -2316,7 +2316,7 @@ def GaussPointsOnField1(proxy, entity, field_name,
     proxy.UpdatePipeline(time=time_value)
 
     # Create Gauss Points object
-    source = pvs.GaussPoints(proxy)
+    source = pvs.ELGAfieldToPointSprite(proxy)
     source.UpdatePipeline()
 
     # Get Gauss Points representation object

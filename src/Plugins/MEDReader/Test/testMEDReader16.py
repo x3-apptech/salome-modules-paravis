@@ -21,7 +21,7 @@
 
 from MEDLoader import *
 
-""" This test is a non regression test of EDF8662 : This bug revealed that ELNOMesh and ELNOPoints do not behave correctly after the call of ExtractGroup"""
+""" This test is a non regression test of EDF8662 : This bug revealed that ELNOfieldToSurface and ELNOfieldToPointSprite do not behave correctly after the call of ExtractGroup"""
 
 fname="testMEDReader16.med"
 
@@ -50,11 +50,11 @@ reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
 ExtractGroup1 = ExtractGroup(Input=reader)
 ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
-ELNOMesh1=ELNOMesh(Input=ExtractGroup1)
-ELNOPoints1=ELNOPoints(Input=ExtractGroup1)
-ELNOPoints1.SelectSourceArray=['ELNO@MyField']
-for elt in [ELNOMesh1,ELNOPoints1]:
-    elnoMesh=servermanager.Fetch(ELNOPoints1,0)
+ELNOfieldToSurface1=ELNOfieldToSurface(Input=ExtractGroup1)
+ELNOfieldToPointSprite1=ELNOfieldToPointSprite(Input=ExtractGroup1)
+ELNOfieldToPointSprite1.SelectSourceArray=['ELNO@MyField']
+for elt in [ELNOfieldToSurface1,ELNOfieldToPointSprite1]:
+    elnoMesh=servermanager.Fetch(ELNOfieldToPointSprite1,0)
     vtkArrToTest=elnoMesh.GetBlock(0).GetPointData().GetArray("MyField")
     assert(vtkArrToTest.GetNumberOfTuples()==8)
     assert(vtkArrToTest.GetNumberOfComponents()==2)
@@ -65,8 +65,8 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     pass
 #
 ExtractGroup1.AllGroups=["GRP_grp2"]
-for elt in [ELNOMesh1,ELNOPoints1]:
-    elnoMesh=servermanager.Fetch(ELNOMesh1)
+for elt in [ELNOfieldToSurface1,ELNOfieldToPointSprite1]:
+    elnoMesh=servermanager.Fetch(ELNOfieldToSurface1)
     vtkArrToTest=elnoMesh.GetBlock(0).GetPointData().GetArray("MyField")
     assert(vtkArrToTest.GetNumberOfTuples()==8)
     assert(vtkArrToTest.GetNumberOfComponents()==2)
@@ -77,8 +77,8 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     pass
 # important to check that if all the field is present that it is OK (check of the optimization)
 ExtractGroup1.AllGroups=["GRP_grp3"]
-for elt in [ELNOMesh1,ELNOPoints1]:
-    elnoMesh=servermanager.Fetch(ELNOMesh1)
+for elt in [ELNOfieldToSurface1,ELNOfieldToPointSprite1]:
+    elnoMesh=servermanager.Fetch(ELNOfieldToSurface1)
     vtkArrToTest=elnoMesh.GetBlock(0).GetPointData().GetArray("MyField")
     assert(vtkArrToTest.GetNumberOfTuples()==16)
     assert(vtkArrToTest.GetNumberOfComponents()==2)
@@ -87,11 +87,11 @@ for elt in [ELNOMesh1,ELNOPoints1]:
     vals=[vtkArrToTest.GetValue(i) for i in xrange(32)]
     assert(arr2.isEqualWithoutConsideringStr(DataArrayDouble(vals,16,2),1e-12))
     pass
-ELNOMesh1=ELNOMesh(Input=reader)
-ELNOPoints1=ELNOPoints(Input=reader)
-ELNOPoints1.SelectSourceArray=['ELNO@MyField']
-for elt in [ELNOMesh1,ELNOPoints1]:
-    elnoMesh=servermanager.Fetch(ELNOMesh1)
+ELNOfieldToSurface1=ELNOfieldToSurface(Input=reader)
+ELNOfieldToPointSprite1=ELNOfieldToPointSprite(Input=reader)
+ELNOfieldToPointSprite1.SelectSourceArray=['ELNO@MyField']
+for elt in [ELNOfieldToSurface1,ELNOfieldToPointSprite1]:
+    elnoMesh=servermanager.Fetch(ELNOfieldToSurface1)
     vtkArrToTest=elnoMesh.GetBlock(0).GetPointData().GetArray("MyField")
     assert(vtkArrToTest.GetNumberOfTuples()==16)
     assert(vtkArrToTest.GetNumberOfComponents()==2)
