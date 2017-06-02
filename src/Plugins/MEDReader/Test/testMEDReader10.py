@@ -1,5 +1,5 @@
 #  -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2007-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -120,5 +120,5 @@ baseline_file = os.path.join(baselinePath, "testMEDReader10.png")
 import vtk.test.Testing
 vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
 vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=25)
+                                                            threshold=1)
 vtk.test.Testing.interact()
