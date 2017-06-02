@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(TEST_NUMBERS 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21)
+INCLUDE(tests.set)
 
 IF(NOT SALOME_INSTALL_SCRIPT_SCRIPTS)
   SET(SALOME_INSTALL_SCRIPT_SCRIPTS "bin/salome")
@@ -111,3 +111,4 @@ ENDFOREACH()
 INSTALL(FILES CTestTestfileInstall.cmake
         DESTINATION ${TEST_INSTALL_DIRECTORY}
         RENAME CTestTestfile.cmake)
+INSTALL(FILES tests.set DESTINATION ${TEST_INSTALL_DIRECTORY})
