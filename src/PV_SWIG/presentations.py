@@ -904,7 +904,8 @@ def add_scalar_bar(field_name, nb_components,
     scalar_bar.LookupTable = lookup_table
 
     # Set default properties same as in Post-Pro
-    scalar_bar.NumberOfLabels = 5
+    # NumberOfLabels removed (see commit ff8f9cb6 in PARAVIEW)
+    # scalar_bar.NumberOfLabels = 5
     scalar_bar.AutomaticLabelFormat = 0
     scalar_bar.LabelFormat = '%-#6.6g'
     # Title
