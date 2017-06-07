@@ -110,19 +110,21 @@ bar.Position = [-1, -1]
 print("Position =", bar.Position)
 
 # 8. Size of scalar bar
-print("Default Height=", bar.Position2[1],"  :  Width=", bar.Position2[0])
+print("Default Length=", bar.ScalarBarLength,"  :  Thickness=", bar.ScalarBarThickness)
 
 print("Set positive Height and Width")
 h = 0.4
-w = 0.2
-bar.Position2 = [w, h]
-print("Size =", bar.Position2)
+w = 0.2 * 600 * 0.4
+bar.ScalarBarLength = h
+bar.ScalarBarThickness = int(w)
+print("Length=", bar.ScalarBarLength,"  :  Thickness=", bar.ScalarBarThickness)
 
 print("Set negative Height and Width")
 h = -0.4
-w = -0.2
-bar.Position2 = [w, h]
-print("Size =", bar.Position2)
+w = -0.2 * 600 * 0.4
+bar.ScalarBarLength = h
+bar.ScalarBarThickness = int(w)
+print("Length=", bar.ScalarBarLength,"  :  Thickness=", bar.ScalarBarThickness)
 
 # 9. Number of colors
 print("Default number of colors = ", scalarmap.LookupTable.NumberOfTableValues)
@@ -144,23 +146,25 @@ nb_colors = 256
 scalarmap.LookupTable.NumberOfTableValues = nb_colors
 print("Number of colors =", scalarmap.LookupTable.NumberOfTableValues)
 
+# NumberOfLabels no longer exists since Paraview 5.4
+
 # 10. Number of labels
-print("Default number of labels = ", bar.NumberOfLabels)
+# print("Default number of labels = ", bar.NumberOfLabels)
 
-print("Set negative number of labels")
-nb_labels = -10
-bar.NumberOfLabels = nb_labels
-print("Number of labels=", bar.NumberOfLabels)
+#print("Set negative number of labels")
+#nb_labels = -10
+#bar.NumberOfLabels = nb_labels
+#print("Number of labels=", bar.NumberOfLabels)
 
-print("Set zero number of labels")
-nb_labels = 0
-bar.NumberOfLabels = nb_labels
-print("Number of labels=", bar.NumberOfLabels)
+#print("Set zero number of labels")
+#nb_labels = 0
+#bar.NumberOfLabels = nb_labels
+#print("Number of labels=", bar.NumberOfLabels)
 
-print("Set positive number of labels")
-nb_labels = 10
-bar.NumberOfLabels = nb_labels
-print("Number of labels=", bar.NumberOfLabels)
+#print("Set positive number of labels")
+#nb_labels = 10
+#bar.NumberOfLabels = nb_labels
+#print("Number of labels=", bar.NumberOfLabels)
 
 # 11. Scalar bar title
 print('Default Title ="', bar.Title, '"')

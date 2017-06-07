@@ -60,16 +60,17 @@ bar.Position = [0.01, 0.01]
 error = error + compare_lists(bar.Position, [0.01, 0.01])
 
 # Scalar bar size
-bar.Position2 = [0.05, 0.5]
-error = error + compare_lists(bar.Position2, [0.05, 0.5])
+#bar.Position2 = [0.05, 0.5]
+#error = error + compare_lists(bar.Position2, [0.05, 0.5])
 
 # Number of colors and labels
 smondefshape.LookupTable.NumberOfTableValues = 4
-bar.NumberOfLabels = 5
+#bar.NumberOfLabels = 5
 
 nb_colors = smondefshape.LookupTable.NumberOfTableValues
-nb_labels = bar.NumberOfLabels
-error = error + compare_lists([nb_colors, nb_labels], [4, 5])
+#nb_labels = bar.NumberOfLabels
+#error = error + compare_lists([nb_colors, nb_labels], [4, 5])
+error = error + compare_lists([nb_colors], [4])
 
 # Title
 bar.Title = 'Pression, Pa'

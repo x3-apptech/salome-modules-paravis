@@ -48,7 +48,7 @@ if bar.Orientation != 'Vertical':
    error = error+1
 
 error = error + compare_lists(bar.Position, [0.85, 0.05])
-error = error + compare_lists(bar.Position2, [0.12, 0.43])
+#error = error + compare_lists(bar.Position2, [0.12, 0.43])
 
 if error > 0:
     raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

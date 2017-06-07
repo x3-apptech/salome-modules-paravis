@@ -58,7 +58,7 @@ else:
     bar = get_bar()
     bar.Orientation = 'Horizontal'
     bar.Position = [0.1, 0.1]
-    bar.Position2 = [0.1, 0.25]
+#    bar.Position2 = [0.1, 0.25]
     bar.AspectRatio = 3
 
     display_only(scalarmap, view)

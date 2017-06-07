@@ -57,8 +57,8 @@ scalarmap.LookupTable.UseLogScale = settings["UseLogScale"]
 
 bar = get_bar()
 bar.Position = settings["Position"]
-bar.Position2 = settings["Size"]
-bar.NumberOfLabels = settings["NbLabels"]
+#bar.Position2 = settings["Size"]
+#bar.NumberOfLabels = settings["NbLabels"]
 bar.Title = settings["Title"]
 bar.Orientation = settings["Orientation"]
 
@@ -113,15 +113,15 @@ if abs(pos_y - settings["Position"][1]) > tolerance:
     errors += 1
 
 # Size of scalar bar
-width  = recreated_bar.Position2[0]
-height = recreated_bar.Position2[1]
+#width  = recreated_bar.Position2[0]
+#height = recreated_bar.Position2[1]
 
-if abs(width - settings["Size"][0]) > tolerance:
-    print("ERROR!!! Width of scalar bar is incorrect: ",  width, " instead of ", settings["Size"][0])
-    errors += 1
-if abs(height - settings["Size"][1]) > tolerance:
-    print("ERROR!!! Height of scalar bar is incorrect: ",  height, " instead of ", settings["Size"][1])
-    errors += 1
+#if abs(width - settings["Size"][0]) > tolerance:
+#    print("ERROR!!! Width of scalar bar is incorrect: ",  width, " instead of ", settings["Size"][0])
+#    errors += 1
+#if abs(height - settings["Size"][1]) > tolerance:
+#    print("ERROR!!! Height of scalar bar is incorrect: ",  height, " instead of ", settings["Size"][1])
+#    errors += 1
 
 # Discretize
 discretize = recreated_scalarmap.LookupTable.Discretize
@@ -136,10 +136,10 @@ if nb_colors != settings["NbColors"]:
     errors += 1
 
 # Number of labels
-nb_labels = recreated_bar.NumberOfLabels
-if nb_labels != settings["NbLabels"]:
-    print("ERROR!!! Number of labels of scalar bar is incorrect: ",  nb_labels, " instead of ", settings["NbLabels"])
-    errors += 1
+#nb_labels = recreated_bar.NumberOfLabels
+#if nb_labels != settings["NbLabels"]:
+#    print("ERROR!!! Number of labels of scalar bar is incorrect: ",  nb_labels, " instead of ", settings["NbLabels"])
+#    errors += 1
 
 # Title
 title = recreated_bar.Title

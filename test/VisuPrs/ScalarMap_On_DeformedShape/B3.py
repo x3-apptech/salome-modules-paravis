@@ -150,18 +150,19 @@ pvsimple.Render(view)
 
 #============Stage8: bar size of Scalar Map On Deformed Shape===========
 print("Changing bar size:")
-print("Default [width, height]: ", bar.Position2)
+print("Default ScalarBarLength: ", bar.ScalarBarLength)
+print("Default ScalarBarThickness: ", bar.ScalarBarThickness)
 
-print("Set height = height*1.2")
-height = bar.Position2[1] * 1.2
-bar.Position2[1] = height
-print("Bar [width, height]: ", bar.Position2)
+print("Set length = length*1.2")
+length = bar.ScalarBarLength * 1.2
+bar.ScalarBarLength = length
+print("Bar length: ", bar.ScalarBarLength)
 pvsimple.Render(view)
 
-print("Set width = width*2")
-width = bar.Position2[0] * 2
-bar.Position2[0] = width
-print("Bar [width, height]: ", bar.Position2)
+print("Set thickness = thickness*2")
+thickness = bar.ScalarBarThickness * 2
+bar.ScalarBarThickness = thickness
+print("Bar thickness: ", bar.ScalarBarThickness)
 pvsimple.Render(view)
 
 #=============Stage9: nb of colors of Scalar Map On Deformed Shape======
@@ -187,27 +188,28 @@ lt.NumberOfTableValues = num
 print("Number of colors: ", lt.NumberOfTableValues)
 pvsimple.Render(view)
 
+# NumberOfLabels no longer exists in Paraview 5.4
 #=============Stage10: nb of labels of Scalar Map On Deformed Shape=====
-print("Changing number of labels:")
-print("Default number of labels: ", bar.NumberOfLabels)
+#print("Changing number of labels:")
+#print("Default number of labels: ", bar.NumberOfLabels)
 
-print("Set negative number of labels")
-num = -128
-bar.NumberOfLabels = num
-print("Number of labels: ", bar.NumberOfLabels)
-pvsimple.Render(view)
+#print("Set negative number of labels")
+#num = -128
+#bar.NumberOfLabels = num
+#print("Number of labels: ", bar.NumberOfLabels)
+#pvsimple.Render(view)
 
-print("Set zero number of labels")
-num = 0
-bar.NumberOfLabels = num
-print("Number of labels: ", bar.NumberOfLabels)
-pvsimple.Render(view)
+#print("Set zero number of labels")
+#num = 0
+#bar.NumberOfLabels = num
+#print("Number of labels: ", bar.NumberOfLabels)
+#pvsimple.Render(view)
 
-print("Set positive number of labels")
-num = 256
-bar.NumberOfLabels = num
-print("Number of labels: ", bar.NumberOfLabels)
-pvsimple.Render(view)
+#print("Set positive number of labels")
+#num = 256
+#bar.NumberOfLabels = num
+#print("Number of labels: ", bar.NumberOfLabels)
+#pvsimple.Render(view)
 
 #=============Stage11: bar title of Scalar Map On Deformed Shape=========
 print("Changing bar title:")
