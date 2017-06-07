@@ -2,7 +2,7 @@ def create_geometry(out_filename=None):
   import GEOM
   import salome
   from salome.geom import geomBuilder
-  geompy = geomBuilder.New(salome.myStudy)
+  geompy = geomBuilder.New()
 
   # create a cloud of points
   points = [
@@ -29,7 +29,7 @@ def create_meshes(geometry, out_filename=None):
   import salome
   from salome.smesh import smeshBuilder
 
-  smesh = smeshBuilder.New(salome.myStudy)
+  smesh = smeshBuilder.New()
   Mesh_tri = smesh.Mesh(geometry)
 
   Regular_1D = Mesh_tri.Segment()

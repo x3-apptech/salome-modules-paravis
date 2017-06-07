@@ -32,7 +32,6 @@
             <component-author>vsv</component-author>
             <component-version>@SALOMEPARAVIS_VERSION@</component-version>
             <component-comment>PVServer control service</component-comment>
-            <component-multistudy>1</component-multistudy>
             <component-impltype>1</component-impltype>
             <component-icone>pqAppIcon22.png</component-icone>
             <constraint></constraint>

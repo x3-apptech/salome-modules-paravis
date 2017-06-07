@@ -42,11 +42,9 @@ import salome
 # run Salome
 #salome_session = SalomeSession()
 salome.salome_init()
-salome.myStudyManager.Close(salome.myStudy)
 
 file_name = os.path.join(os.path.dirname(sys.argv[0]), "test1.hdf")
-opened_study = salome.myStudyManager.Open(file_name)
-salome.myStudy = opened_study
+salome.myStudy.Open(file_name)
 
 # 3. Find IsoSurfaces
 from pvsimple import *

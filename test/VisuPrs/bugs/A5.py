@@ -28,7 +28,6 @@ import pvsimple
 
 salome.salome_init()
 myStudy = salome.myStudy
-myStudyManager = salome.myStudyManager
 
 data_file = datadir + "TimeStamps.med"
 
@@ -41,11 +40,9 @@ save_file = os.path.join(tmp_dir, "TimeStamps_save.hdf")
 print "Save to file ", save_file
 
 pvsimple.OpenDataFile(data_file)
-myStudyManager.SaveAs(save_file, myStudy, 0)
-myStudyManager.Close(myStudy)
+myStudy.SaveAs(save_file, 0, 0)
 
-openedStudy = myStudyManager.Open(data_file)
-myStudyManager.Close(openedStudy)
+myStudy.Open(data_file)
 
 os.remove(save_file)
 
