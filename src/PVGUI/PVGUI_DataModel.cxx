@@ -45,7 +45,6 @@
 // ParaView include
 #include <pqApplicationCore.h>
 #include <pqServer.h>
-#include <pqFixPathsInStateFilesBehavior.h>
 
 const QString PVGUI_DataModel::RESTORE_FLAG_FILE = "do_restore_paravis_references.par";
 
@@ -265,9 +264,7 @@ bool PVGUI_DataModel::open( const QString& theName, CAM_Study* theStudy, QString
               processAllFilesInState(aFullPath, srcFilesEmpty, aTmpDir.toStdString().c_str(), true);
             }
 
-          pqFixPathsInStateFilesBehavior::blockDialog(true);
           mod->loadParaviewState(aFullPath);
-          pqFixPathsInStateFilesBehavior::blockDialog(false);
           ret = true;
         }
       ret = true;
