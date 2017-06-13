@@ -19,5 +19,9 @@
 # Author : Anthony Geay (EDF R&D)
 
 VTK_MODULE_LIBRARY(vtkSimpleMode vtkSimpleMode.cxx)
-TARGET_LINK_LIBRARIES(vtkSimpleMode vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore vtkRenderingOpenGL ${PARAVIEW_LIBRARIES})
+IF(${SALOME_GUI_USE_OPENGL2})
+  TARGET_LINK_LIBRARIES(vtkSimpleMode vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore vtkRenderingOpenGL2 ${PARAVIEW_LIBRARIES})
+ELSE()
+  TARGET_LINK_LIBRARIES(vtkSimpleMode vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore vtkRenderingOpenGL ${PARAVIEW_LIBRARIES})
+ENDIF()
 INSTALL(TARGETS vtkSimpleMode RUNTIME DESTINATION lib/salome LIBRARY DESTINATION lib/salome ARCHIVE DESTINATION lib/salome)
