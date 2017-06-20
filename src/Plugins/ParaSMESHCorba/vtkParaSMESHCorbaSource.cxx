@@ -20,7 +20,6 @@
 #include "vtkParaSMESHCorbaSource.h"
 
 #include <SALOME_LifeCycleCORBA.hxx>
-#include <SalomeApp_Application.h>
 
 #include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkInformationVector.h"

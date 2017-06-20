@@ -38,8 +38,9 @@ PROJECT( ParaGEOMCorba )
     TARGET_LINK_LIBRARIES(ParaGEOMCorbaPlugin
       ${OMNIORB_LIBRARIES}
       ${KERNEL_SalomeIDLKernel}
-      ${GUI_SalomeApp}
-	  ${GEOM_GEOMClient}
+      ${KERNEL_SalomeLifeCycleCORBA}
+      ${KERNEL_SalomeNS}
+      ${GEOM_GEOMClient}
       ${GEOM_SalomeIDLGEOM}
       ${GEOM_OCC2VTK}
   )
