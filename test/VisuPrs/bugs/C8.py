@@ -26,14 +26,14 @@ import pvsimple
 # 1. Import table from file
 file_path = tablesdir + "tables_test.xls"
 
-print 'Import tables_test.xls ....',
+print('Import tables_test.xls ....', end=' ')
 file_path = tablesdir + "tables_test.xls"
 table_reader = pvsimple.TableReader(FileName=file_path)
 table_reader.UpdatePipeline()
 if table_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Show curves
 cur_view = pvsimple.GetRenderView()
@@ -44,12 +44,12 @@ xy_view = pvsimple.CreateXYPlotView()
 xy_view.ChartTitle = "The viewer for Curves from the Table"
 
 
-print 'Get available tables .....'
+print('Get available tables .....')
 available_tables = table_reader.GetPropertyValue("AvailableTables")
 if (available_tables is None) or (len(available_tables) == 0):
-    print "FAILED"
+    print("FAILED")
 else:
-    print available_tables
+    print(available_tables)
 
 for table in available_tables:
     table_reader.TableNumber = available_tables.GetData().index(table)

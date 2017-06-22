@@ -28,8 +28,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("CutPlanes/E6")
 
 file = datadir + "toto.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "CreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("CreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.CUTPLANES], picturedir, pictureext)

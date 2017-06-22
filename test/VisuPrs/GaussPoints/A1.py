@@ -46,7 +46,7 @@ if med_reader is None:
 # Create Gauss Points presentation
 prs = GaussPointsOnField(med_reader, EntityType.CELL, field_name, timestamp_nb)
 if prs is None:
-    raise RuntimeError, "Created presentation is None!!!"
+    raise RuntimeError("Created presentation is None!!!")
 
 # Display presentation and get snapshot
 view = pvsimple.GetRenderView()

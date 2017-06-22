@@ -30,26 +30,26 @@ picturedir = get_picture_dir("bugs/A6")
 med_file_path = datadir + "fra.med"
 
 # 1. Import MED file
-print 'Importing "fra.med"....',
+print('Importing "fra.med"....', end=' ')
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError, "Error"
+    raise RuntimeError("Error")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Create mesh
 mesh_names = get_mesh_full_names(med_reader)
 for mesh_name in [get_field_short_name(name) for name in mesh_names]:
-    print "Mesh name: ", mesh_name
+    print("Mesh name: ", mesh_name)
     mesh = MeshOnEntity(med_reader, mesh_name, EntityType.CELL)
     if mesh is None:
-        raise RuntimeError, "Error"
+        raise RuntimeError("Error")
 
     mesh.Representation = 'Wireframe'
 
     pic_path = os.path.join(picturedir, mesh_name + "_Cell." + pictureext)
     pic_path = re.sub("\s+","_", pic_path)
-    print "Save picture ", pic_path
+    print("Save picture ", pic_path)
     process_prs_for_test(mesh, pvsimple.GetRenderView(), pic_path)

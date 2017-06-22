@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "hydro_sea_alv.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -60,7 +60,7 @@ compare_prec = 0.00001
 
 field_name = 'Head'
 
-print "\nCreating iso surface.......",
+print("\nCreating iso surface.......", end=' ')
 iso_surf = IsoSurfacesOnField(proxy, EntityType.CELL, field_name, 1)
 if iso_surf is None:
     raise RuntimeError("Error!!! Presentation wasn't created...")
@@ -69,7 +69,7 @@ display_only(iso_surf, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 for reprCode in represents:
     repr = RepresentationType.get_name(reprCode)

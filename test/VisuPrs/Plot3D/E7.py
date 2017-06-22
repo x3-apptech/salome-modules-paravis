@@ -28,8 +28,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("Plot3D/E7")
 
 file = datadir + "couplex_alain.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "CreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("CreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.PLOT3D], picturedir, pictureext)

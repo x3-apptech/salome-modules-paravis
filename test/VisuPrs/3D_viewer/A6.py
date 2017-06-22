@@ -40,16 +40,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "cube_hexa8_quad4.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -63,7 +63,7 @@ shr_sm_on_ds = None
 
 field_name = 'fieldcelldouble'
 
-print "\nCreating scalar map on deformed shape.......",
+print("\nCreating scalar map on deformed shape.......", end=' ')
 sm_on_ds = DeformedShapeAndScalarMapOnField(proxy, EntityType.CELL,
 field_name, 1, scale_factor=0.2)
 if sm_on_ds is None:
@@ -73,7 +73,7 @@ display_only(sm_on_ds, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 
 for reprCode in represents:

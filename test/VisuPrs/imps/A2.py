@@ -32,18 +32,18 @@ field_name = "fieldnodedouble";
 timestamp = 1
 
 # 1. Import MED file
-print 'Import "pointe.med"....................',
+print('Import "pointe.med"....................', end=' ')
 med_file_path = datadir + med_file
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Create Scalar Map
-print "Build Scalar Map presentation"
+print("Build Scalar Map presentation")
 scalar_map = ScalarMapOnField(med_reader, entity, field_name, timestamp)
 
 display_only(scalar_map)
@@ -51,13 +51,13 @@ reset_view()
 time.sleep(sleep_delay)
 
 # 3. Set representation type to Point
-print "Set representation type to Point"
+print("Set representation type to Point")
 scalar_map.Representation = 'Points'
 pvsimple.Render()
 time.sleep(sleep_delay)
 
 # 4. Set representation type to Point Sprite
-print "Set Point Sprite representation"
+print("Set Point Sprite representation")
 scalar_map.Representation = 'Point Sprite'
 
 data_range = get_data_range(med_reader, entity,

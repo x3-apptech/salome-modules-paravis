@@ -28,8 +28,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("Vectors/A4")
 
 file = datadir + "Hexa8.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "CreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("CreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.VECTORS], picturedir, pictureext)

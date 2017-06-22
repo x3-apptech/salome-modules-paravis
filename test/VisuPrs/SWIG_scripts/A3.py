@@ -23,44 +23,44 @@ from paravistest import datadir
 from presentations import *
 import pvsimple
 
-print 'Importing "TimeStamps.med"...............',
+print('Importing "TimeStamps.med"...............', end=' ')
 file_path = datadir + "TimeStamps.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Creating Cut Lines........................",
+print("Creating Cut Lines........................", end=' ')
 med_field = "vitesse"
 cutlines = CutLinesOnField(med_reader, EntityType.NODE, med_field, 1,
                            nb_lines=20,
                            orientation1=Orientation.XY,
                            orientation2=Orientation.ZX)
 if cutlines is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Getting a viewer.........................",
+print("Getting a viewer.........................", end=' ')
 view = pvsimple.GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
     reset_view(view)
-    print "OK"
+    print("OK")
 
 cutlines.Visibility = 1
 view.ResetCamera()
 pvsimple.Render()
 
-print "Creating an Animation.....................",
+print("Creating an Animation.....................", end=' ')
 scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, med_field, 2)
 
 scene = pvsimple.AnimateReader(med_reader, view)
 if scene is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")

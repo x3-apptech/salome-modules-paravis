@@ -31,24 +31,24 @@ pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "Error!!! med file is not imported"
+    print("Error!!! med file is not imported")
     error = error+1
 
 # Create Scalar Map
 scalarmap = ScalarMapOnField(med_reader, EntityType.NODE, 'TAUX_DE_VIDE', 1);
 if scalarmap is None:
-    print "Error!!! ScalarMap is not created"
+    print("Error!!! ScalarMap is not created")
     error = error+1
 display_only(scalarmap)
 
 # Check Scalar bar default properties
 bar = get_bar()
 if bar.Orientation != 'Vertical':
-   print "Error!!! Default Scalar Bar Orientation is wrong - not vertical but ", scalarmap.Orientation
+   print("Error!!! Default Scalar Bar Orientation is wrong - not vertical but ", scalarmap.Orientation)
    error = error+1
 
 error = error + compare_lists(bar.Position, [0.85, 0.05])
-error = error + compare_lists(bar.Position2, [0.12, 0.43])
+#error = error + compare_lists(bar.Position2, [0.12, 0.43])
 
 if error > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

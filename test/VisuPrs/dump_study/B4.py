@@ -84,17 +84,17 @@ save_trace( path_to_save, text )
 delete_pv_object(table)
 
 # 4. Execution of the created script
-execfile(path_to_save)
+exec(compile(open(path_to_save).read(), path_to_save, 'exec'))
 
 # 5. Check the restored table
 table = FindSource(title)
 if table is None:
-    raise RuntimeError, "There is no table in the study (must be created by executed python script)!!!"
+    raise RuntimeError("There is no table in the study (must be created by executed python script)!!!")
 
 if table.Script != orig_script:
-    print "ERROR!!! The script value is incorrect:"
-    print table.Script
+    print("ERROR!!! The script value is incorrect:")
+    print(table.Script)
     errors += 1
 
 if errors > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

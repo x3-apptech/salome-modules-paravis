@@ -26,31 +26,31 @@ from presentations import *
 import pvsimple
 
 # 1. MED file import
-print 'Importing "Fields_group3D.med"........',
+print('Importing "Fields_group3D.med"........', end=' ')
 
 med_file_path = datadir + "Fields_group3D.med"
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print 'Get view..............................',
+print('Get view..............................', end=' ')
 view = pvsimple.GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Displaying scalar field
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 
 scalarmap = ScalarMapOnField(med_reader, EntityType.CELL, 'scalar field', 1)
 if scalarmap is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 extract_group = pvsimple.ExtractGroup(med_reader)
 extract_group.UpdatePipelineInformation()

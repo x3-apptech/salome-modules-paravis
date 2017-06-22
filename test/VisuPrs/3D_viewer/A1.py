@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 file_name = datadir + "fra.med"
-print " --------------------------------- "
-print "file ", file_name
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", file_name)
+print(" --------------------------------- ")
 
 OpenDataFile(file_name)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -63,7 +63,7 @@ field_name = 'VITESSE'
 # Get view
 my_view = GetRenderView()
 
-print "\nCreating plot3d......."
+print("\nCreating plot3d.......")
 plot3d = Plot3DOnField(proxy, EntityType.NODE, field_name, 1)
 if plot3d is None:
     raise RuntimeError("Error!!! Presentation wasn't created...")
@@ -72,7 +72,7 @@ display_only(plot3d, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 for reprCode in represents:
     repr = RepresentationType.get_name(reprCode)

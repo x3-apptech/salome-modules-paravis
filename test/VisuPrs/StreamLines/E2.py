@@ -29,8 +29,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("StreamLines/E2")
 
 file = datadir +  "cas2_2d_couplage_chess_castem.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "\nCreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("\nCreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.STREAMLINES], picturedir, pictureext)

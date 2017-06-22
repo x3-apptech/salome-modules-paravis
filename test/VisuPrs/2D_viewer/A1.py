@@ -64,4 +64,4 @@ Ranges = aXYPlot.TopAxisRangeMinimum, aXYPlot.TopAxisRangeMaximum
 error = error + test_values(Ranges, Etvalue)
 
 if error > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

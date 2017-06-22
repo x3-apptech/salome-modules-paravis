@@ -28,8 +28,8 @@ from presentations import CreatePrsForFile, PrsTypeEnum
 picturedir = get_picture_dir("ScalarMap/A6")
 
 file = datadir + "clo.med"
-print " --------------------------------- "
-print "file ", file
-print " --------------------------------- "
-print "CreatePrsForFile..."
+print(" --------------------------------- ")
+print("file ", file)
+print(" --------------------------------- ")
+print("CreatePrsForFile...")
 CreatePrsForFile(file, [PrsTypeEnum.SCALARMAP], picturedir, pictureext)

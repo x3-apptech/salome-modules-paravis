@@ -29,25 +29,25 @@ import pvsimple
 picturedir = get_picture_dir("bugs/A9")
 
 # 1. Step1: Import MED file
-print "**** Step1: Importing MED file"
+print("**** Step1: Importing MED file")
 
-print 'Import "sortie_med_volumique.med"...............',
+print('Import "sortie_med_volumique.med"...............', end=' ')
 file_path = datadir + "sortie_med_volumique.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print 'Get view........................................',
+print('Get view........................................', end=' ')
 view = pvsimple.GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
     reset_view(view)
-    print "OK"
+    print("OK")
 
 mesh_name = 'Volume fluide'
 cell_entity = EntityType.CELL
@@ -56,114 +56,114 @@ node_entity = EntityType.NODE
 # 2. Step2: Displaying mesh
 errors = 0
 
-print "**** Step2: Display mesh"
-print "BREAKPOINT_1"
+print("**** Step2: Display mesh")
+print("BREAKPOINT_1")
 
 # Creation of Mesh presentation on nodes
-print "Creating Mesh presentation on nodes......."
+print("Creating Mesh presentation on nodes.......")
 mesh = MeshOnEntity(med_reader, mesh_name, node_entity)
 if mesh is None:
-    print "ERROR!!! Mesh presentation on nodes creation FAILED!!!"
+    print("ERROR!!! Mesh presentation on nodes creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "MeshPresentation_OnNodes." + pictureext)
     process_prs_for_test(mesh, view, picture_path)
-    print "OK"
+    print("OK")
 
 # Creation of Mesh presentation on cells
-print "Creating Mesh presentation on cells......."
+print("Creating Mesh presentation on cells.......")
 mesh = MeshOnEntity(med_reader, mesh_name, cell_entity)
 if mesh is None:
-    print "ERROR!!! Mesh presentation on cells creation FAILED!!!"
+    print("ERROR!!! Mesh presentation on cells creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "MeshPresentation_OnCells." + pictureext)
     process_prs_for_test(mesh, view, picture_path)
-    print "OK"
+    print("OK")
 
 # 3. Step3: Displaying scalar field 'Dissip'
-print "**** Step3: Display scalar field 'Dissip'"
+print("**** Step3: Display scalar field 'Dissip'")
 
 entity = cell_entity
 
 # Scalar Map creation
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 scalarmap = ScalarMapOnField(med_reader, entity, 'Dissip', 1)
 
 if scalarmap is None:
-    print "ERROR!!! Scalar Map creation FAILED!!!"
+    print("ERROR!!! Scalar Map creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "ScalarMap_Dissip." + pictureext)
     process_prs_for_test(scalarmap, view, picture_path)
-    print "OK"
+    print("OK")
 
 # Iso Surfaces creation
-print "Creating Iso Surfaces.......",
+print("Creating Iso Surfaces.......", end=' ')
 isosurfaces = IsoSurfacesOnField(med_reader, entity, 'Dissip', 1)
 
 if isosurfaces is None:
-    print "ERROR!!! Iso Surfaces creation FAILED!!!"
+    print("ERROR!!! Iso Surfaces creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "IsoSurfaces_Dissip." + pictureext)
     process_prs_for_test(isosurfaces, view, picture_path)
-    print "OK"
+    print("OK")
 
 # Gauss Points creation
-print "Creating Gauss Points.......",
+print("Creating Gauss Points.......", end=' ')
 gausspoints = GaussPointsOnField(med_reader, entity, 'Dissip', 1)
 
 if gausspoints is None:
-    print "ERROR!!! Gauss Points creation FAILED!!!"
+    print("ERROR!!! Gauss Points creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "GaussPoints_Dissip." + pictureext)
     process_prs_for_test(isosurfaces, view, picture_path)
-    print "OK"
+    print("OK")
 
 # 4. Step4: Displaying vectoriel field 'VitesseX'
 entity = cell_entity
 
-print "**** Step5: Display vectoriel field 'VitesseX'"
+print("**** Step5: Display vectoriel field 'VitesseX'")
 # Deformed Shape creation
-print "Creating Deformed Shape.......",
+print("Creating Deformed Shape.......", end=' ')
 
 defshape = DeformedShapeOnField(med_reader, entity, 'VitesseX', 1)
 if defshape is None:
-    print "ERROR!!! Deformed Shape creation FAILED!!!"
+    print("ERROR!!! Deformed Shape creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "DeformedShape_VitesseX." + pictureext)
     process_prs_for_test(defshape, view, picture_path)
-    print "OK"
+    print("OK")
 
 # Vectors creation
-print "Creating Vectors.......",
+print("Creating Vectors.......", end=' ')
 vectors = VectorsOnField(med_reader, entity, 'VitesseX', 1)
 
 if vectors is None:
-    print "ERROR!!! Vectors creation FAILED!!!"
+    print("ERROR!!! Vectors creation FAILED!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "Vectors_VitesseX." + pictureext)
     process_prs_for_test(vectors, view, picture_path)
-    print "OK"
+    print("OK")
 
 # Scalar Map On Deformed Shape creation
-print "Creating Scalar Map On Deformed Shape.......",
+print("Creating Scalar Map On Deformed Shape.......", end=' ')
 smapondefshape = DeformedShapeAndScalarMapOnField(med_reader, entity, 'VitesseX', 1)
 
 if smapondefshape is None:
-    print "ERROR!!! ScalarMapOnDeformedShape creation failed!!!"
+    print("ERROR!!! ScalarMapOnDeformedShape creation failed!!!")
     errors += 1
 else:
     picture_path = os.path.join(picturedir, "ScalMapOnDefShape_VitesseX." + pictureext)
     process_prs_for_test(smapondefshape, view, picture_path)
-    print "OK"
+    print("OK")
 
 if errors == 1:
-    raise RuntimeError, "There is an error was occured... For more info see ERROR message above.."
+    raise RuntimeError("There is an error was occured... For more info see ERROR message above..")
 elif errors > 1:
-    raise RuntimeError, "There are some errors were occured... For more info see ERRORs messages above.."
-print "BREAKPOINT_2"
+    raise RuntimeError("There are some errors were occured... For more info see ERRORs messages above..")
+print("BREAKPOINT_2")

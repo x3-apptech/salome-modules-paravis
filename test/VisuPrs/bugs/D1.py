@@ -32,7 +32,7 @@ med_file_path = datadir + "Bug829_resu_mode.med"
 pvsimple.OpenDataFile(med_file_path)
 med_reader1 = pvsimple.GetActiveSource()
 if med_reader1 is None:
-    raise RuntimeError, "Bug829_resu_mode.med was not imported!!!"
+    raise RuntimeError("Bug829_resu_mode.med was not imported!!!")
 
 # 2. Creation of a set of "DeformedShape and ScalarMap" presentations, based on time stamps of "MODES_DEPL" field
 errors=0
@@ -42,7 +42,7 @@ sizeh=[]
 for i in range(1,11):
     presentation = DeformedShapeAndScalarMapOnField(med_reader1, EntityType.NODE, "MODES___DEPL____________________", i)
     if presentation is None :
-        raise RuntimeError, "Presentation is None!!!"
+        raise RuntimeError("Presentation is None!!!")
 
     pic_path = os.path.join(picturedir, "npal19999_1_time_stamp_" + str(i) + "." + pictureext)
     process_prs_for_test(presentation, pvsimple.GetRenderView(), pic_path)
@@ -52,26 +52,26 @@ for i in range(1,11):
     sizeh.append(h)
 
 if abs(max(sizeh)-min(sizeh)) > 0.01*max(sizeh):
-    print "WARNING!!! Pictures have different height !!!"
+    print("WARNING!!! Pictures have different height !!!")
     errors += 1
     for i in range(1,11):
         picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; height : " + str(sizeh[i-1])
+        print("Picture: " + picture_name + "; height : " + str(sizeh[i-1]))
     raise RuntimeError
 
 if abs(max(sizew)-min(sizew)) > 0.01*max(sizew):
-    print "WARNING!!! Pictures have different width !!!"
+    print("WARNING!!! Pictures have different width !!!")
     errors += 1
     for i in range(1,11):
         picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; width : " + str(sizew[i-1])
+        print("Picture: " + picture_name + "; width : " + str(sizew[i-1]))
     raise RuntimeError
 
 # 3. Import of the "Bug829_resu_mode.med" file at second time
 pvsimple.OpenDataFile(med_file_path)
 med_reader2 = pvsimple.GetActiveSource()
 if med_reader2 is None:
-    raise RuntimeError, "Bug829_resu_mode.med was not imported second time!!!"
+    raise RuntimeError("Bug829_resu_mode.med was not imported second time!!!")
 
 # 4. Creation of a set of "DeformedShape and ScalarMap" presentations, based on time stamps of "MODES_DEPL" field
 errors = 0
@@ -81,7 +81,7 @@ sizeh=[]
 for i in range(1,11):
     presentation = DeformedShapeAndScalarMapOnField(med_reader2, EntityType.NODE, "MODES___DEPL____________________", 11-i)
     if presentation is None :
-        raise RuntimeError, "Presentation is None!!!"
+        raise RuntimeError("Presentation is None!!!")
 
     pic_path = os.path.join(picturedir, "npal19999_2_time_stamp_" + str(i) + "." + pictureext)
     process_prs_for_test(presentation, pvsimple.GetRenderView(), pic_path)
@@ -90,18 +90,18 @@ for i in range(1,11):
     sizeh.append(h)
 
 if abs(max(sizeh)-min(sizeh)) > 0.01*max(sizeh):
-    print "WARNING!!! Pictures have different height !!!"
+    print("WARNING!!! Pictures have different height !!!")
     errors += 1
     for i in range(1,11):
         picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; height : " + str(sizeh[i-1])
+        print("Picture: " + picture_name + "; height : " + str(sizeh[i-1]))
     raise RuntimeError
 
 if abs(max(sizew)-min(sizew)) > 0.01*max(sizew):
-    print "WARNING!!! Pictures have different width !!!"
+    print("WARNING!!! Pictures have different width !!!")
     errors += 1
     for i in range(1,11):
         picture_name = "npal19999_2_time_stamp_" + str(i) + "." + pictureext
-        print "Picture: " + picture_name + "; width : " + str(sizew[i-1])
+        print("Picture: " + picture_name + "; width : " + str(sizew[i-1]))
     raise RuntimeError
 

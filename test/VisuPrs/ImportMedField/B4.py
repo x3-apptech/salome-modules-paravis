@@ -24,6 +24,6 @@ from paravistest import datadir, Import_Med_Field
 
 med_file = datadir + "pointe_4fields.med"
 field_names = ["fieldcelldoublescalar", "fieldcelldoublevector", "fieldnodedouble", "fieldnodedouble", "fieldnodedouble", "fieldnodeint"]
-prs_list = [ [0,1,2,3,4,8], range(10), [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8] ]
+prs_list = [ [0,1,2,3,4,8], list(range(10)), [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8], [1,2,3,4,8] ]
 
 Import_Med_Field(med_file, field_names, 1, prs_list)

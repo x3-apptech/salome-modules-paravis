@@ -24,6 +24,6 @@ from paravistest import datadir, Import_Med_Field
 
 med_file = datadir + "TimeStamps.med"
 field_names = ["pression", "temperature", "vitesse"]
-prs_list = [ [0,1,2,3,4,8], [1,2,3,4,8], range(1,10) ]
+prs_list = [ [0,1,2,3,4,8], [1,2,3,4,8], list(range(1,10)) ]
 
 Import_Med_Field(med_file, field_names, 1, prs_list)

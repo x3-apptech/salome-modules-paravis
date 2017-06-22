@@ -27,33 +27,33 @@ from presentations import *
 from pvsimple import *
 
 # 1. TimeStamps.med import
-print 'Importing "TimeStamps.med"................',
+print('Importing "TimeStamps.med"................', end=' ')
 file_path = datadir + "TimeStamps.med"
 OpenDataFile(file_path)
 med_reader = GetActiveSource()
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. CutLines creation
-print "Creating Cut Lines........................",
+print("Creating Cut Lines........................", end=' ')
 med_field = "vitesse"
 cutlines = CutLinesOnField(med_reader, EntityType.NODE, med_field, 1,
                            nb_lines = 20,
                            orientation1=Orientation.XY, orientation2=Orientation.ZX)
 if cutlines is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 3. Display CutLines
-print "Getting a Viewer.........................",
+print("Getting a Viewer.........................", end=' ')
 view = GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 cutlines.Visibility = 1
 Render(view=view)
 cutlines.Visibility = 0
@@ -62,27 +62,27 @@ display_only(cutlines, view=view)
 reset_view(view=view)
 
 # 4. Animation
-print "Get Animation scene.....................",
+print("Get Animation scene.....................", end=' ')
 scene = GetAnimationScene()
 if scene is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Duration default... ", scene.Duration
+print("Duration default... ", scene.Duration)
 scene.Duration = -10
 scene.Duration = 120
 scene.Duration = 0
 scene.Duration = 30
-print "Duration        ... ", scene.Duration
+print("Duration        ... ", scene.Duration)
 
-print "Loop            ... ", scene.Loop
+print("Loop            ... ", scene.Loop)
 scene.Loop = 1
-print "Loop            ... ", scene.Loop
+print("Loop            ... ", scene.Loop)
 scene.Loop = 0
-print "Loop            ... ", scene.Loop
+print("Loop            ... ", scene.Loop)
 
-print "AnimationTime   ... ", scene.AnimationTime
+print("AnimationTime   ... ", scene.AnimationTime)
 
 scene.Play()
 
@@ -90,19 +90,19 @@ scene.GoToFirst()
 scene.GoToNext()
 scene.GoToNext()
 
-print "AnimationTime   ... ", scene.AnimationTime
+print("AnimationTime   ... ", scene.AnimationTime)
 
 scene.GoToPrevious()
 scene.GoToLast()
 
 scene.Stop()
 
-print "AnimationTime   ... ", scene.AnimationTime
+print("AnimationTime   ... ", scene.AnimationTime)
 
 scene.AnimationTime = -1
 scene.AnimationTime = scene.TimeKeeper.TimestepValues[1]
 scene.AnimationTime = scene.TimeKeeper.TimestepValues[0]
 
 nb_frames = scene.NumberOfFrames
-print "NumberOfFrames  ... ", nb_frames
+print("NumberOfFrames  ... ", nb_frames)
 

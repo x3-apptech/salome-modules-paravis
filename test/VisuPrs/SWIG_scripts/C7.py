@@ -28,13 +28,13 @@ from presentations import *
 import pvsimple
 
 # Import table from file
-print 'Import file with tables....',
+print('Import file with tables....', end=' ')
 file_path = tablesdir + "table_test.xls"
 table_reader = pvsimple.TableReader(FileName=file_path)
 if table_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # Get default settings of the reader
 available_tables = table_reader.GetPropertyValue("AvailableTables")
@@ -43,12 +43,12 @@ first_str_as_title = table_reader.FirstStringAsTitles
 delimiter = table_reader.ValueDelimiter
 table_nb = table_reader.TableNumber
 
-print "Default reader settings:"
-print "Available tables: ", available_tables
-print "Detect Numeric Columns: ", is_detect_num
-print "Interpret First String As Column Titles: ", first_str_as_title
-print "Value Delimiter: '%s'" % delimiter
-print "Table Number: ", table_nb
+print("Default reader settings:")
+print("Available tables: ", available_tables)
+print("Detect Numeric Columns: ", is_detect_num)
+print("Interpret First String As Column Titles: ", first_str_as_title)
+print("Value Delimiter: '%s'" % delimiter)
+print("Table Number: ", table_nb)
 
 
 # Create 3D representation of the table with the
@@ -56,34 +56,34 @@ print "Table Number: ", table_nb
 # in Post-Pro this representation is known as "Pointmap3d"
 table_to_3d = pvsimple.TableTo3D(table_reader)
 
-print 'Create "Table To 3D" filter....',
+print('Create "Table To 3D" filter....', end=' ')
 if table_to_3d is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print "Default 'Table To 3D' filter settings:"
-print "Scale Factor: ", table_to_3d.ScaleFactor
-print "Use Optimus Scale: ", table_to_3d.UseOptimusScale
-print "Presentation Type: ", table_to_3d.PresentationType
-print "Number Of Contours: ", table_to_3d.NumberOfContours
+print("Default 'Table To 3D' filter settings:")
+print("Scale Factor: ", table_to_3d.ScaleFactor)
+print("Use Optimus Scale: ", table_to_3d.UseOptimusScale)
+print("Presentation Type: ", table_to_3d.PresentationType)
+print("Number Of Contours: ", table_to_3d.NumberOfContours)
 
 
 # Show table 3D representation
 
 # Get 3D view
-print 'Get 3D view...................',
+print('Get 3D view...................', end=' ')
 view = pvsimple.GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
     reset_view(view)
-    print "OK"
+    print("OK")
 
 pointmap3d = pvsimple.GetRepresentation(table_to_3d)
 
 table_name = available_tables
-if type(available_tables) == list:
+if isinstance(available_tables, list):
   table_name = available_tables[table_nb]
 
 vector_mode = 'Magnitude'

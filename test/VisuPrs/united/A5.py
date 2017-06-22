@@ -27,32 +27,32 @@ cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
 
 # 1. Import MED file
-print "**** Step1: Import MED file"
+print("**** Step1: Import MED file")
 
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 file_path = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 mesh_name = 'dom'
 
 # 2. Creating mesh
-print "**** Step2: Mesh creation"
+print("**** Step2: Mesh creation")
 
-print "Creating mesh.............",
+print("Creating mesh.............", end=' ')
 mesh = MeshOnEntity(med_reader, mesh_name, cell_entity)
 if mesh is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 3. Changing type of presentation of mesh
-print "**** Step3: Changing type of presentation of mesh"
+print("**** Step3: Changing type of presentation of mesh")
 
 view = pvsimple.GetRenderView()
 display_only(mesh, view)
@@ -61,12 +61,12 @@ reset_view(view)
 mesh.Representation = 'Wireframe'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 mesh.Representation = 'Points'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 # make shrink, in PARAVIS it's not a representation type: use shrink filter
 shrink = pvsimple.Shrink(med_reader)
@@ -77,30 +77,30 @@ display_only(mesh, view)
 mesh.Representation = 'Surface With Edges'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 # 4. Changing Cell color of mesh
-print "**** Step4: Changing Cell color of mesh"
+print("**** Step4: Changing Cell color of mesh")
 
 color = mesh.DiffuseColor
-print "Mesh Cell color in RGB....(", color[0], ",", color[1], ",", color[2], ")"
+print("Mesh Cell color in RGB....(", color[0], ",", color[1], ",", color[2], ")")
 
 color = [0, 0, 1]
 mesh.DiffuseColor = color
 color = mesh.DiffuseColor
-print "Mesh Cell color in RGB....(", color[0], ",", color[1], ",", color[2], ")"
+print("Mesh Cell color in RGB....(", color[0], ",", color[1], ",", color[2], ")")
 pvsimple.Render()
 
 # 5. Changing Node color of mesh
-print "**** Step4: Changing Node color of mesh"
+print("**** Step4: Changing Node color of mesh")
 
 color = mesh.AmbientColor
-print "Mesh Node color in RGB....(", color[0], ",", color[1], ",", color[2], ")"
+print("Mesh Node color in RGB....(", color[0], ",", color[1], ",", color[2], ")")
 
 color = [0, 1, 0]
 mesh.AmbientColor = color
 color = mesh.AmbientColor
-print "Mesh Node color in RGB....(", color[0], ",", color[1], ",", color[2], ")"
+print("Mesh Node color in RGB....(", color[0], ",", color[1], ",", color[2], ")")
 pvsimple.Render()
 
 ## Note: no special property for edge color in PARAVIS; skip link color changing ( SetLinkColor()/GetLinkColor() methods )

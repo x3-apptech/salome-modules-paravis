@@ -39,16 +39,16 @@ reset_view(my_view)
 Render(my_view)
 
 theFileName = datadir + "fra.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 OpenDataFile(theFileName)
 proxy = GetActiveSource()
 if proxy is None:
     raise RuntimeError("Error: can't import file.")
 else:
-    print "OK"
+    print("OK")
 
 represents = [RepresentationType.POINTS, RepresentationType.WIREFRAME,\
 RepresentationType.SURFACE, RepresentationType.VOLUME]
@@ -62,7 +62,7 @@ shrinked_sm = None
 
 field_name = 'VITESSE'
 
-print "\nCreating scalar map.......",
+print("\nCreating scalar map.......", end=' ')
 scalar_map = ScalarMapOnField(proxy, EntityType.NODE, field_name, 1)
 if scalar_map is None:
     raise RuntimeError("Error!!! Presentation wasn't created...")
@@ -71,7 +71,7 @@ display_only(scalar_map, my_view)
 reset_view(my_view)
 Render(my_view)
 
-print "\nChange Presentation Parameters..."
+print("\nChange Presentation Parameters...")
 
 
 for reprCode in represents:

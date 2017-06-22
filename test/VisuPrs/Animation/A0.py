@@ -30,31 +30,31 @@ from pvsimple import *
 picturedir = get_picture_dir("Animation/A0")
 
 theFileName = datadir +  "TimeStamps.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-        raise RuntimeError, "Error: can't import file."
-else: print "OK"
+        raise RuntimeError("Error: can't import file.")
+else: print("OK")
 
-print "Creating a Viewer.........................",
+print("Creating a Viewer.........................", end=' ')
 aView = GetRenderView()
 reset_view(aView)
 Render(aView)
 
-if aView is None : print "Error"
-else : print "OK"
+if aView is None : print("Error")
+else : print("OK")
 
 # Scalar Map creation
 prs= ScalarMapOnField(aProxy,EntityType.NODE,'vitesse' , 1)
 prs.Visibility=1
 aView.ResetCamera()
-print "Creating an Animation.....................",
+print("Creating an Animation.....................", end=' ')
 my_format = "jpeg"
-print "Current format to save snapshots: ",my_format
+print("Current format to save snapshots: ",my_format)
 # Add path separator to the end of picture path if necessery
 if not picturedir.endswith(os.sep):
     picturedir += os.sep
@@ -71,7 +71,7 @@ nb_frames = len(scene.TimeKeeper.TimestepValues)
 
 pics = os.listdir(picturedir)
 if len(pics) != nb_frames:
-   print "FAILED!!! Number of made pictures is equal to ", len(pics), " instead of ", nb_frames
+   print("FAILED!!! Number of made pictures is equal to ", len(pics), " instead of ", nb_frames)
 
 for pic in pics:
     os.remove(picturedir+pic)
@@ -82,5 +82,5 @@ scene.PlayMode = 1 #  set RealTime mode for animation performance
 scene.Duration = 40 # correspond to set the speed of animation in VISU
 scene.GoToFirst()
 scene.Loop = 0
-print "Animation.................................",
+print("Animation.................................", end=' ')
 scene.Play()

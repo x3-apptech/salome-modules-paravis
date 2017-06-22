@@ -28,92 +28,92 @@ cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
 
 # 1. Import MED file
-print "**** Step1: Import MED file"
+print("**** Step1: Import MED file")
 
-print 'Import "fra.med"....................',
+print('Import "fra.med"....................', end=' ')
 file_path = datadir + "fra.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 view = pvsimple.GetRenderView()
 
 field_name = 'VITESSE'
-print "Creating Cut Planes.................",
+print("Creating Cut Planes.................", end=' ')
 orient = Orientation.YZ
 cutplanes = CutPlanesOnField(med_reader, node_entity, field_name, 1, orientation=orient)
 if cutplanes is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(cutplanes, view)
-    print "OK"
+    print("OK")
 
 slice_filter = pvsimple.GetActiveSource()
 
 # 2. Changing view
-print "**** Step2: Changing view"
+print("**** Step2: Changing view")
 
-print "Fit All.............................",
+print("Fit All.............................", end=' ')
 reset_view(view)
-print "OK"
+print("OK")
 
-print "Rotate..............................",
+print("Rotate..............................", end=' ')
 x_angle = 0
 y_angle = 0
 
 nb_planes = len(slice_filter.SliceOffsetValues)
 
-for i in xrange(1, 50):
+for i in range(1, 50):
     y_angle = y_angle + 0.05
     normal = get_normal_by_orientation(orient, x_angle, radians(y_angle))
     slice_filter.SliceType.Normal = normal
     pvsimple.Render()
 
-for i in xrange(1,50):
+for i in range(1,50):
     y_angle = y_angle - 0.05
     normal = get_normal_by_orientation(orient, x_angle, radians(y_angle))
     slice_filter.SliceType.Normal = normal
     pvsimple.Render()
 
-print "OK"
+print("OK")
 
-print "View Point (FRONT)..................",
+print("View Point (FRONT)..................", end=' ')
 view.CameraViewUp = [0.0, 0.0, 1.0]
 view.CameraPosition = [2.4453961849843453, 0.03425, 0.541]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "View Point (BACK)...................",
+print("View Point (BACK)...................", end=' ')
 view.CameraPosition = [-2.0343961849843457, 0.03425, 0.541]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "View Point (TOP)....................",
+print("View Point (TOP)....................", end=' ')
 view.CameraViewUp = [0.0, 1.0, 0.0]
 view.CameraPosition = [0.2055, 0.03425, 2.7808961849843454]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "View Point (BOTTOM).................",
+print("View Point (BOTTOM).................", end=' ')
 view.CameraPosition = [0.2055, 0.03425, -1.6988961849843456]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "View Point (LEFT)...................",
+print("View Point (LEFT)...................", end=' ')
 view.CameraViewUp = [0.0, 0.0, 1.0]
 view.CameraPosition = [0.2055, -2.2056461849843454, 0.541]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "View Point (RIGHT) .................",
+print("View Point (RIGHT) .................", end=' ')
 view.CameraPosition = [0.2055, 2.2741461849843456, 0.541]
 pvsimple.Render()
-print "OK"
+print("OK")
 
-print "Restore View........................",
+print("Restore View........................", end=' ')
 reset_view(view)
-print "OK"
+print("OK")

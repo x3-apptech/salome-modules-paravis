@@ -126,7 +126,7 @@ try:
   baselineIndex = sys.argv.index('-B')+1
   baselinePath = sys.argv[baselineIndex]
 except:
-  print "Could not get baseline directory. Test failed."
+  print("Could not get baseline directory. Test failed.")
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader0.png")
 import vtk.test.Testing

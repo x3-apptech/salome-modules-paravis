@@ -33,7 +33,7 @@ pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError, "MED file was not imported successfully."
+    raise RuntimeError("MED file was not imported successfully.")
 
 # Create presentations
 try:
@@ -51,12 +51,12 @@ try:
 
            mesh = MeshOnEntity(med_reader, mesh_name, entity)
        else:
-           print "We have no permission to rewrite medFile"
+           print("We have no permission to rewrite medFile")
     else:
-        print  "We have no permission to read medFile, it will not be opened";
+        print("We have no permission to read medFile, it will not be opened");
 except:
-    print sys.exc_type
-    print sys.exc_value
-    print sys.exc_traceback
+    print(sys.exc_info()[0])
+    print(sys.exc_info()[1])
+    print(sys.exc_info()[2])
 
 

@@ -41,7 +41,7 @@ def demo2(fname, impth):
 
     # Get the list of point arrays.
     avail = reader.PointVariables.Available
-    print avail
+    print(avail)
 
     # Select all arrays
     reader.PointVariables = avail
@@ -64,15 +64,15 @@ def demo2(fname, impth):
     pdi = reader[0].PointData
 
     # This prints a list of all read point data arrays as well as their value ranges.
-    print 'Number of point arrays:', len(pdi)
+    print('Number of point arrays:', len(pdi))
     for i in range(len(pdi)):
         ai = pdi[i]
-        print "----------------"
-        print "Array:", i, " ", ai.Name, ":"
+        print("----------------")
+        print("Array:", i, " ", ai.Name, ":")
         numComps = ai.GetNumberOfComponents()
-        print "Number of components:", numComps
+        print("Number of components:", numComps)
         for j in range(numComps):
-            print "Range:", ai.GetRange(j)
+            print("Range:", ai.GetRange(j))
 
     # White is boring. Let's color the geometry using a variable. First create a lookup table. This object controls how scalar values are mapped to colors. 
     SetDisplayProperties(LookupTable = MakeBlueToRedLT(0.00678, 0.0288))

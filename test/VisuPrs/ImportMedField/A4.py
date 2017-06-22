@@ -24,6 +24,6 @@ from paravistest import datadir, Import_Med_Field
 
 med_file = datadir + "test_hydro_darcy1a_out.med"
 field_names = ["DarcyVelocity","Head"]
-prs_list = [ range(10), [0,1,2,3,4,8] ]
+prs_list = [ list(range(10)), [0,1,2,3,4,8] ]
 
 Import_Med_Field(med_file, field_names, 1, prs_list)

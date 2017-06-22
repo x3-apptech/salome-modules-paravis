@@ -35,7 +35,7 @@ point2 = [0.4, 0.05, 1.0]
 cut_segment1 = CutSegmentOnField(med_reader, EntityType.NODE, "VITESSE", 1,
                                 point1, point2)
 if cut_segment1 == None:
-   raise RuntimeError, "ERROR!!! The first CutSegment presentation is not built!"
+   raise RuntimeError("ERROR!!! The first CutSegment presentation is not built!")
 
 # 3. Creation of CutSegment presentations, based on time stamps of "TAUX_DE_VIDE" field
 point1 = [0, 0, 1]
@@ -43,7 +43,7 @@ point2 = [0.2055, 0.0685, 0.541]
 cut_segment2 = CutSegmentOnField(med_reader, EntityType.NODE, "TAUX_DE_VIDE", 1,
                                 point1, point2)
 if cut_segment2 == None:
-   raise RuntimeError, "ERROR!!! The second CutSegment presentation is not built!"
+   raise RuntimeError("ERROR!!! The second CutSegment presentation is not built!")
 
 # 4. Creation of Table based on CutSegment presentation
 
@@ -56,11 +56,11 @@ xy_view = pvs.CreateXYPlotView()
 
 curve1 = pvs.Show(cut_segment1.Input, xy_view)
 if curve1 == None:
-   raise RuntimeError, " ERROR!!! Curve based on the first CutSegment is not built!"
+   raise RuntimeError(" ERROR!!! Curve based on the first CutSegment is not built!")
 
 curve2 = pvs.Show(cut_segment2.Input, xy_view)
 if curve2 == None:
-   raise RuntimeError, " ERROR!!! Curve based on the second CutSegment is not built!"
+   raise RuntimeError(" ERROR!!! Curve based on the second CutSegment is not built!")
 
 curves = [curve1, curve2]
 for c in curves:

@@ -24,29 +24,29 @@ from presentations import CutPlanesOnField, EntityType
 import pvsimple
 
 #====================Stage1: Importing MED file====================
-print "**** Stage1: Importing MED file"
+print("**** Stage1: Importing MED file")
 
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 
 file_path = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 #====================Stage2: Creating CutPlanes====================
-print "*****Stage2: Creating CutPlanes"
+print("*****Stage2: Creating CutPlanes")
 
-print "Creating Cut Planes.......",
+print("Creating Cut Planes.......", end=' ')
 
 node_entity = EntityType.NODE
 field_name = 'vitesse'
 cutplanes = CutPlanesOnField(med_reader, node_entity, field_name, 1)
 
 if cutplanes is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")

@@ -67,7 +67,7 @@ class DisplayManager:
 
     def DisplayMap(self, aView, aMap, title, aDelay=0):
         if aMap is None:
-            print "Null scalar map is created"
+            print("Null scalar map is created")
         display_only(aMap, aView)
         reset_view(aView)
         time.sleep(aDelay)
@@ -100,12 +100,12 @@ class DisplayManager:
 
         path = None
         if aPath is not "":
-            print "Define save path"
+            print("Define save path")
             path = aPath
 
         scene = pvsimple.AnimateReader(theObj, aView, path)
 
-        print "Start Animation"
+        print("Start Animation")
 
         scene.Duration = theDuration
         NbOfFrames = len(scene.TimeKeeper.TimestepValues)
@@ -118,7 +118,7 @@ class DisplayManager:
             scene.Play()
             ind = ind + 1
 
-        print "Stop Animation"
+        print("Stop Animation")
         scene.Stop()
 
         return scene

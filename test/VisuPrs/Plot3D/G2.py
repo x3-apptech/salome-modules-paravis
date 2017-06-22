@@ -28,17 +28,17 @@ from pvsimple import *
 picturedir = get_picture_dir("Plot3D/G2")
 
 theFileName = datadir +  "Bug829_resu_mode.med"
-print " --------------------------------- "
-print "file ", theFileName
-print " --------------------------------- "
+print(" --------------------------------- ")
+print("file ", theFileName)
+print(" --------------------------------- ")
 
 
 #print "Import %s..." % theFileName.split('/')[-1],
 result = OpenDataFile(theFileName)
 aProxy = GetActiveSource()
 if aProxy is None:
-        raise RuntimeError, "Error: can't import file."
-else: print "OK"
+        raise RuntimeError("Error: can't import file.")
+else: print("OK")
 # Get viewScalarMap
 aView = GetRenderView()
 
@@ -50,7 +50,7 @@ for i in range(1,11):
     hide_all(aView, True)
     aPrs = Plot3DOnField(aProxy, aFieldEntity,aFieldName , i)
     if aPrs is None:
-        raise RuntimeError, "Presentation is None!!!"
+        raise RuntimeError("Presentation is None!!!")
     #display only current scalar map
     aPrs.Visibility=1
     reset_view(aView)

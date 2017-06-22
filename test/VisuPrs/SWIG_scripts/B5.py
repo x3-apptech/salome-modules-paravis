@@ -28,15 +28,15 @@ import pvsimple
 DELAY = 2
 
 # Step 1
-print 'Importing "pointe.med"...............',
+print('Importing "pointe.med"...............', end=' ')
 file_path = datadir + "pointe.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 field_name = "fieldnodedouble"
 entity = EntityType.NODE
@@ -45,36 +45,36 @@ timestamp = 1
 
 # Step 2
 view1 = pvsimple.GetRenderView()
-print "view1 = pvsimple.GetRenderView()"
+print("view1 = pvsimple.GetRenderView()")
 
 sleep(DELAY)
 
 delete_pv_object(view1)
-print "delete_pv_object(view1)"
+print("delete_pv_object(view1)")
 
 
 # Step 3
 view2 = pvsimple.CreateRenderView()
-print "view2 = pvsimple.CreateRenderView()"
+print("view2 = pvsimple.CreateRenderView()")
 
 color = [0.0, 0.3, 1.0]
 view2.Background = color
-print "view2.Background =", str(color)
+print("view2.Background =", str(color))
 pvsimple.Render(view2)
 
 scalarmap = ScalarMapOnField(med_reader, entity, field_name, timestamp)
-print "ScalarMapOnField(...)"
+print("ScalarMapOnField(...)")
 scalarmap.Visibility = 1
 pvsimple.Render(view2)
 
 view2.CameraFocalPoint = [0, 0, 0]
-print "view2.CameraFocalPoint = [0, 0, 0]"
+print("view2.CameraFocalPoint = [0, 0, 0]")
 view2.CameraParallelScale = 2
-print "view2.CameraParallelScale = 2"
+print("view2.CameraParallelScale = 2")
 pvsimple.Render(view2)
 
 view2.ResetCamera()
-print "view2.ResetCamera()"
+print("view2.ResetCamera()")
 pvsimple.Render(view2)
 
 sleep(DELAY)
@@ -82,74 +82,74 @@ sleep(DELAY)
 
 # Step 4
 view3 = pvsimple.CreateRenderView()
-print "view3 = pvsimple.CreateRenderView()"
+print("view3 = pvsimple.CreateRenderView()")
 
 color = [0.0, 0.7, 0.0]
 view3.Background = color
-print "view3.Background = ", str(color)
+print("view3.Background = ", str(color))
 pvsimple.Render(view3)
 
 cutplanes = CutPlanesOnField(med_reader, entity, field_name, timestamp,
                              orientation=Orientation.XY)
-print "CutPlanesOnField(...)"
+print("CutPlanesOnField(...)")
 
 display_only(cutplanes, view3)
-print "display_only(cutplanes, view3)"
+print("display_only(cutplanes, view3)")
 
 point = view3.CameraFocalPoint
 point[0] = point[0] + 10
 view3.CameraFocalPoint = point
-print "view3.CameraFocalPoint = ", str(point)
+print("view3.CameraFocalPoint = ", str(point))
 
 view3.ResetCamera()
-print "view3.ResetCamera()"
+print("view3.ResetCamera()")
 pvsimple.Render(view3)
-print "pvsimple.Render(view3)"
+print("pvsimple.Render(view3)")
 
 sleep(DELAY)
 
 
 # Step 5
 view4 = pvsimple.CreateRenderView()
-print "view4 = pvsimple.CreateRenderView()"
+print("view4 = pvsimple.CreateRenderView()")
 
 color = [1.0, 0.7, 0.0]
 view4.Background = color
-print "view5.Background = ", str(color)
+print("view5.Background = ", str(color))
 pvsimple.Render(view4)
 
 isosurfaces = IsoSurfacesOnField(med_reader, entity, field_name, timestamp)
-print "isosurfaces = IsoSurfacesOnField(...)"
+print("isosurfaces = IsoSurfacesOnField(...)")
 
 display_only(isosurfaces, view4)
-print "display_only(isosurfaces, view4)"
+print("display_only(isosurfaces, view4)")
 view4.ResetCamera()
-print "view4.ResetCamera()"
+print("view4.ResetCamera()")
 
 pvsimple.Render(view4)
-print "pvsimple.Render(view4)"
+print("pvsimple.Render(view4)")
 
 sleep(DELAY)
 
 
 # Step 6
 view5 = pvsimple.CreateRenderView()
-print "view5 = pvsimple.CreateRenderView()"
+print("view5 = pvsimple.CreateRenderView()")
 
 color = [0.7, 0.7, 0.7]
 view5.Background = color
-print "view5.Background =", str(color)
+print("view5.Background =", str(color))
 pvsimple.Render(view5)
 
 cutlines = CutLinesOnField(med_reader, entity, field_name, timestamp,
                            orientation1=Orientation.ZX,
                            orientation2=Orientation.YZ)
-print "cutlines = CutLinesOnField(...)"
+print("cutlines = CutLinesOnField(...)")
 
 display_only(cutlines, view5)
-print "display_only(cutlines, view5)"
+print("display_only(cutlines, view5)")
 pvsimple.ResetCamera(view5)
-print "pvsimple.ResetCamera(view5)"
+print("pvsimple.ResetCamera(view5)")
 
 sleep(DELAY)
 
@@ -160,7 +160,7 @@ sinus_csv = pvsimple.CSVReader(FileName=file_path)
 sinus_csv.FieldDelimiterCharacters = ' '
 
 view6 = pvsimple.CreateXYPlotView()
-print "view6 = pvsimple.CreateXYPlotView()"
+print("view6 = pvsimple.CreateXYPlotView()")
 
 xy_rep = pvsimple.Show(sinus_csv)
 xy_rep.AttributeType = 'Row Data'

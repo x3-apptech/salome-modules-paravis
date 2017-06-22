@@ -24,6 +24,6 @@ from paravistest import datadir, Import_Med_Field
 
 med_file = datadir + "maill.0.med"
 field_names = ["REQT_GD_________________________", "RESUTRQUDEPL____________________", "RESUTRQUERRE_ELGA_NORE__________", "RESUTRQUSIEF_ELGA_DEPL__________", "RESUTRQUSIGM_ELNO_DEPL__________"]
-prs_list = [ range(1,10), range(1,10), range(10), range(10), range(10)]
+prs_list = [ list(range(1,10)), list(range(1,10)), list(range(10)), list(range(10)), list(range(10))]
 
 Import_Med_Field(med_file, field_names, 1, prs_list)

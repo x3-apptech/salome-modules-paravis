@@ -36,7 +36,7 @@ file_path = datadir + "TimeStamps.med"
 OpenDataFile(file_path)
 med_reader = GetActiveSource()
 if med_reader is None :
-    raise RuntimeError, "TimeStamps.med wasn't imported..."
+    raise RuntimeError("TimeStamps.med wasn't imported...")
 
 # 2. Presentations creation
 errors = 0
@@ -46,18 +46,18 @@ prs_list = []
 med_field = "vitesse"
 
 for name in prs_names:
-    print "Creation of ", name, " presentation..."
+    print("Creation of ", name, " presentation...")
     if name == "GaussPoints":
         prs = GaussPointsOnField(med_reader, EntityType.CELL, "pression", 1)
         pass
     else:
         prs = eval(name + "OnField(med_reader, EntityType.NODE, med_field, 1)")
     if prs is None:
-        print "ERROR!!! ", name," presentation wasn't created..."
+        print("ERROR!!! ", name," presentation wasn't created...")
         # StreamLines presentation is empty for "vitesse" field defined in the loaded MED file.
         # TODO: check why stream lines prs is empty
         if name == "StreamLines":
-            print "WARNING: Stream lines presentation is empty!"
+            print("WARNING: Stream lines presentation is empty!")
         else:
             errors += 1
     else:
@@ -70,7 +70,7 @@ path_to_save = os.path.join(os.getenv("HOME"), "AllPresentations.py")
 save_trace( path_to_save, text )
 
 # 4. Delete the created objects, recreate the view
-source_list = GetSources().values()
+source_list = list(GetSources().values())
 for source in source_list:
     delete_pv_object(source)
 
@@ -78,16 +78,16 @@ delete_pv_object(GetActiveView())
 view = CreateRenderView()
 
 # 5. Execution of the created script
-execfile(path_to_save)
+exec(compile(open(path_to_save).read(), path_to_save, 'exec'))
 
 # 6. Check the restored objects
 for name in prs_names:
     source = FindSource(name)
     if source is None:
-        print "There is no ", name, " in the study (must be created by executed python script)!!!"
+        print("There is no ", name, " in the study (must be created by executed python script)!!!")
         errors += 1
     else:
-        print name + " was found..."
+        print(name + " was found...")
 
 if errors > 0:
-    raise RuntimeError, "There is(are) some error(s) was(were) found... For more info see ERRORs above..."
+    raise RuntimeError("There is(are) some error(s) was(were) found... For more info see ERRORs above...")

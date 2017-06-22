@@ -24,168 +24,168 @@ from presentations import *
 import pvsimple
 
 # 1. Import MED file
-print "**** Step1: Import MED file"
+print("**** Step1: Import MED file")
 
-print 'Import "ResOK_0000.med"...',
+print('Import "ResOK_0000.med"...', end=' ')
 file_path = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
-print 'Get view...................',
+print('Get view...................', end=' ')
 view = pvsimple.GetRenderView()
 if view is None:
-    print "FAILED"
+    print("FAILED")
 else:
     reset_view(view)
-    print "OK"
+    print("OK")
 
 cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
 
 # 2. Displaying vector field
-print "**** Step2: Displaying vector field"
+print("**** Step2: Displaying vector field")
 
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 scalarmap = ScalarMapOnField(med_reader, node_entity, 'vitesse', 1)
 if scalarmap is None:
-    print "FAILED"
+    print("FAILED")
 else:
     bar = get_bar()
     bar.Orientation = 'Horizontal'
     bar.Position = [0.1, 0.1]
-    bar.Position2 = [0.1, 0.25]
+#    bar.Position2 = [0.1, 0.25]
     bar.AspectRatio = 3
 
     display_only(scalarmap, view)
-    print "OK"
+    print("OK")
 
 reset_view(view)
 
-print "Creating Stream Lines.....",
+print("Creating Stream Lines.....", end=' ')
 streamlines = StreamLinesOnField(med_reader, node_entity, 'vitesse', 1)
 if streamlines is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(streamlines, view)
-    print "OK"
+    print("OK")
 
-print "Creating Vectors..........",
+print("Creating Vectors..........", end=' ')
 vectors = VectorsOnField(med_reader, node_entity, 'vitesse', 1)
 if vectors is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(vectors, view)
-    print "OK"
+    print("OK")
 
-print "Creating Iso Surfaces.....",
+print("Creating Iso Surfaces.....", end=' ')
 isosurfaces = IsoSurfacesOnField(med_reader, node_entity, 'vitesse', 1)
 contour_filter = pvsimple.GetActiveSource()
 if isosurfaces is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(isosurfaces, view)
-    print "OK"
+    print("OK")
 
-print "Creating Cut Planes.......",
+print("Creating Cut Planes.......", end=' ')
 cutplanes = CutPlanesOnField(med_reader, node_entity, 'vitesse', 1,
                              nb_planes=30, orientation=Orientation.YZ)
 if cutplanes is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(cutplanes, view)
-    print "OK"
+    print("OK")
 
 # 3. Another MED file import
-print "**** Step3: Import another MED file"
+print("**** Step3: Import another MED file")
 
-print 'Import "Fields_group3D.med"...............',
+print('Import "Fields_group3D.med"...............', end=' ')
 file_path = datadir + "Fields_group3D.med"
 pvsimple.OpenDataFile(file_path)
 med_reader1 = pvsimple.GetActiveSource()
 
 if med_reader1 is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 4. Displaying scalar field
-print "**** Step4: Displaying scalar field"
+print("**** Step4: Displaying scalar field")
 
-print "Creating Scalar Map.......",
+print("Creating Scalar Map.......", end=' ')
 scalarmap1 = ScalarMapOnField(med_reader1, cell_entity, 'scalar field', 1)
 if scalarmap1 is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(scalarmap1, view)
-    print "OK"
+    print("OK")
 
 reset_view(view)
 
-print "Creating Iso Surfaces.....",
+print("Creating Iso Surfaces.....", end=' ')
 isosurfaces1 = IsoSurfacesOnField(med_reader1, cell_entity, 'scalar field', 1)
 if isosurfaces1 is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(isosurfaces1, view)
-    print "OK"
+    print("OK")
 
-print "Creating Cut Planes.......",
+print("Creating Cut Planes.......", end=' ')
 cutplanes1 = CutPlanesOnField(med_reader1, cell_entity, 'scalar field', 1,
                               orientation=Orientation.YZ)
 if cutplanes1 is None:
-    print "FAILED"
+    print("FAILED")
 else:
     slice_filter = pvsimple.GetActiveSource()
     slice_filter.SliceType.Normal = [1.0, 0.0, 0.0]
     display_only(cutplanes1, view)
-    print "OK"
+    print("OK")
 
 # 5. Object browser popup
 
-print "**** Step5: Object browser popup"
+print("**** Step5: Object browser popup")
 
 mesh_name = 'mailles_MED'
 
-print "Creating mesh.............",
+print("Creating mesh.............", end=' ')
 mesh = MeshOnEntity(med_reader1, mesh_name, cell_entity)
 if mesh is None:
-    print "FAILED"
+    print("FAILED")
 else:
     display_only(mesh, view)
-    print "OK"
+    print("OK")
 
-print "Changing type of presentation of mesh:"
+print("Changing type of presentation of mesh:")
 mesh.Representation = 'Wireframe'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 mesh.Representation = 'Points'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 mesh.Representation = 'Surface'
 pvsimple.Render()
 prs_type = mesh.Representation
-print "Presentation type..", prs_type
+print("Presentation type..", prs_type)
 
 shrink = pvsimple.Shrink(med_reader1)
 mesh_shrinked = pvsimple.GetRepresentation(shrink)
 display_only(mesh_shrinked, view)
 
-print "Changing color of mesh....",
+print("Changing color of mesh....", end=' ')
 color = [0, 0, 1]
 mesh.DiffuseColor = color
 display_only(mesh, view)
-print "OK"
+print("OK")
 
-print "Changing first IsoSurfaces",
+print("Changing first IsoSurfaces", end=' ')
 display_only(isosurfaces, view)
 reset_view(view)
 rgb_points = isosurfaces.LookupTable.RGBPoints
@@ -193,9 +193,9 @@ scalar_range = [rgb_points[0], rgb_points[4]]
 surfaces = get_contours(scalar_range, 25)
 contour_filter.Isosurfaces = surfaces
 pvsimple.Render(view=view)
-print "OK"
+print("OK")
 
-print "Hide IsoSurfaces..........",
+print("Hide IsoSurfaces..........", end=' ')
 isosurfaces.Visibility = 0
 pvsimple.Render(view=view)
-print "OK"
+print("OK")

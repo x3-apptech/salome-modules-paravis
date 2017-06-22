@@ -26,14 +26,14 @@ import pvsimple
 # 1. Import MED file
 med_file_path = datadir + "MEDfileForStructuredMesh.med"
 
-print 'Importing "MEDfileForStructuredMesh.med"....',
+print('Importing "MEDfileForStructuredMesh.med"....', end=' ')
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    raise RuntimeError, "MEDfileForStructuredMesh.med was not imported!"
+    raise RuntimeError("MEDfileForStructuredMesh.med was not imported!")
 else:
-    print "OK"
+    print("OK")
 
 errors = 0
 
@@ -42,8 +42,8 @@ mesh_name = "AssemblyMesh"
 
 for entity in [EntityType.NODE, EntityType.CELL]:
     if MeshOnEntity(med_reader, mesh_name, entity) is None:
-        print "Entity:", str(entity)
-        print "ERROR!!! Mesh presentation for \""+mesh_name+"\" wasn't created!!!"
+        print("Entity:", str(entity))
+        print("ERROR!!! Mesh presentation for \""+mesh_name+"\" wasn't created!!!")
         errors += 1
 
 # 3. Creation of the mesh presentations for the "CoreMesh" mesh
@@ -51,9 +51,9 @@ mesh_name = "CoreMesh"
 
 for entity in [EntityType.NODE, EntityType.CELL]:
     if MeshOnEntity(med_reader, mesh_name, entity) is None:
-        print "Entity:", str(entity)
-        print "ERROR!!! Mesh presentation for \""+mesh_name+"\" wasn't created!!!"
+        print("Entity:", str(entity))
+        print("ERROR!!! Mesh presentation for \""+mesh_name+"\" wasn't created!!!")
         errors += 1
 
 if errors > 0:
-    raise RuntimeError, "Some errors were occured during execution... See ERRORs above for details!"
+    raise RuntimeError("Some errors were occured during execution... See ERRORs above for details!")

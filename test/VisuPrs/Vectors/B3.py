@@ -27,40 +27,40 @@ import pvsimple
 
 #====================Stage1: Importing MED file====================
 
-print "**** Stage1: Importing MED file"
+print("**** Stage1: Importing MED file")
 
-print 'Import "ResOK_0000.med"...............',
+print('Import "ResOK_0000.med"...............', end=' ')
 medFile = datadir + "ResOK_0000.med"
 pvsimple.OpenDataFile(medFile)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 cell_entity = EntityType.CELL
 node_entity = EntityType.NODE
 
 #====================Stage2: Creation of Vectors====================
 
-print "Creating Vectors..........",
+print("Creating Vectors..........", end=' ')
 vectors = VectorsOnField(med_reader, node_entity, 'vitesse', 1)
 
 if vectors is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 #====================Stage3: Change properties======================
 glyph = vectors.Input
 
-print "Default LineWidth : ", vectors.LineWidth
-print "Default GlyphType : ", glyph.GlyphType
-print "Default subtype   : ", glyph.GlyphType.GlyphType
-print "Default GlyphPos  : ", glyph.GlyphType.Center
+print("Default LineWidth : ", vectors.LineWidth)
+print("Default GlyphType : ", glyph.GlyphType)
+print("Default subtype   : ", glyph.GlyphType.GlyphType)
+print("Default GlyphPos  : ", glyph.GlyphType.Center)
 
-print "Changing value of line width"
+print("Changing value of line width")
 #width = -10
 #vectors.LineWidth = width
 #print "Negative value -10 : ", vectors.LineWidth
@@ -68,7 +68,7 @@ print "Changing value of line width"
 
 width = 10
 vectors.LineWidth = width
-print "Positive value  10 : ", vectors.LineWidth
+print("Positive value  10 : ", vectors.LineWidth)
 pvsimple.Render()
 
 # width = 0
@@ -78,29 +78,29 @@ pvsimple.Render()
 
 width = 2
 vectors.LineWidth = width
-print "Positive value   2 : ", vectors.LineWidth
+print("Positive value   2 : ", vectors.LineWidth)
 pvsimple.Render()
 
-print "Changing glyph type"
+print("Changing glyph type")
 gtype = "Arrow"
 glyph.GlyphType = gtype
-print "Arrow type     : ", glyph.GlyphType
+print("Arrow type     : ", glyph.GlyphType)
 pvsimple.Render()
 
 gtype = "Cone"
 glyph.GlyphType = gtype
 glyph.GlyphType.Resolution = 3
 glyph.GlyphType.Height = 4
-print "Cone type: " + str(glyph.GlyphType) + ", resolution: " + str(glyph.GlyphType.Resolution)
+print("Cone type: " + str(glyph.GlyphType) + ", resolution: " + str(glyph.GlyphType.Resolution))
 pvsimple.Render()
 
 glyph.GlyphType.Resolution = 6
-print "Cone type: " + str(glyph.GlyphType) + ", resolution: " + str(glyph.GlyphType.Resolution)
+print("Cone type: " + str(glyph.GlyphType) + ", resolution: " + str(glyph.GlyphType.Resolution))
 pvsimple.Render()
 
 gtype = "Line"
 glyph.GlyphType = gtype
-print "Line Type      : ", glyph.GlyphType
+print("Line Type      : ", glyph.GlyphType)
 pvsimple.Render()
 
 gtype = "2D Glyph"
@@ -108,18 +108,18 @@ glyph.GlyphType = gtype
 glyph.GlyphType.GlyphType = "Arrow"
 pvsimple.Render()
 
-print "Changing glyph position"
+print("Changing glyph position")
 pos = [0.0, 0.0, 0.0]
 glyph.GlyphType.Center = pos
-print "Center position : ", glyph.GlyphType.Center
+print("Center position : ", glyph.GlyphType.Center)
 pvsimple.Render()
 
 pos = [0.5, 0.0, 0.0]
 glyph.GlyphType.Center = pos
-print "Tail position   : ", glyph.GlyphType.Center
+print("Tail position   : ", glyph.GlyphType.Center)
 pvsimple.Render()
 
 pos = [-0.5, 0.0, 0.0]
 glyph.GlyphType.Center = pos
-print "Head position   : ", glyph.GlyphType.Center
+print("Head position   : ", glyph.GlyphType.Center)
 pvsimple.Render()

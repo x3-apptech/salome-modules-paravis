@@ -22,15 +22,15 @@ from presentations import *
 import pvsimple
 
 # Import table from file
-print 'Import file with tables....',
+print('Import file with tables....', end=' ')
 file_path = tablesdir + "tables_test.xls"
 table_reader = pvsimple.TableReader(FileName=file_path)
 
 if table_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
     table_reader.UpdatePipeline()
-    print "OK"
+    print("OK")
 
 # Display
 table_to_3d = pvsimple.TableTo3D(table_reader)

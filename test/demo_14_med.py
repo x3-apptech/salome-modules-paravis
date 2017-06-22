@@ -31,7 +31,7 @@ import time
 import inspect
 
 def medread (path, impth):
-  print '============================================================'
+  print('============================================================')
 
   if os.path.exists(path):
     filelist = os.listdir(path)
@@ -59,7 +59,7 @@ def medread (path, impth):
         Render()
         time.sleep(10)
         WriteImage(filename = (impth +  "medFile_" + str(i+1) + ".png"), view=v, Magnification=2)
-        print str(i+1), "Shown file is:  ", fname
+        print(str(i+1), "Shown file is:  ", fname)
         
         Delete(v)
         v1 = CreateRenderView()

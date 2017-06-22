@@ -24,23 +24,23 @@ from presentations import DeformedShapeOnField, EntityType
 import pvsimple
 
 #====================Stage1: Import from MED file in ParaVis============
-print "**** Stage1: Import from MED file in ParaVis"
+print("**** Stage1: Import from MED file in ParaVis")
 
-print 'Import "Hexa8.med"....................',
+print('Import "Hexa8.med"....................', end=' ')
 
 file_path = datadir + "Hexa8.med"
 pvsimple.OpenDataFile(file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 #====================Stage2: Creating Deformed Shape====================
-print "**** Stage2: Creating Deformed Shape"
+print("**** Stage2: Creating Deformed Shape")
 
-print "Creating Deformed Shape...............",
+print("Creating Deformed Shape...............", end=' ')
 
 cell_entity = EntityType.CELL
 field_name = 'vectoriel field'
@@ -48,51 +48,51 @@ defshape = DeformedShapeOnField(med_reader, cell_entity, field_name, 1)
 pvsimple.ResetCamera()
 
 if defshape is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 #====================Stage3: Color of Deformed Shape====================
-print "**** Stage3: Color of Deformed Shape"
+print("**** Stage3: Color of Deformed Shape")
 
 # Step1
-print "Getting the current color of Deformed Shape in RGB ... ",
+print("Getting the current color of Deformed Shape in RGB ... ", end=' ')
 color = defshape.AmbientColor
-print color
+print(color)
 
 # Step2
-print "Set the positive color in RGB"
+print("Set the positive color in RGB")
 color = [0.3, 0.3, 0.3]
 defshape.AmbientColor = color
 pvsimple.Render()
 
 color = defshape.AmbientColor
-print "Color: ", color
+print("Color: ", color)
 
 # Step3
-print "Set the negative R and positive GB"
+print("Set the negative R and positive GB")
 color = [-0.3, 0.3, 0.3]
 defshape.AmbientColor = color
 pvsimple.Render()
 
 color = defshape.AmbientColor
-print "Color: ", color
+print("Color: ", color)
 
 # Step4
-print "Set the negative R and positive GB"
+print("Set the negative R and positive GB")
 color = [0.3, -0.3, 0.3]
 defshape.AmbientColor = color
 pvsimple.Render()
 
 color = defshape.AmbientColor
-print "Color: ", color
+print("Color: ", color)
 
 # Step5
-print "Set the negative B and positive RG"
-print "Set the negative R and positive GB"
+print("Set the negative B and positive RG")
+print("Set the negative R and positive GB")
 color = [0.3, 0.3, -0.3]
 defshape.AmbientColor = color
 pvsimple.Render()
 
 color = defshape.AmbientColor
-print "Color: ", color
+print("Color: ", color)

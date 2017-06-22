@@ -49,7 +49,7 @@ class MEDViewer():
       pvsimple.SetActiveSource(element)
       pvsimple.Render(view=self.renderView)
       if pause:
-        raw_input("Press Enter key to continue")
+        input("Press Enter key to continue")
   #
 
   def display_mesh(self, element, pause=False):

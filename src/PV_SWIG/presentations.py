@@ -23,14 +23,13 @@ typical for Post-Pro module (Scalar Map, Deformed Shape, Vectors, etc.)
 """
 
 
-from __future__ import division
+
 ##from __future__ import print_function
 
 import os
 import re
 import warnings
 from math import sqrt, sin, cos, radians
-from string import upper
 
 # Do not use pv as a short name.
 # It is a name of function from numpy and may be redefined implicitly by 'from numpy import *' call.
@@ -236,7 +235,7 @@ def process_prs_for_test(prs, view, picture_name, show_bar=True):
         os.makedirs(pic_dir)
 
     # Save picture
-    print "Write image:", file_name
+    print("Write image:", file_name)
     pvs.WriteImage(file_name, view=view, Magnification=1)
 
 
@@ -297,7 +296,7 @@ def set_visible_lines(xy_prs, lines):
     sv = xy_prs.GetProperty("SeriesVisibility").GetData()
     visible = '0'
 
-    for i in xrange(0, len(sv)):
+    for i in range(0, len(sv)):
         if i % 2 == 0:
             line_name = sv[i]
             if line_name in lines:
@@ -375,7 +374,7 @@ def get_data_range(proxy, entity, field_name, vector_mode='Magnitude',
     entity_data_info = None
     field_data = proxy.GetFieldDataInformation()
 
-    if field_name in field_data.keys():
+    if field_name in list(field_data.keys()):
         entity_data_info = field_data
     elif entity == EntityType.CELL:
         entity_data_info = proxy.GetCellDataInformation()
@@ -384,7 +383,7 @@ def get_data_range(proxy, entity, field_name, vector_mode='Magnitude',
 
     data_range = []
 
-    if field_name in entity_data_info.keys():
+    if field_name in list(entity_data_info.keys()):
         vcomp = get_vector_component(vector_mode)
         data_range = entity_data_info[field_name].GetComponentRange(vcomp)
     else:
@@ -448,7 +447,7 @@ def is_data_on_cells(proxy, field_name):
     """Check the existence of a field on cells with the given name."""
     proxy.UpdatePipeline()
     cell_data_info = proxy.GetCellDataInformation()
-    return (field_name in cell_data_info.keys())
+    return (field_name in list(cell_data_info.keys()))
 
 
 def is_empty(proxy):
@@ -509,7 +508,7 @@ def multiply3x3(a, b):
          [0, 0, 0],
          [0, 0, 0]]
 
-    for i in xrange(3):
+    for i in range(3):
         c[0][i] = a[0][0] * b[0][i] + a[0][1] * b[1][i] + a[0][2] * b[2][i]
         c[1][i] = a[1][0] * b[0][i] + a[1][1] * b[1][i] + a[1][2] * b[2][i]
         c[2][i] = a[2][0] * b[0][i] + a[2][1] * b[1][i] + a[2][2] * b[2][i]
@@ -575,7 +574,7 @@ def get_normal_by_orientation(orientation, ang1=0, ang2=0):
         rotation = multiply3x3(ry, rz)
         i_plane = 0
 
-    for i in xrange(0, 3):
+    for i in range(0, 3):
         normal[i] = rotation[i][i_plane]
 
     return normal
@@ -596,7 +595,7 @@ def get_bound_project(bound_box, dir):
     bound_prj[0] = dot_product(dir, bound_points[0])
     bound_prj[1] = bound_prj[0]
 
-    for i in xrange(1, 8):
+    for i in range(1, 8):
         tmp = dot_product(dir, bound_points[i])
         if bound_prj[1] < tmp:
             bound_prj[1] = tmp
@@ -619,7 +618,7 @@ def get_positions(nb_planes, dir, bounds, displacement):
         step = bound_prj[2] / (nb_planes - 1)
         abs_displacement = step * displacement
         start_pos = bound_prj[0] - 0.5 * step + abs_displacement
-        for i in xrange(nb_planes):
+        for i in range(nb_planes):
             pos = start_pos + i * step
             positions.append(pos)
     else:
@@ -632,7 +631,7 @@ def get_positions(nb_planes, dir, bounds, displacement):
 def get_contours(scalar_range, nb_contours):
     """Generate contour values."""
     contours = []
-    for i in xrange(nb_contours):
+    for i in range(nb_contours):
         pos = scalar_range[0] + i * (
             scalar_range[1] - scalar_range[0]) / (nb_contours - 1)
         contours.append(pos)
@@ -646,7 +645,7 @@ def get_nb_components(proxy, entity, field_name):
     entity_data_info = None
     field_data = proxy.GetFieldDataInformation()
 
-    if field_name in field_data.keys():
+    if field_name in list(field_data.keys()):
         entity_data_info = field_data
     elif entity == EntityType.CELL:
         select_cells_with_data(proxy, on_cells=[field_name])
@@ -656,7 +655,7 @@ def get_nb_components(proxy, entity, field_name):
         entity_data_info = proxy.GetPointDataInformation()
 
     nb_comp = None
-    if field_name in entity_data_info.keys():
+    if field_name in list(entity_data_info.keys()):
         nb_comp = entity_data_info[field_name].GetNumberOfComponents()
     else:
         pv_entity = EntityType.get_pvtype(entity)
@@ -682,7 +681,7 @@ def get_scale_factor(proxy):
     volume = 1
     vol = dim = 0
 
-    for i in xrange(0, 6, 2):
+    for i in range(0, 6, 2):
         vol = abs(bounds[i + 1] - bounds[i])
         if vol > 0:
             dim += 1
@@ -835,7 +834,7 @@ def select_cells_with_data(proxy, on_points=[], on_cells=[], on_gauss=[]):
 
     if not all_arrays:
         file_name = proxy.FileName.split(os.sep)[-1]
-        print "Warning: " + file_name + " doesn't contain any data array."
+        print("Warning: " + file_name + " doesn't contain any data array.")
 
     # List of cell types to be selected
     cell_types_on = []
@@ -845,8 +844,8 @@ def select_cells_with_data(proxy, on_points=[], on_cells=[], on_gauss=[]):
         proxy.Entity = [cell_type]
         proxy.UpdatePipeline()
 
-        cell_arrays = proxy.GetCellDataInformation().keys()
-        point_arrays = proxy.GetPointDataInformation().keys()
+        cell_arrays = list(proxy.GetCellDataInformation().keys())
+        point_arrays = list(proxy.GetPointDataInformation().keys())
 
         if on_points or on_cells:
             if on_points is None:
@@ -905,7 +904,8 @@ def add_scalar_bar(field_name, nb_components,
     scalar_bar.LookupTable = lookup_table
 
     # Set default properties same as in Post-Pro
-    scalar_bar.NumberOfLabels = 5
+    # NumberOfLabels removed (see commit ff8f9cb6 in PARAVIEW)
+    # scalar_bar.NumberOfLabels = 5
     scalar_bar.AutomaticLabelFormat = 0
     scalar_bar.LabelFormat = '%-#6.6g'
     # Title
@@ -998,7 +998,7 @@ def get_mesh_full_names(proxy):
 def get_group_names(extrGrps):
     """Return full names of all groups of the given 'ExtractGroup' filter object.
     """
-    group_names = filter(lambda x:x[:4]=="GRP_",list(extrGrps.GetProperty("GroupsFlagsInfo")[::2]))
+    group_names = [x for x in list(extrGrps.GetProperty("GroupsFlagsInfo")[::2]) if x[:4]=="GRP_"]
     return group_names
 
 
@@ -1014,7 +1014,7 @@ def get_time(proxy, timestamp_nb):
         timestamps = proxy.Input.TimestepValues.GetData()
 
     length = len(timestamps)
-    if (timestamp_nb > 0 and (timestamp_nb - 1) not in xrange(length) ) or (timestamp_nb < 0 and -timestamp_nb > length):
+    if (timestamp_nb > 0 and (timestamp_nb - 1) not in range(length) ) or (timestamp_nb < 0 and -timestamp_nb > length):
         raise ValueError("Timestamp number is out of range: " + str(timestamp_nb))
 
     if not timestamps:
@@ -2533,7 +2533,7 @@ def MeshOnEntity(proxy, mesh_name, entity):
     else:
         mesh_full_name = find_mesh_full_name(proxy, mesh_name)
     if not mesh_full_name:
-        raise RuntimeError, "The given mesh name was not found"
+        raise RuntimeError("The given mesh name was not found")
     # Select only the given mesh
     proxy.AllArrays = [mesh_full_name]
     proxy.UpdatePipeline()
@@ -2603,17 +2603,17 @@ def CreatePrsForFile(file_name, prs_types,
 
     """
     # Import MED file
-    print "Import " + file_name.split(os.sep)[-1] + "..."
+    print("Import " + file_name.split(os.sep)[-1] + "...")
 
     try:
         proxy = pvs.MEDReader(FileName=file_name)
         if proxy is None:
-            print "FAILED"
+            print("FAILED")
         else:
             #proxy.UpdatePipeline()
-            print "OK"
+            print("OK")
     except:
-        print "FAILED"
+        print("FAILED")
     else:
         # Get view
         view = pvs.GetRenderView()
@@ -2653,13 +2653,13 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
         mesh_names = get_mesh_full_names(proxy)
         for mesh_name in mesh_names:
             # Build mesh field presentation
-            print "Creating submesh for '" + get_field_short_name(mesh_name) + "' mesh... "
+            print("Creating submesh for '" + get_field_short_name(mesh_name) + "' mesh... ")
             prs = MeshOnEntity(proxy, mesh_name, None)
             if prs is None:
-                print "FAILED"
+                print("FAILED")
                 continue
             else:
-                print "OK"
+                print("OK")
             # Construct image file name
             pic_name = picture_dir + get_field_short_name(mesh_name) + "." + picture_ext
 
@@ -2671,13 +2671,13 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
             extGrp.UpdatePipelineInformation()
             if if_possible(proxy, None, None, PrsTypeEnum.MESH, extGrp):
                 for group in get_group_names(extGrp):
-                    print "Creating submesh on group " + get_group_short_name(group) + "... "
+                    print("Creating submesh on group " + get_group_short_name(group) + "... ")
                     prs = MeshOnGroup(proxy, extGrp, group)
                     if prs is None:
-                        print "FAILED"
+                        print("FAILED")
                         continue
                     else:
-                        print "OK"
+                        print("OK")
                     # Construct image file name
                     pic_name = picture_dir + get_group_short_name(group) + "." + picture_ext
 
@@ -2714,7 +2714,7 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                 # Presentation type for graphics file name
                 f_prs_type = prs_name.replace(' ', '').upper()
 
-                for timestamp_nb in xrange(1, len(timestamps) + 1):
+                for timestamp_nb in range(1, len(timestamps) + 1):
                     time = timestamps[timestamp_nb - 1]
                     if (time == 0.0):
                         scalar_range = get_data_range(proxy, field_entity,
@@ -2722,7 +2722,7 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                         # exclude time stamps with null lenght of scalar range
                         if (scalar_range[0] == scalar_range[1]):
                             continue
-                    print "Creating " + prs_name + " on " + field_name + ", time = " + str(time) + "... "
+                    print("Creating " + prs_name + " on " + field_name + ", time = " + str(time) + "... ")
                     try:
                         prs = create_prs(prs_type, proxy,
                                          field_entity, field_name, timestamp_nb)
@@ -2733,13 +2733,13 @@ def CreatePrsForProxy(proxy, view, prs_types, picture_dir, picture_ext):
                             MEDFileFieldRepresentationTree::activateTheFirst() and
                             MEDFileFieldRepresentationTree::getTheSingleActivated(...) methods).
                         """
-                        print "ValueError exception is catched"
+                        print("ValueError exception is catched")
                         continue
                     if prs is None:
-                        print "FAILED"
+                        print("FAILED")
                         continue
                     else:
-                        print "OK"
+                        print("OK")
 
                     # Construct image file name
                     pic_name = picture_dir + field_name + "_" + str(time) + "_" + f_prs_type + "." + picture_ext

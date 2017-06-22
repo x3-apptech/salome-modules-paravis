@@ -31,26 +31,26 @@ picturedir = get_picture_dir("bugs/A2")
 med_file_path = datadir + "carre_MIXTE_0000.med"
 pic_path = os.path.join(picturedir, "A2." + pictureext)
 
-print "BREAKPOINT_1"
+print("BREAKPOINT_1")
 # 1. Import MED file
-print 'Importing "carre_MIXTE_0000.med"...',
+print('Importing "carre_MIXTE_0000.med"...', end=' ')
 pvsimple.OpenDataFile(med_file_path)
 med_reader = pvsimple.GetActiveSource()
 
 if med_reader is None:
-    print "FAILED"
+    print("FAILED")
 else:
-    print "OK"
+    print("OK")
 
 # 2. Create mesh
-print "Creating MeshOnEntity..............",
+print("Creating MeshOnEntity..............", end=' ')
 mesh = MeshOnEntity(med_reader, "dom", EntityType.CELL)
 
 if mesh is None:
-    print "FAILED"
+    print("FAILED")
 else:
     mesh.Representation = 'Surface With Edges'
-    print "OK"
+    print("OK")
 
 # 3. Display mesh and make snapshot
 view = pvsimple.GetRenderView()
@@ -67,6 +67,6 @@ view.CameraParallelScale = 0.1
 
 pvsimple.Render(view)
 
-print "Picure file name is " + pic_path
+print("Picure file name is " + pic_path)
 pvs.WriteImage(pic_path, view=view, Magnification=1)
 time.sleep(1)
