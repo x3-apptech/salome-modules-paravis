@@ -28,9 +28,9 @@
 #include "vtkInformation.h"
 
 #include <SALOME_LifeCycleCORBA.hxx>
+#include <SALOME_NamingService.hxx>
 #include <TopoDS_Shape.hxx>
 #include "vtkPolyData.h"
-#include <SalomeApp_Application.h>
 #include "GEOM_Gen.hh"
 #include "GEOM_Client.hxx"
 #include "OCC2VTK_Tools.h"
@@ -108,7 +108,8 @@ int vtkParaGEOMCorbaSource::RequestData(vtkInformation* request, vtkInformationV
     GEOM::GEOM_Object_var geomObj = GEOM::GEOM_Object::_narrow(obj);
     
     if(!CORBA::is_nil(geomObj)) {
-      SALOME_LifeCycleCORBA aLCC(SalomeApp_Application::namingService());
+      SALOME_NamingService ns(*OrbC);
+      SALOME_LifeCycleCORBA aLCC(&ns);
       Engines::EngineComponent_var aComponent = aLCC.FindOrLoad_Component("FactoryServer","GEOM");
       GEOM::GEOM_Gen_var geomGen = GEOM::GEOM_Gen::_narrow(aComponent);
       if ( !CORBA::is_nil( geomGen ) ) {

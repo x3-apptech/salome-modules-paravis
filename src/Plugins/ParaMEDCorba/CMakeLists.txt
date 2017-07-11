@@ -65,7 +65,6 @@ PROJECT( ParaMEDCorba )
       ${OMNIORB_LIBRARIES}
       ${MED_SalomeIDLMED}
       ${KERNEL_SalomeIDLKernel}
-      ${QT_LIBRARIES}
       )
     TARGET_LINK_LIBRARIES(ParaMEDCorbaPlugin
       ParaMEDMEM2VTK
