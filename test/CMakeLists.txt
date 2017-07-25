@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,30 +17,4 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-ADD_SUBDIRECTORY(VisuPrs)
 ADD_SUBDIRECTORY(standalone)
-
-SET(_demo_files
-  demo0.py
-  demo1.py
-  demo2.py
-  demo3.py
-  demo4.py
-  demo5.py
-  demo6.py
-  demo7.py
-  demo8.py
-  demo9.py
-  demo10.py
-  demo11.py
-  demo12.py
-  demo_14_med.py
-  demo_15_med.py
-  )
-
-SALOME_INSTALL_SCRIPTS("${_demo_files}" ${SALOME_INSTALL_SCRIPT_PYTHON})
-
-# Application tests
-INSTALL(FILES CTestTestfileInstall.cmake
-  DESTINATION ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test
-  RENAME CTestTestfile.cmake)
