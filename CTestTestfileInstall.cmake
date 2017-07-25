@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2015-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,19 +17,4 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-# This case corresponds to: /visu/ScalarMap_On_DeformedShape/A7 case
-# Create Scalar Map on Deformed Shape for all data of the given MED file
-
-import sys
-from paravistest import datadir, pictureext, get_picture_dir
-from presentations import CreatePrsForFile, PrsTypeEnum
-
-# Directory for saving snapshots
-picturedir = get_picture_dir("ScalarMap_On_DeformedShape/A7")
-
-file = datadir + "Tetra4.med"
-print(" --------------------------------- ")
-print("file ", file)
-print(" --------------------------------- ")
-print("CreatePrsForFile...")
-CreatePrsForFile(file, [PrsTypeEnum.DEFORMEDSHAPESCALARMAP], picturedir, pictureext)
+SUBDIRS(MEDReader)

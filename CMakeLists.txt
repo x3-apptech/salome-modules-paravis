@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ ENDIF(WIN32)
 # Ensure a proper linker behavior:
 CMAKE_POLICY(SET CMP0003 NEW)
 IF(WIN32)
-  CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib 
+  CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib
 ENDIF(WIN32)
 
 # Versioning
@@ -146,7 +146,7 @@ FIND_PACKAGE(SalomeParaView REQUIRED)
 ##
 SET(SALOME_PARAVIS_BUILD_INSITU OFF)
 IF(SALOME_PARAVIS_BUILD_PLUGINS)
-   # If CORBA plugins required, take in MED module 
+   # If CORBA plugins required, take in MED module
    IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
       SET(MED_ROOT_DIR $ENV{MED_ROOT_DIR} CACHE PATH "Path to the SALOME MED module")
       IF(EXISTS ${MED_ROOT_DIR})
@@ -160,11 +160,11 @@ IF(SALOME_PARAVIS_BUILD_PLUGINS)
     ELSE(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
        SET(MEDCOUPLING_ROOT_DIR $ENV{MEDCOUPLING_ROOT_DIR} CACHE PATH "Path to the MEDCoupling tool")
        IF(EXISTS ${MEDCOUPLING_ROOT_DIR})
-          LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")   
+          LIST(APPEND CMAKE_MODULE_PATH "${MEDCOUPLING_ROOT_DIR}/cmake_files")
        ENDIF()
        FIND_PACKAGE(SalomeMEDCoupling)            # will load MEDFile
        SALOME_LOG_OPTIONAL_PACKAGE(MEDCoupling SALOME_PARAVIS_BUILD_PLUGINS)
-    ENDIF()        
+    ENDIF()
 ENDIF(SALOME_PARAVIS_BUILD_PLUGINS)
 ##
 ## From GEOM
@@ -355,3 +355,8 @@ IF(NOT SALOME_LIGHT_ONLY)
   INSTALL(EXPORT ${PROJECT_NAME}TargetGroup DESTINATION "${SALOME_INSTALL_CMAKE_LOCAL}"
           FILE ${PROJECT_NAME}Targets.cmake)
 ENDIF()
+
+# Application tests
+INSTALL(FILES CTestTestfileInstall.cmake
+  DESTINATION ${SALOME_INSTALL_SCRIPT_SCRIPTS}/test
+  RENAME CTestTestfile.cmake)
