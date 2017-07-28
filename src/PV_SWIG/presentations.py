@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,12 @@ This module is intended to provide Python API for building presentations
 typical for Post-Pro module (Scalar Map, Deformed Shape, Vectors, etc.)
 """
 
-
 from __future__ import division
 ##from __future__ import print_function
+
+import warnings
+warnings.simplefilter('always', DeprecationWarning)
+warnings.warn("the presentations.py module is deprecated", DeprecationWarning, stacklevel=2)
 
 import os
 import re
