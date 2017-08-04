@@ -505,6 +505,10 @@ void PVGUI_Module::pvCreateMenus()
   createMenu( ShowTraceId, aToolsMnu );
   createMenu( RestartTraceId, aToolsMnu );
 
+  // --- Menu "Catalyst"
+  aRes = guiElements->getCatalystMenu();
+  myCatalystMenuId = createMenu( tr( "MEN_DESK_CATALYST" ), -1, -1, 100, -1, aRes);
+
   // --- Menu "Help"
 
   int aHelpMnu = createMenu( tr( "MEN_DESK_HELP" ), -1, -1 );
