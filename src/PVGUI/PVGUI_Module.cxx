@@ -181,6 +181,7 @@ PVGUI_Module::PVGUI_Module()
     myFiltersMenuId( -1 ),
     myMacrosMenuId(-1),
     myRecentMenuId(-1),
+    myCatalystMenuId(-1),
     myOldMsgHandler(0),
     myTraceWindow(0),
     myInitTimer(0),
@@ -595,6 +596,7 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
   if ( mySourcesMenuId != -1 ) menuMgr()->show(mySourcesMenuId);
   if ( myFiltersMenuId != -1 ) menuMgr()->show(myFiltersMenuId);
   if ( myMacrosMenuId != -1 ) menuMgr()->show(myMacrosMenuId);
+  if ( myCatalystMenuId != -1 ) menuMgr()->show(myCatalystMenuId);
 
   // Update the various menus with the content pre-loaded in myGuiElements
 //  QMenu* srcMenu = menuMgr()->findMenu( mySourcesMenuId );
@@ -673,6 +675,7 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
   menuMgr()->hide(mySourcesMenuId);
   menuMgr()->hide(myFiltersMenuId);
   menuMgr()->hide(myMacrosMenuId);
+  menuMgr()->hide(myCatalystMenuId);
   setMenuShown( false );
   setToolShown( false );
 

@@ -1257,5 +1257,9 @@
         <source>ERR_STATE_CANNOT_BE_RESTORED</source>
         <translation>The state can&apos;t be restored.</translation>
     </message>
+    <message>
+        <source>MEN_DESK_CATALYST</source>
+        <translation>Catalyst</translation>
+    </message>
 </context>
 </TS>

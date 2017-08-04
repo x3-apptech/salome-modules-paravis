@@ -208,6 +208,7 @@ private:
   int                    myFiltersMenuId;
   int                    myMacrosMenuId;
   int                    myRecentMenuId;
+  int                    myCatalystMenuId;
   
   typedef QMap<QWidget*, bool> WgMap;
   WgMap                  myDockWidgets;
