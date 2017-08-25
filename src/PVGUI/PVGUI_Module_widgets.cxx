@@ -52,7 +52,7 @@
 #include <pqDataInformationWidget.h>
 #include <pqPVAnimationWidget.h>
 #include <pqFindDataSelectionDisplayFrame.h>
-#include <pqMultiBlockInspectorPanel.h>
+#include <pqMultiBlockInspectorWidget.h>
 #include <pqProgressWidget.h>
 #include <pqProgressManager.h>
 #include <pqPropertiesPanel.h>
@@ -264,7 +264,7 @@ void PVGUI_Module::setupDockWidgets()
   QDockWidget* multiBlockInspectorPanelDock  = new QDockWidget( tr( "TTL_MUTLI_BLOCK_INSPECTOR" ), desk );
   multiBlockInspectorPanelDock->setObjectName("multiBlockInspectorPanelDock");
   desk->addDockWidget( Qt::LeftDockWidgetArea, multiBlockInspectorPanelDock );
-  pqMultiBlockInspectorPanel* mbi_panel = new pqMultiBlockInspectorPanel( multiBlockInspectorPanelDock );
+  pqMultiBlockInspectorWidget* mbi_panel = new pqMultiBlockInspectorWidget( multiBlockInspectorPanelDock );
   multiBlockInspectorPanelDock->setWidget(mbi_panel);
   myDockWidgets[multiBlockInspectorPanelDock] = false; // hidden by default
 
