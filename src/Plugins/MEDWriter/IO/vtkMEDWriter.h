@@ -44,16 +44,16 @@ protected:
   ~vtkMEDWriter();
 
   int RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
-
   int RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
-
+  int RequestUpdateExtent(vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);
 private:
   vtkMEDWriter(const vtkMEDWriter&);
   void operator=(const vtkMEDWriter&); // Not implemented.
  private:
   int WriteAllTimeSteps;
+  int NumberOfTimeSteps;
+  int CurrentTimeIndex;
   char *FileName;
-  bool IsTouched;
   //BTX
   //ETX
 };
