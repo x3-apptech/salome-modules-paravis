@@ -38,6 +38,7 @@ class vtkStructuredGrid;
 class vtkVariantArray;
 class vtkIdTypeArray;
 class vtkDoubleArray;
+class vtkDataArray;
 class vtkDataSet;
 
 class TimeKeeper;
@@ -47,12 +48,14 @@ class ExportedTinyInfo;
 class ELGACmp
 {
 public:
-  vtkIdTypeArray *findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const;
+  template<class T>
+  vtkIdTypeArray *findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const;
   void appendELGAIfAny(vtkDataSet *ds) const;
   ~ELGACmp();
 private:
-  vtkIdTypeArray *isExisting(const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd) const;
-  vtkIdTypeArray *createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const;
+  vtkIdTypeArray *isExisting(const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd) const;
+  template<class T>
+  vtkIdTypeArray *createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const;
 private:
   //! size of _loc_names is equal to _elgas.
   mutable std::vector< std::vector<std::string> > _loc_names;

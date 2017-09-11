@@ -46,6 +46,7 @@
 #include "vtkIdTypeArray.h"
 #include "vtkDoubleArray.h"
 #include "vtkIntArray.h"
+#include "vtkFloatArray.h"
 #include "vtkCellArray.h"
 #include "vtkPointData.h"
 #include "vtkFieldData.h"
@@ -77,7 +78,8 @@ const char MEDFileFieldRepresentationTree::ROOT_OF_FAM_IDS_IN_TREE[]="zeFamIds";
 
 const char MEDFileFieldRepresentationTree::COMPO_STR_TO_LOCATE_MESH_DA[]="-@?|*_";
 
-vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const
+template<class T>
+vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd, vtkDataSet *ds, bool& isNew, ExportedTinyInfo *internalInfo) const
 {
   vtkIdTypeArray *try0(isExisting(locsReallyUsed,vtkd));
   if(try0)
@@ -88,11 +90,11 @@ vtkIdTypeArray *ELGACmp::findOrCreate(const MEDCoupling::MEDFileFieldGlobsReal *
   else
     {
       isNew=true;
-      return createNew(globs,locsReallyUsed,vtkd,ds,internalInfo);
+      return createNew<T>(globs,locsReallyUsed,vtkd,ds,internalInfo);
     }
 }
 
-vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd) const
+vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd) const
 {
   std::vector< std::vector<std::string> >::iterator it(std::find(_loc_names.begin(),_loc_names.end(),locsReallyUsed));
   if(it==_loc_names.end())
@@ -108,9 +110,10 @@ vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUs
   return ret;
 }
 
-vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDoubleArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
+template<class T>
+vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
-  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
   std::vector< std::vector<std::string> > locNames(_loc_names);
   std::vector<vtkIdTypeArray *> elgas(_elgas);
   std::vector< std::pair< vtkQuadratureSchemeDefinition *, unsigned char > > defs;
@@ -217,6 +220,14 @@ public:
 };
 
 template<>
+class MEDFileVTKTraits<float>
+{
+public:
+  typedef vtkFloatArray VtkType;
+  typedef MEDCoupling::DataArrayFloat MCType;
+};
+
+template<>
 class MEDFileVTKTraits<double>
 {
 public:
@@ -239,6 +250,84 @@ void AssignDataPointerOther(VTKT *vtkTab, MCT *mcTab, int nbElems)
 {
   vtkTab->SetVoidArray(reinterpret_cast<unsigned char *>(mcTab->getPointer()),nbElems,0,VTKT::VTK_DATA_ARRAY_FREE);
   mcTab->accessToMemArray().setSpecificDeallocator(0);
+}
+
+template<class T>
+void AssignToFieldData(DataArray *vPtr, const MEDTimeReq *tr, vtkFieldData *att, const std::string& crudeName, bool noCpyNumNodes,
+                       const std::vector<TypeOfField>& discs, const ELGACmp& elgaCmp, const MEDCoupling::MEDFileFieldGlobsReal *globs,
+                       MEDFileAnyTypeField1TS *f1ts, vtkDataSet *ds, ExportedTinyInfo *internalInfo)
+{
+  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
+  typename MEDFileVTKTraits<T>::MCType *vi(static_cast<typename MEDFileVTKTraits<T>::MCType *>(vPtr));
+  typename MEDFileVTKTraits<T>::VtkType *vtkd(MEDFileVTKTraits<T>::VtkType::New());
+  vtkd->SetNumberOfComponents(vi->getNumberOfComponents());
+  for(int i=0;i<vi->getNumberOfComponents();i++)
+    vtkd->SetComponentName(i,vi->getVarOnComponent(i).c_str());
+  AssignDataPointerToVTK<T>(vtkd,vi,noCpyNumNodes);
+  std::string name(tr->buildName(crudeName));
+  vtkd->SetName(name.c_str());
+  att->AddArray(vtkd);
+  vtkd->Delete();
+  if(discs[0]==ON_GAUSS_PT)
+    {
+      bool tmp;
+      elgaCmp.findOrCreate<T>(globs,f1ts->getLocsReallyUsed(),vtkd,ds,tmp,internalInfo);
+    }
+  if(discs[0]==ON_GAUSS_NE)
+    {
+      vtkIdTypeArray *elno(vtkIdTypeArray::New());
+      elno->SetNumberOfComponents(1);
+      vtkIdType ncell(ds->GetNumberOfCells());
+      int *pt(new int[ncell]),offset(0);
+      std::set<int> cellTypes;
+      for(vtkIdType cellId=0;cellId<ncell;cellId++)
+        {
+          vtkCell *cell(ds->GetCell(cellId));
+          int delta(cell->GetNumberOfPoints());
+          cellTypes.insert(cell->GetCellType());
+          pt[cellId]=offset;
+          offset+=delta;
+        }
+      elno->GetInformation()->Set(MEDUtilities::ELNO(),1);
+      elno->SetVoidArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
+      std::string nameElno("ELNO"); nameElno+="@"; nameElno+=name;
+      elno->SetName(nameElno.c_str());
+      ds->GetCellData()->AddArray(elno);
+      vtkd->GetInformation()->Set(vtkQuadratureSchemeDefinition::QUADRATURE_OFFSET_ARRAY_NAME(),elno->GetName());
+      elno->GetInformation()->Set(vtkAbstractArray::GUI_HIDE(),1);
+      //
+      vtkInformationQuadratureSchemeDefinitionVectorKey *key(vtkQuadratureSchemeDefinition::DICTIONARY());
+      for(std::set<int>::const_iterator it=cellTypes.begin();it!=cellTypes.end();it++)
+        {
+          const unsigned char *pos(std::find(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH,*it));
+          if(pos==MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH)
+            continue;
+          INTERP_KERNEL::NormalizedCellType ct((INTERP_KERNEL::NormalizedCellType)std::distance(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,pos));
+          const INTERP_KERNEL::CellModel& cm(INTERP_KERNEL::CellModel::GetCellModel(ct));
+          int nbGaussPt(cm.getNumberOfNodes()),dim(cm.getDimension());
+          vtkQuadratureSchemeDefinition *def(vtkQuadratureSchemeDefinition::New());
+          double *shape(new double[nbGaussPt*nbGaussPt]);
+          std::size_t dummy;
+          const double *gsCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));//GetLocsFromGeometricType
+          const double *refCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));
+          const double *weights(MEDCouplingFieldDiscretizationGaussNE::GetWeightArrayFromGeometricType(ct,dummy));
+          std::vector<double> gsCoords2(gsCoords,gsCoords+nbGaussPt*dim),refCoords2(refCoords,refCoords+nbGaussPt*dim);
+          INTERP_KERNEL::GaussInfo calculator(ct,gsCoords2,nbGaussPt,refCoords2,nbGaussPt);
+          calculator.initLocalInfo();
+          for(int i=0;i<nbGaussPt;i++)
+            {
+              const double *pt0(calculator.getFunctionValues(i));
+              std::copy(pt0,pt0+nbGaussPt,shape+nbGaussPt*i);
+            }
+          def->Initialize(*it,nbGaussPt,nbGaussPt,shape,const_cast<double *>(weights));
+          delete [] shape;
+          key->Set(elno->GetInformation(),def,*it);
+          key->Set(vtkd->GetInformation(),def,*it);
+          def->Delete();
+        }
+      //
+      elno->Delete();
+    }
 }
 
 //=
@@ -330,13 +419,16 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
       MEDFileAnyTypeField1TS *f1tsPtr(f1ts);
       MEDFileField1TS *f1tsPtrDbl(dynamic_cast<MEDFileField1TS *>(f1tsPtr));
       MEDFileIntField1TS *f1tsPtrInt(dynamic_cast<MEDFileIntField1TS *>(f1tsPtr));
+      MEDFileFloatField1TS *f1tsPtrFloat(dynamic_cast<MEDFileFloatField1TS *>(f1tsPtr));
       DataArray *crudeArr(0),*postProcessedArr(0);
       if(f1tsPtrDbl)
         crudeArr=f1tsPtrDbl->getUndergroundDataArray();
       else if(f1tsPtrInt)
         crudeArr=f1tsPtrInt->getUndergroundDataArray();
+      else if(f1tsPtrFloat)
+        crudeArr=f1tsPtrFloat->getUndergroundDataArray();
       else
-        throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationLeavesArrays::appendFields : only FLOAT64 and INT32 fields are dealt for the moment !");
+        throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationLeavesArrays::appendFields : only FLOAT64, FLOAT32 and INT32 fields are dealt for the moment !");
       MEDFileField1TSStructItem fsst(MEDFileField1TSStructItem::BuildItemFrom(f1ts,mst));
       f1ts->loadArraysIfNecessary();
       MCAuto<DataArray> v(mml->buildDataArray(fsst,globs,crudeArr));
@@ -373,89 +465,15 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
         }
       if(f1tsPtrDbl)
         {
-          DataArray *vPtr(v); DataArrayDouble *vd(static_cast<DataArrayDouble *>(vPtr));
-          vtkDoubleArray *vtkd(vtkDoubleArray::New());
-          vtkd->SetNumberOfComponents(vd->getNumberOfComponents());
-          for(int i=0;i<vd->getNumberOfComponents();i++)
-            vtkd->SetComponentName(i,vd->getInfoOnComponent(i).c_str());
-          AssignDataPointerToVTK<double>(vtkd,vd,postProcessedArr==crudeArr);
-          std::string name(tr->buildName(f1ts->getName()));
-          vtkd->SetName(name.c_str());
-          att->AddArray(vtkd);
-          vtkd->Delete();
-          if(discs[0]==ON_GAUSS_PT)
-            {
-              bool tmp;
-              _elga_cmp.findOrCreate(globs,f1ts->getLocsReallyUsed(),vtkd,ds,tmp,internalInfo);
-            }
-          if(discs[0]==ON_GAUSS_NE)
-            {
-              vtkIdTypeArray *elno(vtkIdTypeArray::New());
-              elno->SetNumberOfComponents(1);
-              vtkIdType ncell(ds->GetNumberOfCells());
-              int *pt(new int[ncell]),offset(0);
-              std::set<int> cellTypes;
-              for(vtkIdType cellId=0;cellId<ncell;cellId++)
-                {
-                  vtkCell *cell(ds->GetCell(cellId));
-                  int delta(cell->GetNumberOfPoints());
-                  cellTypes.insert(cell->GetCellType());
-                  pt[cellId]=offset;
-                  offset+=delta;
-                }
-              elno->GetInformation()->Set(MEDUtilities::ELNO(),1);
-              elno->SetVoidArray(pt,ncell,0,VTK_DATA_ARRAY_DELETE);
-              std::string nameElno("ELNO"); nameElno+="@"; nameElno+=name;
-              elno->SetName(nameElno.c_str());
-              ds->GetCellData()->AddArray(elno);
-              vtkd->GetInformation()->Set(vtkQuadratureSchemeDefinition::QUADRATURE_OFFSET_ARRAY_NAME(),elno->GetName());
-              elno->GetInformation()->Set(vtkAbstractArray::GUI_HIDE(),1);
-              //
-              vtkInformationQuadratureSchemeDefinitionVectorKey *key(vtkQuadratureSchemeDefinition::DICTIONARY());
-              for(std::set<int>::const_iterator it=cellTypes.begin();it!=cellTypes.end();it++)
-                {
-                  const unsigned char *pos(std::find(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH,*it));
-                  if(pos==MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE+MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE_LGTH)
-                    continue;
-                  INTERP_KERNEL::NormalizedCellType ct((INTERP_KERNEL::NormalizedCellType)std::distance(MEDMeshMultiLev::PARAMEDMEM_2_VTKTYPE,pos));
-                  const INTERP_KERNEL::CellModel& cm(INTERP_KERNEL::CellModel::GetCellModel(ct));
-                  int nbGaussPt(cm.getNumberOfNodes()),dim(cm.getDimension());
-                  vtkQuadratureSchemeDefinition *def(vtkQuadratureSchemeDefinition::New());
-                  double *shape(new double[nbGaussPt*nbGaussPt]);
-                  std::size_t dummy;
-                  const double *gsCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));//GetLocsFromGeometricType
-                  const double *refCoords(MEDCouplingFieldDiscretizationGaussNE::GetRefCoordsFromGeometricType(ct,dummy));
-                  const double *weights(MEDCouplingFieldDiscretizationGaussNE::GetWeightArrayFromGeometricType(ct,dummy));
-                  std::vector<double> gsCoords2(gsCoords,gsCoords+nbGaussPt*dim),refCoords2(refCoords,refCoords+nbGaussPt*dim);
-                  INTERP_KERNEL::GaussInfo calculator(ct,gsCoords2,nbGaussPt,refCoords2,nbGaussPt);
-                  calculator.initLocalInfo();
-                  for(int i=0;i<nbGaussPt;i++)
-                    {
-                      const double *pt0(calculator.getFunctionValues(i));
-                      std::copy(pt0,pt0+nbGaussPt,shape+nbGaussPt*i);
-                    }
-                  def->Initialize(*it,nbGaussPt,nbGaussPt,shape,const_cast<double *>(weights));
-                  delete [] shape;
-                  key->Set(elno->GetInformation(),def,*it);
-                  key->Set(vtkd->GetInformation(),def,*it);
-                  def->Delete();
-                }
-              //
-              elno->Delete();
-            }
+          AssignToFieldData<double>(v,tr,att,f1ts->getName(),postProcessedArr==crudeArr,discs,_elga_cmp,globs,f1ts,ds,internalInfo);
         }
       else if(f1tsPtrInt)
         {
-          DataArray *vPtr(v); DataArrayInt *vi(static_cast<DataArrayInt *>(vPtr));
-          vtkIntArray *vtkd(vtkIntArray::New());
-          vtkd->SetNumberOfComponents(vi->getNumberOfComponents());
-          for(int i=0;i<vi->getNumberOfComponents();i++)
-            vtkd->SetComponentName(i,vi->getVarOnComponent(i).c_str());
-          AssignDataPointerToVTK<int>(vtkd,vi,postProcessedArr==crudeArr);
-          std::string name(tr->buildName(f1ts->getName()));
-          vtkd->SetName(name.c_str());
-          att->AddArray(vtkd);
-          vtkd->Delete();
+          AssignToFieldData<int>(v,tr,att,f1ts->getName(),postProcessedArr==crudeArr,discs,_elga_cmp,globs,f1ts,ds,internalInfo);
+        }
+      else if(f1tsPtrFloat)
+        {
+          AssignToFieldData<float>(v,tr,att,f1ts->getName(),postProcessedArr==crudeArr,discs,_elga_cmp,globs,f1ts,ds,internalInfo);
         }
       else
         throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationLeavesArrays::appendFields : only FLOAT64 and INT32 fields are dealt for the moment ! Internal Error !");

@@ -62,8 +62,10 @@
 #include "MEDFileData.hxx"
 #include "MEDCouplingMemArray.hxx"
 #include "MEDCouplingFieldInt.hxx"
+#include "MEDCouplingFieldFloat.hxx"
 #include "MEDCouplingFieldDouble.hxx"
 #include "MEDCouplingRefCountObject.hxx"
+#include "MEDLoaderTraits.hxx"
 
 #include <map>
 #include <deque>
@@ -83,13 +85,17 @@ using MEDCoupling::MEDFileFieldMultiTS;
 using MEDCoupling::MEDFileAnyTypeFieldMultiTS;
 using MEDCoupling::DataArray;
 using MEDCoupling::DataArrayInt;
+using MEDCoupling::DataArrayFloat;
 using MEDCoupling::DataArrayDouble;
 using MEDCoupling::MEDCouplingMesh;
 using MEDCoupling::MEDCouplingUMesh;
 using MEDCoupling::MEDCouplingCMesh;
 using MEDCoupling::MEDCouplingFieldDouble;
+using MEDCoupling::MEDCouplingFieldFloat;
 using MEDCoupling::MEDCouplingFieldInt;
 using MEDCoupling::MCAuto;
+using MEDCoupling::Traits;
+using MEDCoupling::MLFieldTraits;
 
 vtkStandardNewMacro(vtkMEDWriter);
 
@@ -103,6 +109,38 @@ public:
   virtual ~MZCException() throw() { }
 private:
   std::string _reason;
+};
+
+template<class T>
+class MEDFileVTKTraits
+{
+public:
+  typedef void VtkType;
+  typedef void MCType;
+};
+
+template<>
+class MEDFileVTKTraits<int>
+{
+public:
+  typedef vtkIntArray VtkType;
+  typedef MEDCoupling::DataArrayInt MCType;
+};
+
+template<>
+class MEDFileVTKTraits<float>
+{
+public:
+  typedef vtkFloatArray VtkType;
+  typedef MEDCoupling::DataArrayFloat MCType;
+};
+
+template<>
+class MEDFileVTKTraits<double>
+{
+public:
+  typedef vtkDoubleArray VtkType;
+  typedef MEDCoupling::DataArrayDouble MCType;
 };
 
 ///////////////////
@@ -172,39 +210,59 @@ DataArrayInt *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
   throw MZCException(oss.str());
 }
 
-DataArrayDouble *ConvertVTKArrayToMCArrayDouble(vtkDataArray *data)
+template<class T>
+typename Traits<T>::ArrayType *ConvertVTKArrayToMCArrayDouble(vtkDataArray *data)
 {
   if(!data)
     throw MZCException("ConvertVTKArrayToMCArrayDouble : internal error !");
   int nbTuples(data->GetNumberOfTuples()),nbComp(data->GetNumberOfComponents());
   std::size_t nbElts(nbTuples*nbComp);
-  MCAuto<DataArrayDouble> ret(DataArrayDouble::New());
+  MCAuto< typename Traits<T>::ArrayType > ret(Traits<T>::ArrayType::New());
   ret->alloc(nbTuples,nbComp);
   for(int i=0;i<nbComp;i++)
     {
       const char *comp(data->GetComponentName(i));
       if(comp)
         ret->setInfoOnComponent(i,comp);
+      else
+        {
+          if(nbComp>1 && nbComp<=3)
+            {
+              char tmp[2];
+              tmp[0]='X'+i; tmp[1]='\0';
+              ret->setInfoOnComponent(i,tmp);
+            }
+        }
     }
-  double *ptOut(ret->getPointer());
-  vtkFloatArray *d0(vtkFloatArray::SafeDownCast(data));
+  T *ptOut(ret->getPointer());
+  typename MEDFileVTKTraits<T>::VtkType *d0(MEDFileVTKTraits<T>::VtkType::SafeDownCast(data));
   if(d0)
     {
-      const float *pt(d0->GetPointer(0));
+      const T *pt(d0->GetPointer(0));
       for(std::size_t i=0;i<nbElts;i++)
-        ptOut[i]=pt[i];
-      return ret.retn();
-    }
-  vtkDoubleArray *d1(vtkDoubleArray::SafeDownCast(data));
-  if(d1)
-    {
-      const double *pt(d1->GetPointer(0));
-      std::copy(pt,pt+nbElts,ptOut);
+        ptOut[i]=(T)pt[i];
       return ret.retn();
     }
   std::ostringstream oss;
-  oss << "ConvertVTKArrayToMCArrayDouble : unrecognized array \"" << typeid(*data).name() << "\" type !";
+  oss << "ConvertVTKArrayToMCArrayDouble : unrecognized array \"" << data->GetClassName() << "\" type !";
   throw MZCException(oss.str());
+}
+
+DataArrayDouble *ConvertVTKArrayToMCArrayDoubleForced(vtkDataArray *data)
+{
+  if(!data)
+    throw MZCException("ConvertVTKArrayToMCArrayDoubleForced : internal error 0 !");
+  vtkFloatArray *d0(vtkFloatArray::SafeDownCast(data));
+  if(d0)
+    {
+      MCAuto<DataArrayFloat> ret(ConvertVTKArrayToMCArrayDouble<float>(data));
+      MCAuto<DataArrayDouble> ret2(ret->convertToDblArr());
+      return ret2.retn();
+    }
+  vtkDoubleArray *d1(vtkDoubleArray::SafeDownCast(data));
+  if(d1)
+    return ConvertVTKArrayToMCArrayDouble<double>(data);
+  throw MZCException("ConvertVTKArrayToMCArrayDoubleForced : unrecognized type of data for double !");
 }
 
 DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
@@ -212,9 +270,11 @@ DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
   if(!data)
     throw MZCException("ConvertVTKArrayToMCArray : internal error !");
   vtkFloatArray *d0(vtkFloatArray::SafeDownCast(data));
+  if(d0)
+    return ConvertVTKArrayToMCArrayDouble<float>(data);
   vtkDoubleArray *d1(vtkDoubleArray::SafeDownCast(data));
-  if(d0 || d1)
-    return ConvertVTKArrayToMCArrayDouble(data);
+  if(d1)
+    return ConvertVTKArrayToMCArrayDouble<double>(data);
   vtkIntArray *d2(vtkIntArray::SafeDownCast(data));
   vtkLongArray *d3(vtkLongArray::SafeDownCast(data));
   vtkUnsignedCharArray *d4(vtkUnsignedCharArray::SafeDownCast(data));
@@ -322,7 +382,29 @@ MicroField::MicroField(const std::vector< MicroField >& vs)
   _m=MEDCouplingUMesh::MergeUMeshesOnSameCoords(vs2);
 }
 
-void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFileData *mfd, MCAuto<DataArray> da, const DataArrayInt *n2oPtr)
+template<class T>
+void AppendToFields(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, const DataArrayInt *n2oPtr, typename MEDFileVTKTraits<T>::MCType *dadPtr, MEDFileFields *fs, double timeStep, int tsId)
+{
+  std::string fieldName(dadPtr->getName());
+  MCAuto< typename Traits<T>::FieldType > f(Traits<T>::FieldType::New(tf));
+  f->setTime(timeStep,tsId,0);
+  f->setName(fieldName);
+  if(!n2oPtr)
+    f->setArray(dadPtr);
+  else
+    {
+      MCAuto< typename Traits<T>::ArrayType > dad2(dadPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
+      f->setArray(dad2);
+    }
+  f->setMesh(mesh);
+  MCAuto< typename MLFieldTraits<T>::FMTSType > fmts(MLFieldTraits<T>::FMTSType::New());
+  MCAuto< typename MLFieldTraits<T>::F1TSType > f1ts(MLFieldTraits<T>::F1TSType::New());
+  f1ts->setFieldNoProfileSBT(f);
+  fmts->pushBackTimeStep(f1ts);
+  fs->pushField(fmts);
+}
+
+void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFileData *mfd, MCAuto<DataArray> da, const DataArrayInt *n2oPtr, double timeStep, int tsId)
 {
   static const char FAMFIELD_FOR_CELLS[]="FamilyIdCell";
   static const char FAMFIELD_FOR_NODES[]="FamilyIdNode";
@@ -333,53 +415,24 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
   if(!fs || !ms)
     throw MZCException("AppendMCFieldFrom : internal error 2 !");
   MCAuto<DataArrayDouble> dad(MEDCoupling::DynamicCast<DataArray,DataArrayDouble>(da));
-  DataArrayDouble *dadPtr(dad);
-  std::string fieldName;
-  if(dadPtr)
+  if(dad.isNotNull())
     {
-      fieldName=dadPtr->getName();
-      MCAuto<MEDCouplingFieldDouble> f(MEDCouplingFieldDouble::New(tf));
-      f->setName(fieldName);
-      if(!n2oPtr)
-        f->setArray(dadPtr);
-      else
-        {
-          MCAuto<DataArrayDouble> dad2(dadPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
-          f->setArray(dad2);
-        }
-      f->setMesh(mesh);
-      MCAuto<MEDFileFieldMultiTS> fmts(MEDFileFieldMultiTS::New());
-      MCAuto<MEDFileField1TS> f1ts(MEDFileField1TS::New());
-      f1ts->setFieldNoProfileSBT(f);
-      fmts->pushBackTimeStep(f1ts);
-      fs->pushField(fmts);
+      AppendToFields<double>(tf,mesh,n2oPtr,dad,fs,timeStep,tsId);
+      return ;
+    }
+  MCAuto<DataArrayFloat> daf(MEDCoupling::DynamicCast<DataArray,DataArrayFloat>(da));
+  if(daf.isNotNull())
+    {
+      AppendToFields<float>(tf,mesh,n2oPtr,daf,fs,timeStep,tsId);
       return ;
     }
   MCAuto<DataArrayInt> dai(MEDCoupling::DynamicCast<DataArray,DataArrayInt>(da));
-  DataArrayInt *daiPtr(dai);
-  if(daiPtr)
+  if(dai.isNotNull())
     {
-      fieldName=daiPtr->getName();
+      std::string fieldName(dai->getName());
       if((fieldName!=FAMFIELD_FOR_CELLS || tf!=MEDCoupling::ON_CELLS) && (fieldName!=FAMFIELD_FOR_NODES || tf!=MEDCoupling::ON_NODES))
         {
-          MCAuto<MEDCouplingFieldInt> f(MEDCouplingFieldInt::New(tf));
-          f->setName(fieldName);
-          f->setMesh(mesh);
-          MCAuto<MEDFileIntFieldMultiTS> fmts(MEDFileIntFieldMultiTS::New());
-          MCAuto<MEDFileIntField1TS> f1ts(MEDFileIntField1TS::New());
-          if(!n2oPtr)
-            {
-              f->setArray(dai);
-              f1ts->setFieldNoProfileSBT(f);
-            }
-          else
-            {
-              MCAuto<DataArrayInt> dai2(daiPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
-              f->setArray(dai2);
-              f1ts->setFieldNoProfileSBT(f);
-            }
-          fmts->pushBackTimeStep(f1ts);
-          fs->pushField(fmts);
+          AppendToFields<int>(tf,mesh,n2oPtr,dai,fs,timeStep,tsId);
           return ;
         }
       else if(fieldName==FAMFIELD_FOR_CELLS && tf==MEDCoupling::ON_CELLS)
@@ -388,10 +441,10 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
           if(!mm)
             throw MZCException("AppendMCFieldFrom : internal error 3 !");
           if(!n2oPtr)
-            mm->setFamilyFieldArr(mesh->getMeshDimension()-mm->getMeshDimension(),daiPtr);
+            mm->setFamilyFieldArr(mesh->getMeshDimension()-mm->getMeshDimension(),dai);
           else
             {
-              MCAuto<DataArrayInt> dai2(daiPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
+              MCAuto<DataArrayInt> dai2(dai->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
               mm->setFamilyFieldArr(mesh->getMeshDimension()-mm->getMeshDimension(),dai2);
             }
         }
@@ -401,17 +454,17 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
           if(!mm)
             throw MZCException("AppendMCFieldFrom : internal error 4 !");
           if(!n2oPtr)
-            mm->setFamilyFieldArr(1,daiPtr);
+            mm->setFamilyFieldArr(1,dai);
           else
             {
-              MCAuto<DataArrayInt> dai2(daiPtr->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
+              MCAuto<DataArrayInt> dai2(dai->selectByTupleId(n2oPtr->begin(),n2oPtr->end()));
               mm->setFamilyFieldArr(1,dai2);
             }
         }
     }
 }
 
-void PutAtLevelDealOrder(MEDFileData *mfd, int meshDimRel, const MicroField& mf)
+void PutAtLevelDealOrder(MEDFileData *mfd, int meshDimRel, const MicroField& mf, double timeStep, int tsId)
 {
   if(!mfd)
     throw MZCException("PutAtLevelDealOrder : internal error !");
@@ -440,11 +493,11 @@ void PutAtLevelDealOrder(MEDFileData *mfd, int meshDimRel, const MicroField& mf)
   for(std::vector<MCAuto<DataArray> >::const_iterator it=cells.begin();it!=cells.end();it++)
     {
       MCAuto<DataArray> da(*it);
-      AppendMCFieldFrom(MEDCoupling::ON_CELLS,mesh,mfd,da,n2oPtr);
+      AppendMCFieldFrom(MEDCoupling::ON_CELLS,mesh,mfd,da,n2oPtr,timeStep,tsId);
     }
 }
 
-void AssignSingleGTMeshes(MEDFileData *mfd, const std::vector< MicroField >& ms)
+void AssignSingleGTMeshes(MEDFileData *mfd, const std::vector< MicroField >& ms, double timeStep, int tsId)
 {
   if(!mfd)
     throw MZCException("AssignSingleGTMeshes : internal error !");
@@ -471,12 +524,12 @@ void AssignSingleGTMeshes(MEDFileData *mfd, const std::vector< MicroField >& ms)
       const std::vector< MicroField >& vs((*it).second);
       if(vs.size()==1)
         {
-          PutAtLevelDealOrder(mfd,(*it).first-meshDim,vs[0]);
+          PutAtLevelDealOrder(mfd,(*it).first-meshDim,vs[0],timeStep,tsId);
         }
       else
         {
           MicroField merge(vs);
-          PutAtLevelDealOrder(mfd,(*it).first-meshDim,merge);
+          PutAtLevelDealOrder(mfd,(*it).first-meshDim,merge,timeStep,tsId);
         }
     }
 }
@@ -491,11 +544,10 @@ DataArrayDouble *BuildCoordsFrom(vtkPointSet *ds)
   vtkDataArray *data(pts->GetData());
   if(!data)
     throw MZCException("BuildCoordsFrom : internal error 3 !");
-  MCAuto<DataArrayDouble> coords(ConvertVTKArrayToMCArrayDouble(data));
-  return coords.retn();
+  return ConvertVTKArrayToMCArrayDoubleForced(data);
 }
 
-void AddNodeFields(MEDFileData *mfd, vtkDataSetAttributes *dsa)
+void AddNodeFields(MEDFileData *mfd, vtkDataSetAttributes *dsa, double timeStep, int tsId)
 {
   if(!mfd || !dsa)
     throw MZCException("AddNodeFields : internal error !");
@@ -520,7 +572,7 @@ void AddNodeFields(MEDFileData *mfd, vtkDataSetAttributes *dsa)
         continue;
       MCAuto<DataArray> da(ConvertVTKArrayToMCArray(arr));
       da->setName(name);
-      AppendMCFieldFrom(MEDCoupling::ON_NODES,mesh,mfd,da,0);
+      AppendMCFieldFrom(MEDCoupling::ON_NODES,mesh,mfd,da,NULL,timeStep,tsId);
     }
 }
 
@@ -569,7 +621,7 @@ std::vector<MCAuto<DataArray> > AddPartFields2(int bg, int end, vtkDataSetAttrib
   return ret;
 }
 
-void ConvertFromRectilinearGrid(MEDFileData *ret, vtkRectilinearGrid *ds, const std::vector<int>& context)
+void ConvertFromRectilinearGrid(MEDFileData *ret, vtkRectilinearGrid *ds, const std::vector<int>& context, double timeStep, int tsId)
 {
   if(!ds || !ret)
     throw MZCException("ConvertFromRectilinearGrid : internal error !");
@@ -585,17 +637,17 @@ void ConvertFromRectilinearGrid(MEDFileData *ret, vtkRectilinearGrid *ds, const 
   vtkDataArray *cx(ds->GetXCoordinates()),*cy(ds->GetYCoordinates()),*cz(ds->GetZCoordinates());
   if(cx)
     {
-      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDouble(cx));
+      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDoubleForced(cx));
       cmeshmc->setCoordsAt(0,arr);
     }
   if(cy)
     {
-      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDouble(cy));
+      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDoubleForced(cy));
       cmeshmc->setCoordsAt(1,arr);
     }
   if(cz)
     {
-      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDouble(cz));
+      MCAuto<DataArrayDouble> arr(ConvertVTKArrayToMCArrayDoubleForced(cz));
       cmeshmc->setCoordsAt(2,arr);
     }
   std::string meshName(GetMeshNameWithContext(context));
@@ -605,17 +657,17 @@ void ConvertFromRectilinearGrid(MEDFileData *ret, vtkRectilinearGrid *ds, const 
   for(std::vector<MCAuto<DataArray> >::const_iterator it=cellFs.begin();it!=cellFs.end();it++)
     {
       MCAuto<DataArray> da(*it);
-      AppendMCFieldFrom(MEDCoupling::ON_CELLS,cmeshmc,ret,da,0);
+      AppendMCFieldFrom(MEDCoupling::ON_CELLS,cmeshmc,ret,da,NULL,timeStep,tsId);
     }
   std::vector<MCAuto<DataArray> > nodeFs(AddPartFields(0,ds->GetPointData()));
   for(std::vector<MCAuto<DataArray> >::const_iterator it=nodeFs.begin();it!=nodeFs.end();it++)
     {
       MCAuto<DataArray> da(*it);
-      AppendMCFieldFrom(MEDCoupling::ON_NODES,cmeshmc,ret,da,0);
+      AppendMCFieldFrom(MEDCoupling::ON_NODES,cmeshmc,ret,da,NULL,timeStep,tsId);
     }
 }
 
-void ConvertFromPolyData(MEDFileData *ret, vtkPolyData *ds, const std::vector<int>& context)
+void ConvertFromPolyData(MEDFileData *ret, vtkPolyData *ds, const std::vector<int>& context, double timeStep, int tsId)
 {
   if(!ds || !ret)
     throw MZCException("ConvertFromPolyData : internal error !");
@@ -678,11 +730,11 @@ void ConvertFromPolyData(MEDFileData *ret, vtkPolyData *ds, const std::vector<in
           ms.push_back(MicroField(subMesh,cellFs));
         }
     }
-  AssignSingleGTMeshes(ret,ms);
-  AddNodeFields(ret,ds->GetPointData());
+  AssignSingleGTMeshes(ret,ms,timeStep,tsId);
+  AddNodeFields(ret,ds->GetPointData(),timeStep,tsId);
 }
 
-void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, const std::vector<int>& context)
+void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, const std::vector<int>& context, double timeStep, int tsId)
 {
   if(!ds || !ret)
     throw MZCException("ConvertFromUnstructuredGrid : internal error !");
@@ -772,13 +824,13 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
       std::vector<MCAuto<DataArray> > cellFs(AddPartFields(cellIdsCurLev,ds->GetCellData()));
       ms.push_back(MicroField(m0,cellFs));
     }
-  AssignSingleGTMeshes(ret,ms);
-  AddNodeFields(ret,ds->GetPointData());
+  AssignSingleGTMeshes(ret,ms,timeStep,tsId);
+  AddNodeFields(ret,ds->GetPointData(),timeStep,tsId);
 }
 
 ///////////////////
 
-vtkMEDWriter::vtkMEDWriter():WriteAllTimeSteps(0),FileName(0),IsTouched(false)
+vtkMEDWriter::vtkMEDWriter():WriteAllTimeSteps(0),NumberOfTimeSteps(0),CurrentTimeIndex(0),FileName(0)
 {
 }
 
@@ -923,10 +975,26 @@ void LoadFamGrpMapInfo(vtkMutableDirectedGraph *sil, std::string& meshName, std:
 int vtkMEDWriter::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 { 
   //std::cerr << "########################################## vtkMEDWriter::RequestInformation ########################################## " << (const char *) this->FileName << std::endl;
+  vtkInformation *inInfo(inputVector[0]->GetInformationObject(0));
+  if(inInfo->Has(vtkStreamingDemandDrivenPipeline::TIME_STEPS()))
+    this->NumberOfTimeSteps=inInfo->Length(vtkStreamingDemandDrivenPipeline::TIME_STEPS());
+  else
+    this->NumberOfTimeSteps=0;
   return 1;
 }
 
-void WriteMEDFileFromVTKDataSet(MEDFileData *mfd, vtkDataSet *ds, const std::vector<int>& context)
+int vtkMEDWriter::RequestUpdateExtent(vtkInformation* vtkNotUsed(request), vtkInformationVector** inputVector, vtkInformationVector* vtkNotUsed(outputVector))
+{
+  double *inTimes(inputVector[0]->GetInformationObject(0)->Get(vtkStreamingDemandDrivenPipeline::TIME_STEPS()));
+  if(inTimes && this->WriteAllTimeSteps)
+    {
+      double timeReq(inTimes[this->CurrentTimeIndex]);
+      inputVector[0]->GetInformationObject(0)->Set(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP(),timeReq);
+    }
+  return 1;
+}
+
+void WriteMEDFileFromVTKDataSet(MEDFileData *mfd, vtkDataSet *ds, const std::vector<int>& context, double timeStep, int tsId)
 {
   if(!ds || !mfd)
     throw MZCException("Internal error in WriteMEDFileFromVTKDataSet.");
@@ -935,21 +1003,21 @@ void WriteMEDFileFromVTKDataSet(MEDFileData *mfd, vtkDataSet *ds, const std::vec
   vtkRectilinearGrid *ds4(vtkRectilinearGrid::SafeDownCast(ds));
   if(ds2)
     {
-      ConvertFromPolyData(mfd,ds2,context);
+      ConvertFromPolyData(mfd,ds2,context,timeStep,tsId);
     }
   else if(ds3)
     {
-      ConvertFromUnstructuredGrid(mfd,ds3,context);
+      ConvertFromUnstructuredGrid(mfd,ds3,context,timeStep,tsId);
     }
   else if(ds4)
     {
-      ConvertFromRectilinearGrid(mfd,ds4,context);
+      ConvertFromRectilinearGrid(mfd,ds4,context,timeStep,tsId);
     }
   else
     throw MZCException("Unrecognized vtkDataSet ! Sorry ! Try to convert it to UnstructuredGrid to be able to write it !");
 }
 
-void WriteMEDFileFromVTKMultiBlock(MEDFileData *mfd, vtkMultiBlockDataSet *ds, const std::vector<int>& context)
+void WriteMEDFileFromVTKMultiBlock(MEDFileData *mfd, vtkMultiBlockDataSet *ds, const std::vector<int>& context, double timeStep, int tsId)
 {
   if(!ds || !mfd)
     throw MZCException("Internal error in WriteMEDFileFromVTKMultiBlock.");
@@ -962,7 +1030,7 @@ void WriteMEDFileFromVTKMultiBlock(MEDFileData *mfd, vtkMultiBlockDataSet *ds, c
       vtkDataSet *uniqueEltc(vtkDataSet::SafeDownCast(uniqueElt));
       if(uniqueEltc)
         {
-          WriteMEDFileFromVTKDataSet(mfd,uniqueEltc,context);
+          WriteMEDFileFromVTKDataSet(mfd,uniqueEltc,context,timeStep,tsId);
           return ;
         }
     }
@@ -981,13 +1049,13 @@ void WriteMEDFileFromVTKMultiBlock(MEDFileData *mfd, vtkMultiBlockDataSet *ds, c
       vtkDataSet *elt1(vtkDataSet::SafeDownCast(elt));
       if(elt1)
         {
-          WriteMEDFileFromVTKDataSet(mfd,elt1,context);
+          WriteMEDFileFromVTKDataSet(mfd,elt1,context,timeStep,tsId);
           continue;
         }
       vtkMultiBlockDataSet *elt2(vtkMultiBlockDataSet::SafeDownCast(elt));
       if(elt2)
         {
-          WriteMEDFileFromVTKMultiBlock(mfd,elt2,context);
+          WriteMEDFileFromVTKMultiBlock(mfd,elt2,context,timeStep,tsId);
           continue;
         }
       std::ostringstream oss; oss << "In context ";
@@ -997,7 +1065,7 @@ void WriteMEDFileFromVTKMultiBlock(MEDFileData *mfd, vtkMultiBlockDataSet *ds, c
     }
 }
 
-void WriteMEDFileFromVTKGDS(MEDFileData *mfd, vtkDataObject *input)
+void WriteMEDFileFromVTKGDS(MEDFileData *mfd, vtkDataObject *input, double timeStep, int tsId)
 {
   if(!input || !mfd)
     throw MZCException("WriteMEDFileFromVTKGDS : internal error !");
@@ -1005,13 +1073,13 @@ void WriteMEDFileFromVTKGDS(MEDFileData *mfd, vtkDataObject *input)
   vtkDataSet *input1(vtkDataSet::SafeDownCast(input));
   if(input1)
     {
-      WriteMEDFileFromVTKDataSet(mfd,input1,context);
+      WriteMEDFileFromVTKDataSet(mfd,input1,context,timeStep,tsId);
       return ;
     }
   vtkMultiBlockDataSet *input2(vtkMultiBlockDataSet::SafeDownCast(input));
   if(input2)
     {
-      WriteMEDFileFromVTKMultiBlock(mfd,input2,context);
+      WriteMEDFileFromVTKMultiBlock(mfd,input2,context,timeStep,tsId);
       return ;
     }
   throw MZCException("WriteMEDFileFromVTKGDS : not recognized data type !");
@@ -1053,6 +1121,18 @@ int vtkMEDWriter::RequestData(vtkInformation *request, vtkInformationVector **in
   //std::cerr << "########################################## vtkMEDWriter::RequestData        ########################################## " << (const char *) this->FileName << std::endl;
   try
     {
+      bool writeAll((this->WriteAllTimeSteps!=0 && this->NumberOfTimeSteps>0));
+      if(writeAll)
+        {
+          if(this->CurrentTimeIndex==0)
+            request->Set(vtkStreamingDemandDrivenPipeline::CONTINUE_EXECUTING(),1);
+        }
+      else
+        {
+          request->Remove(vtkStreamingDemandDrivenPipeline::CONTINUE_EXECUTING());
+          this->CurrentTimeIndex=0;
+        }
+      //////////////
       vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));
       std::string meshName;
       std::vector<Grp> groups; std::vector<Fam> fams;
@@ -1065,11 +1145,33 @@ int vtkMEDWriter::RequestData(vtkInformation *request, vtkInformationVector **in
       vtkDataObject *input(vtkDataObject::SafeDownCast(inputInfo->Get(vtkDataObject::DATA_OBJECT())));
       if(!input)
         throw MZCException("Not recognized data object in input of the MEDWriter ! Maybe not implemented yet !");
+      double timeStep;
+      {
+        vtkInformation *inInfo(inputVector[0]->GetInformationObject(0));
+        vtkDataObject* input(vtkDataObject::GetData(inInfo));
+        timeStep=input->GetInformation()->Get(vtkDataObject::DATA_TIME_STEP());
+      }
+      ////////////
       MCAuto<MEDFileData> mfd(MEDFileData::New());
-      WriteMEDFileFromVTKGDS(mfd,input);
+      WriteMEDFileFromVTKGDS(mfd,input,timeStep,this->CurrentTimeIndex);
       PutFamGrpInfoIfAny(mfd,meshName,groups,fams);
-      mfd->write(this->FileName,this->IsTouched?0:2); this->IsTouched=true;
+      if(this->WriteAllTimeSteps==0 || (this->WriteAllTimeSteps!=0 && this->CurrentTimeIndex==0))
+        mfd->write(this->FileName,2);
+      else
+        {
+          mfd->getFields()->write(this->FileName,0);
+        }
       outInfo->Set(vtkDataObject::DATA_OBJECT(),input);
+      ///////////
+      if(writeAll)
+        {
+          this->CurrentTimeIndex++;
+          if(this->CurrentTimeIndex>=this->NumberOfTimeSteps)
+            {
+              request->Remove(vtkStreamingDemandDrivenPipeline::CONTINUE_EXECUTING());
+              this->CurrentTimeIndex=0;
+            }
+        }
     }
   catch(MZCException& e)
     {
