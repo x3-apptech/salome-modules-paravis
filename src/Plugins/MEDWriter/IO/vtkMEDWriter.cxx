@@ -388,7 +388,10 @@ void AppendToFields(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, const Da
   std::string fieldName(dadPtr->getName());
   MCAuto< typename Traits<T>::FieldType > f(Traits<T>::FieldType::New(tf));
   f->setTime(timeStep,tsId,0);
-  f->setName(fieldName);
+  {
+    std::string fieldNameForChuckNorris(MEDCoupling::MEDFileAnyTypeField1TSWithoutSDA::FieldNameToMEDFileConvention(fieldName));
+    f->setName(fieldNameForChuckNorris);
+  }
   if(!n2oPtr)
     f->setArray(dadPtr);
   else
