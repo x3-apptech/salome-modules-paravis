@@ -1257,5 +1257,9 @@
       <source>ERR_STATE_CANNOT_BE_RESTORED</source>
       <translation>状態を復元できません。</translation>
     </message>
+    <message>
+      <source>MEN_DESK_CATALYST</source>
+      <translation>触媒</translation>
+    </message>
   </context>
 </TS>
