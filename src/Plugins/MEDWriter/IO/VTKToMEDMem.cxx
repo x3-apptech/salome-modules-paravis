@@ -105,37 +105,7 @@ Fam::Fam(const std::string& name)
 
 ///////////////////
 
-template<class T>
-class MEDFileVTKTraits
-{
-public:
-  typedef void VtkType;
-  typedef void MCType;
-};
-
-template<>
-class MEDFileVTKTraits<int>
-{
-public:
-  typedef vtkIntArray VtkType;
-  typedef MEDCoupling::DataArrayInt MCType;
-};
-
-template<>
-class MEDFileVTKTraits<float>
-{
-public:
-  typedef vtkFloatArray VtkType;
-  typedef MEDCoupling::DataArrayFloat MCType;
-};
-
-template<>
-class MEDFileVTKTraits<double>
-{
-public:
-  typedef vtkDoubleArray VtkType;
-  typedef MEDCoupling::DataArrayDouble MCType;
-};
+#include "VTKMEDTraits.hxx"
 
 std::map<int,int> ComputeMapOfType()
 {
