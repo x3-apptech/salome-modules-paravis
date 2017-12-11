@@ -7,5 +7,4 @@ vtk_module(vtkMEDReader
     vtkRenderingCore
     vtkTestingRendering
     vtkInteractionStyle
-  EXCLUDE_FROM_WRAP_HIERARCHY
 )
