@@ -1179,19 +1179,19 @@
     </message>
     <message>
         <source>PREF_TRACE_TYPE_LBL</source>
-        <translation type="unfinished">Select which properties to save in trace</translation>
+        <translation>Sélectionner quelles propriétés sauvegarder dans la trace</translation>
     </message>
     <message>
         <source>PREF_TRACE_TYPE_0</source>
-        <translation type="unfinished">All properties</translation>
+        <translation>Toutes les propriétés</translation>
     </message>
     <message>
         <source>PREF_TRACE_TYPE_1</source>
-        <translation type="unfinished">Any modified properties</translation>
+        <translation>Toutes les propriétés modifiées</translation>
     </message>
     <message>
         <source>PREF_TRACE_TYPE_2</source>
-        <translation type="unfinished">Only user modified properties</translation>
+        <translation>Seulement les propriétés modifiées par l'utilisateur</translation>
     </message>
     <message>
         <source>TIT_PVISSETTINGS</source>

@@ -216,7 +216,9 @@ void pqMEDReaderTimesFlagsWidget::UpdateTimeSteps()
 
     // Updating times steps using leaf id
     QStringList dts, its, tts;
-    pqMedReaderGraphUtils::getCurrentTS(g, tsId, dts, its, tts);
-    this->TimesVectWidget->setItems(dts, its, tts);
+    if(g)
+      pqMedReaderGraphUtils::getCurrentTS(g, tsId, dts, its, tts);
+    if(this->TimesVectWidget)
+      this->TimesVectWidget->setItems(dts, its, tts);
     }
 }

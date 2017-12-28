@@ -1,0 +1,65 @@
+###############################################################
+# Copyright (C) 2017  CEA/DEN, EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+
+@PACKAGE_INIT@
+
+# Load the dependencies for the libraries of @PROJECT_NAME@ 
+# (contains definitions for IMPORTED targets). This is only 
+# imported if we are not built as a subproject (in this case targets are already there)
+INCLUDE("@PROJECT_NAME@Targets")
+
+# Package root dir:
+SET_AND_CHECK(MEDWRITER_ROOT_DIR_EXP "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+
+# Include directories and definitions
+SET_AND_CHECK(MEDWRITER_INCLUDE_DIRS "${MEDWRITER_ROOT_DIR_EXP}/@MEDWRITER_INSTALL_HEADERS@")
+
+
+# For all prerequisites, load the corresponding targets if the package was used
+# in CONFIG mode. This ensures dependent projects link correctly
+# without having to set LD_LIBRARY_PATH:
+SET(_PREREQ_@PROJECT_NAME@ @_PREREQ_LIST@)
+SET(_PREREQ_@PROJECT_NAME@_CONFIG_DIR @_PREREQ_DIR_LIST@)
+SET(_PREREQ_@PROJECT_NAME@_COMPONENTS "@_PREREQ_COMPO_LIST@")
+LIST(LENGTH _PREREQ_@PROJECT_NAME@_CONFIG_DIR _list_len_@PROJECT_NAME@)
+IF(NOT _list_len_@PROJECT_NAME@ EQUAL 0)
+  # Another CMake stupidity - FOREACH(... RANGE r) generates r+1 numbers ...
+  MATH(EXPR _range_@PROJECT_NAME@ "${_list_len_@PROJECT_NAME@}-1")
+  FOREACH(_p_@PROJECT_NAME@ RANGE ${_range_@PROJECT_NAME@})
+    LIST(GET _PREREQ_@PROJECT_NAME@            ${_p_@PROJECT_NAME@} _pkg_@PROJECT_NAME@    )
+    LIST(GET _PREREQ_@PROJECT_NAME@_CONFIG_DIR ${_p_@PROJECT_NAME@} _pkg_dir_@PROJECT_NAME@)
+    LIST(GET _PREREQ_@PROJECT_NAME@_COMPONENTS ${_p_@PROJECT_NAME@} _pkg_compo_@PROJECT_NAME@)
+    IF(NOT OMIT_DETECT_PACKAGE_${_pkg_@PROJECT_NAME@})
+      MESSAGE(STATUS "===> Reloading targets from ${_pkg_@PROJECT_NAME@} ...")
+      IF(NOT _pkg_compo_@PROJECT_NAME@)
+        FIND_PACKAGE(${_pkg_@PROJECT_NAME@} REQUIRED NO_MODULE
+            PATHS "${_pkg_dir_@PROJECT_NAME@}"
+            NO_DEFAULT_PATH)
+      ELSE()
+        STRING(REPLACE "," ";" _compo_lst_@PROJECT_NAME@ "${_pkg_compo_@PROJECT_NAME@}")
+        MESSAGE(STATUS "===> (components: ${_pkg_compo_@PROJECT_NAME@})")
+        FIND_PACKAGE(${_pkg_@PROJECT_NAME@} REQUIRED NO_MODULE
+            COMPONENTS ${_compo_lst_@PROJECT_NAME@}
+            PATHS "${_pkg_dir_@PROJECT_NAME@}"
+            NO_DEFAULT_PATH)
+      ENDIF()
+    ENDIF()
+  ENDFOREACH()
+ENDIF()
