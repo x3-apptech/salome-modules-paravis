@@ -212,6 +212,18 @@ int vtkMEDWriter::RequestUpdateExtent(vtkInformation* vtkNotUsed(request), vtkIn
   return 1;
 }
 
+template<class T>
+void ExceptionDisplayer(vtkMEDWriter *self, const std::string& fileName, T& e)
+{
+  std::ostringstream oss;
+  oss << "Exception has been thrown in vtkMEDWriter::RequestData : During writing of \"" << fileName << "\", the following exception has been thrown : "<< e.what() << std::endl;
+  if(self->HasObserver("ErrorEvent") )
+    self->InvokeEvent("ErrorEvent",const_cast<char *>(oss.str().c_str()));
+  else
+    vtkOutputWindowDisplayErrorText(const_cast<char *>(oss.str().c_str()));
+  vtkObject::BreakOnError();
+}
+
 int vtkMEDWriter::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   //std::cerr << "########################################## vtkMEDWriter::RequestData        ########################################## " << (const char *) this->FileName << std::endl;
@@ -269,15 +281,14 @@ int vtkMEDWriter::RequestData(vtkInformation *request, vtkInformationVector **in
             }
         }
     }
+  catch(INTERP_KERNEL::Exception& e)
+    {
+      ExceptionDisplayer(this,(const char *) this->FileName,e);
+      return 0;
+    }
   catch(MZCException& e)
     {
-      std::ostringstream oss;
-      oss << "Exception has been thrown in vtkMEDWriter::RequestData : During writing of \"" << (const char *) this->FileName << "\", the following exception has been thrown : "<< e.what() << std::endl;
-      if(this->HasObserver("ErrorEvent") )
-        this->InvokeEvent("ErrorEvent",const_cast<char *>(oss.str().c_str()));
-      else
-        vtkOutputWindowDisplayErrorText(const_cast<char *>(oss.str().c_str()));
-      vtkObject::BreakOnError();
+      ExceptionDisplayer(this,(const char *) this->FileName,e);
       return 0;
     }
   return 1;

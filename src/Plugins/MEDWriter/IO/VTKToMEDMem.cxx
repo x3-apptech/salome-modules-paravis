@@ -664,7 +664,16 @@ void ConvertFromPolyData(MEDFileData *ret, vtkPolyData *ds, const std::vector<in
   vtkCellArray *cc(ds->GetLines());
   if(cc)
     {
-      MCAuto<MEDCouplingUMesh> subMesh(BuildMeshFromCellArray(cc,coords,1,INTERP_KERNEL::NORM_SEG2));
+      MCAuto<MEDCouplingUMesh> subMesh;
+      try
+        {
+          subMesh=BuildMeshFromCellArray(cc,coords,1,INTERP_KERNEL::NORM_SEG2);
+        }
+      catch(INTERP_KERNEL::Exception& e)
+        {
+          std::ostringstream oss; oss << "MEDWriter does not manage polyline cell type because MED file format does not support it ! Maybe it is the source of the problem ? The cause of this exception was " << e.what() << std::endl;
+          throw INTERP_KERNEL::Exception(oss.str());
+        }
       if((const MEDCouplingUMesh *)subMesh)
         {
           std::vector<MCAuto<DataArray> > cellFs(AddPartFields2(offset,offset+subMesh->getNumberOfCells(),ds->GetCellData()));
