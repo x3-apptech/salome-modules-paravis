@@ -212,8 +212,7 @@ int vtkMEDWriter::RequestUpdateExtent(vtkInformation* vtkNotUsed(request), vtkIn
   return 1;
 }
 
-template<class T>
-void ExceptionDisplayer(vtkMEDWriter *self, const std::string& fileName, T& e)
+void ExceptionDisplayer(vtkMEDWriter *self, const std::string& fileName, std::exception& e)
 {
   std::ostringstream oss;
   oss << "Exception has been thrown in vtkMEDWriter::RequestData : During writing of \"" << fileName << "\", the following exception has been thrown : "<< e.what() << std::endl;
