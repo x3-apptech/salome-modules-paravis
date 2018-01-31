@@ -750,8 +750,16 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
         }
       else
         {
-          std::ostringstream oss; oss << "ConvertFromUnstructuredGrid : at pos #" << i << " unrecognized VTK cell with type =" << ctPtr[i];
-          throw MZCException(oss.str());
+          if(ctPtr[i]==VTK_POLY_VERTEX)
+            {
+              const INTERP_KERNEL::CellModel& cm(INTERP_KERNEL::CellModel::GetCellModel(INTERP_KERNEL::NORM_POINT1));
+              levPtr[i]=cm.getDimension();
+            }
+          else
+            {
+              std::ostringstream oss; oss << "ConvertFromUnstructuredGrid : at pos #" << i << " unrecognized VTK cell with type =" << ctPtr[i];
+              throw MZCException(oss.str());
+            }
         }
     }
   int dummy(0);
@@ -765,18 +773,19 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
       MCAuto<DataArrayInt> cellIdsCurLev(lev->findIdsEqual(*curLev));
       for(const int *cellId=cellIdsCurLev->begin();cellId!=cellIdsCurLev->end();cellId++)
         {
-          std::map<int,int>::iterator it(m.find(ctPtr[*cellId]));
+          int vtkType(ctPtr[*cellId]);
+          std::map<int,int>::iterator it(m.find(vtkType));
           vtkIdType offset(claPtr[*cellId]);
           vtkIdType sz(caPtr[offset]);
-          INTERP_KERNEL::NormalizedCellType ct((INTERP_KERNEL::NormalizedCellType)(*it).second);
-          if(ct!=INTERP_KERNEL::NORM_POLYHED)
+          INTERP_KERNEL::NormalizedCellType ct=it!=m.end()?(INTERP_KERNEL::NormalizedCellType)((*it).second):INTERP_KERNEL::NORM_POINT1;
+          if(ct!=INTERP_KERNEL::NORM_POLYHED && vtkType!=VTK_POLY_VERTEX)
             {
               std::vector<int> conn2(sz);
               for(int kk=0;kk<sz;kk++)
                 conn2[kk]=caPtr[offset+1+kk];
               m0->insertNextCell(ct,sz,&conn2[0]);
             }
-          else
+          else if(ct==INTERP_KERNEL::NORM_POLYHED)
             {
               if(!faces || !faceLoc)
                 throw MZCException("ConvertFromUnstructuredGrid : faces are expected when there are polyhedra !");
@@ -793,6 +802,12 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
                     conn.push_back(-1);
                 }
               m0->insertNextCell(ct,conn.size(),&conn[0]);
+            }
+          else
+            {
+              if(sz!=1)
+                throw MZCException("ConvertFromUnstructuredGrid : non single poly vertex not managed by MED !");
+              m0->insertNextCell(ct,1,caPtr+offset+1);
             }
         }
       std::vector<MCAuto<DataArray> > cellFs(AddPartFields(cellIdsCurLev,ds->GetCellData()));
