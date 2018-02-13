@@ -28,7 +28,7 @@
 
 #include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkUnstructuredGrid.h"
-#include "vtkPolyData.h"
+#include "vtkDataSet.h"
 #include  "vtkMultiBlockDataSet.h"
 
 #include "vtkInformationStringKey.h"
@@ -298,7 +298,7 @@ void vtkSimpleMode::SetInputArrayToProcess(int idx, int port, int connection, in
 {
   if(idx==0)
     this->Internal->setFieldForReal(name);
-  vtkPolyDataAlgorithm::SetInputArrayToProcess(idx,port,connection,ff,name);
+  vtkDataSetAlgorithm::SetInputArrayToProcess(idx,port,connection,ff,name);
 }
 
 double GetOptimalRatioFrom(vtkUnstructuredGrid *dataset, vtkDoubleArray *array)
@@ -332,6 +332,12 @@ double GetOptimalRatioFrom(vtkUnstructuredGrid *dataset, vtkDoubleArray *array)
   if(maxDispDelta<EPS)
     maxDispDelta=1.;
   return maxGeoDelta/maxDispDelta;
+}
+
+int vtkSimpleMode::FillOutputPortInformation( int vtkNotUsed(port), vtkInformation* info)
+{
+  info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkPolyData");
+  return 1;
 }
 
 int vtkSimpleMode::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)

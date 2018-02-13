@@ -21,15 +21,15 @@
 #ifndef vtkSimpleMode_h__
 #define vtkSimpleMode_h__
 
-#include "vtkPolyDataAlgorithm.h"
+#include "vtkDataSetAlgorithm.h"
 
 class vtkMutableDirectedGraph;
 
-class VTK_EXPORT vtkSimpleMode : public vtkPolyDataAlgorithm
+class VTK_EXPORT vtkSimpleMode : public vtkDataSetAlgorithm
 {
 public:
   static vtkSimpleMode* New();
-  vtkTypeMacro(vtkSimpleMode, vtkPolyDataAlgorithm)
+  vtkTypeMacro(vtkSimpleMode, vtkDataSetAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent);
   void SetInputArrayToProcess(int idx, int port, int connection, int fieldAssociation, const char *name);
   vtkGetMacro(Factor,double);
@@ -39,7 +39,7 @@ public:
 protected:
   vtkSimpleMode();
   ~vtkSimpleMode();
-
+  int FillOutputPortInformation( int vtkNotUsed(port), vtkInformation* info);
   int RequestInformation(vtkInformation *request,
       vtkInformationVector **inputVector, vtkInformationVector *outputVector);
 
