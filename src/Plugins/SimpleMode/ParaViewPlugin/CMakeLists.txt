@@ -20,9 +20,6 @@
 
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../IO )
 ADD_PARAVIEW_PLUGIN(SimpleModePlugin "4.0"
-  SERVER_MANAGER_SOURCES ${SM_SRCS}
-  SERVER_MANAGER_XML Resources/SimpleModeServer.xml
-  CS_KITS
-  vtkSimpleMode)
-TARGET_LINK_LIBRARIES(SimpleModePlugin vtkSimpleMode vtkSimpleModeCS)
+  SERVER_MANAGER_SOURCES ${SM_SRCS} ${PROJECT_SOURCE_DIR}/IO/vtkSimpleMode.cxx
+  SERVER_MANAGER_XML Resources/SimpleModeServer.xml)
 INSTALL(TARGETS SimpleModePlugin RUNTIME DESTINATION lib/paraview LIBRARY DESTINATION lib/paraview ARCHIVE DESTINATION lib/paraview)
