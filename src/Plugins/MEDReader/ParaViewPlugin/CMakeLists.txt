@@ -27,7 +27,15 @@ IF(PARAVIEW_BUILD_QT_GUI)
 
   # create a plugin that implements an object panel for the reader
   SET(SM_SRCS
-    vtkPVMetaDataInformation.cxx)
+    vtkPVMetaDataInformation.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkMEDReader.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkExtractGroup.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkELNOMeshFilter.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkELNOSurfaceFilter.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkELNOFilter.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkExtractCellType.cxx
+    ${PROJECT_SOURCE_DIR}/IO/vtkMEDQuadraturePointsGenerator.cxx
+    )
 
   SET(CLIENT_SRCS
     pqExtractGroupFieldsWidget.cxx
@@ -98,10 +106,6 @@ IF(PARAVIEW_BUILD_QT_GUI)
       ${MEDREADER_FIELDS_IFACE_SRCS}
       ${MEDREADER_VECTORS_IFACE_SRCS}
       ${EXTRACTGROUP_FIELDS_IFACES_SRCS}
-    CS_KITS
-    # this is the same name as the name in module.cmake file IO
-    # directory.
-    vtkMEDReader
     )
 
 ELSE(PARAVIEW_BUILD_QT_GUI)
@@ -118,7 +122,8 @@ ELSE(PARAVIEW_BUILD_QT_GUI)
 
 ENDIF(PARAVIEW_BUILD_QT_GUI)
 
-TARGET_LINK_LIBRARIES(MEDReaderPlugin vtkMEDReader vtkMEDReaderCS)
+TARGET_LINK_LIBRARIES(MEDReaderPlugin MEDLoaderForPV)
+
 # Install
 INSTALL(
   TARGETS MEDReaderPlugin

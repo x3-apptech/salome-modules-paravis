@@ -17,17 +17,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-INCLUDE_DIRECTORIES(
-  ${MEDCOUPLING_INCLUDE_DIRS}
-  ${MEDFILE_INCLUDE_DIRS}
-  ${HDF5_INCLUDE_DIRS}
-  ${MED_ROOT_DIR}/include/salome
-  )
-
-IF(HDF5_IS_PARALLEL)
-  ADD_DEFINITIONS("-DMEDREADER_USE_MPI")
-ENDIF(HDF5_IS_PARALLEL)
-
 SET(MEDReader_CLASSES vtkMEDReader vtkExtractGroup vtkELNOMeshFilter vtkELNOSurfaceFilter vtkELNOFilter 
                                    vtkExtractCellType vtkMEDQuadraturePointsGenerator)
 
@@ -49,11 +38,8 @@ ELSE(HDF5_IS_PARALLEL)
   TARGET_LINK_LIBRARIES(MEDLoaderForPV vtkCommonCore vtkCommonDataModel ${MEDCoupling_medloader} ${MEDFILE_C_LIBRARIES})
 ENDIF(HDF5_IS_PARALLEL)
 
-VTK_MODULE_LIBRARY(vtkMEDReader ${MEDReader_SRCS})
-TARGET_LINK_LIBRARIES(vtkMEDReader vtkPVVTKExtensionsRendering vtkFiltersGeneral vtkFiltersCore ${PARAVIEW_LIBRARIES} MEDLoaderForPV ${MEDFILE_C_LIBRARIES})
-
 INSTALL(
-  TARGETS vtkMEDReader MEDLoaderForPV
+  TARGETS MEDLoaderForPV
   RUNTIME DESTINATION lib/salome
   LIBRARY DESTINATION lib/salome
   ARCHIVE DESTINATION lib/salome
