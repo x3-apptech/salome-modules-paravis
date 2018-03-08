@@ -46,7 +46,6 @@ IF(NOT ParaView_FOUND)
   MESSAGE(FATAL_ERROR "Please locate ParaView." )
 ENDIF(NOT ParaView_FOUND)
 INCLUDE(${PARAVIEW_USE_FILE})
-PV_SETUP_MODULE_ENVIRONMENT("vtkSimpleMode")
 
 OPTION(BUILD_SHARED_LIBS "Build with shared libraries." ${VTK_BUILD_SHARED_LIBS})
 
