@@ -93,7 +93,6 @@ IF(MEDReader_BUILD_ParaView_Plugin)
     ENDIF(NOT ParaView_FOUND)
     INCLUDE(${PARAVIEW_USE_FILE})
     # Load information about VTK/ParaView modules loaded/available.
-    PV_SETUP_MODULE_ENVIRONMENT("vtkMEDReader")
 ELSE(MEDReader_BUILD_ParaView_Plugin)
     FIND_PACKAGE(VTK REQUIRED)
     if(NOT VTK_FOUND)
