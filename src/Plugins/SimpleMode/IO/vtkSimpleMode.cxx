@@ -96,7 +96,6 @@ vtkSmartPointer<vtkDoubleArray> ForceTo3Compo(vtkDoubleArray *arr)
   if(nbCompo==3)
     {
       vtkSmartPointer<vtkDoubleArray> ret(arr);
-      arr->Register(0);
       return ret;
     }
   if(nbCompo==6)
@@ -410,12 +409,16 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
         vtkDataArray *dummy(0);
         ExtractInfo3(ds,this->Internal->getFieldForReal(),dummy,idx2);
       }
-      ds->GetPointData()->SetActiveAttribute(idx2,vtkDataSetAttributes::SCALARS);
       //
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkPolyData *output(vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       output->ShallowCopy(ds);
-      
+
+      vtkDataArray* array = ds->GetPointData()->GetArray(idx2);
+      vtkSmartPointer<vtkDataArray> result = vtkSmartPointer<vtkDataArray>::Take(vtkDataArray::CreateDataArray(array->GetDataType()));
+      result->ShallowCopy(array);
+      result->SetName("Result");
+      output->GetPointData()->SetScalars(result);            
     }
   catch(MZCException& e)
     {
