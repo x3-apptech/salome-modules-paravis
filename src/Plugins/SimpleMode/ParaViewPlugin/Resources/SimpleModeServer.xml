@@ -61,7 +61,6 @@ Select the array that represents the requested mode.
                             command="SetAnimationTime"
                             default_values="0"
                             name="AnimationTime"
-			    panel_visibility="advanced"
                             number_of_elements="1">
         <DoubleRangeDomain max="1" min="0" name="range" />
         <Documentation>The value of this property sets the scale factor applied for all nodes displacement.</Documentation>
