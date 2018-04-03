@@ -390,7 +390,7 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
       arr1->SetNumberOfTuples(nbPts);
       double *ptToFeed1(arr1->Begin());
       const double *srcPt1(arrReal->Begin());
-      double cst1(Factor*sin(AnimationTime*2*M_PI));
+      double cst1(Factor*cos(AnimationTime*2*M_PI));
       std::transform(srcPt1,srcPt1+3*nbPts,ptToFeed1,std::bind2nd(std::multiplies<double>(),cst1));
       int idx1(outSurface->GetPointData()->AddArray(arr1));
       outSurface->GetPointData()->SetActiveAttribute(idx1,vtkDataSetAttributes::VECTORS);
@@ -413,8 +413,22 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkPolyData *output(vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       output->ShallowCopy(ds);
-
-      vtkDataArray* array = ds->GetPointData()->GetArray(idx2);
+      output->GetPointData()->DeepCopy(ds->GetPointData());
+      //
+      for(int i=0;i<output->GetPointData()->GetNumberOfArrays();i++)
+        {
+          vtkDataArray *arr(output->GetPointData()->GetArray(i));
+          vtkDoubleArray *arr2(vtkDoubleArray::SafeDownCast(arr));
+          if(!arr2)
+            continue;
+          int nbCompo(arr2->GetNumberOfComponents()),nbTuples(arr2->GetNumberOfTuples());
+          if(nbCompo!=3 && nbCompo!=2)
+            continue;
+          double *arrPtr(arr2->GetPointer(0));
+          std::transform(arrPtr,arrPtr+nbCompo*nbTuples,arrPtr,std::bind2nd(std::multiplies<double>(),cos(AnimationTime*2*M_PI)));
+        }
+      //
+      vtkDataArray* array = output->GetPointData()->GetArray(idx2);
       vtkSmartPointer<vtkDataArray> result = vtkSmartPointer<vtkDataArray>::Take(vtkDataArray::CreateDataArray(array->GetDataType()));
       result->ShallowCopy(array);
       result->SetName("Result");
