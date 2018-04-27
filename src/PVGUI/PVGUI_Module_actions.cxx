@@ -513,7 +513,7 @@ void PVGUI_Module::pvCreateMenus()
 
   int aHelpMnu = createMenu( tr( "MEN_DESK_HELP" ), -1, -1 );
   int aUsersGuide = createMenu( tr( "User's Guide" ), aHelpMnu, -1 );
-  int aPVHelpMnu = createMenu( tr( "ParaViS module" ), aUsersGuide, -1, 0 );
+  int aPVHelpMnu = createMenu( tr( "ParaViS module" ), aUsersGuide, -1, 5 );
 #ifdef HAS_PV_DOC
   createMenu( ParaViewHelpId,  aPVHelpMnu );
   createMenu( separator(),     aPVHelpMnu );
