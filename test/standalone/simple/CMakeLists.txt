@@ -32,5 +32,6 @@ INCLUDE_DIRECTORIES(
   )
 
 ADD_EXECUTABLE(paraCmdLine ${pl_SOURCES})
-TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle)
+# RNV: ${vtkgl2ps_LIBRARIES} was added for Fedora 26 OS
+TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle ${vtkgl2ps_LIBRARIES})
 
