@@ -89,9 +89,11 @@ PROJECT( ParaMEDCorba )
       ${ParaMEDCorba_SOURCE_DIR}/testParaMEDCorba.cxx
       )
     # SET_TARGET_PROPERTIES(testCorbaPlugin PROPERTIES COMPILE_FLAGS "${OMNIORB_DEFINITIONS}")
-    
+
+    # RNV: ${vtkgl2ps_LIBRARIES} was added for Fedora 26 OS    
     TARGET_LINK_LIBRARIES( testParaMEDCorba
       ParaMEDCorbaPlugin
+      ${vtkgl2ps_LIBRARIES}
       )
     
     INSTALL(FILES ParaMEDCorbaServerManager.xml DESTINATION share)

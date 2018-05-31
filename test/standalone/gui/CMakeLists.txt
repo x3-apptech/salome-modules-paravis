@@ -71,7 +71,8 @@ ADD_EXECUTABLE(paraLight
     ${pl_HEADERS_MOC} 
     ${pl_FORMS_HEADERS}
     ${rcs_sources})
-    
-TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle)
+
+# RNV: ${vtkgl2ps_LIBRARIES} was added for Fedora 26 OS    
+TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle ${vtkgl2ps_LIBRARIES})
 #INSTALL(TARGET paraLight bin)
 
