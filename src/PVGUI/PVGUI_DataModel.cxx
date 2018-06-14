@@ -208,7 +208,7 @@ bool PVGUI_DataModel::dumpPython( const QString& path, CAM_Study* std,
   if (isMultiFile)
     {
       QStringList abuffer;
-      abuffer.push_back(QString("def RebuildData( theStudy ):"));
+      abuffer.push_back(QString("def RebuildData():"));
       QStringList lst(trace.split("\n"));
       foreach(QString elem, lst)
         {

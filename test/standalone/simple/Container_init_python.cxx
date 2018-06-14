@@ -50,10 +50,15 @@ void KERNEL_PYTHON::init_python(int argc, char **argv)
   // set stdout to line buffering (aka C++ std::cout)
   setvbuf(stdout, (char *)NULL, _IOLBF, BUFSIZ);
   char* salome_python=getenv("SALOME_PYTHON");
+  size_t size_salome_python = sizeof(salome_python) / sizeof(salome_python[0]);
   if(salome_python != 0)
-    Py_SetProgramName(salome_python);
+	  Py_SetProgramName(Py_DecodeLocale(salome_python, NULL));
+
   Py_Initialize(); // Initialize the interpreter
-  PySys_SetArgv(argc, argv);
+  wchar_t **w_argv = new wchar_t*[argc];
+  for (int i = 0; i < argc; i++)
+	  w_argv[i] = Py_DecodeLocale(argv[i], NULL);
+  PySys_SetArgv(argc, w_argv);
   PyRun_SimpleString("import threading\n");
   PyEval_InitThreads(); // Create (and acquire) the interpreter lock
   PyThreadState *pts = PyGILState_GetThisThreadState(); 

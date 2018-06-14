@@ -44,7 +44,7 @@ for entry in selection:
     try:
         import GEOM
         from salome.geom import geomBuilder
-        geompy = geomBuilder.New(salome.myStudy)
+        geompy = geomBuilder.New()
         go = sobj.GetObject()._narrow(GEOM.GEOM_Object)
         if go:
             tmpf = tempfile.NamedTemporaryFile(suffix='.vtk')
@@ -64,13 +64,13 @@ for entry in selection:
     try: 
         import SMESH
         from salome.smesh import smeshBuilder
-        mesh = smeshBuilder.New(salome.myStudy)
+        mesh = smeshBuilder.New()
         mo = sobj.GetObject()._narrow(SMESH.SMESH_Mesh)
         if mo:
             tmpf = tempfile.NamedTemporaryFile(suffix='.med')
             fname = tmpf.name
             tmpf.close()
-            mo.ExportToMEDX(fname, True, SMESH.MED_V2_2, True, True)
+            mo.ExportMED(fname, True, True, True)
             ShowParaviewView()
             p = MEDReader(FileName=fname)
             renderView = GetActiveViewOrCreate('RenderView')

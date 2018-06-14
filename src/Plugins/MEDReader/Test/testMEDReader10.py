@@ -80,7 +80,7 @@ DataRepresentation1.Representation = 'Wireframe'
 wbv=WarpByVector(Input=myMedReader)
 wbv.ScaleFactor=0.1
 wbv.Vectors=['POINTS','f3NbComp4_Vector']
-assert(wbv.PointData.keys()==['f0NbComp1','f1NbComp2','f1NbComp2_Vector','f2NbComp3','f3NbComp4','f3NbComp4_Vector'])
+assert(list(wbv.PointData.keys())==['f0NbComp1','f1NbComp2','f1NbComp2_Vector','f2NbComp3','f3NbComp4','f3NbComp4_Vector'])
 #
 DataRepresentation2 = Show()
 DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
@@ -114,7 +114,7 @@ try:
   baselineIndex = sys.argv.index('-B')+1
   baselinePath = sys.argv[baselineIndex]
 except:
-  print "Could not get baseline directory. Test failed."
+  print("Could not get baseline directory. Test failed.")
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader10.png")
 import vtk.test.Testing

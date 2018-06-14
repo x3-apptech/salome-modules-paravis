@@ -27,7 +27,7 @@ __DEBUG = 0   # increase if you want more verbosity
 
 def __my_log(msg):
     if __DEBUG:
-      print "[PARAVIS] %s" % msg
+      print("[PARAVIS] %s" % msg)
 
 def __getFromGUI():
     """ Identify if we are running inside SALOME's embedded interpreter.

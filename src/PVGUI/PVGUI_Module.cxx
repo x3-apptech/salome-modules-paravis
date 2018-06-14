@@ -125,6 +125,19 @@
 #include <pqServerManagerModel.h>
 #include <pqAnimationTimeToolbar.h>
 
+#if PY_VERSION_HEX < 0x03050000
+static char*
+Py_EncodeLocale(const wchar_t *arg, size_t *size)
+{
+	return _Py_wchar2char(arg, size);
+}
+static wchar_t*
+Py_DecodeLocale(const char *arg, size_t *size)
+{
+	return _Py_char2wchar(arg, size);
+}
+#endif
+
 //----------------------------------------------------------------------------
 PVGUI_Module* ParavisModule = 0;
 
@@ -790,7 +803,7 @@ void PVGUI_Module::executeScript( const char* script )
 //      PyObject * elem = PyList_GetItem(lst, i);
 //      if (PyString_Check(elem))
 //        {
-//          std::cout << "At pos:" << i << ", " << PyString_AsString(elem) << std::endl;
+//          std::cout << "At pos:" << i << ", " << Py_EncodeLocale(PyUnicode_AS_UNICODE(elem), NULL) << std::endl;
 //        }
 //      else
 //        std::cout << "At pos:" << i << ", not a string!" << std::endl;
@@ -837,12 +850,12 @@ QString PVGUI_Module::getTraceString()
         vtkSmartPyObject save_cam(PyObject_GetAttrString(trace_mod, const_cast<char*>("SaveCameras")));
         vtkSmartPyObject camera_trace(PyObject_CallMethod(save_cam, const_cast<char*>("get_trace"), NULL));
         // Convert to a single string
-        vtkSmartPyObject ret(PyString_FromString(end_line.toStdString().c_str()));
+        vtkSmartPyObject ret(PyUnicode_FromUnicode(Py_DecodeLocale(end_line.toStdString().c_str(), NULL), end_line.size()));
         vtkSmartPyObject final_string(PyObject_CallMethod(ret, const_cast<char*>("join"),
             const_cast<char*>("O"), (PyObject*)camera_trace));
-        if (PyString_CheckExact(final_string))
+        if (PyUnicode_CheckExact(final_string))
           {
-            QString camera_qs(PyString_AsString(final_string));  // deep copy
+            QString camera_qs(Py_EncodeLocale(PyUnicode_AS_UNICODE(final_string.GetPointer()), NULL));  // deep copy
             traceString = traceString + end_line  + end_line + QString("#### saving camera placements for all active views")
                 + end_line + end_line + camera_qs + end_line;
           }

@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2010-2017  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,15 +22,13 @@ SET(_PYFILES_TO_INSTALL)
 IF(SALOME_LIGHT_ONLY)
   LIST(APPEND _PYFILES_TO_INSTALL
     pvsimple.py
-    presentations.py
   )
 ELSE(SALOME_LIGHT_ONLY)
-    # Use a set of Python files redirecting the API directly 
+    # Use a set of Python files redirecting the API directly
     # to the original ParaView modules.
     LIST(APPEND _PYFILES_TO_INSTALL
       pvserver.py
       pvsimple.py
-      presentations.py
       paravisSM.py
     )
 ENDIF(SALOME_LIGHT_ONLY)
