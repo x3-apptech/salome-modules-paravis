@@ -105,8 +105,8 @@ DataRepresentation3.ColorArrayName = 'SolutionSIEQ_ELNO'
 DataRepresentation3.LookupTable = a2_SolutionSIEQ_ELNO_PVLookupTable
 DataRepresentation3.Visibility = 1
 #
-ELGAfieldToPointSprite1=ELGAfieldToPointSprite(Input=ELNOfieldToSurface1)
-ELGAfieldToPointSprite1.SelectSourceArray=['CELLS','ELGA@0']
+ELGAfieldToPointGaussian1=ELGAfieldToPointGaussian(Input=ELNOfieldToSurface1)
+ELGAfieldToPointGaussian1.SelectSourceArray=['CELLS','ELGA@0']
 DataRepresentation4 = Show()
 DataRepresentation4.ScaleFactor = 0.008999999705702066
 DataRepresentation4.EdgeColor = [0.0, 0.0, 0.5000076295109483]

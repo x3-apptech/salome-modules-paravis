@@ -56,7 +56,7 @@ ELNOfieldToSurface3 = ELNOfieldToSurface(Input=testMEDReader13_med)
 DataRepresentation2 = Show()
 #DataRepresentation2.ConstantRadius = 1.9999333620071411
 DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-#DataRepresentation2.PointSpriteDefaultsInitialized = 1
+#DataRepresentation2.PointGaussianDefaultsInitialized = 1
 DataRepresentation2.SelectionPointFieldDataArrayName = 'fieldELNO'
 DataRepresentation2.SelectionCellFieldDataArrayName = 'FamilyIdCell'
 #DataRepresentation2.SelectInputVectors = ['POINTS', 'fieldELNO_Vector']
