@@ -116,6 +116,7 @@ except:
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader8.png")
 import vtk.test.Testing
+from vtk.util.misc import vtkGetTempDir
 vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
 vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
                                                             threshold=1)

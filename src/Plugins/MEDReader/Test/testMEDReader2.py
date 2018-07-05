@@ -66,7 +66,7 @@ GroupDatasets1=GroupDatasets(Input=[testMEDReader1,testMEDReader2])
 Clip1 = Clip(ClipType="Plane",Input=GroupDatasets1)
 Clip1.Scalars=['FamilyIdCell']
 Clip1.ClipType.Origin=[3.0, 3.0, 3.0]
-Clip1.InsideOut=1
+Clip1.Invert=1
 Clip1.ClipType.Normal=[0.9255623174457069, 0.0027407477590518157, 0.378585373233375]
 Clip1.Scalars=['CELLS']
 
@@ -115,6 +115,7 @@ except:
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader2.png")
 import vtk.test.Testing
+from vtk.util.misc import vtkGetTempDir
 vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
 vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
                                                             threshold=1)
