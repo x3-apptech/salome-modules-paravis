@@ -522,7 +522,7 @@ void PVGUI_Module::pvCreateMenus()
 
   // -- Context menu in the pipeline browser
   pqPipelineBrowserWidget * pq = guiElements->getPipelineBrowserWidget();
-  pqParaViewMenuBuilders::buildPipelineBrowserContextMenu( *pq );
+  pqParaViewMenuBuilders::buildPipelineBrowserContextMenu( *(pq->contextMenu()) );
 }
 
 /*!

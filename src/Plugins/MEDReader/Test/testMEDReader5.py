@@ -83,7 +83,7 @@ Clip1.Scalars = ['POINTS', 'FamilyIdNode']
 Clip1.ClipType.Origin = [2.0, 2.0, 2.0]
 Clip1.ClipType = "Plane"
 Clip1.ClipType.Normal = [0.04207410474474753, 0.9319448861971525, 0.3601506612529047]
-Clip1.InsideOut = 1
+Clip1.Invert = 1
 
 DataRepresentation2 = Show()
 DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
@@ -121,6 +121,7 @@ except:
   exit(1)
 baseline_file = os.path.join(baselinePath, "testMEDReader5.png")
 import vtk.test.Testing
+from vtk.util.misc import vtkGetTempDir
 vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
 vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
                                                             threshold=1)
