@@ -846,7 +846,7 @@ QString PVGUI_Module::getTraceString()
     vtkPythonScopeGilEnsurer psge;
     PyObject * mods(PySys_GetObject(const_cast<char*>("modules")));
     PyObject * trace_mod(PyDict_GetItemString(mods, "paraview.smtrace"));  // module was already (really) imported by vtkSMTrace
-    if (PyModule_Check(trace_mod)) {
+    if (trace_mod && trace_mod != Py_None && PyModule_Check(trace_mod)) {
         vtkSmartPyObject save_cam(PyObject_GetAttrString(trace_mod, const_cast<char*>("SaveCameras")));
         vtkSmartPyObject camera_trace(PyObject_CallMethod(save_cam, const_cast<char*>("get_trace"), NULL));
         // Convert to a single string
