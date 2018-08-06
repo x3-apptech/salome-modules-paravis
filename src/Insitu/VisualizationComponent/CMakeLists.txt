@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(
   ${OMNIORB_INCLUDE_DIR}
   ${PROJECT_BINARY_DIR}
   ${PROJECT_BINARY_DIR}/idl
-  ${MED_INCLUDE_DIRS}
+  ${FIELDS_INCLUDE_DIRS}
   ${MEDCOUPLING_INCLUDE_DIRS}
   ${CMAKE_CURRENT_SOURCE_DIR}/../VisualizationLibrary
 )
@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(
 # --- definitions ---
 ADD_DEFINITIONS(
   ${OMNIORB_DEFINITIONS}
-  ${MED_DEFINITIONS}
+  ${FIELDS_DEFINITIONS}
   ${MEDCOUPLING_DEFINITIONS}
 )
 
@@ -28,13 +28,11 @@ SET(_link_LIBRARIES
   ${KERNEL_SalomeMPIContainer}
   MEDLoaderForPV
   visulib
-  ${MED_SalomeIDLMED}
-  ${MED_med}
-  ${MED_medcouplingcorba}
-  ${MED_medcouplingclient}
-
-  ${MED_paramedmemcompo}
-  ${MED_paramedcouplingcorba}  
+  ${FIELDS_SalomeIDLMED}
+  ${FIELDS_medcouplingcorba}
+  ${FIELDS_medcouplingclient}
+  ${FIELDS_paramedmemcompo}
+  ${FIELDS_paramedcouplingcorba}  
 )
 
 # --- headers ---

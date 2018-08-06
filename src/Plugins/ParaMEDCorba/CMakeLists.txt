@@ -52,7 +52,7 @@ PROJECT( ParaMEDCorba )
       SERVER_MANAGER_XML ParaMEDCorbaServerManager.xml
       SERVER_MANAGER_SOURCES ${PARACORBAPLUG_SRCS} )
     
-    INCLUDE_DIRECTORIES(${OMNIORB_INCLUDE_DIR} ${MED_ROOT_DIR}/include/salome ${KERNEL_ROOT_DIR}/include/salome)
+    INCLUDE_DIRECTORIES(${OMNIORB_INCLUDE_DIR} ${FIELDS_ROOT_DIR}/include/salome ${KERNEL_ROOT_DIR}/include/salome)
     ADD_DEFINITIONS(${OMNIORB_DEFINITIONS})
 
     TARGET_LINK_LIBRARIES(ParaMEDMEM2VTK
@@ -63,7 +63,7 @@ PROJECT( ParaMEDCorba )
       vtkPVVTKExtensionsRendering
       pqCore
       ${OMNIORB_LIBRARIES}
-      ${MED_SalomeIDLMED}
+      ${FIELDS_SalomeIDLMED}
       ${KERNEL_SalomeIDLKernel}
       )
     TARGET_LINK_LIBRARIES(ParaMEDCorbaPlugin

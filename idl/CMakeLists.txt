@@ -5,7 +5,7 @@ IF(SALOME_PARAVIS_BUILD_INSITU)
     ${OMNIORB_INCLUDE_DIR}
     ${KERNEL_INCLUDE_DIRS}
     ${PROJECT_BINARY_DIR}/idl
-    ${MED_INCLUDE_DIRS}
+    ${FIELDS_INCLUDE_DIRS}
     ${MEDCOUPLING_INCLUDE_DIRS}
   )
 
@@ -16,13 +16,13 @@ IF(SALOME_PARAVIS_BUILD_INSITU)
 
   SET(_idl_include_dirs
     ${KERNEL_ROOT_DIR}/idl/salome
-    ${MED_ROOT_DIR}/idl/salome
+    ${FIELDS_ROOT_DIR}/idl/salome
     
   )
 
   SET(_idl_link_flags
     ${KERNEL_SalomeIDLKernel}
-    ${MED_SalomeIDLMED}
+    ${FIELDS_SalomeIDLMED}
     
   )
 
