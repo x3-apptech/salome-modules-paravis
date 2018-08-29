@@ -21,6 +21,8 @@
 #ifndef __VTKTOMEDMEM_HXX__
 #define __VTKTOMEDMEM_HXX__
 
+#include "vtkSystemIncludes.h" //needed for exports
+
 #include "MEDFileMesh.hxx"
 #include "MEDFileField.hxx"
 #include "MEDFileData.hxx"
@@ -38,7 +40,7 @@
 
 class vtkDataSet;
 
-class MZCException : public std::exception
+class VTK_EXPORT MZCException : public std::exception
 {
 public:
   MZCException(const std::string& s):_reason(s) { }
@@ -50,7 +52,7 @@ private:
 
 namespace VTKToMEDMem
 {
-  class Grp
+  class VTK_EXPORT Grp
   {
   public:
     Grp(const std::string& name):_name(name) { }
@@ -62,7 +64,7 @@ namespace VTKToMEDMem
     std::vector<std::string> _fams;
   };
 
-  class Fam
+  class VTK_EXPORT Fam
   {
   public:
     Fam(const std::string& name);
@@ -76,11 +78,11 @@ namespace VTKToMEDMem
 
 class vtkDataObject;
 
-void WriteMEDFileFromVTKDataSet(MEDCoupling::MEDFileData *mfd, vtkDataSet *ds, const std::vector<int>& context, double timeStep, int tsId);
+void VTK_EXPORT WriteMEDFileFromVTKDataSet(MEDCoupling::MEDFileData *mfd, vtkDataSet *ds, const std::vector<int>& context, double timeStep, int tsId);
 
-void WriteMEDFileFromVTKGDS(MEDCoupling::MEDFileData *mfd, vtkDataObject *input, double timeStep, int tsId);
+void VTK_EXPORT WriteMEDFileFromVTKGDS(MEDCoupling::MEDFileData *mfd, vtkDataObject *input, double timeStep, int tsId);
   
-void PutFamGrpInfoIfAny(MEDCoupling::MEDFileData *mfd, const std::string& meshName, const std::vector<VTKToMEDMem::Grp>& groups, const std::vector<VTKToMEDMem::Fam>& fams);
+void VTK_EXPORT PutFamGrpInfoIfAny(MEDCoupling::MEDFileData *mfd, const std::string& meshName, const std::vector<VTKToMEDMem::Grp>& groups, const std::vector<VTKToMEDMem::Fam>& fams);
 
 #endif
 

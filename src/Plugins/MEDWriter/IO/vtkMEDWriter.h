@@ -21,7 +21,6 @@
 #ifndef vtkMEDWriter_h__
 #define vtkMEDWriter_h__
 
-#include "vtkPVVTKExtensionsDefaultModule.h" //needed for exports
 #include "vtkDataObjectAlgorithm.h"
 
 class vtkMutableDirectedGraph;

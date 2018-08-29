@@ -18,6 +18,9 @@
 //
 
 // To access to vtkUnstructuredGrid::Faces and FaceLocations
+#ifdef WIN32
+#define _ALLOW_KEYWORD_MACROS
+#endif
 #define protected public
 
 #include "VTKMEDCouplingMultiFieldsClient.hxx"
