@@ -70,8 +70,8 @@ ELGAfieldToPointGaussian1.SelectSourceArray = ['CELLS','ELGA@0']
 
 Glyph1 = Glyph( Input=ELGAfieldToPointGaussian1, GlyphType="Sphere", GlyphTransform="Transform2" )
 Glyph1.GlyphType = "Sphere"
-Glyph1.Vectors = ['POINTS', '']
-Glyph1.ScaleFactor = 0.29
+Glyph1.OrientationArray = ['POINTS', 'No orientation array']
+Glyph1.MaximumGlyphSize = 0.29
 
 RenderView1 = GetRenderView()
 RenderView1.CameraFocalPoint = [1.5, 1.5, 0.0]
