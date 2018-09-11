@@ -17,10 +17,5 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(input ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.in)
-SET(output ${CMAKE_CURRENT_BINARY_DIR}/VERSION)
-
-MESSAGE(STATUS "Creation of ${output}")
-CONFIGURE_FILE(${input} ${output})
-
-INSTALL(FILES paravis_setenv.py ${CMAKE_CURRENT_BINARY_DIR}/VERSION DESTINATION ${SALOME_INSTALL_BINS})
+SALOME_CONFIGURE_FILE(VERSION.in VERSION INSTALL ${SALOME_INSTALL_BINS})
+SALOME_INSTALL_SCRIPTS(paravis_setenv.py ${SALOME_INSTALL_SCRIPT_SCRIPTS})
