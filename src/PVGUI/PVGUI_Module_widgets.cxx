@@ -48,7 +48,6 @@
 #include <pqComparativeVisPanel.h>
 #include <pqPipelineBrowserWidget.h>
 #include <pqProxyInformationWidget.h>
-#include <pqSettings.h>
 #include <pqDataInformationWidget.h>
 #include <pqPVAnimationWidget.h>
 #include <pqFindDataSelectionDisplayFrame.h>
@@ -68,6 +67,7 @@
 #include <pqDeleteReaction.h>
 
 #include <vtkPVGeneralSettings.h>
+#include <vtkSMSettings.h>
 
 class ResizeHelper : public pqPVAnimationWidget
 {
@@ -121,7 +121,7 @@ void PVGUI_Module::setupDockWidgets()
 
   // PROPERTIES, DISPLAY and VIEW:
   // See ParaViewMainWindow.cxx - those three panels can be separated or grouped.
-  pqSettings *settings = pqApplicationCore::instance()->settings();
+  vtkSMSettings* settings = vtkSMSettings::GetInstance();
 
   //    Properties dock (previously called OBJECT_INSPECTOR)
   QDockWidget* propertiesDock = new QDockWidget( tr( "TTL_OBJECT_INSPECTOR" ), desk );
@@ -139,45 +139,53 @@ void PVGUI_Module::setupDockWidgets()
   myDockWidgets[propertiesDock] = true;
   propertiesDock->hide();
 
-  // Display dock
-  QDockWidget* displayPropertiesDock = new QDockWidget( tr( "TTL_DISPLAY" ), desk );
-  displayPropertiesDock->setObjectName("displayPropertiesDock");
-  displayPropertiesDock->setAllowedAreas( Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea );
-  desk->addDockWidget( Qt::LeftDockWidgetArea, displayPropertiesDock );
+  int propertiesPanelMode = settings->GetSettingAsInt(
+      ".settings.GeneralSettings.PropertiesPanelMode", vtkPVGeneralSettings::ALL_IN_ONE);
 
-  pqPropertiesPanel* displayPropertiesPanel = new pqPropertiesPanel();
-  displayPropertiesPanel->setObjectName("displayPropertiesPanel");
-  displayPropertiesPanel->setProperty("panelMode", QVariant(2));  // probably to have only the Display part
-  displayPropertiesDock->setWidget(displayPropertiesPanel);
-  myDockWidgets[displayPropertiesDock] = false;
-  displayPropertiesDock->hide();
+  // Display dock
+  QDockWidget* displayPropertiesDock = 0;
+  if (propertiesPanelMode == vtkPVGeneralSettings::SEPARATE_DISPLAY_PROPERTIES ||
+      propertiesPanelMode == vtkPVGeneralSettings::ALL_SEPARATE )
+  {
+    displayPropertiesDock = new QDockWidget( tr( "TTL_DISPLAY" ), desk );
+    displayPropertiesDock->setObjectName("displayPropertiesDock");
+    displayPropertiesDock->setAllowedAreas( Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea );
+    desk->addDockWidget( Qt::LeftDockWidgetArea, displayPropertiesDock );
+    
+    pqPropertiesPanel* displayPropertiesPanel = new pqPropertiesPanel();
+    displayPropertiesPanel->setObjectName("displayPropertiesPanel");
+    displayPropertiesPanel->setProperty("panelMode", QVariant(2));  // probably to have only the Display part
+    displayPropertiesDock->setWidget(displayPropertiesPanel);
+    myDockWidgets[displayPropertiesDock] = false;
+    displayPropertiesDock->hide();
+  }
 
   // View dock
-  QDockWidget* viewPropertiesDock = new QDockWidget( tr( "TTL_VIEW_PANEL" ), desk );
-  viewPropertiesDock->setObjectName("viewPropertiesDock");
-  viewPropertiesDock->setAllowedAreas( Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea );
-  desk->addDockWidget( Qt::LeftDockWidgetArea, viewPropertiesDock );
+  QDockWidget* viewPropertiesDock = 0;
+  if (propertiesPanelMode == vtkPVGeneralSettings::SEPARATE_VIEW_PROPERTIES ||
+      propertiesPanelMode == vtkPVGeneralSettings::ALL_SEPARATE )
+  {
+    viewPropertiesDock = new QDockWidget( tr( "TTL_VIEW_PANEL" ), desk );
+    viewPropertiesDock->setObjectName("viewPropertiesDock");
+    viewPropertiesDock->setAllowedAreas( Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea );
+    desk->addDockWidget( Qt::LeftDockWidgetArea, viewPropertiesDock );
+    
+    pqPropertiesPanel* viewPropertiesPanel = new pqPropertiesPanel();
+    viewPropertiesPanel->setObjectName("viewPropertiesPanel");
+    viewPropertiesPanel->setProperty("panelMode", QVariant(4)); // probably to have only the View part
+    viewPropertiesDock->setWidget(viewPropertiesPanel);
+    myDockWidgets[viewPropertiesDock] = false;
+    viewPropertiesDock->hide();
+  }
 
-  pqPropertiesPanel* viewPropertiesPanel = new pqPropertiesPanel();
-  viewPropertiesPanel->setObjectName("viewPropertiesPanel");
-  viewPropertiesPanel->setProperty("panelMode", QVariant(4)); // probably to have only the View part
-  viewPropertiesDock->setWidget(viewPropertiesPanel);
-  myDockWidgets[viewPropertiesDock] = false;
-  viewPropertiesDock->hide();
-
-  // Taken from ParaViewMainWindow.cxx:
-  int propertiesPanelMode = settings->value(
-      "GeneralSettings.PropertiesPanelMode", vtkPVGeneralSettings::ALL_IN_ONE).toInt();
   switch (propertiesPanelMode)
   {
     case vtkPVGeneralSettings::SEPARATE_DISPLAY_PROPERTIES:
-      viewPropertiesDock->hide();
       propertiesPanel->setPanelMode(
           pqPropertiesPanel::SOURCE_PROPERTIES|pqPropertiesPanel::VIEW_PROPERTIES);
       break;
 
     case vtkPVGeneralSettings::SEPARATE_VIEW_PROPERTIES:
-      displayPropertiesDock->hide();
       propertiesPanel->setPanelMode(
           pqPropertiesPanel::SOURCE_PROPERTIES|pqPropertiesPanel::DISPLAY_PROPERTIES);
       break;
@@ -190,8 +198,6 @@ void PVGUI_Module::setupDockWidgets()
     default:
       propertiesPanel->setPanelMode(
                 pqPropertiesPanel::SOURCE_PROPERTIES|pqPropertiesPanel::VIEW_PROPERTIES|pqPropertiesPanel::DISPLAY_PROPERTIES);
-      viewPropertiesDock->hide();
-      displayPropertiesDock->hide();
       break;
   }
 
@@ -220,8 +226,10 @@ void PVGUI_Module::setupDockWidgets()
 
   myDockWidgets[informationDock] = true;
 
+  if ( viewPropertiesDock )
   desk->tabifyDockWidget(propertiesDock, viewPropertiesDock);
-  desk->tabifyDockWidget(propertiesDock, displayPropertiesDock);
+  if ( displayPropertiesDock )
+    desk->tabifyDockWidget(propertiesDock, displayPropertiesDock);
   desk->tabifyDockWidget(propertiesDock, informationDock);
   propertiesDock->raise();
 
