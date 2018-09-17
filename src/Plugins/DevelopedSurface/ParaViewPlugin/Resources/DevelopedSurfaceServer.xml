@@ -1,0 +1,47 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="filters">
+    <SourceProxy name="DevelopedSurface" class="vtkDevelopedSurface" label="Developed Surface">
+     <InputProperty name="Input" command="SetInputConnection">
+       <ProxyGroupDomain name="groups">
+         <Group name="sources"/>
+         <Group name="filters"/>
+       </ProxyGroupDomain>
+       <DataTypeDomain name="input_type">
+         <DataType value="vtkDataSet"/>
+       </DataTypeDomain>
+       <Documentation>
+         This property specifies the input to the Level Scalars filter.
+       </Documentation>
+     </InputProperty>
+      <ProxyProperty command="SetCutFunction"
+                     label="Slice Type"
+                     name="CutFunction">
+        <ProxyGroupDomain name="groups">
+          <Group name="implicit_functions" />
+        </ProxyGroupDomain>
+        <ProxyListDomain name="proxy_list">
+          <Proxy group="implicit_functions" name="Cylinder" />
+        </ProxyListDomain>
+        <Documentation>This property sets the parameters of cylinder used for slice.</Documentation>
+      </ProxyProperty>
+      <IntVectorProperty command="SetInvertWay"
+                         default_values="0"
+                         name="InvertWay"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>Specify if way used to develop theta is inverted or not relative to the reference one. By default no. The reference way used is those defined by the first cell sharing node 0.</Documentation>
+      </IntVectorProperty>
+      <DoubleVectorProperty animateable="1"
+                            command="SetThetaOffset"
+                            default_values="0"
+                            name="ThetaOffset"
+                            number_of_elements="1">
+        <DoubleRangeDomain max="180" min="-180" name="range" />
+        <Documentation>By default, node 0 theta parameter is used as starting point. This property allows to change this reference by applying an offset on it. Offset is expressed in degrees.</Documentation>
+      </DoubleVectorProperty>
+     <Hints>
+        <ShowInMenu category="Turbomachine" />
+     </Hints>
+    </SourceProxy>
+  </ProxyGroup>
+</ServerManagerConfiguration>

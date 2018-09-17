@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  CEA/DEN, EDF R&D
+# Copyright (C) 2016  EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,42 +16,11 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author : Anthony Geay (EDF R&D)
 
-INCLUDE(${PARAVIEW_USE_FILE})
-
-SET(_subdirs
-  MEDReader
-  MEDWriter
-#  TableReader
-  SimpleMode
-  ElevationSurface
-  ScaleVector
-  EllipseBuilder
-  DifferenceTimesteps
-  ArrayRenamer
-  JSONReader
-  DevelopedSurface
-  StaticMesh
-  GaussToCell
-  VoroGauss
-  )
-
-IF(NOT SALOME_LIGHT_ONLY)
-  IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
-    LIST(APPEND _subdirs
-      ParaMEDCorba
-    )
-  ENDIF()
-ENDIF()
-
-IF(SALOME_PARAVIS_USE_GEOM_SOURCE)
-  LIST(APPEND _subdirs ParaGEOMCorba)
-ENDIF()
-
-IF(SALOME_PARAVIS_USE_SMESH_SOURCE)
-  LIST(APPEND _subdirs ParaSMESHCorba)
-ENDIF()
-
-FOREACH(_dir ${_subdirs})
-  ADD_SUBDIRECTORY(${_dir})
-ENDFOREACH()
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../IO )
+ADD_PARAVIEW_PLUGIN(VoroGaussPlugin "1.0"
+  SERVER_MANAGER_SOURCES ${SM_SRCS} ${PROJECT_SOURCE_DIR}/IO/vtkVoroGauss.cxx
+  SERVER_MANAGER_XML Resources/VoroGaussServer.xml)
+TARGET_LINK_LIBRARIES(VoroGaussPlugin ${MEDCoupling_medcoupling})
+INSTALL(TARGETS VoroGaussPlugin RUNTIME DESTINATION lib/paraview LIBRARY DESTINATION lib/paraview ARCHIVE DESTINATION lib/paraview)
