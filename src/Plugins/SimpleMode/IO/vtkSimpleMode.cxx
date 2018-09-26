@@ -432,7 +432,7 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
       vtkDataArray* array = output->GetPointData()->GetArray(idx2);
       vtkSmartPointer<vtkDataArray> result = vtkSmartPointer<vtkDataArray>::Take(vtkDataArray::CreateDataArray(array->GetDataType()));
       result->ShallowCopy(array);
-      result->SetName("Result");
+      result->SetName("__NormalModesAnimation__");
       output->GetPointData()->SetScalars(result);            
     }
   catch(MZCException& e)
