@@ -47,7 +47,7 @@ reader=MEDReader(FileName=fname)
 reader.AllArrays=['TS0/mesh/ComSup0/mesh@@][@@P0']
 ExtractGroup1 = ExtractGroup(Input=reader)
 ExtractGroup1.AllGroups=["GRP_grp0","GRP_grp1"]
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 res=servermanager.Fetch(ExtractGroup1,0)
 assert(res.GetNumberOfBlocks()==2)
 assert(res.GetBlock(1).GetNumberOfCells()==1)

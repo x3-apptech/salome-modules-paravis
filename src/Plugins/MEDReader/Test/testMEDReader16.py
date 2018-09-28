@@ -48,7 +48,7 @@ ExpectedEntries=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE','TS1/Mesh/ComSup0/Mesh@@]
 assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
 reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
 ExtractGroup1 = ExtractGroup(Input=reader)
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
 ELNOfieldToSurface1=ELNOfieldToSurface(Input=ExtractGroup1)
 ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=ExtractGroup1)

@@ -88,7 +88,7 @@ myMedReader.AllArrays=keys
 RenderView1 = GetRenderView()
 ELNOfieldToSurface1=ELNOfieldToSurface(Input=myMedReader)
 ExtractGroup1=ExtractGroup(Input=ELNOfieldToSurface1)
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=['GRP_ba2','GRP_to1','GRP_web']
 assert(isinstance(ExtractGroup1.GetProperty("MeshName")[0],str))
 assert(ExtractGroup1.GetProperty("MeshName")[0]=="mesh")

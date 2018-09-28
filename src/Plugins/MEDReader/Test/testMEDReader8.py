@@ -76,7 +76,7 @@ assert(list(extractCT.GetProperty("GeoTypesInfo"))==['TRI3','0','QUAD4','0'])
 extractCT.AllGeoTypes=['TRI3']
 
 extGrp=ExtractGroup(Input=extractCT)
-extGrp.UpdatePipelineInformation()
+#extGrp.UpdatePipelineInformation()
 assert([x for x in list(extGrp.GetProperty("GroupsFlagsInfo")[::2]) if x[:4]=="GRP_"]==['GRP_grp0'])
 extGrp.AllGroups="GRP_grp0"
 

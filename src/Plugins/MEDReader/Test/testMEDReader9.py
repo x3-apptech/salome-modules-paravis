@@ -44,12 +44,12 @@ from paraview.simple import *
 
 myMedReader=MEDReader(FileName=fname)
 myMedReader.AllArrays=['TS0/m1/ComSup0/f1@@][@@P0']
-myMedReader.UpdatePipelineInformation()
+#myMedReader.UpdatePipelineInformation()
 ExtractGroup1=ExtractGroup(Input=myMedReader)
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 assert(ExtractGroup1.GetProperty("MeshName")[0]=="m1")
 myMedReader.AllArrays=['TS0/m2/ComSup0/f2@@][@@P0']
-myMedReader.UpdatePipeline()
+#myMedReader.UpdatePipeline()
 ExtractGroup2=ExtractGroup(Input=myMedReader)
-ExtractGroup2.UpdatePipelineInformation()
+#ExtractGroup2.UpdatePipelineInformation()
 assert(ExtractGroup2.GetProperty("MeshName")[0]=="m2")

@@ -48,7 +48,7 @@ ExpectedEntries=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE','TS1/Mesh/ComSup0/Mesh@@]
 assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
 reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
 ExtractGroup1 = ExtractGroup(Input=reader)
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
 ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=ExtractGroup1)
 ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
@@ -56,9 +56,9 @@ ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
 ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=reader)
 ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
 ExtractGroup1 = ExtractGroup(Input=ELNOfieldToPointGaussian1)
-ExtractGroup1.UpdatePipelineInformation()
+#ExtractGroup1.UpdatePipelineInformation()
 ExtractGroup1.AllGroups=["GRP_grp1"]
-ExtractGroup1.UpdatePipeline()
+#ExtractGroup1.UpdatePipeline()
 res=servermanager.Fetch(ExtractGroup1,0)
 assert(res.GetBlock(0).GetNumberOfCells()==8)
 vtkArrToTest=res.GetBlock(0).GetPointData().GetArray("MyField")

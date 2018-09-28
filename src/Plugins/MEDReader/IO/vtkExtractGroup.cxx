@@ -71,14 +71,15 @@ public:
   ExtractGroupStatus():_status(false) { }
   ExtractGroupStatus(const char *name);
   bool getStatus() const { return _status; }
-  void setStatus(bool status) { _status=status; }
+  void setStatus(bool status) const { _status=status; }
   void cpyStatusFrom(const ExtractGroupStatus& other) { _status=other._status; }
   std::string getName() const { return _name; }
+  void resetStatus() const { _status=false; }
   const char *getKeyOfEntry() const { return _ze_key_name.c_str(); }
   virtual void printMySelf(std::ostream& os) const;
   virtual bool isSameAs(const ExtractGroupStatus& other) const;
 protected:
-bool _status;
+mutable bool _status;
 std::string _name;
 std::string _ze_key_name;
 };
@@ -120,6 +121,7 @@ public:
   void setStatusOfEntryStr(const char *entry, bool status);
   void printMySelf(std::ostream& os) const;
   std::set<int> getIdsToKeep() const;
+  void clearSelection() const;
   int getIdOfFamily(const std::string& famName) const;
   static bool IsInformationOK(vtkInformation *info);
 private:
@@ -129,6 +131,7 @@ private:
 private:
   std::vector<ExtractGroupGrp> _groups;
   std::vector<ExtractGroupFam> _fams;
+  mutable std::vector< std::pair<std::string,bool> > _selection;
   std::string _mesh_name;
 };
 
@@ -308,8 +311,7 @@ bool vtkExtractGroup::vtkExtractGroupInternal::getStatusOfEntryStr(const char *e
 
 void vtkExtractGroup::vtkExtractGroupInternal::setStatusOfEntryStr(const char *entry, bool status)
 {
-  ExtractGroupStatus& elt(getEntry(entry));
-  elt.setStatus(status);
+  _selection.emplace_back(entry,status);
 }
 
 const ExtractGroupStatus& vtkExtractGroup::vtkExtractGroupInternal::getEntry(const char *entry) const
@@ -392,6 +394,11 @@ void ExtractGroupFam::fillIdsToKeep(std::set<int>& s) const
 
 std::set<int> vtkExtractGroup::vtkExtractGroupInternal::getIdsToKeep() const
 {
+  for(auto it: _selection)
+    {
+      const ExtractGroupStatus& elt(getEntry(it.first.c_str()));
+      elt.setStatus(it.second);
+    }
   std::map<std::string,int> m(this->computeFamStrIdMap());
   std::set<int> s;
   for(std::vector<ExtractGroupGrp>::const_iterator it0=_groups.begin();it0!=_groups.end();it0++)
@@ -411,6 +418,15 @@ std::set<int> vtkExtractGroup::vtkExtractGroupInternal::getIdsToKeep() const
     if((*it0).getStatus())
       (*it0).fillIdsToKeep(s);
   return s;
+}
+
+void vtkExtractGroup::vtkExtractGroupInternal::clearSelection() const
+{
+  _selection.clear();
+  for(auto it : _groups)
+    it.resetStatus();
+  for(auto it : _fams)
+    it.resetStatus();
 }
 
 std::map<std::string,int> vtkExtractGroup::vtkExtractGroupInternal::computeFamStrIdMap() const
@@ -585,6 +601,7 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       std::set<int> idsToKeep(this->Internal->getIdsToKeep());
+      this->Internal->clearSelection();
       // first shrink the input
       bool catchAll,catchSmth;
       vtkSmartPointer<vtkThreshold> thres1(vtkSmartPointer<vtkThreshold>::New()),thres2(vtkSmartPointer<vtkThreshold>::New());
@@ -705,11 +722,8 @@ int vtkExtractGroup::GetGroupsFlagsArrayStatus(const char *name)
 void vtkExtractGroup::SetGroupsFlagsStatus(const char *name, int status)
 {
   //std::cerr << "vtkExtractGroup::SetFieldsStatus(" << name << "," << status << ")" << std::endl;
-  if (GetNumberOfGroupsFlagsArrays()<1)
-    return;
   this->Internal->setStatusOfEntryStr(name,(bool)status);
-  if(std::string(name)==GetGroupsFlagsArrayName(GetNumberOfGroupsFlagsArrays()-1))
-     this->Modified();
+  this->Modified();
   //this->Internal->printMySelf(std::cerr);
 }
 
