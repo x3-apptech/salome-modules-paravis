@@ -30,8 +30,8 @@
 #ifndef vtkStaticDataSetSurfaceFilter_h
 #define vtkStaticDataSetSurfaceFilter_h
 
-#include "vtkDataSetSurfaceFilter.h"
-#include "vtkNew.h"
+#include <vtkDataSetSurfaceFilter.h>
+#include <vtkNew.h>
 
 class vtkPolyData;
 
@@ -41,13 +41,13 @@ public:
   static vtkStaticDataSetSurfaceFilter* New();
   typedef vtkDataSetSurfaceFilter
     Superclass; // vtkTypeMacro can't be used with a factory built object
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
-  int UnstructuredGridExecute(vtkDataSet* input, vtkPolyData* output) VTK_OVERRIDE;
+  int UnstructuredGridExecute(vtkDataSet* input, vtkPolyData* output) override;
 
 protected:
   vtkStaticDataSetSurfaceFilter();
-  ~vtkStaticDataSetSurfaceFilter() VTK_OVERRIDE;
+  ~vtkStaticDataSetSurfaceFilter() override;
 
   vtkNew<vtkPolyData> Cache;
   vtkMTimeType InputMeshTime;
@@ -55,8 +55,8 @@ protected:
 
 private:
   // Hide these from the user and the compiler.
-  vtkStaticDataSetSurfaceFilter(const vtkStaticDataSetSurfaceFilter&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkStaticDataSetSurfaceFilter&) VTK_DELETE_FUNCTION;
+  vtkStaticDataSetSurfaceFilter(const vtkStaticDataSetSurfaceFilter&) = delete;
+  void operator=(const vtkStaticDataSetSurfaceFilter&) = delete;
 };
 
 #endif

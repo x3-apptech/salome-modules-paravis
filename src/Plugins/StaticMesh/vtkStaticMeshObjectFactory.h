@@ -23,14 +23,14 @@
 #ifndef vtkStaticMeshObjectFactory_h
 #define vtkStaticMeshObjectFactory_h
 
-#include "vtkObjectFactory.h" // Must be included before singletons
+#include <vtkObjectFactory.h> // Must be included before singletons
 
 class vtkStaticMeshObjectFactory : public vtkObjectFactory
 {
 public:
   vtkTypeMacro(vtkStaticMeshObjectFactory, vtkObjectFactory);
   static vtkStaticMeshObjectFactory* New();
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
   /**
    * All sub-classes of vtkObjectFactory must return the version of
@@ -39,20 +39,20 @@ public:
    * As the version needs to be compiled into the file as a string constant.
    * This is critical to determine possible incompatible dynamic factory loads.
    */
-  const char* GetVTKSourceVersion() VTK_OVERRIDE;
+  const char* GetVTKSourceVersion() override;
 
   /**
    * Return a descriptive string describing the factory.
    */
-  const char* GetDescription() VTK_OVERRIDE;
+  const char* GetDescription() override;
 
 protected:
   vtkStaticMeshObjectFactory();
-  ~vtkStaticMeshObjectFactory() VTK_OVERRIDE;
+  ~vtkStaticMeshObjectFactory() override;
 
 private:
-  vtkStaticMeshObjectFactory(const vtkStaticMeshObjectFactory&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkStaticMeshObjectFactory&) VTK_DELETE_FUNCTION;
+  vtkStaticMeshObjectFactory(const vtkStaticMeshObjectFactory&) = delete;
+  void operator=(const vtkStaticMeshObjectFactory&) = delete;
 };
 
 #endif

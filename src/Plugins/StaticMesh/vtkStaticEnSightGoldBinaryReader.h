@@ -38,8 +38,8 @@
 #ifndef vtkStaticEnSightGoldBinaryReader_h
 #define vtkStaticEnSightGoldBinaryReader_h
 
-#include "vtkEnSightGoldBinaryReader.h"
-#include "vtkNew.h"
+#include <vtkEnSightGoldBinaryReader.h>
+#include <vtkNew.h>
 
 class vtkMultiBlockDataSet;
 

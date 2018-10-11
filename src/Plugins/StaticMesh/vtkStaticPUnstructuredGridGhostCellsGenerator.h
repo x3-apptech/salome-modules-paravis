@@ -46,13 +46,13 @@ public:
   static vtkStaticPUnstructuredGridGhostCellsGenerator* New();
   typedef vtkPUnstructuredGridGhostCellsGenerator
     Superclass; // vtkTypeMacro can't be used with a factory built object
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
-  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) VTK_OVERRIDE;
+  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 
 protected:
   vtkStaticPUnstructuredGridGhostCellsGenerator();
-  ~vtkStaticPUnstructuredGridGhostCellsGenerator() VTK_OVERRIDE;
+  ~vtkStaticPUnstructuredGridGhostCellsGenerator() override;
 
   /**
    * Check input for "ProcessId" and "Ids" point and cell array,
@@ -95,8 +95,8 @@ protected:
 private:
   // Hide these from the user and the compiler.
   vtkStaticPUnstructuredGridGhostCellsGenerator(
-    const vtkStaticPUnstructuredGridGhostCellsGenerator&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkStaticPUnstructuredGridGhostCellsGenerator&) VTK_DELETE_FUNCTION;
+    const vtkStaticPUnstructuredGridGhostCellsGenerator&) = delete;
+  void operator=(const vtkStaticPUnstructuredGridGhostCellsGenerator&) = delete;
 };
 
 #endif

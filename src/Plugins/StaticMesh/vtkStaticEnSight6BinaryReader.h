@@ -38,8 +38,8 @@
 #ifndef vtkStaticEnSight6BinaryReader_h
 #define vtkStaticEnSight6BinaryReader_h
 
-#include "vtkEnSight6BinaryReader.h"
-#include "vtkNew.h"
+#include <vtkEnSight6BinaryReader.h>
+#include <vtkNew.h>
 
 class vtkMultiBlockDataSet;
 

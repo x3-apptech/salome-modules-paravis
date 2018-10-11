@@ -45,18 +45,23 @@ class vtkStaticPlaneCutter : public vtkPlaneCutter
 public:
   static vtkStaticPlaneCutter* New();
   typedef vtkPlaneCutter Superclass; // vtkTypeMacro can't be used with a factory built object
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
+  void PrintSelf(ostream &os, vtkIndent indent) override;
 
-  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) VTK_OVERRIDE;
+  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 
 protected:
   vtkStaticPlaneCutter();
-  ~vtkStaticPlaneCutter() VTK_OVERRIDE;
+  ~vtkStaticPlaneCutter() override;
 
   /**
-   * Check input for "Ids" cell array, if absent, compute and add them.
+   * Check input for Ids cell array, if absent, compute and add them.
    */
   static void AddIdsArray(vtkDataSet* input, vtkDataSet* output);
+
+  /**
+   * Remove an Ids cell array in all polydata pieces of output
+   */
+  static void RemoveIdsArray(vtkMultiPieceDataSet* output);
 
   /**
    * Update cache point, cell and field data using input
@@ -64,25 +69,23 @@ protected:
   void UpdateCacheData(vtkDataSet* input);
 
   /**
-   * Compute the cells ids to be used when updating the cache later
+   * Compute the ids and weights to be used when updating the cache later
    */
-  void ComputeCellIds();
+  void ComputeIds(vtkUnstructuredGrid* input);
 
-  /**
-   * Remove all point data array of a multipiece input with polydata leafs
-   */
-  static void RemovePointData(vtkMultiPieceDataSet* dataset);
+  void ClearWeightsVector();
 
   vtkNew<vtkMultiPieceDataSet> Cache;
   std::vector<vtkSmartPointer<vtkIdList> > CellToCopyFrom;
   std::vector<vtkSmartPointer<vtkIdList> > CellToCopyTo;
+  std::vector<std::vector<std::pair<vtkSmartPointer<vtkIdList>, double*>>> WeightsVectorCompo;
   vtkMTimeType InputMeshTime;
   vtkMTimeType FilterMTime;
 
 private:
   // Hide these from the user and the compiler.
-  vtkStaticPlaneCutter(const vtkStaticPlaneCutter&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkStaticPlaneCutter&) VTK_DELETE_FUNCTION;
+  vtkStaticPlaneCutter(const vtkStaticPlaneCutter&) = delete;
+  void operator=(const vtkStaticPlaneCutter&) = delete;
 };
 
 #endif

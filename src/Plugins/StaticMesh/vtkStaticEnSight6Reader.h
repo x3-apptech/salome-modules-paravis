@@ -38,8 +38,8 @@
 #ifndef vtkStaticEnSight6Reader_h
 #define vtkStaticEnSight6Reader_h
 
-#include "vtkEnSight6Reader.h"
-#include "vtkNew.h"
+#include <vtkEnSight6Reader.h>
+#include <vtkNew.h>
 
 class vtkMultiBlockDataSet;
 

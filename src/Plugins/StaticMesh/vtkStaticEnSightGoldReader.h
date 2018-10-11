@@ -38,8 +38,8 @@
 #ifndef vtkStaticEnSightGoldReader_h
 #define vtkStaticEnSightGoldReader_h
 
-#include "vtkEnSightGoldReader.h"
-#include "vtkNew.h"
+#include <vtkEnSightGoldReader.h>
+#include <vtkNew.h>
 
 class vtkMultiBlockDataSet;
 

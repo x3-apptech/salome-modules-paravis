@@ -25,7 +25,7 @@
 #ifndef vtkTemporalUGWavelet_h
 #define vtkTemporalUGWavelet_h
 
-#include "vtkRTAnalyticSource.h"
+#include <vtkRTAnalyticSource.h>
 
 class vtkUnstructuredGrid;
 
@@ -34,7 +34,7 @@ class vtkTemporalUGWavelet : public vtkRTAnalyticSource
 public:
   static vtkTemporalUGWavelet* New();
   vtkTypeMacro(vtkTemporalUGWavelet, vtkRTAnalyticSource);
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
   //@{
   /**
@@ -48,20 +48,20 @@ protected:
   vtkTemporalUGWavelet();
   ~vtkTemporalUGWavelet();
 
-  int FillOutputPortInformation(int vtkNotUsed(port), vtkInformation* info) VTK_OVERRIDE;
+  int FillOutputPortInformation(int vtkNotUsed(port), vtkInformation* info) override;
 
   int RequestInformation(vtkInformation* request, vtkInformationVector** inputVector,
-    vtkInformationVector* outputVector) VTK_OVERRIDE;
+    vtkInformationVector* outputVector) override;
 
-  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) VTK_OVERRIDE;
+  int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 
   int NumberOfTimeSteps;
   vtkUnstructuredGrid* Cache;
   vtkTimeStamp CacheMTime;
 
 private:
-  vtkTemporalUGWavelet(const vtkTemporalUGWavelet&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkTemporalUGWavelet&) VTK_DELETE_FUNCTION;
+  vtkTemporalUGWavelet(const vtkTemporalUGWavelet&) = delete;
+  void operator=(const vtkTemporalUGWavelet&) = delete;
 };
 
 #endif
