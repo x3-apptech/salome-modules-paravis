@@ -124,6 +124,7 @@
 #include <pqAnimationScene.h>
 #include <pqServerManagerModel.h>
 #include <pqAnimationTimeToolbar.h>
+#include <pqPipelineBrowserWidget.h>
 
 #if PY_VERSION_HEX < 0x03050000
 static char*
@@ -629,7 +630,13 @@ bool PVGUI_Module::activateModule( SUIT_Study* study )
   }
 
   if ( myRecentMenuId != -1 ) menuMgr()->show(myRecentMenuId);
-  
+
+  // VSR 18/10/2018 - 0023170: Workaround to re-select current index after module activation
+  QItemSelectionModel* selection_model = myGuiElements->getPipelineBrowserWidget()->getSelectionModel();
+  QModelIndex idx = selection_model->currentIndex();
+  selection_model->clearCurrentIndex();
+  selection_model->setCurrentIndex(idx, QItemSelectionModel::ClearAndSelect);
+
   return isDone;
 }
 
