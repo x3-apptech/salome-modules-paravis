@@ -102,7 +102,6 @@ class PVGUI_Module: public LightApp_Module
     MaxWindowSizeId,
     CustomWindowSizeId,
     TimerLogId,
-    OutputWindowId,
     PythonShellId,
     ShowTraceId,
     RestartTraceId,

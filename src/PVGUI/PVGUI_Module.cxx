@@ -87,7 +87,6 @@
 #include <vtkProcessModule.h>
 #include <vtkPVSession.h>
 #include <vtkPVProgressHandler.h>
-#include <vtkOutputWindow.h>
 #include <vtkEventQtSlotConnect.h>
 #include <vtkNew.h>
 #include <vtkSMProxy.h>
@@ -270,7 +269,7 @@ void PVGUI_Module::initialize( CAM_Application* app )
 
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
-  PVViewer_Core::ParaviewInitApp(aDesktop, anApp->logWindow());
+  PVViewer_Core::ParaviewInitApp(aDesktop);
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
@@ -479,7 +478,7 @@ void PVGUI_Module::showView( bool toShow )
   PVViewer_ViewManager* viewMgr =
     dynamic_cast<PVViewer_ViewManager*>( anApp->getViewManager( PVViewer_Viewer::Type(), false ) );
   if ( !viewMgr ) {
-    viewMgr = new PVViewer_ViewManager( anApp->activeStudy(), anApp->desktop(), anApp->logWindow() );
+    viewMgr = new PVViewer_ViewManager( anApp->activeStudy(), anApp->desktop() );
     anApp->addViewManager( viewMgr );
     connect( viewMgr, SIGNAL( lastViewClosed( SUIT_ViewManager* ) ),
              anApp, SLOT( onCloseView( SUIT_ViewManager* ) ) );
@@ -528,51 +527,7 @@ void PVGUI_Module::endWaitCursor()
 {
   QApplication::restoreOverrideCursor();
 }
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-/*!
-  \brief Handler method for the output of messages.
-*/
-static void ParavisMessageOutput(QtMsgType type, const char *msg)
-{
-  switch(type)
-    {
-  case QtDebugMsg:
-    vtkOutputWindow::GetInstance()->DisplayText(msg);
-    break;
-  case QtWarningMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg);
-    break;
-  case QtCriticalMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg);
-    break;
-  case QtFatalMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg);
-    break;
-    }
-}
-#else
-/*!
-  \brief Handler method for the output of messages.
-*/
-static void ParavisMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-  switch(type)
-    {
-  case QtDebugMsg:
-    vtkOutputWindow::GetInstance()->DisplayText(msg.toLatin1().constData());
-    break;
-  case QtWarningMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
-    break;
-  case QtCriticalMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
-    break;
-  case QtFatalMsg:
-    vtkOutputWindow::GetInstance()->DisplayErrorText(msg.toLatin1().constData());
-    break;
-    }
-}
-#endif
+
 /*!
   \brief Activate module.
   \param study current study
@@ -581,11 +536,6 @@ static void ParavisMessageOutput(QtMsgType type, const QMessageLogContext &conte
 */
 bool PVGUI_Module::activateModule( SUIT_Study* study )
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  myOldMsgHandler = qInstallMsgHandler(ParavisMessageOutput);
-#else
-  myOldMsgHandler = qInstallMessageHandler(ParavisMessageOutput);
-#endif  
   SUIT_ExceptionHandler::addCleanUpRoutine( paravisCleanUp );
 
   storeCommonWindowsState();

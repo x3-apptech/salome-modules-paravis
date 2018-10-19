@@ -343,14 +343,6 @@ void PVGUI_Module::pvCreateActions()
   registerAction(TimerLogId, anAction);
   new pqTimerLogReaction(anAction << pqSetName("actionToolsTimerLog"));
 
-  // Output Window
-  anAction = new QAction(tr("MEN_OUTPUT_WINDOW"), this);
-  anAction->setToolTip(tr("TOP_OUTPUT_WINDOW"));
-  anAction->setStatusTip(tr("STB_OUTPUT_WINDOW"));
-  registerAction(OutputWindowId, anAction);
-  anAction << pqSetName("actionToolsOutputWindow");
-  connect(anAction, SIGNAL(triggered()), pqApplicationCore::instance(), SLOT(showOutputWindow()));
-  
  // Python Shell
   anAction = new QAction(tr("MEN_PYTHON_SHELL"), this);
   anAction->setToolTip(tr("TOP_PYTHON_SHELL"));
@@ -497,7 +489,6 @@ void PVGUI_Module::pvCreateMenus()
   createMenu( separator(), aToolsMnu );
 
   createMenu( TimerLogId, aToolsMnu );
-  createMenu( OutputWindowId, aToolsMnu );
   createMenu( separator(), aToolsMnu );
 
   createMenu( PythonShellId, aToolsMnu );
