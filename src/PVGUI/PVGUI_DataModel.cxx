@@ -45,6 +45,7 @@
 // ParaView include
 #include <pqApplicationCore.h>
 #include <pqServer.h>
+#include <vtkOutputWindow.h>
 
 const QString PVGUI_DataModel::RESTORE_FLAG_FILE = "do_restore_paravis_references.par";
 
@@ -53,9 +54,29 @@ const QString PVGUI_DataModel::RESTORE_FLAG_FILE = "do_restore_paravis_reference
  */
 namespace {
 
+  QStringList multiFormats()
+  {
+    static QStringList formats;
+    if ( formats.isEmpty() )
+      formats << "vtm" << "lata" << "pvd";
+    return formats;
+  }
+  void warning( const QString& message )
+  {
+    vtkOutputWindow* vtkWindow = vtkOutputWindow::GetInstance();
+    if ( vtkWindow )
+    {
+      vtkWindow->DisplayWarningText( qPrintable( message ) );
+    }
+  }
+
   void processElements(QDomNode& thePropertyNode, QStringList& theFileNames,
                        const QString& theNewPath, bool theRestore)
   {
+    QDomElement aProperty = thePropertyNode.toElement();
+    int aNbElements = aProperty.attribute("number_of_elements").toInt();
+    if ( aNbElements > 1 )
+      warning( QString("You save data file with number of entities > 1 (%1); some data may be lost!").arg(aNbElements) );
     QDomNode aElementNode = thePropertyNode.firstChild();
     while (aElementNode.isElement()) {
       QDomElement aElement = aElementNode.toElement();
@@ -67,6 +88,9 @@ namespace {
             if (theNewPath.isEmpty()) {
               QFileInfo aFInfo(aValue);
               if (aFInfo.exists()) {
+                QString ext = aFInfo.suffix();
+                if ( multiFormats().contains(aFInfo.suffix()) )
+                  warning( QString("You save data in multiple file format (%1); some data may be not saved!").arg(ext) );
                 theFileNames<<aValue;
                 aElement.setAttribute("value", aFInfo.fileName());
               }
