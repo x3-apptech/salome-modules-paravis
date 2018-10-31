@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test is CEA specific one. It generates a .sauv file
@@ -91,38 +94,37 @@ DataRepresentation2.ScalarOpacityUnitDistance = 1.5768745057161244
 DataRepresentation2.ExtractedBlockIndex = 1
 DataRepresentation2.ScaleFactor = 0.4
 
-RenderView1=GetRenderView()
-RenderView1.CenterOfRotation=[2.,2.,2.]
-RenderView1.CameraViewUp=[0.24562884954787187,0.6907950752417243,-0.680050463047831]
-RenderView1.CameraPosition=[-2.5085697461776486,11.6185941755061,10.14210560568201]
-RenderView1.CameraFocalPoint=[2.,2.,2.]
-RenderView1.CameraParallelScale=5.071791174723188
+if '-D' not in sys.argv:
+  RenderView1=GetRenderView()
+  RenderView1.CenterOfRotation=[2.,2.,2.]
+  RenderView1.CameraViewUp=[0.24562884954787187,0.6907950752417243,-0.680050463047831]
+  RenderView1.CameraPosition=[-2.5085697461776486,11.6185941755061,10.14210560568201]
+  RenderView1.CameraFocalPoint=[2.,2.,2.]
+  RenderView1.CameraParallelScale=5.071791174723188
 
-LookupTable=GetLookupTableForArray("fNode",1,RGBPoints=[0.0,0.23,0.299,0.754,55.0,0.706,0.016,0.15],VectorMode='Magnitude',NanColor=[0.25,0.0,0.0],ColorSpace='Diverging',ScalarRangeInitialized=1.0,AllowDuplicateScalars=1)
-DataRepresentation2 = Show()
-DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation2.ScalarOpacityUnitDistance = 1.5768745057161244
-DataRepresentation2.ExtractedBlockIndex = 1
-DataRepresentation2.ScaleFactor = 0.4
-DataRepresentation2.ColorArrayName=('POINTS','fNode')
-DataRepresentation2.LookupTable=LookupTable
+  LookupTable=GetLookupTableForArray("fNode",1,RGBPoints=[0.0,0.23,0.299,0.754,55.0,0.706,0.016,0.15],VectorMode='Magnitude',NanColor=[0.25,0.0,0.0],ColorSpace='Diverging',ScalarRangeInitialized=1.0,AllowDuplicateScalars=1)
+  DataRepresentation2 = Show()
+  DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+  DataRepresentation2.ScalarOpacityUnitDistance = 1.5768745057161244
+  DataRepresentation2.ExtractedBlockIndex = 1
+  DataRepresentation2.ScaleFactor = 0.4
+  DataRepresentation2.ColorArrayName=('POINTS','fNode')
+  DataRepresentation2.LookupTable=LookupTable
 
-RenderView1.ViewSize=[300,300]
-Render()
+  RenderView1.ViewSize=[300,300]
+  Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader5.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader5.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 fname="testMEDReader3.med"
@@ -93,52 +96,51 @@ testMEDReader3.AllArrays=['TS0/mesh/ComSup0/ANodeField@@][@@P1']
 
 assert(list(testMEDReader3.TimestepValues)==[1.,2.,3.,4.,5.]) ## <- the test is here - double time steps are too big use dt.
 
-RenderView1=GetRenderView()
-RenderView1.ViewTime=3.0
-RenderView1.CameraPosition=[0.5,0.5,5.7320508075688776]
-RenderView1.ViewSize=[300,300]
+if '-D' not in sys.argv:
+  RenderView1=GetRenderView()
+  RenderView1.ViewTime=3.0
+  RenderView1.CameraPosition=[0.5,0.5,5.7320508075688776]
+  RenderView1.ViewSize=[300,300]
 
-DataRepresentation2=Show()
-DataRepresentation2.EdgeColor=[0.0, 0.0, 0.5000076295109483]
-DataRepresentation2.SelectionPointFieldDataArrayName='ANodeField'
-DataRepresentation2.SelectionCellFieldDataArrayName='FamilyIdCell'
-DataRepresentation2.ScalarOpacityUnitDistance=1.4142135623730951
-DataRepresentation2.ExtractedBlockIndex=1
-DataRepresentation2.ScaleFactor=0.1
+  DataRepresentation2=Show()
+  DataRepresentation2.EdgeColor=[0.0, 0.0, 0.5000076295109483]
+  DataRepresentation2.SelectionPointFieldDataArrayName='ANodeField'
+  DataRepresentation2.SelectionCellFieldDataArrayName='FamilyIdCell'
+  DataRepresentation2.ScalarOpacityUnitDistance=1.4142135623730951
+  DataRepresentation2.ExtractedBlockIndex=1
+  DataRepresentation2.ScaleFactor=0.1
 
-a1_ANodeField_PVLookupTable=GetLookupTableForArray("ANodeField",1,RGBPoints=[0.0,0.23,0.299,0.754,4.0,0.706,0.016,0.15],VectorMode='Magnitude',NanColor=[0.25,0.0,0.0],
-                                                     ColorSpace='Diverging',ScalarRangeInitialized=1.0,AllowDuplicateScalars=1)
-a1_ANodeField_PiecewiseFunction=CreatePiecewiseFunction(Points=[0.0,0.0,0.5,0.0,1.0,1.0,0.5,0.0])
-a1_ANodeField_PVLookupTable.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunction
+  a1_ANodeField_PVLookupTable=GetLookupTableForArray("ANodeField",1,RGBPoints=[0.0,0.23,0.299,0.754,4.0,0.706,0.016,0.15],VectorMode='Magnitude',NanColor=[0.25,0.0,0.0],
+                                                       ColorSpace='Diverging',ScalarRangeInitialized=1.0,AllowDuplicateScalars=1)
+  a1_ANodeField_PiecewiseFunction=CreatePiecewiseFunction(Points=[0.0,0.0,0.5,0.0,1.0,1.0,0.5,0.0])
+  a1_ANodeField_PVLookupTable.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunction
 
-DataRepresentation2.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunction
-DataRepresentation2.ColorArrayName='ANodeField'
-DataRepresentation2.LookupTable=a1_ANodeField_PVLookupTable
+  DataRepresentation2.ScalarOpacityFunction=a1_ANodeField_PiecewiseFunction
+  DataRepresentation2.ColorArrayName='ANodeField'
+  DataRepresentation2.LookupTable=a1_ANodeField_PVLookupTable
 
-# Triangulate so rendring always the same with different gpu or graphic backend.
-extSurf = ExtractSurface(Input=testMEDReader3)
-triangulate = Triangulate(Input=extSurf)
-Hide(testMEDReader3, RenderView1)
-Show(triangulate, RenderView1)
-triangulate1Display = GetDisplayProperties(triangulate, view=RenderView1)
-ColorBy(triangulate1Display, ('POINTS', 'ANodeField'))
+  # Triangulate so rendring always the same with different gpu or graphic backend.
+  extSurf = ExtractSurface(Input=testMEDReader3)
+  triangulate = Triangulate(Input=extSurf)
+  Hide(testMEDReader3, RenderView1)
+  Show(triangulate, RenderView1)
+  triangulate1Display = GetDisplayProperties(triangulate, view=RenderView1)
+  ColorBy(triangulate1Display, ('POINTS', 'ANodeField'))
 
-Render()
-###
+  Render()
+  ###
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader3.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader3.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

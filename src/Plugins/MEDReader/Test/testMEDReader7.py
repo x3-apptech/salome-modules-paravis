@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test generate a simple multi time field with a very aggressive time steps triplets. Neither dt, nor iteration nor order is considered.
@@ -70,44 +73,43 @@ myMedReader=MEDReader(FileName=fname)
 myMedReader.AllArrays = ['TS0/mesh/ComSup0/fNode@@][@@P1']
 assert(list(myMedReader.TimestepValues)==[0.,1.,2.,3.])
 
-RenderView1 = GetRenderView()
-RenderView1.CameraFocalPoint = [1.5, 1.5, 0.0]
-RenderView1.CameraPosition = [1.5, 1.5, 10000.0]
-RenderView1.InteractionMode = '3D'
-RenderView1.CameraPosition = [1.5, 1.5, 8.196152422706632]
-RenderView1.CameraParallelScale = 2.1213203435596424
-RenderView1.CenterOfRotation = [1.5, 1.5, 0.0]
+if '-D' not in sys.argv:
+    RenderView1 = GetRenderView()
+    RenderView1.CameraFocalPoint = [1.5, 1.5, 0.0]
+    RenderView1.CameraPosition = [1.5, 1.5, 10000.0]
+    RenderView1.InteractionMode = '3D'
+    RenderView1.CameraPosition = [1.5, 1.5, 8.196152422706632]
+    RenderView1.CameraParallelScale = 2.1213203435596424
+    RenderView1.CenterOfRotation = [1.5, 1.5, 0.0]
 
-DataRepresentation4 = Show()
-DataRepresentation4.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation4.SelectionPointFieldDataArrayName = 'fNode'
-DataRepresentation4.ScaleFactor = 0.3182729169726372
+    DataRepresentation4 = Show()
+    DataRepresentation4.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+    DataRepresentation4.SelectionPointFieldDataArrayName = 'fNode'
+    DataRepresentation4.ScaleFactor = 0.3182729169726372
 
-a1_fGauss_PVLookupTable = GetLookupTableForArray( "fNode", 1, RGBPoints=[0.22, 0.23, 0.299, 0.754, 2.95, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0, AllowDuplicateScalars=1 )
-a1_fGauss_PiecewiseFunction = CreatePiecewiseFunction( Points=[0.0, 0.0, 0.5, 0.0, 1.0, 1.0, 0.5, 0.0] )
-DataRepresentation4.ColorArrayName = 'fNode'
-DataRepresentation4.LookupTable = a1_fGauss_PVLookupTable
-a1_fGauss_PVLookupTable.ScalarOpacityFunction = a1_fGauss_PiecewiseFunction
+    a1_fGauss_PVLookupTable = GetLookupTableForArray( "fNode", 1, RGBPoints=[0.22, 0.23, 0.299, 0.754, 2.95, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0, AllowDuplicateScalars=1 )
+    a1_fGauss_PiecewiseFunction = CreatePiecewiseFunction( Points=[0.0, 0.0, 0.5, 0.0, 1.0, 1.0, 0.5, 0.0] )
+    DataRepresentation4.ColorArrayName = 'fNode'
+    DataRepresentation4.LookupTable = a1_fGauss_PVLookupTable
+    a1_fGauss_PVLookupTable.ScalarOpacityFunction = a1_fGauss_PiecewiseFunction
 
-RenderView1.ViewTime = 1.0 #### Important # red is in right bottom
-RenderView1.CacheKey = 1.0
-RenderView1.UseCache = 1
-RenderView1.ViewSize=[300,300]
-Render()
+    RenderView1.ViewTime = 1.0 #### Important # red is in right bottom
+    RenderView1.CacheKey = 1.0
+    RenderView1.UseCache = 1
+    RenderView1.ViewSize=[300,300]
+    Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader7.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=6)
-vtk.test.Testing.interact()
+    # compare with baseline image
+    try:
+      baselineIndex = sys.argv.index('-B')+1
+      baselinePath = sys.argv[baselineIndex]
+    except:
+      print("Could not get baseline directory. Test failed.")
+      exit(1)
+    baseline_file = os.path.join(baselinePath, "testMEDReader7.png")
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                                threshold=6)
+    vtk.test.Testing.interact()

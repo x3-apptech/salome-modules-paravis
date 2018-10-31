@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 fname="testMEDReader2.med"
@@ -93,30 +96,29 @@ DataRepresentation5.ScalarOpacityFunction = a2_ACellField_PiecewiseFunction
 DataRepresentation5.LookupTable = a2_ACellField_PVLookupTable
 DataRepresentation5.ColorArrayName = ("CELLS", "ACellField")
 
-RenderView1 = GetRenderView()
-RenderView1.CenterOfRotation = [3.0, 3.0, 3.0]
-RenderView1.CameraViewUp = [-0.03886073885859842, 0.48373409998193495, 0.8743518533691291]
-RenderView1.CameraPosition = [7.351939549758929, -5.688193007926853, 8.000155023042788]
-RenderView1.CameraFocalPoint = [2.9999999999999996, 2.9999999999999987, 2.9999999999999982]
+if '-D' not in sys.argv:
+  RenderView1 = GetRenderView()
+  RenderView1.CenterOfRotation = [3.0, 3.0, 3.0]
+  RenderView1.CameraViewUp = [-0.03886073885859842, 0.48373409998193495, 0.8743518533691291]
+  RenderView1.CameraPosition = [7.351939549758929, -5.688193007926853, 8.000155023042788]
+  RenderView1.CameraFocalPoint = [2.9999999999999996, 2.9999999999999987, 2.9999999999999982]
 
-RenderView1.ViewSize =[300,300]
-Render()
+  RenderView1.ViewSize =[300,300]
+  Render()
 
-#WriteImage(outImgName)
+  #WriteImage(outImgName)
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader2.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader2.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

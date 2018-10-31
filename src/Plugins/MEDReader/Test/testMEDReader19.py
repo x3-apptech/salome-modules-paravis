@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This is a non regression bug revealed during training session. The bug is linked to the native Threshold VTK filter. Corrected with PV version >= 4.4. (KW10658)
@@ -54,50 +57,49 @@ testMEDReader19med.AllTimeSteps = ['0000']
 # Properties modified on testMEDReader19med
 testMEDReader19med.AllArrays = ['TS0/mesh/ComSup0/mesh@@][@@P0']
 
-# get active view
-renderView1 = GetActiveViewOrCreate('RenderView')
+if '-D' not in sys.argv:
+    # get active view
+    renderView1 = GetActiveViewOrCreate('RenderView')
 
-# reset view to fit data
-renderView1.ResetCamera()
+    # reset view to fit data
+    renderView1.ResetCamera()
 
-#changing interaction mode based on data extents
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [0.2, 0.2, 10000.0]
-renderView1.CameraFocalPoint = [0.2, 0.2, 0.0]
-testMEDReader19med.UpdatePipeline()
-# create a new 'Extract Cell Type'
-extractCellType1 = ExtractCellType(Input=testMEDReader19med)
-extractCellType1.AllGeoTypes = []
+    #changing interaction mode based on data extents
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [0.2, 0.2, 10000.0]
+    renderView1.CameraFocalPoint = [0.2, 0.2, 0.0]
+    testMEDReader19med.UpdatePipeline()
+    # create a new 'Extract Cell Type'
+    extractCellType1 = ExtractCellType(Input=testMEDReader19med)
+    extractCellType1.AllGeoTypes = []
 
-# Properties modified on extractCellType1
-extractCellType1.AllGeoTypes = ['TRI3']
+    # Properties modified on extractCellType1
+    extractCellType1.AllGeoTypes = ['TRI3']
 
-# show data in view
-extractCellType1Display = Show(extractCellType1, renderView1)
-# trace defaults for the display properties.
-extractCellType1Display.ColorArrayName = [None, '']
-extractCellType1Display.ScalarOpacityUnitDistance = 0.5
+    # show data in view
+    extractCellType1Display = Show(extractCellType1, renderView1)
+    # trace defaults for the display properties.
+    extractCellType1Display.ColorArrayName = [None, '']
+    extractCellType1Display.ScalarOpacityUnitDistance = 0.5
 
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [0.2, 0.2, 10000.0]
-renderView1.CameraFocalPoint = [0.2, 0.2, 0.0]
-renderView1.CameraParallelScale = 0.7071067811865476
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [0.2, 0.2, 10000.0]
+    renderView1.CameraFocalPoint = [0.2, 0.2, 0.0]
+    renderView1.CameraParallelScale = 0.7071067811865476
 
-res=servermanager.Fetch(extractCellType1,0)
-assert(res.GetBlock(0).GetNumberOfCells()==2) # problem was here in PV4.3.1
+    res=servermanager.Fetch(extractCellType1,0)
+    assert(res.GetBlock(0).GetNumberOfCells()==2) # problem was here in PV4.3.1
 
-# compare with baseline image # Waiting KW return to uncomment this part because SIGSEGV in PV5.
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, imgName)
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
-vtk.test.Testing.interact()
+    # compare with baseline image # Waiting KW return to uncomment this part because SIGSEGV in PV5.
+    try:
+      baselineIndex = sys.argv.index('-B')+1
+      baselinePath = sys.argv[baselineIndex]
+    except:
+      print("Could not get baseline directory. Test failed.")
+      exit(1)
+    baseline_file = os.path.join(baselinePath, imgName)
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
+    vtk.test.Testing.interact()

@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test focuses on GenerateVector part.
@@ -64,62 +67,61 @@ arr_name=[elt.split(myMedReader.GetProperty("Separator").GetData())[0] for elt i
 myMedReader.AllArrays=keys
 myMedReader.GenerateVectors=1
 
-RenderView1=GetRenderView()
-DataRepresentation1 = Show()
-DataRepresentation1.EdgeColor = [0.0, 0.0, 0.5]
-DataRepresentation1.SelectionPointFieldDataArrayName='f0NbComp1'
-DataRepresentation1.ScalarOpacityUnitDistance = 2.299619191183727
-#DataRepresentation1.ExtractedBlockIndex = 1
-DataRepresentation1.ScaleFactor = 0.3
-RenderView1.CenterOfRotation = [1.5, 0.5, 0.5]
-RenderView1.CameraPosition = [1.5, 0.5, 6.907227082229696]
-RenderView1.CameraFocalPoint = [1.5, 0.5, 0.5]
-RenderView1.CameraParallelScale = 1.6583123951777
-DataRepresentation1.Representation = 'Wireframe'
-#
-wbv=WarpByVector(Input=myMedReader)
-wbv.ScaleFactor=0.1
-wbv.Vectors=['POINTS','f3NbComp4_Vector']
-assert(list(wbv.PointData.keys())==['f0NbComp1','f1NbComp2','f1NbComp2_Vector','f2NbComp3','f3NbComp4','f3NbComp4_Vector'])
-#
-DataRepresentation2 = Show()
-DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation2.SelectionPointFieldDataArrayName = 'f0NbComp1'
-DataRepresentation2.SelectionCellFieldDataArrayName = 'FamilyIdCell'
-DataRepresentation2.ScalarOpacityUnitDistance = 4.546673931685981
-#DataRepresentation2.ExtractedBlockIndex = 1
-DataRepresentation2.ScaleFactor = 0.5
-DataRepresentation1.Visibility = 0
-DataRepresentation1.ColorArrayName = ('POINT_DATA', '')
-DataRepresentation1.Visibility = 1
-a4_f3NbComp4_PVLookupTable = GetLookupTableForArray( "f3NbComp4", 4, RGBPoints=[1.118033988749895, 0.23, 0.299, 0.754, 8.108851429645696, 0.865, 0.865, 0.865, 15.0996688705415, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0 )
-a4_f3NbComp4_PiecewiseFunction = CreatePiecewiseFunction( Points=[1.118033988749895, 0.0, 0.5, 0.0, 15.0996688705415, 1.0, 0.5, 0.0] )
-DataRepresentation1.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
-DataRepresentation1.LookupTable = a4_f3NbComp4_PVLookupTable
-a4_f3NbComp4_PVLookupTable.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
-DataRepresentation2.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
-DataRepresentation2.ColorArrayName = ('POINT_DATA', 'f3NbComp4')
-DataRepresentation2.LookupTable = a4_f3NbComp4_PVLookupTable
-RenderView1.CameraViewUp = [0.32310237626907823, -0.28721735329781684, -0.901726702728644]
-RenderView1.CameraPosition = [0.17151044563787257, 6.31903262423349, -1.8294921560963984]
-RenderView1.CameraFocalPoint = [1.4999999999999996, 0.49999999999999944, 0.4999999999999996]
-#
-RenderView1.ViewSize =[300,300]
-Render()
+if '-D' not in sys.argv:
+  RenderView1=GetRenderView()
+  DataRepresentation1 = Show()
+  DataRepresentation1.EdgeColor = [0.0, 0.0, 0.5]
+  DataRepresentation1.SelectionPointFieldDataArrayName='f0NbComp1'
+  DataRepresentation1.ScalarOpacityUnitDistance = 2.299619191183727
+  #DataRepresentation1.ExtractedBlockIndex = 1
+  DataRepresentation1.ScaleFactor = 0.3
+  RenderView1.CenterOfRotation = [1.5, 0.5, 0.5]
+  RenderView1.CameraPosition = [1.5, 0.5, 6.907227082229696]
+  RenderView1.CameraFocalPoint = [1.5, 0.5, 0.5]
+  RenderView1.CameraParallelScale = 1.6583123951777
+  DataRepresentation1.Representation = 'Wireframe'
+  #
+  wbv=WarpByVector(Input=myMedReader)
+  wbv.ScaleFactor=0.1
+  wbv.Vectors=['POINTS','f3NbComp4_Vector']
+  assert(list(wbv.PointData.keys())==['f0NbComp1','f1NbComp2','f1NbComp2_Vector','f2NbComp3','f3NbComp4','f3NbComp4_Vector'])
+  #
+  DataRepresentation2 = Show()
+  DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+  DataRepresentation2.SelectionPointFieldDataArrayName = 'f0NbComp1'
+  DataRepresentation2.SelectionCellFieldDataArrayName = 'FamilyIdCell'
+  DataRepresentation2.ScalarOpacityUnitDistance = 4.546673931685981
+  #DataRepresentation2.ExtractedBlockIndex = 1
+  DataRepresentation2.ScaleFactor = 0.5
+  DataRepresentation1.Visibility = 0
+  DataRepresentation1.ColorArrayName = ('POINT_DATA', '')
+  DataRepresentation1.Visibility = 1
+  a4_f3NbComp4_PVLookupTable = GetLookupTableForArray( "f3NbComp4", 4, RGBPoints=[1.118033988749895, 0.23, 0.299, 0.754, 8.108851429645696, 0.865, 0.865, 0.865, 15.0996688705415, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0 )
+  a4_f3NbComp4_PiecewiseFunction = CreatePiecewiseFunction( Points=[1.118033988749895, 0.0, 0.5, 0.0, 15.0996688705415, 1.0, 0.5, 0.0] )
+  DataRepresentation1.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
+  DataRepresentation1.LookupTable = a4_f3NbComp4_PVLookupTable
+  a4_f3NbComp4_PVLookupTable.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
+  DataRepresentation2.ScalarOpacityFunction = a4_f3NbComp4_PiecewiseFunction
+  DataRepresentation2.ColorArrayName = ('POINT_DATA', 'f3NbComp4')
+  DataRepresentation2.LookupTable = a4_f3NbComp4_PVLookupTable
+  RenderView1.CameraViewUp = [0.32310237626907823, -0.28721735329781684, -0.901726702728644]
+  RenderView1.CameraPosition = [0.17151044563787257, 6.31903262423349, -1.8294921560963984]
+  RenderView1.CameraFocalPoint = [1.4999999999999996, 0.49999999999999944, 0.4999999999999996]
+  #
+  RenderView1.ViewSize =[300,300]
+  Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader10.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader10.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

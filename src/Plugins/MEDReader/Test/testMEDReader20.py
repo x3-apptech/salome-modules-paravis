@@ -24,7 +24,11 @@
 # Commit of the correction : a4e89b15c2faff6341ab9c3d78abc in PARAVIS
 # Due to mistake in MEDReader, the family field array on nodes was deleted twice when changing time step
 
+import os
+import sys
+
 from MEDLoader import *
+
 fname="testMEDReader20.med"
 png="testMEDReader20.png"
 nb=10
@@ -74,79 +78,79 @@ animationScene1 = GetAnimationScene()
 # update animation scene based on data timesteps
 animationScene1.UpdateAnimationUsingDataTimeSteps()
 
-# get active view
-renderView1 = GetActiveViewOrCreate('RenderView')
-# uncomment following to set a specific view size
-# renderView1.ViewSize = [610, 477]
+if '-D' not in sys.argv:
+    # get active view
+    renderView1 = GetActiveViewOrCreate('RenderView')
+    # uncomment following to set a specific view size
+    # renderView1.ViewSize = [610, 477]
 
-# show data in view
-testMEDReader20medDisplay = Show(testMEDReader20med, renderView1)
-# trace defaults for the display properties.
-testMEDReader20medDisplay.ColorArrayName = [None, '']
-testMEDReader20medDisplay.GlyphType = 'Arrow'
-testMEDReader20medDisplay.ScalarOpacityUnitDistance = 4.664739046219201
+    # show data in view
+    testMEDReader20medDisplay = Show(testMEDReader20med, renderView1)
+    # trace defaults for the display properties.
+    testMEDReader20medDisplay.ColorArrayName = [None, '']
+    testMEDReader20medDisplay.GlyphType = 'Arrow'
+    testMEDReader20medDisplay.ScalarOpacityUnitDistance = 4.664739046219201
 
-# reset view to fit data
-renderView1.ResetCamera()
+    # reset view to fit data
+    renderView1.ResetCamera()
 
-#changing interaction mode based on data extents
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [5.0, 0.5, 10000.0]
-renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
+    #changing interaction mode based on data extents
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [5.0, 0.5, 10000.0]
+    renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
 
-# set scalar coloring
-ColorBy(testMEDReader20medDisplay, ('CELLS', 'Field'))
+    # set scalar coloring
+    ColorBy(testMEDReader20medDisplay, ('CELLS', 'Field'))
 
-# rescale color and/or opacity maps used to include current data range
-testMEDReader20medDisplay.RescaleTransferFunctionToDataRange(True)
+    # rescale color and/or opacity maps used to include current data range
+    testMEDReader20medDisplay.RescaleTransferFunctionToDataRange(True)
 
-# do not show color bar/color legend
-testMEDReader20medDisplay.SetScalarBarVisibility(renderView1, False)
+    # do not show color bar/color legend
+    testMEDReader20medDisplay.SetScalarBarVisibility(renderView1, False)
 
-# get color transfer function/color map for 'Field'
-fieldLUT = GetColorTransferFunction('Field')
+    # get color transfer function/color map for 'Field'
+    fieldLUT = GetColorTransferFunction('Field')
 
-# get opacity transfer function/opacity map for 'Field'
-fieldPWF = GetOpacityTransferFunction('Field')
+    # get opacity transfer function/opacity map for 'Field'
+    fieldPWF = GetOpacityTransferFunction('Field')
 
-animationScene1.GoToNext() # <- very important to see the bug play with time steps...
-animationScene1.GoToNext()
-animationScene1.GoToNext()
-animationScene1.GoToNext()
-animationScene1.GoToPrevious()
-animationScene1.GoToPrevious()
+    animationScene1.GoToNext() # <- very important to see the bug play with time steps...
+    animationScene1.GoToNext()
+    animationScene1.GoToNext()
+    animationScene1.GoToNext()
+    animationScene1.GoToPrevious()
+    animationScene1.GoToPrevious()
 
-# current camera placement for renderView1
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [5.0, 0.5, 10000.0]
-renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
-renderView1.CameraParallelScale = 5.024937810560445
+    # current camera placement for renderView1
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [5.0, 0.5, 10000.0]
+    renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
+    renderView1.CameraParallelScale = 5.024937810560445
 
-#
+    #
 
-renderView1.ViewSize =[300,300]
-Render()
-#WriteImage(png)
+    renderView1.ViewSize =[300,300]
+    Render()
+    #WriteImage(png)
 
-#### saving camera placements for all active views
+    #### saving camera placements for all active views
 
-# current camera placement for renderView1
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [5.0, 0.5, 10000.0]
-renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
-renderView1.CameraParallelScale = 5.024937810560445
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath,png)
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
-vtk.test.Testing.interact()
+    # current camera placement for renderView1
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [5.0, 0.5, 10000.0]
+    renderView1.CameraFocalPoint = [5.0, 0.5, 0.0]
+    renderView1.CameraParallelScale = 5.024937810560445
+
+    # compare with baseline image
+    try:
+      baselineIndex = sys.argv.index('-B')+1
+      baselinePath = sys.argv[baselineIndex]
+    except:
+      print("Could not get baseline directory. Test failed.")
+      exit(1)
+    baseline_file = os.path.join(baselinePath,png)
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
+    vtk.test.Testing.interact()

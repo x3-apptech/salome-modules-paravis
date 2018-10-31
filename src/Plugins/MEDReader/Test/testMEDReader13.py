@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test is non regression test to check non regression of EDF 8761. ELNO Mesh filter on vector field with 4 comps cut of using GenerateVectors"""
@@ -46,49 +49,48 @@ testMEDReader13_med = MEDReader( FileName=fname )
 testMEDReader13_med.GenerateVectors = 1
 testMEDReader13_med.AllArrays = ['TS0/mesh/ComSup0/fieldELNO@@][@@GSSNE']
 
-RenderView1 = GetRenderView()
-RenderView1.CameraPosition = [1.0, 0.5, 10000.0]
+if '-D' not in sys.argv:
+  RenderView1 = GetRenderView()
+  RenderView1.CameraPosition = [1.0, 0.5, 10000.0]
 
-RenderView1.CameraPosition = [1.0, 0.5, 4.319751617610021]
+  RenderView1.CameraPosition = [1.0, 0.5, 4.319751617610021]
 
-ELNOfieldToSurface3 = ELNOfieldToSurface(Input=testMEDReader13_med)
+  ELNOfieldToSurface3 = ELNOfieldToSurface(Input=testMEDReader13_med)
 
-DataRepresentation2 = Show()
-#DataRepresentation2.ConstantRadius = 1.9999333620071411
-DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-#DataRepresentation2.PointGaussianDefaultsInitialized = 1
-DataRepresentation2.SelectionPointFieldDataArrayName = 'fieldELNO'
-DataRepresentation2.SelectionCellFieldDataArrayName = 'FamilyIdCell'
-#DataRepresentation2.SelectInputVectors = ['POINTS', 'fieldELNO_Vector']
-DataRepresentation2.ScalarOpacityUnitDistance = 1.7746382108908556
-DataRepresentation2.Texture = []
-DataRepresentation2.ExtractedBlockIndex = 1
-#DataRepresentation2.RadiusRange = [6.666666740784422e-05, 1.9999333620071411]
-DataRepresentation2.ScaleFactor = 0.19998666953397334
+  DataRepresentation2 = Show()
+  #DataRepresentation2.ConstantRadius = 1.9999333620071411
+  DataRepresentation2.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+  #DataRepresentation2.PointGaussianDefaultsInitialized = 1
+  DataRepresentation2.SelectionPointFieldDataArrayName = 'fieldELNO'
+  DataRepresentation2.SelectionCellFieldDataArrayName = 'FamilyIdCell'
+  #DataRepresentation2.SelectInputVectors = ['POINTS', 'fieldELNO_Vector']
+  DataRepresentation2.ScalarOpacityUnitDistance = 1.7746382108908556
+  DataRepresentation2.Texture = []
+  DataRepresentation2.ExtractedBlockIndex = 1
+  #DataRepresentation2.RadiusRange = [6.666666740784422e-05, 1.9999333620071411]
+  DataRepresentation2.ScaleFactor = 0.19998666953397334
 
-#DataRepresentation2.RadiusRange = [6.66667e-05, 1.99993]
-DataRepresentation2.ColorArrayName = ('POINT_DATA', 'fieldELNO_Vector')
+  #DataRepresentation2.RadiusRange = [6.66667e-05, 1.99993]
+  DataRepresentation2.ColorArrayName = ('POINT_DATA', 'fieldELNO_Vector')
 
-a3_fieldELNO_Vector_PVLookupTable = GetLookupTableForArray( "fieldELNO_Vector", 3, RGBPoints=[0.3464101615137755, 0.23, 0.299, 0.754, 1.1258330249197703, 0.865, 0.865, 0.865, 1.9052558883257653, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0 )
+  a3_fieldELNO_Vector_PVLookupTable = GetLookupTableForArray( "fieldELNO_Vector", 3, RGBPoints=[0.3464101615137755, 0.23, 0.299, 0.754, 1.1258330249197703, 0.865, 0.865, 0.865, 1.9052558883257653, 0.706, 0.016, 0.15], VectorMode='Magnitude', NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0 )
 
-a3_fieldELNO_Vector_PiecewiseFunction = CreatePiecewiseFunction( Points=[0.3464101615137755, 0.0, 0.5, 0.0, 1.9052558883257653, 1.0, 0.5, 0.0] )
+  a3_fieldELNO_Vector_PiecewiseFunction = CreatePiecewiseFunction( Points=[0.3464101615137755, 0.0, 0.5, 0.0, 1.9052558883257653, 1.0, 0.5, 0.0] )
 
-RenderView1.ViewSize =[300,300]
-Render()
+  RenderView1.ViewSize =[300,300]
+  Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader13.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader13.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

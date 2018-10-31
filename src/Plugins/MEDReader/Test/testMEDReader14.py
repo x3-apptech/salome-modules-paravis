@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay (EDF R&D)
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test reproduces precisely the bug EDF8655 (PAL 22677) by cheking that multi loc per geo type in a field is correctly managed.
@@ -129,49 +132,49 @@ paraview.simple._DisableFirstRenderCameraReset()
 reader=MEDReader(FileName=fname)
 ExpectedEntries=['TS0/Mesh/ComSup0/zeField0_MM0@@][@@GAUSS', 'TS0/Mesh/ComSup1/zeField0_MM1@@][@@GAUSS', 'TS0/Mesh/ComSup2/zeField0_MM2@@][@@GAUSS', 'TS0/Mesh/ComSup2/zeField1_MM0@@][@@GAUSS', 'TS0/Mesh/ComSup3/zeField1_MM1@@][@@GAUSS', 'TS0/Mesh/ComSup4/zeField2@@][@@P1', 'TS1/Mesh/ComSup0/Mesh@@][@@P0']
 assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
-renderView1=GetActiveViewOrCreate('RenderView')
-for entry in [[ExpectedEntries[0]],[ExpectedEntries[1]],[ExpectedEntries[2],ExpectedEntries[3]],[ExpectedEntries[4]]]:
-    reader=MEDReader(FileName=fname)
-    reader.AllArrays=entry
-    gaussPoints=ELGAfieldToPointGaussian(Input=reader)
-    gaussPoints.SelectSourceArray="ELGA@0"
-    Show(gaussPoints,renderView1)
-    pass
 
-#
+if '-D' not in sys.argv:
+    renderView1=GetActiveViewOrCreate('RenderView')
+    for entry in [[ExpectedEntries[0]],[ExpectedEntries[1]],[ExpectedEntries[2],ExpectedEntries[3]],[ExpectedEntries[4]]]:
+        reader=MEDReader(FileName=fname)
+        reader.AllArrays=entry
+        gaussPoints=ELGAfieldToPointGaussian(Input=reader)
+        gaussPoints.SelectSourceArray="ELGA@0"
+        Show(gaussPoints,renderView1)
+        pass
 
-readerNodeField=MEDReader(FileName=fname)
-readerNodeField.AllArrays=[ExpectedEntries[5]]
-nodeFieldDisplay=Show(readerNodeField,renderView1)
-ColorBy(nodeFieldDisplay,('POINTS','zeField2'))
-nodeFieldDisplay.RescaleTransferFunctionToDataRange(True)
-zeField2LUT=GetColorTransferFunction('zeField2')
-zeField2LUT.RGBPoints=[990.6568528002015, 0.231373, 0.298039, 0.752941, 1009.0416245953584, 0.865003, 0.865003, 0.865003, 1027.4263963905153, 0.705882, 0.0156863, 0.14902]
-zeField2LUT.ScalarRangeInitialized=1.
-#
-renderView1.ResetCamera()
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [3.0, 2.0, 10000.0]
-renderView1.CameraFocalPoint = [3.0, 2.0, 0.0]
-renderView1.ViewSize =[300,300]
-renderView1.GetRenderWindow().DoubleBufferOff()
-#
+    #
 
-Render()
+    readerNodeField=MEDReader(FileName=fname)
+    readerNodeField.AllArrays=[ExpectedEntries[5]]
+    nodeFieldDisplay=Show(readerNodeField,renderView1)
+    ColorBy(nodeFieldDisplay,('POINTS','zeField2'))
+    nodeFieldDisplay.RescaleTransferFunctionToDataRange(True)
+    zeField2LUT=GetColorTransferFunction('zeField2')
+    zeField2LUT.RGBPoints=[990.6568528002015, 0.231373, 0.298039, 0.752941, 1009.0416245953584, 0.865003, 0.865003, 0.865003, 1027.4263963905153, 0.705882, 0.0156863, 0.14902]
+    zeField2LUT.ScalarRangeInitialized=1.
+    #
+    renderView1.ResetCamera()
+    renderView1.InteractionMode = '2D'
+    renderView1.CameraPosition = [3.0, 2.0, 10000.0]
+    renderView1.CameraFocalPoint = [3.0, 2.0, 0.0]
+    renderView1.ViewSize =[300,300]
+    renderView1.GetRenderWindow().DoubleBufferOff()
+    #
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader14.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(renderView1.GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+    Render()
+
+    # compare with baseline image
+    try:
+      baselineIndex = sys.argv.index('-B')+1
+      baselinePath = sys.argv[baselineIndex]
+    except:
+      print("Could not get baseline directory. Test failed.")
+      exit(1)
+    baseline_file = os.path.join(baselinePath, "testMEDReader14.png")
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(renderView1.GetRenderWindow(), baseline_file,
+                                                                threshold=1)
+    vtk.test.Testing.interact()

@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
 
 """ This test checks that umeshes with no names work properly.
@@ -84,28 +87,27 @@ function=CreatePiecewiseFunction(Points=[0.0,0.0,0.5,0.0,1.0,1.0,0.5,0.0] )
 lookupTable.ScalarOpacityFunction = function
 DataRepresentation1.LookupTable = lookupTable
 
-RenderView1 = GetRenderView()
-RenderView1.CameraViewUp = [0.06254683966704512, 0.9980420295997885, 0.0]
-RenderView1.CameraPosition = [0.8087292125440382, 1.3325993334207897, 12.692130429902462]
-RenderView1.CameraFocalPoint = [0.8087292125440382, 1.3325993334207897, 0.0]
-RenderView1.CameraParallelScale = 3.712804729456109
+if '-D' not in sys.argv:
+  RenderView1 = GetRenderView()
+  RenderView1.CameraViewUp = [0.06254683966704512, 0.9980420295997885, 0.0]
+  RenderView1.CameraPosition = [0.8087292125440382, 1.3325993334207897, 12.692130429902462]
+  RenderView1.CameraFocalPoint = [0.8087292125440382, 1.3325993334207897, 0.0]
+  RenderView1.CameraParallelScale = 3.712804729456109
 
-RenderView1.ViewSize =[300,300]
-Render()
+  RenderView1.ViewSize =[300,300]
+  Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader4.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+  # compare with baseline image
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, "testMEDReader4.png")
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                              threshold=1)
+  vtk.test.Testing.interact()

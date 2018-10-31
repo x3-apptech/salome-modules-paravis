@@ -19,6 +19,9 @@
 #
 # Author : Anthony Geay (EDF R&D)
 
+import os
+import sys
+
 from paraview.simple import *
 
 from MEDLoader import *
@@ -43,122 +46,122 @@ WriteField(fname,f,True)
 testTotomed = MEDReader(FileName=fname)
 testTotomed.AllArrays = ['TS0/%s/ComSup0/%s@@][@@GSSNE'%(meshName,fieldName)]
 testTotomed.AllTimeSteps = ['0000']
-# get active view
-renderView1 = GetActiveViewOrCreate('RenderView')
-# uncomment following to set a specific view size
-# renderView1.ViewSize = [739, 503]
 
-# show data in view
-testTotomedDisplay = Show(testTotomed, renderView1)
-# trace defaults for the display properties.
-testTotomedDisplay.ColorArrayName = [None, '']
-testTotomedDisplay.GlyphType = 'Arrow'
-testTotomedDisplay.ScalarOpacityUnitDistance = 1.5874010519681994
+if '-D' not in sys.argv:
+  # get active view
+  renderView1 = GetActiveViewOrCreate('RenderView')
+  # uncomment following to set a specific view size
+  # renderView1.ViewSize = [739, 503]
 
-# reset view to fit data
-renderView1.ResetCamera()
+  # show data in view
+  testTotomedDisplay = Show(testTotomed, renderView1)
+  # trace defaults for the display properties.
+  testTotomedDisplay.ColorArrayName = [None, '']
+  testTotomedDisplay.GlyphType = 'Arrow'
+  testTotomedDisplay.ScalarOpacityUnitDistance = 1.5874010519681994
 
-#changing interaction mode based on data extents
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [1.0, 10000.0, 10000.0]
-renderView1.CameraFocalPoint = [1.0, 0.0, 0.0]
-renderView1.CameraViewUp = [1.0, 1.0, 0.0]
+  # reset view to fit data
+  renderView1.ResetCamera()
 
-# set scalar coloring
-ColorBy(testTotomedDisplay, ('FIELD', 'vtkBlockColors'))
+  #changing interaction mode based on data extents
+  renderView1.InteractionMode = '2D'
+  renderView1.CameraPosition = [1.0, 10000.0, 10000.0]
+  renderView1.CameraFocalPoint = [1.0, 0.0, 0.0]
+  renderView1.CameraViewUp = [1.0, 1.0, 0.0]
 
-# hide color bar/color legend
-testTotomedDisplay.SetScalarBarVisibility(renderView1, False)
+  # set scalar coloring
+  ColorBy(testTotomedDisplay, ('FIELD', 'vtkBlockColors'))
 
-# get color transfer function/color map for 'vtkBlockColors'
-vtkBlockColorsLUT = GetColorTransferFunction('vtkBlockColors')
+  # hide color bar/color legend
+  testTotomedDisplay.SetScalarBarVisibility(renderView1, False)
 
-# get opacity transfer function/opacity map for 'vtkBlockColors'
-vtkBlockColorsPWF = GetOpacityTransferFunction('vtkBlockColors')
+  # get color transfer function/color map for 'vtkBlockColors'
+  vtkBlockColorsLUT = GetColorTransferFunction('vtkBlockColors')
 
-# create a new 'ELNO Mesh'
-eLNOMesh1 = ELNOfieldToSurface(Input=testTotomed)
+  # get opacity transfer function/opacity map for 'vtkBlockColors'
+  vtkBlockColorsPWF = GetOpacityTransferFunction('vtkBlockColors')
 
-# Properties modified on eLNOMesh1
-eLNOMesh1.ShrinkFactor = 0.5 # <- test is here !!!!!!!!
+  # create a new 'ELNO Mesh'
+  eLNOMesh1 = ELNOfieldToSurface(Input=testTotomed)
 
-# show data in view
-eLNOMesh1Display = Show(eLNOMesh1, renderView1)
-# trace defaults for the display properties.
-eLNOMesh1Display.ColorArrayName = [None, '']
-eLNOMesh1Display.GlyphType = 'Arrow'
-eLNOMesh1Display.ScalarOpacityUnitDistance = 1.1905507889761495
+  # Properties modified on eLNOMesh1
+  eLNOMesh1.ShrinkFactor = 0.5 # <- test is here !!!!!!!!
 
-# hide data in view
-Hide(testTotomed, renderView1)
+  # show data in view
+  eLNOMesh1Display = Show(eLNOMesh1, renderView1)
+  # trace defaults for the display properties.
+  eLNOMesh1Display.ColorArrayName = [None, '']
+  eLNOMesh1Display.GlyphType = 'Arrow'
+  eLNOMesh1Display.ScalarOpacityUnitDistance = 1.1905507889761495
 
-# set scalar coloring
-ColorBy(eLNOMesh1Display, ('FIELD', 'vtkBlockColors'))
+  # hide data in view
+  Hide(testTotomed, renderView1)
 
-# show color bar/color legend
-eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
+  # set scalar coloring
+  ColorBy(eLNOMesh1Display, ('FIELD', 'vtkBlockColors'))
 
-# set scalar coloring
-ColorBy(eLNOMesh1Display, ('POINTS', 'MyField'))
+  # show color bar/color legend
+  eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
 
-# rescale color and/or opacity maps used to include current data range
-eLNOMesh1Display.RescaleTransferFunctionToDataRange(True)
+  # set scalar coloring
+  ColorBy(eLNOMesh1Display, ('POINTS', 'MyField'))
 
-# show color bar/color legend
-eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
+  # rescale color and/or opacity maps used to include current data range
+  eLNOMesh1Display.RescaleTransferFunctionToDataRange(True)
 
-# get color transfer function/color map for 'MyField'
-myFieldLUT = GetColorTransferFunction('MyField')
+  # show color bar/color legend
+  eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
 
-# get opacity transfer function/opacity map for 'MyField'
-myFieldPWF = GetOpacityTransferFunction('MyField')
+  # get color transfer function/color map for 'MyField'
+  myFieldLUT = GetColorTransferFunction('MyField')
 
-# hide color bar/color legend
-eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
+  # get opacity transfer function/opacity map for 'MyField'
+  myFieldPWF = GetOpacityTransferFunction('MyField')
 
-# create a new 'Glyph'
-glyph1 = Glyph(Input=eLNOMesh1,
-    GlyphType='Arrow')
-glyph1.ScaleArray = ['POINTS', 'MyField']
-glyph1.OrientationArray = ['POINTS', 'No orientation array']
-glyph1.MaximumGlyphSize = 0.15000000000000002
-glyph1.GlyphTransform = 'Transform2'
+  # hide color bar/color legend
+  eLNOMesh1Display.SetScalarBarVisibility(renderView1, False)
 
-# Properties modified on glyph1
-glyph1.GlyphType = 'Sphere'
-glyph1.MaximumGlyphSize = 0.15
+  # create a new 'Glyph'
+  glyph1 = Glyph(Input=eLNOMesh1,
+      GlyphType='Arrow')
+  glyph1.ScaleArray = ['POINTS', 'MyField']
+  glyph1.OrientationArray = ['POINTS', 'No orientation array']
+  glyph1.MaximumGlyphSize = 0.15000000000000002
+  glyph1.GlyphTransform = 'Transform2'
 
-# show data in view
-glyph1Display = Show(glyph1, renderView1)
-# trace defaults for the display properties.
-glyph1Display.ColorArrayName = ['POINTS', 'MyField']
-glyph1Display.LookupTable = myFieldLUT
-glyph1Display.GlyphType = 'Arrow'
+  # Properties modified on glyph1
+  glyph1.GlyphType = 'Sphere'
+  glyph1.MaximumGlyphSize = 0.15
 
-# hide color bar/color legend
-glyph1Display.SetScalarBarVisibility(renderView1, False)
+  # show data in view
+  glyph1Display = Show(glyph1, renderView1)
+  # trace defaults for the display properties.
+  glyph1Display.ColorArrayName = ['POINTS', 'MyField']
+  glyph1Display.LookupTable = myFieldLUT
+  glyph1Display.GlyphType = 'Arrow'
 
-#### saving camera placements for all active views
+  # hide color bar/color legend
+  glyph1Display.SetScalarBarVisibility(renderView1, False)
 
-# current camera placement for renderView1
-renderView1.InteractionMode = '2D'
-renderView1.CameraPosition = [0.9999999999999908, 9999.999999999995, 9999.999999999993]
-renderView1.CameraFocalPoint = [1.0, 0.0, 0.0]
-renderView1.CameraViewUp = [0.6331899945158901, 0.547298104713038, -0.5472981047130381]
-renderView1.CameraParallelScale = 0.6930835077290218
-renderView1.ViewSize = [739,503]
+  #### saving camera placements for all active views
 
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, imgName)
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
-vtk.test.Testing.interact()
+  # current camera placement for renderView1
+  renderView1.InteractionMode = '2D'
+  renderView1.CameraPosition = [0.9999999999999908, 9999.999999999995, 9999.999999999993]
+  renderView1.CameraFocalPoint = [1.0, 0.0, 0.0]
+  renderView1.CameraViewUp = [0.6331899945158901, 0.547298104713038, -0.5472981047130381]
+  renderView1.CameraParallelScale = 0.6930835077290218
+  renderView1.ViewSize = [739,503]
+
+  try:
+    baselineIndex = sys.argv.index('-B')+1
+    baselinePath = sys.argv[baselineIndex]
+  except:
+    print("Could not get baseline directory. Test failed.")
+    exit(1)
+  baseline_file = os.path.join(baselinePath, imgName)
+  import vtk.test.Testing
+  from vtk.util.misc import vtkGetTempDir
+  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file, threshold=1)
+  vtk.test.Testing.interact()

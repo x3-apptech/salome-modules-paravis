@@ -19,7 +19,11 @@
 #
 # Author : Anthony Geay
 
+import os
+import sys
+
 from MEDLoader import *
+
 fname="testMEDReader0.med"
 outImgName="testMEDReader0.png"
 #########
@@ -85,53 +89,53 @@ arr_name_with_dis=[elt.split("/")[-1] for elt in keys]
 # list all the names of arrays (Equal to those in the MED File)
 arr_name=[elt.split(myMedReader.GetProperty("Separator").GetData())[0] for elt in arr_name_with_dis]
 myMedReader.AllArrays=keys
-RenderView1 = GetRenderView()
-ELNOfieldToSurface1=ELNOfieldToSurface(Input=myMedReader)
-ExtractGroup1=ExtractGroup(Input=ELNOfieldToSurface1)
-#ExtractGroup1.UpdatePipelineInformation()
-ExtractGroup1.AllGroups=['GRP_ba2','GRP_to1','GRP_web']
-assert(isinstance(ExtractGroup1.GetProperty("MeshName")[0],str))
-assert(ExtractGroup1.GetProperty("MeshName")[0]=="mesh")
-#
-DataRepresentation3 = Show()
-DataRepresentation3.ScaleFactor = 0.008999999705702066
-DataRepresentation3.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation3.SelectionPointFieldDataArrayName = 'SolutionSIEF_ELNO'
-a2_SolutionSIEQ_ELNO_PiecewiseFunction = CreatePiecewiseFunction(Points=[0.0, 0.0, 0.5, 0.0, 1.0, 1.0, 0.5, 0.0])
-#VectorMode='Magnitude' or VectorMode='Component'
-a2_SolutionSIEQ_ELNO_PVLookupTable = GetLookupTableForArray("SolutionSIEQ_ELNO",2,RGBPoints=[0.0, 0.23, 0.299, 0.754, 239013.7773476667, 0.706, 0.016, 0.15], VectorMode='Component', VectorComponent=1, NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0, AllowDuplicateScalars=1 )
-DataRepresentation3.ScalarOpacityFunction = a2_SolutionSIEQ_ELNO_PiecewiseFunction
-DataRepresentation3.ColorArrayName = 'SolutionSIEQ_ELNO'
-DataRepresentation3.LookupTable = a2_SolutionSIEQ_ELNO_PVLookupTable
-DataRepresentation3.Visibility = 1
-#
-ELGAfieldToPointGaussian1=ELGAfieldToPointGaussian(Input=ELNOfieldToSurface1)
-ELGAfieldToPointGaussian1.SelectSourceArray=['CELLS','ELGA@0']
-DataRepresentation4 = Show()
-DataRepresentation4.ScaleFactor = 0.008999999705702066
-DataRepresentation4.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation4.SelectionPointFieldDataArrayName = 'SolutionSIEF_ELGA'
-DataRepresentation4.ColorArrayName = 'SolutionSIEF_ELGA'
-########
-RenderView1.CameraViewUp = [-0.19545466285945437, 0.837274140321886, -0.5106559396646081]
-RenderView1.CameraPosition = [0.11797550069274401, 0.20119836056342144, 0.20885419432082736]
-RenderView1.CameraFocalPoint = [1.0170565790969026e-18, 0.0599999981932342, 0.022500000894069675]
-RenderView1.ViewSize =[300,300]
-Render()
 
-# compare with baseline image
-import os
-import sys
-try:
-  baselineIndex = sys.argv.index('-B')+1
-  baselinePath = sys.argv[baselineIndex]
-except:
-  print("Could not get baseline directory. Test failed.")
-  exit(1)
-baseline_file = os.path.join(baselinePath, "testMEDReader0.png")
-import vtk.test.Testing
-from vtk.util.misc import vtkGetTempDir
-vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                            threshold=1)
-vtk.test.Testing.interact()
+if '-D' not in sys.argv:
+    RenderView1 = GetRenderView()
+    ELNOfieldToSurface1=ELNOfieldToSurface(Input=myMedReader)
+    ExtractGroup1=ExtractGroup(Input=ELNOfieldToSurface1)
+    #ExtractGroup1.UpdatePipelineInformation()
+    ExtractGroup1.AllGroups=['GRP_ba2','GRP_to1','GRP_web']
+    assert(isinstance(ExtractGroup1.GetProperty("MeshName")[0],str))
+    assert(ExtractGroup1.GetProperty("MeshName")[0]=="mesh")
+    #
+    DataRepresentation3 = Show()
+    DataRepresentation3.ScaleFactor = 0.008999999705702066
+    DataRepresentation3.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+    DataRepresentation3.SelectionPointFieldDataArrayName = 'SolutionSIEF_ELNO'
+    a2_SolutionSIEQ_ELNO_PiecewiseFunction = CreatePiecewiseFunction(Points=[0.0, 0.0, 0.5, 0.0, 1.0, 1.0, 0.5, 0.0])
+    #VectorMode='Magnitude' or VectorMode='Component'
+    a2_SolutionSIEQ_ELNO_PVLookupTable = GetLookupTableForArray("SolutionSIEQ_ELNO",2,RGBPoints=[0.0, 0.23, 0.299, 0.754, 239013.7773476667, 0.706, 0.016, 0.15], VectorMode='Component', VectorComponent=1, NanColor=[0.25, 0.0, 0.0], ColorSpace='Diverging', ScalarRangeInitialized=1.0, AllowDuplicateScalars=1 )
+    DataRepresentation3.ScalarOpacityFunction = a2_SolutionSIEQ_ELNO_PiecewiseFunction
+    DataRepresentation3.ColorArrayName = 'SolutionSIEQ_ELNO'
+    DataRepresentation3.LookupTable = a2_SolutionSIEQ_ELNO_PVLookupTable
+    DataRepresentation3.Visibility = 1
+    #
+    ELGAfieldToPointGaussian1=ELGAfieldToPointGaussian(Input=ELNOfieldToSurface1)
+    ELGAfieldToPointGaussian1.SelectSourceArray=['CELLS','ELGA@0']
+    DataRepresentation4 = Show()
+    DataRepresentation4.ScaleFactor = 0.008999999705702066
+    DataRepresentation4.EdgeColor = [0.0, 0.0, 0.5000076295109483]
+    DataRepresentation4.SelectionPointFieldDataArrayName = 'SolutionSIEF_ELGA'
+    DataRepresentation4.ColorArrayName = 'SolutionSIEF_ELGA'
+    ########
+    RenderView1.CameraViewUp = [-0.19545466285945437, 0.837274140321886, -0.5106559396646081]
+    RenderView1.CameraPosition = [0.11797550069274401, 0.20119836056342144, 0.20885419432082736]
+    RenderView1.CameraFocalPoint = [1.0170565790969026e-18, 0.0599999981932342, 0.022500000894069675]
+    RenderView1.ViewSize =[300,300]
+    Render()
+
+    # compare with baseline image
+    try:
+      baselineIndex = sys.argv.index('-B')+1
+      baselinePath = sys.argv[baselineIndex]
+    except:
+      print("Could not get baseline directory. Test failed.")
+      exit(1)
+    baseline_file = os.path.join(baselinePath, "testMEDReader0.png")
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                                threshold=1)
+    vtk.test.Testing.interact()
