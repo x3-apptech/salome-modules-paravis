@@ -29,6 +29,7 @@ class vtkDoubleArray;
 class VTK_EXPORT vtkGenerateVectors
 {
 public:
+  static void ChangeMeshTimeToUpdateCache(vtkDataSet *dataset);
   static void Operate(vtkFieldData *fd);
   static vtkDoubleArray *Operate2Compo(vtkDoubleArray *oldArr);
   static vtkDoubleArray *OperateMoreThan3Compo(vtkDoubleArray *oldArr);
