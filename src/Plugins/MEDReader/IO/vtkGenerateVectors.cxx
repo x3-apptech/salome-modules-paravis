@@ -22,6 +22,7 @@
 #include "vtkDataArrayTemplate.h"
 #include "vtkDoubleArray.h"
 #include "vtkInformation.h"
+#include "vtkUnstructuredGrid.h"
 #include "vtkQuadratureSchemeDefinition.h"
 #include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
 #include "MEDUtilities.hxx"
@@ -35,6 +36,17 @@ std::string vtkGenerateVectors::SuffixFieldName(const std::string& name)
 {
   std::ostringstream oss; oss << name << VECTOR_SUFFIX;
   return oss.str();
+}
+
+/*!
+ * This method forces MeshMTime modification. To do so, points are declared as modified.
+ */
+void vtkGenerateVectors::ChangeMeshTimeToUpdateCache(vtkDataSet *dataset)
+{
+  vtkUnstructuredGrid *ug(vtkUnstructuredGrid::SafeDownCast(dataset));
+  if(!ug)
+    return ;
+  ug->GetPoints()->Modified();
 }
 
 void vtkGenerateVectors::Operate(vtkFieldData *fd)
