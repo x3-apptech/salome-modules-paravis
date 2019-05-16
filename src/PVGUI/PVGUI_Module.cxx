@@ -124,6 +124,7 @@
 #include <pqServerManagerModel.h>
 #include <pqAnimationTimeToolbar.h>
 #include <pqPipelineBrowserWidget.h>
+#include <pqCoreUtilities.h>
 
 #if PY_VERSION_HEX < 0x03050000
 static char*
@@ -191,20 +192,6 @@ PVGUI_Module::PVGUI_Module()
   Q_INIT_RESOURCE( PVGUI );
 #endif
   ParavisModule = this;
-
-  // Clear old copies of embedded macros files
-  QString aDestPath = QString( "%1/.config/%2/Macros" ).arg( QDir::homePath() ).arg( QApplication::applicationName() );
-  QStringList aFilter;
-  aFilter << "*.py";
-
-  QDir aDestDir(aDestPath);
-  QStringList aDestFiles = aDestDir.entryList(aFilter, QDir::Files);
-  foreach (QString aMacrosPath, getEmbeddedMacrosList()) {
-    QString aMacrosName = QFileInfo(aMacrosPath).fileName();
-    if (aDestFiles.contains(aMacrosName)) {
-      aDestDir.remove(aMacrosName);
-    }
-  }
 }
 
 /*!
@@ -270,7 +257,24 @@ void PVGUI_Module::initialize( CAM_Application* app )
   // Initialize ParaView client and associated behaviors
   // and connect to externally launched pvserver
   PVViewer_Core::ParaviewInitApp(aDesktop);
+
+  // Clear old copies of embedded macros files
+  //QString aDestPath = QString( "%1/.config/%2/Macros" ).arg( QDir::homePath() ).arg( QApplication::applicationName() );
+  QString aDestPath = pqCoreUtilities::getParaViewUserDirectory() + "/Macros";
+  QStringList aFilter;
+  aFilter << "*.py";
+
+  QDir aDestDir(aDestPath);
+  QStringList aDestFiles = aDestDir.entryList(aFilter, QDir::Files);
+  foreach(QString aMacrosPath, getEmbeddedMacrosList()) {
+	  QString aMacrosName = QFileInfo(aMacrosPath).fileName();
+	  if (aDestFiles.contains(aMacrosName)) {
+		  aDestDir.remove(aMacrosName);
+	  }
+  }
+
   myGuiElements = PVViewer_GUIElements::GetInstance(aDesktop);
+
 
   // [ABN]: careful with the order of the GUI element creation, the loading of the configuration
   // and the connection to the server. This order is very sensitive if one wants to make
