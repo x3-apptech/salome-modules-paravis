@@ -645,11 +645,8 @@ bool PVGUI_Module::deactivateModule( SUIT_Study* study )
   SUIT_ExceptionHandler::removeCleanUpRoutine( paravisCleanUp );
 
   if (myOldMsgHandler)
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    qInstallMsgHandler(myOldMsgHandler);
-#else
     qInstallMessageHandler(myOldMsgHandler);
-#endif
+
   restoreCommonWindowsState();
   
   return LightApp_Module::deactivateModule( study );

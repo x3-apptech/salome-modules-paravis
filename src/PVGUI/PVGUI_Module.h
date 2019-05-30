@@ -217,11 +217,8 @@ private:
 
   typedef QMap<int, bool> DockWindowMap;         
   DockWindowMap           myCommonMap; 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  QtMsgHandler            myOldMsgHandler;
-#else  
   QtMessageHandler        myOldMsgHandler;
-#endif  
+
   vtkEventQtSlotConnect*  VTKConnect;
 
   pqPythonScriptEditor*   myTraceWindow;

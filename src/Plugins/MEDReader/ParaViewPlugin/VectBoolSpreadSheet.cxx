@@ -217,13 +217,9 @@ void VectBoolSpreadSheet::init()
   this->verticalHeader()->setMinimumSectionSize(2);
   this->verticalHeader()->setDefaultSectionSize(2);
   this->setItemDelegate(_delegate);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  this->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  this->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-#else
   this->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   this->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
+
   this->resizeColumnsToContents();
   this->resizeRowsToContents();
   //this->verticalHeader()->hide();
