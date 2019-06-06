@@ -39,12 +39,6 @@
                       function="Input" />
           </RequiredProperties>
         </ArrayListDomain>
-        <FieldDataDomain name="field_list">
-          <RequiredProperties>
-            <Property name="Input"
-                      function="Input" />
-          </RequiredProperties>
-        </FieldDataDomain>
         <Documentation>
           This property indicates the scalar array name to compute difference.
         </Documentation>
