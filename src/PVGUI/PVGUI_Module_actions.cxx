@@ -67,7 +67,7 @@
 #include <pqAboutDialogReaction.h>
 #include <pqHelpReaction.h>
 #include <pqDataQueryReaction.h>
-#include <pqPythonShellReaction.h>
+//#include <pqPythonShellReaction.h>
 
 #include <pqViewManager.h>
 #include <pqViewMenuManager.h>
@@ -343,12 +343,17 @@ void PVGUI_Module::pvCreateActions()
   registerAction(TimerLogId, anAction);
   new pqTimerLogReaction(anAction << pqSetName("actionToolsTimerLog"));
 
- // Python Shell
+  // Python Shell
+  // ???
+  // No more pqPythonShellReaction class, but there is a pqPythonShell class.
+  // Is that equivalent? I don't know what to do at this stage.
   anAction = new QAction(tr("MEN_PYTHON_SHELL"), this);
   anAction->setToolTip(tr("TOP_PYTHON_SHELL"));
   anAction->setStatusTip(tr("STB_PYTHON_SHELL"));
   registerAction(PythonShellId, anAction);
+  /*
   new pqPythonShellReaction(anAction << pqSetName("actionToolsPythonShell"));
+  */
 
   //Show Trace
   anAction = new QAction(tr("MEN_SHOW_TRACE"), this);

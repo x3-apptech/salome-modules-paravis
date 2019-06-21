@@ -108,7 +108,7 @@
 #include <pqActiveObjects.h>
 #include <pqHelpReaction.h>
 #include <pqPluginManager.h>
-#include <pqPythonDialog.h>
+//#include <pqPythonDialog.h>
 #include <pqPythonManager.h>
 #include <pqLoadDataReaction.h>
 #include <pqPythonScriptEditor.h>
@@ -734,6 +734,19 @@ void PVGUI_Module::stopTrace()
 */
 void PVGUI_Module::executeScript( const char* script )
 {
+  // ???
+  // Not sure this is the right fix, but the PYTHON_MANAGER has a function named
+  // executeScript() which seems to do what the runScript on pyShellDialog() class
+  // was doing.
+#ifndef WNT
+  pqPythonManager* manager =
+    qobject_cast<pqPythonManager*>(pqApplicationCore::instance()->manager("PYTHON_MANAGER"));
+
+  if ( manager )  {
+    manager->executeScript(script);
+  }
+#endif
+  /*
 #ifndef WNT
   pqPythonManager* manager = qobject_cast<pqPythonManager*>(
                              pqApplicationCore::instance()->manager( "PYTHON_MANAGER" ) );
@@ -744,6 +757,7 @@ void PVGUI_Module::executeScript( const char* script )
     }
   }
 #endif
+  */
 }
 
 ///**
