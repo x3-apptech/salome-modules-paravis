@@ -52,7 +52,7 @@ ExpectedEntries=['TS0/zeName/ComSup0/zeName@@][@@P1','TS0/zeName/ComSup0/MESH@ze
 assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
 
 #
-glyph1=Glyph(Input=reader,GlyphType='Arrow',ScaleArray='FamilyIdNode',OrientationArray='zeName',GlyphMode='All Points',MaximumGlyphSize=0.1,GlyphTransform='Transform2')
+glyph1=Glyph(Input=reader,GlyphType='Arrow',ScaleArray='FamilyIdNode',OrientationArray='zeName',GlyphMode='All Points',ScaleFactor=0.1,GlyphTransform='Transform2')
 
 if '-D' not in sys.argv:
   renderView1=GetActiveViewOrCreate('RenderView')

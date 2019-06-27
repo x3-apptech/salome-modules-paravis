@@ -73,7 +73,7 @@ testMEDReader4_med.AllArrays=['TS0/mesh/ComSup0/f0NoPfl@@][@@P1','TS0/mesh/ComSu
 
 Glyph1=Glyph(Input=testMEDReader4_med,GlyphType='Sphere')
 Glyph1.ScaleArray=['POINTS','f0NoPfl']
-Glyph1.MaximumGlyphSize=0.3
+Glyph1.ScaleFactor=0.3
 Glyph1.OrientationArray = ['POINTS', 'No orientation array']
 Glyph1.GlyphTransform="Transform2"
 
