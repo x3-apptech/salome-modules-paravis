@@ -47,6 +47,7 @@
 #include "vtkVariantArray.h"
 #include "vtkStringArray.h"
 #include "vtkDoubleArray.h"
+#include "vtkFloatArray.h"
 #include "vtkCharArray.h"
 #include "vtkUnsignedCharArray.h"
 #include "vtkDataSetAttributes.h"
@@ -89,28 +90,69 @@ private:
   std::string _reason;
 };
 
-vtkSmartPointer<vtkDoubleArray> ForceTo3Compo(vtkDoubleArray *arr)
+//ValueTypeT
+
+/*template<class T>
+struct ArrayTraits
 {
+  typedef T EltType;
+  };*/
+
+template<class VTK_ARRAY_T>
+vtkSmartPointer<VTK_ARRAY_T> ForceTo3CompoImpl(VTK_ARRAY_T *arr)
+{
+  using ELT_TYPE = typename VTK_ARRAY_T::ValueType;
   if(!arr)
-    return vtkSmartPointer<vtkDoubleArray>();
-  int nbCompo(arr->GetNumberOfComponents()),nbTuples(arr->GetNumberOfTuples());
+    return vtkSmartPointer<VTK_ARRAY_T>();
+  vtkIdType nbCompo(arr->GetNumberOfComponents()),nbTuples(arr->GetNumberOfTuples());
   if(nbCompo==3)
     {
-      vtkSmartPointer<vtkDoubleArray> ret(arr);
+      vtkSmartPointer<VTK_ARRAY_T> ret(arr);
       return ret;
     }
   if(nbCompo==6)
     {
-      vtkSmartPointer<vtkDoubleArray> ret(vtkSmartPointer<vtkDoubleArray>::New());
+      vtkSmartPointer<VTK_ARRAY_T> ret(vtkSmartPointer<VTK_ARRAY_T>::New());
       ret->SetNumberOfComponents(3);
       ret->SetNumberOfTuples(nbTuples);
-      const double *srcPt(arr->Begin());
-      double *destPt(ret->Begin());
-      for(int i=0;i<nbTuples;i++,destPt+=3,srcPt+=6)
+      const ELT_TYPE *srcPt(arr->Begin());
+      ELT_TYPE *destPt(ret->Begin());
+      for(vtkIdType i=0;i<nbTuples;i++,destPt+=3,srcPt+=6)
         std::copy(srcPt,srcPt+3,destPt);
       return ret;
     }
-  throw MZCException("ForceTo3Compo : internal error ! 6 or 3 compo arrays expected !");
+  throw MZCException("ForceTo3CompoImpl : internal error ! 6 or 3 compo arrays expected !");
+}
+
+vtkSmartPointer<vtkDataArray> ForceTo3Compo(vtkDataArray *arr)
+{
+  vtkDoubleArray *arr0(vtkDoubleArray::SafeDownCast(arr));
+  if(arr0)
+    return ForceTo3CompoImpl<vtkDoubleArray>(arr0);
+  vtkFloatArray *arr1(vtkFloatArray::SafeDownCast(arr));
+  if(arr1)
+    return ForceTo3CompoImpl<vtkFloatArray>(arr1);
+  throw MZCException("ForceTo3Compo : array is NEITHER float64 NOR float32 array !");
+}
+
+template<class VTK_ARRAY_T>
+void FeedDataInternal(VTK_ARRAY_T *arrReal, double cst1, double *ptToFeed1)
+{
+  vtkIdType nbTuples(arrReal->GetNumberOfTuples());
+  using ELT_TYPE = typename VTK_ARRAY_T::ValueType;
+  const ELT_TYPE *srcPt1(arrReal->Begin());
+  std::for_each(srcPt1,srcPt1+3*nbTuples,[&ptToFeed1,cst1](const ELT_TYPE& elt) { *ptToFeed1 = (double)elt * cst1; ptToFeed1++; });
+}
+
+void FeedData(vtkDataArray *arr, double cst1, double *ptToFeed1)
+{
+  vtkDoubleArray *arr0(vtkDoubleArray::SafeDownCast(arr));
+  if(arr0)
+    return FeedDataInternal<vtkDoubleArray>(arr0,cst1,ptToFeed1);
+  vtkFloatArray *arr1(vtkFloatArray::SafeDownCast(arr));
+  if(arr1)
+    return FeedDataInternal<vtkFloatArray>(arr1,cst1,ptToFeed1);
+  throw MZCException("FeedData : array is NEITHER float64 NOR float32 array !");
 }
 
 std::vector< std::string > GetPossibleArrayNames(vtkDataSet *dataset)
@@ -225,16 +267,16 @@ void ExtractInfo3(vtkDataSet *ds, const std::string& arrName, vtkDataArray *& ar
 }
 
   
-void ExtractInfo2(vtkDataSet *ds, const std::string& arrName, vtkDoubleArray *& arr)
+void ExtractInfo2(vtkDataSet *ds, const std::string& arrName, vtkDataArray *&arr)
 {
-  vtkDataArray *zeArr(0);
   int dummy;
-  ExtractInfo3(ds,arrName,zeArr,dummy);
-  arr=vtkDoubleArray::SafeDownCast(zeArr);
-  if(!arr)
+  ExtractInfo3(ds,arrName,arr,dummy);
+  vtkDoubleArray *arr1(vtkDoubleArray::SafeDownCast(arr));
+  vtkFloatArray *arr2(vtkFloatArray::SafeDownCast(arr));
+  if(!arr1 && !arr2)
     {
       std::ostringstream oss;
-      oss << "Array called \"" << arrName << "\" has been located but this is NOT a float64 array !";
+      oss << "Array called \"" << arrName << "\" has been located but this is NEITHER float64 NOR float32 array !";
       throw MZCException(oss.str());
     }
   if(arr->GetNumberOfComponents()!=3 && arr->GetNumberOfComponents()!=6)
@@ -382,17 +424,16 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
       //
       int nbPts(usgIn->GetNumberOfPoints());
       vtkPolyData *outSurface(this->Internal->performConnection(usgIn));
-      vtkDoubleArray *arrRealBase(0);
+      vtkDataArray *arrRealBase(nullptr);
       ExtractInfo2(outSurface,this->Internal->getFieldForReal(),arrRealBase);
-      vtkSmartPointer<vtkDoubleArray> arrReal(ForceTo3Compo(arrRealBase));
+      vtkSmartPointer<vtkDataArray> arrReal(ForceTo3Compo(arrRealBase));
       vtkSmartPointer<vtkDoubleArray> arr1(vtkSmartPointer<vtkDoubleArray>::New());
       arr1->SetName(ZE_DISPLACEMENT_NAME1);
       arr1->SetNumberOfComponents(3);
       arr1->SetNumberOfTuples(nbPts);
       double *ptToFeed1(arr1->Begin());
-      const double *srcPt1(arrReal->Begin());
       double cst1(Factor*cos(AnimationTime*2*M_PI));
-      std::transform(srcPt1,srcPt1+3*nbPts,ptToFeed1,std::bind2nd(std::multiplies<double>(),cst1));
+      FeedData(arrReal,cst1,ptToFeed1);
       int idx1(outSurface->GetPointData()->AddArray(arr1));
       outSurface->GetPointData()->SetActiveAttribute(idx1,vtkDataSetAttributes::VECTORS);
       //
@@ -422,7 +463,7 @@ int vtkSimpleMode::RequestData(vtkInformation *request, vtkInformationVector **i
           vtkDoubleArray *arr2(vtkDoubleArray::SafeDownCast(arr));
           if(!arr2)
             continue;
-          int nbCompo(arr2->GetNumberOfComponents()),nbTuples(arr2->GetNumberOfTuples());
+          vtkIdType nbCompo(arr2->GetNumberOfComponents()),nbTuples(arr2->GetNumberOfTuples());
           if(nbCompo!=3 && nbCompo!=2)
             continue;
           double *arrPtr(arr2->GetPointer(0));
