@@ -124,14 +124,14 @@ if '-D' not in sys.argv:
   # create a new 'Glyph'
   glyph1 = Glyph(Input=eLNOMesh1,
       GlyphType='Arrow')
-  glyph1.ScaleArray = ['POINTS', 'MyField']
+  glyph1.ScaleArray = []
   glyph1.OrientationArray = ['POINTS', 'No orientation array']
-  glyph1.MaximumGlyphSize = 0.15000000000000002
+  glyph1.ScaleFactor = 0.15000000000000002
   glyph1.GlyphTransform = 'Transform2'
 
   # Properties modified on glyph1
   glyph1.GlyphType = 'Sphere'
-  glyph1.MaximumGlyphSize = 0.15
+  glyph1.ScaleFactor = 0.15
 
   # show data in view
   glyph1Display = Show(glyph1, renderView1)
