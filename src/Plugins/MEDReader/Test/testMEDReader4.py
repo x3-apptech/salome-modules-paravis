@@ -72,10 +72,11 @@ testMEDReader4_med.AllArrays=['TS0/mesh/ComSup0/f0NoPfl@@][@@P1','TS0/mesh/ComSu
 #testMEDReader4_med.AllTimeSteps=['0000']
 
 Glyph1=Glyph(Input=testMEDReader4_med,GlyphType='Sphere')
-Glyph1.ScaleArray=['POINTS','f0NoPfl']
+Glyph1.ScaleArray=['POINTS','No scale array']#f0NoPflN
 Glyph1.ScaleFactor=0.3
 Glyph1.OrientationArray = ['POINTS', 'No orientation array']
 Glyph1.GlyphTransform="Transform2"
+Glyph1.GlyphMode = 'All Points'
 
 DataRepresentation1 = Show()
 DataRepresentation1.EdgeColor = [0.0, 0.0, 0.5000076295109483]
