@@ -19,40 +19,47 @@
 #
 # Author : Anthony Geay
 
-from MEDLoader import *
+from medcoupling import *
+from MEDReaderHelper import WriteInTmpDir,RetriveBaseLine
 
-"""
-This test focused on ELNO. Here a 2 QUAD4 cells and a single ELNO field
-is defined.
-"""
-fname="testMEDReader1.med"
+@WriteInTmpDir
+def GenerateCase():
+    """
+    This test focused on ELNO. Here a 2 QUAD4 cells and a single ELNO field
+    is defined.
+    """
+    fname="testMEDReader1.med"
+    coords=DataArrayDouble([(0,0,0),(2,1,0),(1,0,0),(1,1,0),(2,0,0),(0,1,0)])
+    m=MEDCouplingUMesh("mesh",2) ; m.setCoords(coords)
+    m.allocateCells()
+    m.insertNextCell(NORM_QUAD4,[0,5,3,2])
+    m.insertNextCell(NORM_QUAD4,[4,2,3,1])
+    m.finishInsertingCells()
+    WriteMesh(fname,m,True)
+    #
+    f0=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f0.setMesh(m) ; f0.setTimeUnit("ms")
+    f0.setTime(1.1,1,1)
+    f0.setName("myELNOField")
+    arr=DataArrayDouble([7,5,3,1,5,3,1,7]) ; arr.setInfoOnComponent(0,"Comp0")
+    f0.setArray(arr)
+    WriteFieldUsingAlreadyWrittenMesh(fname,f0)
+    #
+    f0.setTime(2.2,2,1)
+    arr=DataArrayDouble([1,7,5,3,7,5,3,1]) ; arr.setInfoOnComponent(0,"Comp0")
+    f0.setArray(arr)
+    WriteFieldUsingAlreadyWrittenMesh(fname,f0)
+    #
+    f0.setTime(3.3,3,1)
+    arr=DataArrayDouble([3,1,7,5,1,7,5,3]) ; arr.setInfoOnComponent(0,"Comp0")
+    f0.setArray(arr)
+    WriteFieldUsingAlreadyWrittenMesh(fname,f0)
+    #
+    f0.setTime(4.4,4,1)
+    arr=DataArrayDouble([5,3,1,7,3,1,7,5]) ; arr.setInfoOnComponent(0,"Comp0")
+    f0.setArray(arr)
+    WriteFieldUsingAlreadyWrittenMesh(fname,f0)
 
-coords=DataArrayDouble([(0,0,0),(2,1,0),(1,0,0),(1,1,0),(2,0,0),(0,1,0)])
-m=MEDCouplingUMesh("mesh",2) ; m.setCoords(coords)
-m.allocateCells()
-m.insertNextCell(NORM_QUAD4,[0,5,3,2])
-m.insertNextCell(NORM_QUAD4,[4,2,3,1])
-m.finishInsertingCells()
-WriteMesh(fname,m,True)
-#
-f0=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f0.setMesh(m) ; f0.setTimeUnit("ms")
-f0.setTime(1.1,1,1)
-f0.setName("myELNOField")
-arr=DataArrayDouble([7,5,3,1,5,3,1,7]) ; arr.setInfoOnComponent(0,"Comp0")
-f0.setArray(arr)
-WriteFieldUsingAlreadyWrittenMesh(fname,f0)
-#
-f0.setTime(2.2,2,1)
-arr=DataArrayDouble([1,7,5,3,7,5,3,1]) ; arr.setInfoOnComponent(0,"Comp0")
-f0.setArray(arr)
-WriteFieldUsingAlreadyWrittenMesh(fname,f0)
-#
-f0.setTime(3.3,3,1)
-arr=DataArrayDouble([3,1,7,5,1,7,5,3]) ; arr.setInfoOnComponent(0,"Comp0")
-f0.setArray(arr)
-WriteFieldUsingAlreadyWrittenMesh(fname,f0)
-#
-f0.setTime(4.4,4,1)
-arr=DataArrayDouble([5,3,1,7,3,1,7,5]) ; arr.setInfoOnComponent(0,"Comp0")
-f0.setArray(arr)
-WriteFieldUsingAlreadyWrittenMesh(fname,f0)
+
+if __name__ == "__main__":
+    GenerateCase()
+    pass

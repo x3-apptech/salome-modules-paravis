@@ -19,50 +19,60 @@
 #
 # Author : Anthony Geay (EDF R&D)
 
-from MEDLoader import *
-
-""" This test is a non regression test of EDF9622."""
-
-fname="testMEDReader17.med"
-
-arr=DataArrayDouble([0,1,2])
-m=MEDCouplingCMesh() ; m.setCoords(arr,arr) ; m=m.buildUnstructured() ; m.setName("Mesh")
-mm=MEDFileUMesh() ; mm.setMeshAtLevel(0,m)
-grp0=DataArrayInt([0,1]) ; grp0.setName("grp0")
-grp1=DataArrayInt([2,3]) ; grp1.setName("grp1")
-grp2=DataArrayInt([1,2]) ; grp2.setName("grp2")
-grp3=DataArrayInt([0,1,2,3]) ; grp3.setName("grp3")
-mm.setGroupsAtLevel(0,[grp0,grp1,grp2,grp3])
-f=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f.setMesh(m) ; f.setName("MyField") ; f.setTime(0.,0,0)
-arr2=DataArrayDouble(4*4*2) ; arr2.iota() ; arr2.rearrange(2) ; arr2.setInfoOnComponents(["aa","bbb"])
-f.setArray(arr2) ; arr2+=0.1 ; f.checkConsistencyLight()
-mm.write(fname,2)
-WriteFieldUsingAlreadyWrittenMesh(fname,f)
-#
+from medcoupling import *
 from paraview.simple import *
 from paraview import servermanager
+from MEDReaderHelper import WriteInTmpDir,RetriveBaseLine
 
 paraview.simple._DisableFirstRenderCameraReset()
-reader=MEDReader(FileName=fname)
-ExpectedEntries=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE','TS1/Mesh/ComSup0/Mesh@@][@@P0']
-assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
-reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
-ExtractGroup1 = ExtractGroup(Input=reader)
-#ExtractGroup1.UpdatePipelineInformation()
-ExtractGroup1.AllGroups=["GRP_grp1"]
-ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=ExtractGroup1)
-ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
-#
-ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=reader)
-ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
-ExtractGroup1 = ExtractGroup(Input=ELNOfieldToPointGaussian1)
-#ExtractGroup1.UpdatePipelineInformation()
-ExtractGroup1.AllGroups=["GRP_grp1"]
-#ExtractGroup1.UpdatePipeline()
-res=servermanager.Fetch(ExtractGroup1,0)
-assert(res.GetBlock(0).GetNumberOfCells()==8)
-vtkArrToTest=res.GetBlock(0).GetPointData().GetArray("MyField")
-assert(vtkArrToTest.GetNumberOfComponents()==2)
-assert(vtkArrToTest.GetNumberOfTuples()==8)
-vals=[vtkArrToTest.GetValue(i) for i in range(16)]
-assert(DataArrayDouble([(16.1,17.1),(18.1,19.1),(20.1,21.1),(22.1,23.1),(24.1,25.1),(26.1,27.1),(28.1,29.1),(30.1,31.1)]).isEqual(DataArrayDouble(vals,8,2),1e-12))
+
+def GenerateCase():
+    """ This test is a non regression test of EDF9622."""
+
+    fname="testMEDReader17.med"
+
+    arr=DataArrayDouble([0,1,2])
+    m=MEDCouplingCMesh() ; m.setCoords(arr,arr) ; m=m.buildUnstructured() ; m.setName("Mesh")
+    mm=MEDFileUMesh() ; mm.setMeshAtLevel(0,m)
+    grp0=DataArrayInt([0,1]) ; grp0.setName("grp0")
+    grp1=DataArrayInt([2,3]) ; grp1.setName("grp1")
+    grp2=DataArrayInt([1,2]) ; grp2.setName("grp2")
+    grp3=DataArrayInt([0,1,2,3]) ; grp3.setName("grp3")
+    mm.setGroupsAtLevel(0,[grp0,grp1,grp2,grp3])
+    f=MEDCouplingFieldDouble(ON_GAUSS_NE) ; f.setMesh(m) ; f.setName("MyField") ; f.setTime(0.,0,0)
+    arr2=DataArrayDouble(4*4*2) ; arr2.iota() ; arr2.rearrange(2) ; arr2.setInfoOnComponents(["aa","bbb"])
+    f.setArray(arr2) ; arr2+=0.1 ; f.checkConsistencyLight()
+    mm.write(fname,2)
+    WriteFieldUsingAlreadyWrittenMesh(fname,f)
+    return fname
+
+@WriteInTmpDir
+def test():
+    fname = GenerateCase()
+    #
+    reader=MEDReader(FileName=fname)
+    ExpectedEntries=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE','TS1/Mesh/ComSup0/Mesh@@][@@P0']
+    assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
+    reader.AllArrays=['TS0/Mesh/ComSup0/MyField@@][@@GSSNE']
+    ExtractGroup1 = ExtractGroup(Input=reader)
+    #ExtractGroup1.UpdatePipelineInformation()
+    ExtractGroup1.AllGroups=["GRP_grp1"]
+    ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=ExtractGroup1)
+    ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
+    #
+    ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=reader)
+    ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
+    ExtractGroup1 = ExtractGroup(Input=ELNOfieldToPointGaussian1)
+    #ExtractGroup1.UpdatePipelineInformation()
+    ExtractGroup1.AllGroups=["GRP_grp1"]
+    #ExtractGroup1.UpdatePipeline()
+    res=servermanager.Fetch(ExtractGroup1,0)
+    assert(res.GetBlock(0).GetNumberOfCells()==8)
+    vtkArrToTest=res.GetBlock(0).GetPointData().GetArray("MyField")
+    assert(vtkArrToTest.GetNumberOfComponents()==2)
+    assert(vtkArrToTest.GetNumberOfTuples()==8)
+    vals=[vtkArrToTest.GetValue(i) for i in range(16)]
+    assert(DataArrayDouble([(16.1,17.1),(18.1,19.1),(20.1,21.1),(22.1,23.1),(24.1,25.1),(26.1,27.1),(28.1,29.1),(30.1,31.1)]).isEqual(DataArrayDouble(vals,8,2),1e-12))
+
+if __name__ == "__main__":
+    test()

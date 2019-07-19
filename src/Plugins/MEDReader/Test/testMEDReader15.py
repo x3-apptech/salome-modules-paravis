@@ -22,71 +22,74 @@
 import os
 import sys
 
-from MEDLoader import *
-
-""" This test is a non regression test that checks the behaviour of MEDReader when a mesh has the same name than a field.
-"""
-
-fname="testMEDReader15.med"
-outImgName="testMEDReader15.png"
-
-zeName="zeName"
-c=DataArrayDouble([(0.,0.,0.),(1.,0.,0.),(0.,1.,0.)])
-m=MEDFileUMesh()
-m.setCoords(c)
-m.setName(zeName)
-m.write(fname,2)
-f=MEDCouplingFieldDouble(ON_NODES)
-f.setName(zeName)
-f.setArray(DataArrayDouble([(-1.,1.,0.),(0.,1.,0.),(1.,1.,0.)]))
-tmp=MEDCouplingUMesh.Build0DMeshFromCoords(m.getCoords()) ; tmp.setName(zeName)
-f.setMesh(tmp)
-WriteFieldUsingAlreadyWrittenMesh(fname,f)
-#
-
+from medcoupling import *
 from paraview.simple import *
+from MEDReaderHelper import WriteInTmpDir,RetriveBaseLine
 
 paraview.simple._DisableFirstRenderCameraReset()
-reader=MEDReader(FileName=fname)
-ExpectedEntries=['TS0/zeName/ComSup0/zeName@@][@@P1','TS0/zeName/ComSup0/MESH@zeName@@][@@P1']
-assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
 
-#
-glyph1=Glyph(Input=reader,GlyphType='Arrow',ScaleArray='FamilyIdNode',OrientationArray='zeName',GlyphMode='All Points',ScaleFactor=0.1,GlyphTransform='Transform2')
+def GenerateCase():
+  """ This test is a non regression test that checks the behaviour of MEDReader when a mesh has the same name than a field.
+  """
 
-if '-D' not in sys.argv:
-  renderView1=GetActiveViewOrCreate('RenderView')
-  renderView1.InteractionMode='3D'
-  zeNameLUT = GetColorTransferFunction('zeName')
-  zeNameLUT.RGBPoints = [1.0, 0.231373, 0.298039, 0.752941, 1.2071067811865475, 0.865003, 0.865003, 0.865003, 1.4142135623730951, 0.705882, 0.0156863, 0.14902]
-  zeNameLUT.ScalarRangeInitialized = 1.
-  zeNameLUT.VectorMode = 'Component'
+  fname="testMEDReader15.med"
 
-  glyph1Display=Show(glyph1,renderView1)
-  glyph1Display.ColorArrayName = ['POINTS', 'FamilyIdNode']
-  glyph1Display.LookupTable = zeNameLUT
-  # set scalar coloring
-  ColorBy(glyph1Display, ('POINTS', 'zeName'))
-  # rescale color and/or opacity maps used to include current data range
-  glyph1Display.RescaleTransferFunctionToDataRange(True)
-  # do not show color bar/color legend
-  glyph1Display.SetScalarBarVisibility(renderView1, False)
+  zeName="zeName"
+  c=DataArrayDouble([(0.,0.,0.),(1.,0.,0.),(0.,1.,0.)])
+  m=MEDFileUMesh()
+  m.setCoords(c)
+  m.setName(zeName)
+  m.write(fname,2)
+  f=MEDCouplingFieldDouble(ON_NODES)
+  f.setName(zeName)
+  f.setArray(DataArrayDouble([(-1.,1.,0.),(0.,1.,0.),(1.,1.,0.)]))
+  tmp=MEDCouplingUMesh.Build0DMeshFromCoords(m.getCoords()) ; tmp.setName(zeName)
+  f.setMesh(tmp)
+  WriteFieldUsingAlreadyWrittenMesh(fname,f)
+  return fname
+
+@WriteInTmpDir
+def test(baseline_file):
+  fname = GenerateCase()
+  reader=MEDReader(FileName=fname)
+  ExpectedEntries=['TS0/zeName/ComSup0/zeName@@][@@P1','TS0/zeName/ComSup0/MESH@zeName@@][@@P1']
+  assert(reader.GetProperty("FieldsTreeInfo")[::2]==ExpectedEntries)
+
   #
-  renderView1.ViewSize =[300,300]
-  renderView1.GetRenderWindow().DoubleBufferOff()
-  Render()
+  glyph1=Glyph(Input=reader,GlyphType='Arrow',ScaleArray='FamilyIdNode',OrientationArray='zeName',GlyphMode='All Points',ScaleFactor=0.1,GlyphTransform='Transform2')
 
-  # compare with baseline image
-  try:
-    baselineIndex = sys.argv.index('-B')+1
-    baselinePath = sys.argv[baselineIndex]
-  except:
-    print("Could not get baseline directory. Test failed.")
-    exit(1)
-  baseline_file = os.path.join(baselinePath, "testMEDReader15.png")
-  import vtk.test.Testing
-  from vtk.util.misc import vtkGetTempDir
-  vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
-  vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
-                                                              threshold=1)
-  vtk.test.Testing.interact()
+  if '-D' not in sys.argv:
+    renderView1=GetActiveViewOrCreate('RenderView')
+    renderView1.InteractionMode='3D'
+    zeNameLUT = GetColorTransferFunction('zeName')
+    zeNameLUT.RGBPoints = [1.0, 0.231373, 0.298039, 0.752941, 1.2071067811865475, 0.865003, 0.865003, 0.865003, 1.4142135623730951, 0.705882, 0.0156863, 0.14902]
+    zeNameLUT.ScalarRangeInitialized = 1.
+    zeNameLUT.VectorMode = 'Component'
+
+    glyph1Display=Show(glyph1,renderView1)
+    glyph1Display.ColorArrayName = ['POINTS', 'FamilyIdNode']
+    glyph1Display.LookupTable = zeNameLUT
+    # set scalar coloring
+    ColorBy(glyph1Display, ('POINTS', 'zeName'))
+    # rescale color and/or opacity maps used to include current data range
+    glyph1Display.RescaleTransferFunctionToDataRange(True)
+    # do not show color bar/color legend
+    glyph1Display.SetScalarBarVisibility(renderView1, False)
+    #
+    renderView1.ViewSize =[300,300]
+    renderView1.GetRenderWindow().DoubleBufferOff()
+    Render()
+
+    # compare with baseline image
+    import vtk.test.Testing
+    from vtk.util.misc import vtkGetTempDir
+    vtk.test.Testing.VTK_TEMP_DIR = vtk.util.misc.vtkGetTempDir()
+    vtk.test.Testing.compareImage(GetActiveView().GetRenderWindow(), baseline_file,
+                                                                threshold=1)
+    vtk.test.Testing.interact()
+
+if __name__ == "__main__":
+  outImgName="testMEDReader15.png"
+  baseline_file = RetriveBaseLine(outImgName)
+  test(baseline_file)
+  pass

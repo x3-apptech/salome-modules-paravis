@@ -19,36 +19,48 @@
 #
 # Author : Anthony Geay (EDF R&D)
 
-# Non regression test for bug EDF11343. Extract group on groups mixing cells entities and node entities.
 
-from MEDLoader import *
-
-fname="testMEDReader18.med"
-arr1=DataArrayDouble(5) ; arr1.iota()
-arr2=DataArrayDouble([0,1])
-m=MEDCouplingCMesh() ; m.setCoords(arr1,arr2)
-m.setName("mesh")
-m=m.buildUnstructured()
-#
-mm=MEDFileUMesh()
-mm[0]=m
-#
-grp0=DataArrayInt([1,2]) ; grp0.setName("grp0")
-grp1=DataArrayInt([3,4,8,9]) ; grp1.setName("grp1")
-#
-mm.addGroup(0,grp0)
-mm.addGroup(1,grp1)
-#
-mm.write(fname,2)
-#####
+from medcoupling import *
 from paraview.simple import *
+from MEDReaderHelper import WriteInTmpDir,RetriveBaseLine
 
-reader=MEDReader(FileName=fname)
-reader.AllArrays=['TS0/mesh/ComSup0/mesh@@][@@P0']
-ExtractGroup1 = ExtractGroup(Input=reader)
-ExtractGroup1.AllGroups=["GRP_grp0","GRP_grp1"]
-#ExtractGroup1.UpdatePipelineInformation()
-res=servermanager.Fetch(ExtractGroup1,0)
-assert(res.GetNumberOfBlocks()==2)
-assert(res.GetBlock(1).GetNumberOfCells()==1)
-assert(res.GetBlock(0).GetNumberOfCells()==2)
+def GenerateCase():
+    """Non regression test for bug EDF11343. Extract group on groups mixing cells entities and node entities."""
+    fname="testMEDReader18.med"
+    arr1=DataArrayDouble(5) ; arr1.iota()
+    arr2=DataArrayDouble([0,1])
+    m=MEDCouplingCMesh() ; m.setCoords(arr1,arr2)
+    m.setName("mesh")
+    m=m.buildUnstructured()
+    #
+    mm=MEDFileUMesh()
+    mm[0]=m
+    #
+    grp0=DataArrayInt([1,2]) ; grp0.setName("grp0")
+    grp1=DataArrayInt([3,4,8,9]) ; grp1.setName("grp1")
+    #
+    mm.addGroup(0,grp0)
+    mm.addGroup(1,grp1)
+    #
+    mm.write(fname,2)
+    return fname
+
+@WriteInTmpDir
+def test():
+  fname = GenerateCase()
+  reader=MEDReader(FileName=fname)
+  reader.AllArrays=['TS0/mesh/ComSup0/mesh@@][@@P0']
+  ExtractGroup1 = ExtractGroup(Input=reader)
+  ExtractGroup1.AllGroups=["GRP_grp0","GRP_grp1"]
+  #ExtractGroup1.UpdatePipelineInformation()
+  res=servermanager.Fetch(ExtractGroup1,0)
+  assert(res.GetNumberOfBlocks()==2)
+  assert(res.GetBlock(1).GetNumberOfCells()==1)
+  assert(res.GetBlock(0).GetNumberOfCells()==2)
+  pass
+
+if __name__ == "__main__":
+    test()
+    pass
+
+
