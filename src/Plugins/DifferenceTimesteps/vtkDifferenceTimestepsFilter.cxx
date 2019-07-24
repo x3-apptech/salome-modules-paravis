@@ -77,6 +77,11 @@ void vtkTemporalDataDifference(
       *anOutputData++ = static_cast<T>(x1[c]-x0[c]);
     }
   }
+  // Copy component name
+  for (int c = 0; c < theNumComp; ++c)
+  {
+    theOutput->SetComponentName(c,theArrays[0]->GetComponentName(c));
+  }
   theOutput->SetNumberOfTuples(N);
 }
 
