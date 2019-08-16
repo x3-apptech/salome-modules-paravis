@@ -47,6 +47,7 @@ SET(_link_LIBRARIES
                  ${GUI_SalomeObject}
   ${_PARAVIEW_APP_COMPO_LIB}
   ${GUI_PVViewer}
+  ${VTK_LIBRARIES}
 )
 
 # --- headers ---
