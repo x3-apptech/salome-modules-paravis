@@ -106,7 +106,7 @@ class TestParavis(unittest.TestCase):
             self.assertIsNotNone(glyph)
             glyph.OrientationArray = ['POINTS', 'vitesse_3c']
             glyph.ScaleArray = ['POINTS', 'No scale array']
-            glyph.MaximumGlyphSize = 0.01
+            glyph.ScaleFactor = 0.01
             vectors = pvs.Show(glyph, view)
             self.assertIsNotNone(vectors)
             vectors.Representation = 'Surface'
