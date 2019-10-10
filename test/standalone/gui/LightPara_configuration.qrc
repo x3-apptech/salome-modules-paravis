@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="LightPara/Configuration">
+  <file alias="ParaViewFilters.xml">xml/ParaViewFilters.xml</file>
+  <file alias="ParaViewReaders.xml">xml/ParaViewReaders.xml</file>
+</qresource>
+</RCC>

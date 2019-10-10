@@ -1,0 +1,14 @@
+NAME
+  SimpleModeModule
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+  VTK::FiltersCore
+  VTK::FiltersModeling
+PRIVATE_DEPENDS
+  VTK::CommonMisc
+  VTK::CommonSystem
+  VTK::FiltersGeneral
+  VTK::FiltersGeometry
+  ParaView::VTKExtensionsMisc

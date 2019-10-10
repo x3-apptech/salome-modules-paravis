@@ -20,18 +20,14 @@
 
 SET(pl_SOURCES
     simple_gil.cxx
-    #PyInterp_Interp.cxx
-    #SUITApp_init_python.cxx
     Container_init_python.cxx
     )
-    
+
 INCLUDE_DIRECTORIES(
-    ${PARAVIEW_INCLUDE_DIRS}
     ${PYTHON_INCLUDE_DIRS}
     ${QT_INCLUDE_DIRS}
   )
 
 ADD_EXECUTABLE(paraCmdLine ${pl_SOURCES})
-# RNV: ${vtkgl2ps_LIBRARIES} was added for Fedora 26 OS
-TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle ${vtkgl2ps_LIBRARIES})
+TARGET_LINK_LIBRARIES(paraCmdLine ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ParaView::pqApplicationComponents)
 

@@ -16,35 +16,68 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+cmake_minimum_required(VERSION 3.8)
+project(ParaSMESHCorba)
 
- PROJECT(ParaSMESHCorba)
- CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
+include(GNUInstallDirs)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
- FIND_PACKAGE(ParaView REQUIRED)
- INCLUDE(${PARAVIEW_USE_FILE})
+find_package(SalomeSMESH)
 
- SET(PARA_SMESH_CORBA_SRC
-    ${ParaSMESHCorba_SOURCE_DIR}/vtkParaSMESHCorbaSource.cxx 
-    )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/plugin/ParaSMESHCorbaModule )
 
- ADD_PARAVIEW_PLUGIN( ParaSMESHCorbaPlugin "1.0"
-      SERVER_MANAGER_XML ParaSMESHCorbaServerManager.xml
-      SERVER_MANAGER_SOURCES ${PARA_SMESH_CORBA_SRC} )
+set("_paraview_plugin_default_${CMAKE_PROJECT_NAME}" ON)
+paraview_plugin_scan(
+  ENABLE_BY_DEFAULT YES
+  PLUGIN_FILES      "${CMAKE_CURRENT_SOURCE_DIR}/plugin/paraview.plugin"
+  PROVIDES_PLUGINS  plugins
+  REQUIRES_MODULES  required_modules)
 
- INCLUDE_DIRECTORIES(
-     ${OMNIORB_INCLUDE_DIR}
-     ${SMESH_ROOT_DIR}/include/salome 
-     ${GEOM_ROOT_DIR}/include/salome
-     ${KERNEL_ROOT_DIR}/include/salome )
+foreach(module IN LISTS required_modules)
+  if(NOT TARGET "${module}")
+    message("Missing required module: ${module}")
+    return()
+  endif()
+endforeach()
+
+set(BUILD_SHARED_LIBS ON)
+paraview_plugin_build(
+  RUNTIME_DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY_DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  LIBRARY_SUBDIRECTORY "${PARAVIEW_PLUGIN_SUBDIR}"
+  PLUGINS ${plugins}
+  AUTOLOAD ${plugins})
+
+# PROJECT(ParaSMESHCorba)
+# CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
+#
+# FIND_PACKAGE(ParaView REQUIRED)
+# INCLUDE(${PARAVIEW_USE_FILE})
+#
+# SET(PARA_SMESH_CORBA_SRC
+#    ${ParaSMESHCorba_SOURCE_DIR}/vtkParaSMESHCorbaSource.cxx 
+#    )
+
+# ADD_PARAVIEW_PLUGIN( ParaSMESHCorbaPlugin "1.0"
+#      SERVER_MANAGER_XML ParaSMESHCorbaServerManager.xml
+#      SERVER_MANAGER_SOURCES ${PARA_SMESH_CORBA_SRC} )
+
+# INCLUDE_DIRECTORIES(
+#     ${OMNIORB_INCLUDE_DIR}
+#     ${SMESH_ROOT_DIR}/include/salome 
+#     ${GEOM_ROOT_DIR}/include/salome
+#     ${KERNEL_ROOT_DIR}/include/salome )
      
- ADD_DEFINITIONS(${OMNIORB_DEFINITIONS})
- TARGET_LINK_LIBRARIES(ParaSMESHCorbaPlugin
-      ${OMNIORB_LIBRARIES}
-      ${KERNEL_SalomeIDLKernel}
-      ${SMESH_SalomeIDLSMESH}
-      ${SMESH_SMESHClient}
-      ${GEOM_SalomeIDLGEOM}
-  )
+# ADD_DEFINITIONS(${OMNIORB_DEFINITIONS})
+# TARGET_LINK_LIBRARIES(ParaSMESHCorbaPlugin
+#      ${OMNIORB_LIBRARIES}
+#      ${KERNEL_SalomeIDLKernel}
+#      ${SMESH_SalomeIDLSMESH}
+#      ${SMESH_SMESHClient}
+#      ${GEOM_SalomeIDLGEOM}
+#  )
 
- INSTALL(TARGETS ParaSMESHCorbaPlugin DESTINATION lib/paraview)
- INSTALL(FILES ParaSMESHCorbaServerManager.xml DESTINATION share)
+# INSTALL(TARGETS ParaSMESHCorbaPlugin DESTINATION lib/paraview)
+# INSTALL(FILES ParaSMESHCorbaServerManager.xml DESTINATION share)

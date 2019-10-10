@@ -1,0 +1,9 @@
+NAME
+  ParaMEDCorbaPlugin
+DESCRIPTION
+  This plugin provides the ParaMEDCorba filter.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore
+  

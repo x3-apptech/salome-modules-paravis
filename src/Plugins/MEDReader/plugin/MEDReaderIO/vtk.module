@@ -1,0 +1,10 @@
+NAME
+  MEDReaderIO
+DEPENDS
+  VTK::FiltersGeneral
+  VTK::IOLegacy
+  ParaView::RemotingCore
+PRIVATE_DEPENDS
+  VTK::IOLegacy
+  ParaView::VTKExtensionsFiltersRendering
+  ParaView::VTKExtensionsMisc

@@ -1,0 +1,24 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="filters">
+    <SourceProxy name="VoroGauss"
+                 class="vtkVoroGauss"
+                 label="ELGA field To Surface">
+     <InputProperty name="Input"
+                    command="SetInputConnection">
+       <ProxyGroupDomain name="groups">
+         <Group name="sources"/>
+         <Group name="filters"/>
+       </ProxyGroupDomain>
+       <DataTypeDomain name="input_type">
+         <DataType value="vtkDataSet"/>
+       </DataTypeDomain>
+       <Documentation>
+         This property specifies the input to the Level Scalars filter.
+       </Documentation>
+     </InputProperty>
+     <Hints>
+        <ShowInMenu category="Mechanics" />
+      </Hints>
+    </SourceProxy>
+  </ProxyGroup>
+</ServerManagerConfiguration>

@@ -1,0 +1,28 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="sources">
+    <SourceProxy name="JSONReader"
+                 class="vtkJSONReader"
+                 label="JSON Reader">
+
+      <Hints>
+         <ReaderFactory extensions="json"
+                        file_description="JSON file" />
+      </Hints>
+
+      <Documentation
+        short_help="Reads JSON file"
+        long_help="Reads JSON file and converts it to the VTK table">
+      </Documentation>
+
+      <StringVectorProperty name="FileName"
+                            command="SetFileName"
+                            number_of_elements="1"
+                            panel_visibility="never">
+        <FileListDomain name="files"/>
+        <Documentation>
+          This property specifies the file name for the JSON reader
+        </Documentation>
+      </StringVectorProperty>
+    </SourceProxy>
+  </ProxyGroup>
+</ServerManagerConfiguration>

@@ -1,58 +1,30 @@
-# Copyright (C) 2018-2019  EDF R&D
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-#
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+cmake_minimum_required(VERSION 3.8)
+project(StaticMesh)
+find_package(ParaView REQUIRED)
 
-if (NOT ParaView_BINARY_DIR)
-  cmake_minimum_required(VERSION 3.3)
-  find_package(ParaView REQUIRED)
-  include(${PARAVIEW_USE_FILE})
-endif()
+include(GNUInstallDirs)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
-include_directories(
-  ${VTK_INCLUDE_DIRS}
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  )
+set("_paraview_plugin_default_${CMAKE_PROJECT_NAME}" ON)
+paraview_plugin_scan(
+  ENABLE_BY_DEFAULT YES
+  PLUGIN_FILES      "${CMAKE_CURRENT_SOURCE_DIR}/plugin/paraview.plugin"
+  PROVIDES_PLUGINS  plugins
+  REQUIRES_MODULES  required_modules)
 
-set(Module_SRCS
-  vtkStaticDataSetSurfaceFilter.cxx
-  vtkStaticEnSight6BinaryReader.cxx
-  vtkStaticEnSight6Reader.cxx
-  vtkStaticEnSightGoldBinaryReader.cxx
-  vtkStaticEnSightGoldReader.cxx
-  vtkStaticMeshObjectFactory.cxx
-  vtkStaticPlaneCutter.cxx
-)
-if (PARAVIEW_USE_MPI)
-  list(APPEND Module_SRCS vtkStaticPUnstructuredGridGhostCellsGenerator.cxx)
-endif()
+foreach(module IN LISTS required_modules)
+  if(NOT TARGET "${module}")
+    message("Missing required module: ${module}")
+    return()
+  endif()
+endforeach()
 
-add_paraview_plugin(
-  StaticMesh "0.1"
-  SERVER_MANAGER_XML
-    StaticMeshSM.xml
-  SERVER_MANAGER_SOURCES
-    vtkTemporalUGWavelet.cxx
-  SOURCES
-    ${Module_SRCS}
-  )
-
-if (BUILD_TESTING)
-  add_subdirectory(Testing)
-endif()
-INSTALL(TARGETS StaticMesh RUNTIME DESTINATION lib/paraview LIBRARY DESTINATION lib/paraview ARCHIVE DESTINATION lib/paraview)
+set(BUILD_SHARED_LIBS ON)
+paraview_plugin_build(
+  RUNTIME_DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY_DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  LIBRARY_SUBDIRECTORY "${PARAVIEW_PLUGIN_SUBDIR}"
+  PLUGINS ${plugins}
+  AUTOLOAD ${plugins})

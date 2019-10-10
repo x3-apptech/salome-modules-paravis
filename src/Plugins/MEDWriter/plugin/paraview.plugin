@@ -1,0 +1,6 @@
+NAME
+  MEDWriterPlugin
+DESCRIPTION
+  This plugin provides the MED Writer.
+REQUIRES_MODULES
+  VTK::CommonCore

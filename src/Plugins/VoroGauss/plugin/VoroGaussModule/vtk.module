@@ -1,0 +1,9 @@
+NAME
+  VoroGaussModule
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+PRIVATE_DEPENDS
+  ParaView::VTKExtensionsMisc
+  ParaView::VTKExtensionsFiltersRendering

@@ -25,6 +25,9 @@ IF(WIN32)
   SET( CMAKE_SHARED_LINKER_FLAGS_DEBUG "${replacementFlags}" )
 ENDIF(WIN32)
 
+# For correct Qt 5 detection procedure
+CMAKE_POLICY(SET CMP0053 NEW)
+
 # Ensure a proper linker behavior:
 CMAKE_POLICY(SET CMP0003 NEW)
 IF(WIN32)

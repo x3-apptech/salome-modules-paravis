@@ -1,0 +1,8 @@
+NAME
+  EllipseBuilderFilter
+DESCRIPTION
+  This plugin provides the Ellipse Builder filter.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore

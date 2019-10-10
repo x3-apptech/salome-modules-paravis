@@ -1,0 +1,6 @@
+NAME
+  GaussToCellPlugin
+DESCRIPTION
+  This plugin provides the GaussToCell filter.
+REQUIRES_MODULES
+  VTK::CommonCore

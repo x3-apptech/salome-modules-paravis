@@ -15,7 +15,6 @@ SET(_link_LIBRARIES
   ${MEDCoupling_medcoupling}
   ${MEDCoupling_interpkernel}
   ${MPI_LIBRARIES}
-  ${VTK_LIBRARIES}
   ${PARAVIS_MEDLoaderForPV}
   ${MEDCoupling_medloader}
   ${MEDFILE_C_LIBRARIES}

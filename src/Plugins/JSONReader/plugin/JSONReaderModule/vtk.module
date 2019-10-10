@@ -1,0 +1,15 @@
+NAME
+  JSONReaderModule
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+  VTK::FiltersCore
+  VTK::IOCore
+  VTK::jsoncpp
+PRIVATE_DEPENDS
+  VTK::CommonMisc
+  VTK::CommonSystem
+  VTK::InfovisCore
+  VTK::vtksys
+  VTK::zlib

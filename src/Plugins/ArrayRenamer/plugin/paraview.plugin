@@ -1,0 +1,13 @@
+NAME
+  ArrayRenamer
+DESCRIPTION
+  Renames data arrays and array's components.
+CONDITION
+  PARAVIEW_USE_QT
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore
+  ParaView::pqApplicationComponents
+  ParaView::RemotingCore
+  ParaView::RemotingServerManager

@@ -47,18 +47,11 @@ SET(pl_FORMS
     
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-INCLUDE_DIRECTORIES(${PARAVIEW_INCLUDE_DIRS})
 
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 # Generate resources that will embedded 
-SET(ui_resources
-  "${CMAKE_CURRENT_BINARY_DIR}/LightPara_configuration.qrc")
-  
-GENERATE_QT_RESOURCE_FROM_FILES(
-    "${ui_resources}"
-    "LightPara/Configuration"
-    "${PROJECT_SOURCE_DIR}/gui/xml/ParaViewReaders.xml;${PROJECT_SOURCE_DIR}/gui/xml/ParaViewFilters.xml")
+SET(ui_resources LightPara_configuration.qrc)
 
 QT_ADD_RESOURCES(rcs_sources
     ${ui_resources}
@@ -72,7 +65,5 @@ ADD_EXECUTABLE(paraLight
     ${pl_FORMS_HEADERS}
     ${rcs_sources})
 
-# RNV: ${vtkgl2ps_LIBRARIES} was added for Fedora 26 OS    
-TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} pqApplicationComponents vtkRenderingFreeType vtkInteractionStyle ${vtkgl2ps_LIBRARIES})
+TARGET_LINK_LIBRARIES(paraLight ${QT_LIBRARIES} ParaView::pqApplicationComponents ParaView::pqPython)
 #INSTALL(TARGET paraLight bin)
-

@@ -17,8 +17,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-INCLUDE(${PARAVIEW_USE_FILE})
-
 SET(_subdirs
   MEDReader
   MEDWriter
@@ -38,9 +36,7 @@ SET(_subdirs
 
 IF(NOT SALOME_LIGHT_ONLY)
   IF(SALOME_PARAVIS_BUILD_CORBA_PLUGINS)
-    LIST(APPEND _subdirs
-      ParaMEDCorba
-    )
+    LIST(APPEND _subdirs ParaMEDCorba)
   ENDIF()
 ENDIF()
 

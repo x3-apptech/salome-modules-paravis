@@ -1,0 +1,8 @@
+NAME
+  ElevationSurface
+DESCRIPTION
+  This plugin provides the ElevationSurface filter.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore

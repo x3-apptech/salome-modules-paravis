@@ -1,0 +1,6 @@
+NAME
+  VoroGaussPlugin
+DESCRIPTION
+  This plugin provides the VoroGauss filter.
+REQUIRES_MODULES
+  VTK::CommonCore

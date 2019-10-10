@@ -1,0 +1,15 @@
+NAME
+  ParaSMESHCorbaModule
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+  VTK::FiltersCore
+  VTK::FiltersModeling
+  VTK::IOLegacy
+PRIVATE_DEPENDS
+  VTK::CommonMisc
+  VTK::CommonSystem
+  VTK::FiltersGeneral
+  VTK::FiltersGeometry
+  

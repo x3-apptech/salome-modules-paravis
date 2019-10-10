@@ -1,0 +1,7 @@
+NAME
+  MEDWriterIO
+DEPENDS
+  VTK::FiltersCore
+  VTK::CommonCore
+PRIVATE_DEPENDS
+  VTK::FiltersGeneral

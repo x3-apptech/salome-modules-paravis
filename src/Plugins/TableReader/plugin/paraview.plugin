@@ -1,0 +1,12 @@
+NAME
+  TableReaderPlugin
+DESCRIPTION
+  This plugin provides TableReader and TableTo3D filter.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore
+  ParaView::RemotingServerManager
+  ParaView::RemotingViews
+  ParaView::pqComponents
+  ParaView::pqCore

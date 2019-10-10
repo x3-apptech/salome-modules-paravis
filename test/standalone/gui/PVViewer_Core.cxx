@@ -115,7 +115,7 @@ void PVViewer_Core::ParaviewLoadConfigurations(const QString & configPath, bool 
     {
       if (!configPath.isNull()) {
           MyCoreApp->loadConfiguration(configPath + QDir::separator() + "ParaViewFilters.xml");
-          MyCoreApp->loadConfiguration(configPath + QDir::separator() + "ParaViewSources.xml");
+          MyCoreApp->loadConfiguration(configPath + QDir::separator() + "ParaViewReaders.xml");
       }
       ConfigLoaded = true;
     }

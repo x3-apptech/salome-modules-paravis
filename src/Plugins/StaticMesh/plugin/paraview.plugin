@@ -1,0 +1,11 @@
+NAME
+  StaticMesh
+DESCRIPTION
+  Extend unstructured dataset and selected filters to take benefit of static meshes in transient data.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore
+  VTK::FiltersGeometry
+  VTK::FiltersParallelGeometry
+  VTK::IOEnSight

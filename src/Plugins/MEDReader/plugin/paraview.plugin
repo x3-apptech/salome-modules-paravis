@@ -1,0 +1,5 @@
+NAME
+  MEDReader
+DESCRIPTION
+  Reads the MED data format from Electricite de France
+REQUIRES_MODULES

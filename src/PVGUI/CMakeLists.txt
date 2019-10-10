@@ -35,9 +35,6 @@ INCLUDE_DIRECTORIES(
 ADD_DEFINITIONS(${KERNEL_DEFINITIONS})
 
 # libraries to link to
-SET(_PARAVIEW_APP_COMPO_LIB
-  pqApplicationComponents
-  )
 
 SET(_link_LIBRARIES 
   ${QT_LIBRARIES}
@@ -45,9 +42,8 @@ SET(_link_LIBRARIES
   ${KERNEL_LDFLAGS}
   ${GUI_LDFLAGS} ${GUI_LightApp} ${GUI_CAM} ${GUI_qtx} ${GUI_suit}
                  ${GUI_SalomeObject}
-  ${_PARAVIEW_APP_COMPO_LIB}
+  ParaView::pqApplicationComponents		 
   ${GUI_PVViewer}
-  ${VTK_LIBRARIES}
 )
 
 # --- headers ---
@@ -88,7 +84,7 @@ IF(SALOME_BUILD_DOC)
   # Check ParaView documentation file existence
   # if it exists add it to the resources (compile into binary form)
   # otherwise print warning message
-  SET(PV_DOC_FILE ${VTK_INSTALL_PREFIX}/share/doc/paraview-${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}/paraview.qch)
+  SET(PV_DOC_FILE ${ParaView_PREFIX_PATH}/share/doc/ParaView/paraview.qch)
   IF (EXISTS ${PV_DOC_FILE})
     SET(RC_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/PVGUI.qrc.in)
     SET(RC_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/PVGUI.qrc)

@@ -1,0 +1,18 @@
+NAME
+  StaticMeshModule
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+  VTK::FiltersCore
+  VTK::FiltersModeling
+  VTK::FiltersGeometry
+  VTK::FiltersParallelGeometry
+  VTK::ImagingCore
+  VTK::IOCore
+  VTK::IOGeometry
+  VTK::IOEnSight
+PRIVATE_DEPENDS
+  VTK::CommonMisc
+  VTK::CommonSystem
+  VTK::FiltersGeneral

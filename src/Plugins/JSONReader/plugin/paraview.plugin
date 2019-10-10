@@ -1,0 +1,8 @@
+NAME
+  JSONReader
+DESCRIPTION
+  Reads the JSON file and converts it to the VTK table.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore

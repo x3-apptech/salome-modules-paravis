@@ -1,0 +1,8 @@
+NAME
+  ParaGEOMCorbaPlugin
+DESCRIPTION
+  This plugin provides the ParaGEOMCorba filter.
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore

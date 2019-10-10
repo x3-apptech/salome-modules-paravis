@@ -1,0 +1,8 @@
+NAME
+  ScaleVector
+DESCRIPTION
+  This plugin provides the ScaleVector filter
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::IOCore
+  VTK::FiltersCore
