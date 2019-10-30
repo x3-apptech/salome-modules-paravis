@@ -100,8 +100,8 @@ int vtkStaticDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet* input, vt
         vtkAbstractArray* inArr = inPD->GetAbstractArray(iArr);
         outArr = inArr->NewInstance();
         outArr->SetName(inArr->GetName());
-        outArr->SetNumberOfTuples(output->GetNumberOfPoints());
         outArr->SetNumberOfComponents(inArr->GetNumberOfComponents());
+        outArr->SetNumberOfTuples(output->GetNumberOfPoints());
         inArr->GetTuples(pointIds.Get(), outArr);
         outPD->AddArray(outArr);
       }
@@ -137,8 +137,8 @@ int vtkStaticDataSetSurfaceFilter::UnstructuredGridExecute(vtkDataSet* input, vt
         vtkAbstractArray* inArr = inCD->GetAbstractArray(iArr);
         outArr = inArr->NewInstance();
         outArr->SetName(inArr->GetName());
-        outArr->SetNumberOfTuples(output->GetNumberOfCells());
         outArr->SetNumberOfComponents(inArr->GetNumberOfComponents());
+        outArr->SetNumberOfTuples(output->GetNumberOfCells());
         inArr->GetTuples(cellIds.Get(), outArr);
         outCD->AddArray(outArr);
       }

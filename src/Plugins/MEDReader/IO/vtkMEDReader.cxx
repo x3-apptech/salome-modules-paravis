@@ -686,7 +686,7 @@ vtkDataSet *vtkMEDReader::RetrieveDataSetAtTime(double reqTS, ExportedTinyInfo *
       vtkGenerateVectors::Operate(ret->GetFieldData());
       // The operations above have potentially created new arrays -> This breaks the optimization of StaticMesh that expects the same field arrays over time.
       // To enforce the cache recomputation declare modification of mesh.
-      vtkGenerateVectors::ChangeMeshTimeToUpdateCache(ret);
+      //vtkGenerateVectors::ChangeMeshTimeToUpdateCache(ret);
     }
   return ret;
 }
