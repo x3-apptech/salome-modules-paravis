@@ -17,6 +17,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+cmake_minimum_required(VERSION 3.12)
+
 INCLUDE(UseQtExt)
 
 # create a plugin with a custom view that shows up in ParaView's multi-view
