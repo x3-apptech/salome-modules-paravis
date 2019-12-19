@@ -83,7 +83,7 @@ void vtkParaMEDCorbaSource::SetIORCorba(char *ior)
     return;
   if(ior[0]=='\0')
     return;
-  int length=strlen(ior);
+  std::size_t length=strlen(ior);
   IOR.resize(length+1);
   std::copy(ior,ior+length+1,&IOR[0]);
   this->Modified();
@@ -168,7 +168,7 @@ int vtkParaMEDCorbaSource::RequestInformation(vtkInformation* request, vtkInform
           double timeRange[2];
           timeRange[0]=tsteps.front();
           timeRange[1]=tsteps.back();
-          myInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),&tsteps[0],tsteps.size());
+          myInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),&tsteps[0],(vtkIdType)tsteps.size());
           myInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(),timeRange,2);
         }
       }

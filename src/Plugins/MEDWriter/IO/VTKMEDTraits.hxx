@@ -21,6 +21,11 @@
 #ifndef __VTKMEDTRAITS_HXX__
 #define __VTKMEDTRAITS_HXX__
 
+class vtkIntArray;
+class vtkLongArray;
+class vtkFloatArray;
+class vtkDoubleArray;
+
 template<class T>
 class MEDFileVTKTraits
 {
@@ -34,7 +39,15 @@ class MEDFileVTKTraits<int>
 {
 public:
   typedef vtkIntArray VtkType;
-  typedef MEDCoupling::DataArrayInt MCType;
+  typedef MEDCoupling::DataArrayInt32 MCType;
+};
+
+template<>
+class MEDFileVTKTraits<long>
+{
+public:
+  typedef vtkLongArray VtkType;
+  typedef MEDCoupling::DataArrayInt64 MCType;
 };
 
 template<>

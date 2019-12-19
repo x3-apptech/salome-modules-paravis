@@ -160,13 +160,13 @@ void VectBoolModel::selectUnselectAll()
   emit layoutAboutToBeChanged();
   if(nbOn>sz/2)
     {
-      for(std::size_t ii=0;ii<sz;ii++)
+      for(int ii=0;ii<sz;ii++)
         _activated[ii]=false;
       signalVal=0;
     }
   else
     {
-      for(std::size_t ii=0;ii<sz;ii++)
+      for(int ii=0;ii<sz;ii++)
         _activated[ii]=true;
       signalVal=(int)sz;
     }
@@ -177,7 +177,7 @@ void VectBoolModel::selectUnselectAll()
 int VectBoolModel::getNbOfActivatedTimeSteps() const
 {
   int sz(curSize()),nbOn(0);
-  for(std::size_t ii=0;ii<sz;ii++)
+  for(int ii=0;ii<sz;ii++)
     if(_activated[ii])
       nbOn++;
   return nbOn;
@@ -196,7 +196,7 @@ void VectBoolModel::setCurSize(int sz)
 
 int VectBoolModel::curSize() const
 {
-  return _dts.size();
+  return (int)_dts.size();
 }
 
 ///////////////

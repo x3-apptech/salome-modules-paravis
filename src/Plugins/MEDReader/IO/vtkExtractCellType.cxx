@@ -440,7 +440,7 @@ int vtkExtractCellType::RequestData(vtkInformation *request, vtkInformationVecto
 
 int vtkExtractCellType::GetSILUpdateStamp()
 {
-  return this->SILTime;
+  return (int)this->SILTime;
 }
 
 void vtkExtractCellType::PrintSelf(ostream& os, vtkIndent indent)

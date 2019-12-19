@@ -85,10 +85,10 @@ vtkDoubleArray *vtkGenerateVectors::Operate2Compo(vtkDoubleArray *oldArr)
 {
   const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
-  std::size_t nbOfTuples(oldArr->GetNumberOfTuples());
+  vtkIdType nbOfTuples(oldArr->GetNumberOfTuples());
   const double *inPt(oldArr->GetPointer(0));
   double *pt((double *)malloc(nbOfTuples*3*sizeof(double)));
-  for(std::size_t i=0;i<nbOfTuples;i++)
+  for(vtkIdType i=0;i<nbOfTuples;i++)
     {
       pt[3*i+0]=inPt[2*i+0];
       pt[3*i+1]=inPt[2*i+1];
@@ -109,10 +109,10 @@ vtkDoubleArray *vtkGenerateVectors::OperateMoreThan3Compo(vtkDoubleArray *oldArr
   const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
   int nbOfCompo(oldArr->GetNumberOfComponents());
-  std::size_t nbOfTuples(oldArr->GetNumberOfTuples());
+  vtkIdType nbOfTuples(oldArr->GetNumberOfTuples());
   const double *inPt(oldArr->GetPointer(0));
   double *pt((double *)malloc(nbOfTuples*3*sizeof(double)));
-  for(std::size_t i=0;i<nbOfTuples;i++)
+  for(vtkIdType i=0;i<nbOfTuples;i++)
     {
       pt[3*i+0]=inPt[nbOfCompo*i+0];
       pt[3*i+1]=inPt[nbOfCompo*i+1];

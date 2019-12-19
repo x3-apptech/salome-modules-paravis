@@ -21,10 +21,12 @@
 #include "vtkExtractGroup.h"
 #include "MEDFileFieldRepresentationTree.hxx"
 #include "vtkMEDReader.h"
+#include "VTKMEDTraits.hxx"
 
 #include "vtkAdjacentVertexIterator.h"
 #include "vtkDataArrayTemplate.h"
 #include "vtkIntArray.h"
+#include "vtkLongArray.h"
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 
@@ -357,6 +359,7 @@ int vtkExtractGroup::vtkExtractGroupInternal::getIdOfFamily(const std::string& f
       if((*it).getName()==famName)
         return (*it).getId();
     }
+  return std::numeric_limits<int>::max();
 }
 
 ExtractGroupFam::ExtractGroupFam(const char *name):ExtractGroupStatus(name),_id(0)
@@ -516,7 +519,8 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   if(!da)
     return 0;
   std::string daName(da->GetName());
-  vtkIntArray *dai(vtkIntArray::SafeDownCast(da));
+  typedef MEDFileVTKTraits<mcIdType>::VtkType vtkMCIdTypeArray;
+  vtkMCIdTypeArray *dai(vtkMCIdTypeArray::SafeDownCast(da));
   if(daName!=arrNameOfFamilyField || !dai)
     return 0;
   //
@@ -526,7 +530,7 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   zeSelection->SetNumberOfComponents(1);
   char *pt(new char[nbOfTuples]);
   zeSelection->SetArray(pt,nbOfTuples,0,VTK_DATA_ARRAY_DELETE);
-  const int *inPtr(dai->GetPointer(0));
+  const mcIdType *inPtr(dai->GetPointer(0));
   std::fill(pt,pt+nbOfTuples,0);
   catchAll=true; catchSmth=false;
   std::vector<bool> pt2(nbOfTuples,false);
@@ -577,13 +581,12 @@ public:
 private:
   vtkDataSet *_ds;
 };
-
 int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   try
     {
-//      std::cerr << "########################################## vtkExtractGroup::RequestData        ##########################################" << std::endl;
-//      request->Print(cout);
+      // std::cerr << "########################################## vtkExtractGroup::RequestData        ##########################################" << std::endl;
+      // request->Print(cout);
       vtkInformation* inputInfo=inputVector[0]->GetInformationObject(0);
       vtkMultiBlockDataSet *inputMB(vtkMultiBlockDataSet::SafeDownCast(inputInfo->Get(vtkDataObject::DATA_OBJECT())));
       if(inputMB->GetNumberOfBlocks()!=1)
@@ -690,7 +693,7 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
 
 int vtkExtractGroup::GetSILUpdateStamp()
 {
-  return this->SILTime;
+  return (int)this->SILTime;
 }
 
 void vtkExtractGroup::PrintSelf(ostream& os, vtkIndent indent)

@@ -189,18 +189,18 @@ void pqMEDReaderTimesFlagsWidget::UpdateTimeSteps()
   if (prop)
     {
     // Searching first activated leaf id
-    for (int i = 1; i < prop->GetNumberOfElements(); i += 2)
+    for (unsigned int i = 1; i < prop->GetNumberOfElements(); i += 2)
       {
       if (prop->GetElement(i)[0] == '1')
         {
         const char* leafString = prop->GetElement(i - 1);
         const char* tmp = strchr(leafString, '/');
         size_t num = tmp - leafString;
-        char* dest = new char[num];
+        char* dest = new char[num+1];
         strncpy(dest, leafString, num);
         dest[num] = '\0';
-        tsId = strtol(dest + 2, NULL, 10);
-        delete dest;
+        tsId = (vtkIdType)strtol(dest + 2, NULL, 10);
+        delete [] dest;
         break;
         }
       }

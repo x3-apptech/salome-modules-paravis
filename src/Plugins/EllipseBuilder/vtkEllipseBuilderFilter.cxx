@@ -234,7 +234,7 @@ int vtkEllipseBuilderFilter::RequestData(vtkInformation* vtkNotUsed(request),
 		  y = y / aScaleFactor;		    
 
 		  double x_point, y_point;
-		  for (int r = 0; r < circle.size(); r++)
+		  for (std::size_t r = 0; r < circle.size(); r++)
 		    {
 		      x_point = (x*circle[r]).real();
 		      y_point = (y*circle[r]).real();
@@ -284,7 +284,7 @@ int vtkEllipseBuilderFilter::RequestInformation(vtkInformation* request,
     anIter->Delete();
     
     this->FieldList->Reset();
-    this->FieldList->SetNumberOfValues(aList.size());
+    this->FieldList->SetNumberOfValues((vtkIdType)aList.size());
     list<string>::const_iterator anIterName;
     int i = 0;
     for (anIterName = aList.begin(); anIterName != aList.end(); anIterName++)

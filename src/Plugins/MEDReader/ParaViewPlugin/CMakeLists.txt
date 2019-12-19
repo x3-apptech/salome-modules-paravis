@@ -17,7 +17,10 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../IO )
+INCLUDE_DIRECTORIES(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../IO
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../MEDWriter/IO
+  )
 
 IF(PARAVIEW_BUILD_QT_GUI)
 

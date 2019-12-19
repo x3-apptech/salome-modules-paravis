@@ -191,7 +191,7 @@ int vtkElevationSurfaceFilter::RequestData(vtkInformation *request,
       continue;
 
     unsigned char newCellType = VTK_EMPTY_CELL;
-    unsigned char oldCellType = cell->GetCellType();
+    unsigned char oldCellType = (unsigned char)cell->GetCellType();
     switch(oldCellType)
       {
       case VTK_TRIANGLE :

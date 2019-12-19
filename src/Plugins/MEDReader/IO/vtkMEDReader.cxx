@@ -69,7 +69,7 @@
 class PropertyKeeper
 {
 public:
-  PropertyKeeper(vtkMEDReader *master):_master(master),IsGVActivated(false),GVValue(0),IsCMActivated(false),CMValue(0),IsGhostActivated(false),GCGCP(1) { }
+  PropertyKeeper(vtkMEDReader *master):IsGVActivated(false),GVValue(0),IsCMActivated(false),CMValue(0),IsGhostActivated(false),GCGCP(1),_master(master) { }
   void assignPropertiesIfNeeded();
   bool arePropertiesOnTreeToSetAfter() const;
   //
@@ -171,7 +171,7 @@ class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),FirstCall0(2),PK(master),MyMTime(0),GCGCP(true)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),PK(master),MyMTime(0),GCGCP(true),FirstCall0(2)
   {
   }
 
@@ -459,7 +459,7 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
       if(!ti.empty())
         {
           const std::vector<double>& data(ti.getData());
-          outInfo->Set(vtkMEDReader::GAUSS_DATA(),&data[0],data.size());
+          outInfo->Set(vtkMEDReader::GAUSS_DATA(),&data[0],(int)data.size());
           request->Append(vtkExecutive::KEYS_TO_COPY(),vtkMEDReader::GAUSS_DATA());// Thank you to SciberQuest and DIPOLE_CENTER ! Don't understand why ! In RequestInformation it does not work !
         }
       output->GetInformation()->Set(vtkDataObject::DATA_TIME_STEP(),reqTS);
@@ -492,7 +492,7 @@ void vtkMEDReader::SetFieldsStatus(const char* name, int status)
   try
     {
       this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(this->Internal->Tree.getIdHavingZeName(name),status);
-      if(this->Internal->_wonderful_set.size()==GetNumberOfFieldsTreeArrays())
+      if((int)this->Internal->_wonderful_set.size()==GetNumberOfFieldsTreeArrays())
         {
           if(this->Internal->_wonderful_ref!=this->Internal->Tree.dumpState())
             {
@@ -553,7 +553,7 @@ void vtkMEDReader::SetTimesFlagsStatus(const char *name, int status)
   int pos(0);
   std::istringstream iss(name); iss >> pos;
   this->Internal->TK.getTimesFlagArray()[pos].first=(bool)status;
-  if(pos==this->Internal->TK.getTimesFlagArray().size()-1)
+  if(pos==(int)this->Internal->TK.getTimesFlagArray().size()-1)
     if(!this->Internal->PluginStart0())
       {
         this->Modified();
@@ -657,7 +657,7 @@ double vtkMEDReader::PublishTimeStepsIfNeeded(vtkInformation *outInfo, bool& isU
       double timeRange[2];
       timeRange[0]=tsteps.front();
       timeRange[1]=tsteps.back();
-      outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),&tsteps[0],tsteps.size());
+      outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),&tsteps[0],(int)tsteps.size());
       outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(),timeRange,2);
       this->Internal->LastLev0=lev0;
     }

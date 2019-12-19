@@ -27,6 +27,7 @@
 #include "InterpKernelGaussCoords.hxx"
 #include "MEDFileData.hxx"
 #include "SauvReader.hxx"
+#include "MEDCouplingMemArray.txx"
 
 #ifdef MEDREADER_USE_MPI
   #include "ParaMEDFileMesh.hxx"
@@ -46,6 +47,7 @@
 #include "vtkIdTypeArray.h"
 #include "vtkDoubleArray.h"
 #include "vtkIntArray.h"
+#include "vtkLongArray.h"
 #include "vtkFloatArray.h"
 #include "vtkCellArray.h"
 #include "vtkPointData.h"
@@ -167,7 +169,7 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
   for(vtkIdType cellId=0;cellId<ncell;cellId++)
     {
       vtkCell *cell(ds->GetCell(cellId));
-      int delta(m[cell->GetCellType()]);
+      int delta(m[(unsigned char)cell->GetCellType()]);
       pt[cellId]=offset;
       offset+=delta;
     }
@@ -220,6 +222,14 @@ public:
 };
 
 template<>
+class MEDFileVTKTraits<long>
+{
+public:
+  typedef vtkLongArray VtkType;
+  typedef MEDCoupling::DataArrayInt64 MCType;
+};
+
+template<>
 class MEDFileVTKTraits<float>
 {
 public:
@@ -235,6 +245,9 @@ public:
   typedef MEDCoupling::DataArrayDouble MCType;
 };
 
+typedef typename MEDFileVTKTraits<mcIdType>::VtkType vtkMCIdTypeArray;
+
+
 template<class T>
 void AssignDataPointerToVTK(typename MEDFileVTKTraits<T>::VtkType *vtkTab, typename MEDFileVTKTraits<T>::MCType *mcTab, bool noCpyNumNodes)
 {
@@ -248,8 +261,18 @@ void AssignDataPointerToVTK(typename MEDFileVTKTraits<T>::VtkType *vtkTab, typen
 template<class VTKT, class MCT>
 void AssignDataPointerOther(VTKT *vtkTab, MCT *mcTab, int nbElems)
 {
-  vtkTab->SetVoidArray(reinterpret_cast<unsigned char *>(mcTab->getPointer()),nbElems,0,VTKT::VTK_DATA_ARRAY_FREE);
-  mcTab->accessToMemArray().setSpecificDeallocator(0);
+  typedef typename VTKT::ValueType VTKType;
+  if ( sizeof( VTKType ) == sizeof( typename MCT::Type ))
+    {
+      vtkTab->SetVoidArray(reinterpret_cast<unsigned char *>(mcTab->getPointer()),nbElems,0,VTKT::VTK_DATA_ARRAY_FREE);
+      mcTab->accessToMemArray().setSpecificDeallocator(0);
+    }
+  else
+    {
+      VTKType* newArray = new VTKType[ nbElems ];
+      std::copy( mcTab->begin(), mcTab->begin() + nbElems, newArray );
+      vtkTab->SetVoidArray(reinterpret_cast<unsigned char *>(newArray),nbElems,0,VTKT::VTK_DATA_ARRAY_DELETE);
+    }
 }
 
 template<class T>
@@ -260,8 +283,8 @@ void AssignToFieldData(DataArray *vPtr, const MEDTimeReq *tr, vtkFieldData *att,
   const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
   typename MEDFileVTKTraits<T>::MCType *vi(static_cast<typename MEDFileVTKTraits<T>::MCType *>(vPtr));
   typename MEDFileVTKTraits<T>::VtkType *vtkd(MEDFileVTKTraits<T>::VtkType::New());
-  vtkd->SetNumberOfComponents(vi->getNumberOfComponents());
-  for(int i=0;i<vi->getNumberOfComponents();i++)
+  vtkd->SetNumberOfComponents((int)vi->getNumberOfComponents());
+  for(unsigned int i=0;i<vi->getNumberOfComponents();i++)
     vtkd->SetComponentName(i,vi->getVarOnComponent(i).c_str());
   AssignDataPointerToVTK<T>(vtkd,vi,noCpyNumNodes);
   std::string name(tr->buildName(crudeName));
@@ -685,29 +708,29 @@ vtkUnstructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInt
 {
   DataArrayDouble *coordsMC(0);
   DataArrayByte *typesMC(0);
-  DataArrayInt *cellLocationsMC(0),*cellsMC(0),*faceLocationsMC(0),*facesMC(0);
+  DataArrayIdType *cellLocationsMC(0),*cellsMC(0),*faceLocationsMC(0),*facesMC(0);
   bool statusOfCoords(mm->buildVTUArrays(coordsMC,typesMC,cellLocationsMC,cellsMC,faceLocationsMC,facesMC));
   MCAuto<DataArrayDouble> coordsSafe(coordsMC);
   MCAuto<DataArrayByte> typesSafe(typesMC);
-  MCAuto<DataArrayInt> cellLocationsSafe(cellLocationsMC),cellsSafe(cellsMC),faceLocationsSafe(faceLocationsMC),facesSafe(facesMC);
+  MCAuto<DataArrayIdType> cellLocationsSafe(cellLocationsMC),cellsSafe(cellsMC),faceLocationsSafe(faceLocationsMC),facesSafe(facesMC);
   //
   int nbOfCells(typesSafe->getNbOfElems());
   vtkUnstructuredGrid *ret(vtkUnstructuredGrid::New());
   vtkUnsignedCharArray *cellTypes(vtkUnsignedCharArray::New());
   AssignDataPointerOther<vtkUnsignedCharArray,DataArrayByte>(cellTypes,typesSafe,nbOfCells);
   vtkIdTypeArray *cellLocations(vtkIdTypeArray::New());
-  AssignDataPointerOther<vtkIdTypeArray,DataArrayInt>(cellLocations,cellLocationsSafe,nbOfCells);
+  AssignDataPointerOther<vtkIdTypeArray,DataArrayIdType>(cellLocations,cellLocationsSafe,nbOfCells);
   vtkCellArray *cells(vtkCellArray::New());
   vtkIdTypeArray *cells2(vtkIdTypeArray::New());
-  AssignDataPointerOther<vtkIdTypeArray,DataArrayInt>(cells2,cellsSafe,cellsSafe->getNbOfElems());
+  AssignDataPointerOther<vtkIdTypeArray,DataArrayIdType>(cells2,cellsSafe,cellsSafe->getNbOfElems());
   cells->SetCells(nbOfCells,cells2);
   cells2->Delete();
   if(faceLocationsMC!=0 && facesMC!=0)
     {
       vtkIdTypeArray *faces(vtkIdTypeArray::New());
-      AssignDataPointerOther<vtkIdTypeArray,DataArrayInt>(faces,facesSafe,facesSafe->getNbOfElems());
+      AssignDataPointerOther<vtkIdTypeArray,DataArrayIdType>(faces,facesSafe,facesSafe->getNbOfElems());
       vtkIdTypeArray *faceLocations(vtkIdTypeArray::New());
-      AssignDataPointerOther<vtkIdTypeArray,DataArrayInt>(faceLocations,faceLocationsSafe,faceLocationsSafe->getNbOfElems());
+      AssignDataPointerOther<vtkIdTypeArray,DataArrayIdType>(faceLocations,faceLocationsSafe,faceLocationsSafe->getNbOfElems());
       ret->SetCells(cellTypes,cellLocations,cells,faceLocations,faces);
       faceLocations->Delete();
       faces->Delete();
@@ -776,7 +799,7 @@ vtkStructuredGrid *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInter
 {
   int meshStr[3]={1,1,1};
   DataArrayDouble *coords(0);
-  std::vector<int> nodeStrct;
+  std::vector<mcIdType> nodeStrct;
   bool isInternal;
   mm->buildVTUArrays(coords,nodeStrct,isInternal);
   std::size_t dim(nodeStrct.size());
@@ -845,15 +868,15 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
   //
   appendFields(tr,globs,mml,meshes,ret,internalInfo);
   // The arrays links to mesh
-  DataArrayInt *famCells(0),*numCells(0);
+  DataArrayIdType *famCells(0),*numCells(0);
   bool noCpyFamCells(false),noCpyNumCells(false);
   ptMML2->retrieveFamilyIdsOnCells(famCells,noCpyFamCells);
   if(famCells)
     {
-      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkMCIdTypeArray *vtkTab(vtkMCIdTypeArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_CELL_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,famCells,noCpyFamCells);
+      AssignDataPointerToVTK<mcIdType>(vtkTab,famCells,noCpyFamCells);
       ret->GetCellData()->AddArray(vtkTab);
       vtkTab->Delete();
       famCells->decrRef();
@@ -861,24 +884,24 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
   ptMML2->retrieveNumberIdsOnCells(numCells,noCpyNumCells);
   if(numCells)
     {
-      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkMCIdTypeArray *vtkTab(vtkMCIdTypeArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::NUM_ID_CELL_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,numCells,noCpyNumCells);
+      AssignDataPointerToVTK<mcIdType>(vtkTab,numCells,noCpyNumCells);
       ret->GetCellData()->AddArray(vtkTab);
       vtkTab->Delete();
       numCells->decrRef();
     }
   // The arrays links to mesh
-  DataArrayInt *famNodes(0),*numNodes(0);
+  DataArrayIdType *famNodes(0),*numNodes(0);
   bool noCpyFamNodes(false),noCpyNumNodes(false);
   ptMML2->retrieveFamilyIdsOnNodes(famNodes,noCpyFamNodes);
   if(famNodes)
     {
-      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkMCIdTypeArray *vtkTab(vtkMCIdTypeArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::FAMILY_ID_NODE_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,famNodes,noCpyFamNodes);
+      AssignDataPointerToVTK<mcIdType>(vtkTab,famNodes,noCpyFamNodes);
       ret->GetPointData()->AddArray(vtkTab);
       vtkTab->Delete();
       famNodes->decrRef();
@@ -886,22 +909,22 @@ vtkDataSet *MEDFileFieldRepresentationLeaves::buildVTKInstanceNoTimeInterpolatio
   ptMML2->retrieveNumberIdsOnNodes(numNodes,noCpyNumNodes);
   if(numNodes)
     {
-      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkMCIdTypeArray *vtkTab(vtkMCIdTypeArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::NUM_ID_NODE_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,numNodes,noCpyNumNodes);
+      AssignDataPointerToVTK<mcIdType>(vtkTab,numNodes,noCpyNumNodes);
       ret->GetPointData()->AddArray(vtkTab);
       vtkTab->Delete();
       numNodes->decrRef();
     }
   // Global Node Ids if any ! (In // mode)
-  DataArrayInt *gni(ptMML2->retrieveGlobalNodeIdsIfAny());
+  DataArrayIdType *gni(ptMML2->retrieveGlobalNodeIdsIfAny());
   if(gni)
     {
-      vtkIntArray *vtkTab(vtkIntArray::New());
+      vtkMCIdTypeArray *vtkTab(vtkMCIdTypeArray::New());
       vtkTab->SetNumberOfComponents(1);
       vtkTab->SetName(MEDFileFieldRepresentationLeavesArrays::GLOBAL_NODE_ID_NAME);
-      AssignDataPointerToVTK<int>(vtkTab,gni,false);
+      AssignDataPointerToVTK<mcIdType>(vtkTab,gni,false);
       ret->GetPointData()->AddArray(vtkTab);
       vtkTab->Delete();
       gni->decrRef();
@@ -1282,7 +1305,7 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
               MEDCoupling::MEDFileMesh *tmp(ms->getMeshAtPos(i));
               MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
               if(tmp2)
-                MCAuto<DataArrayInt> tmp3(tmp2->zipCoords());
+                MCAuto<DataArrayIdType> tmp3(tmp2->zipCoords());
             }
           fields=MEDFileFields::LoadPartOf(fileName,false,ms);//false is important to not read the values
 #else
@@ -1365,9 +1388,9 @@ vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, d
       zeTimeId=std::distance(ts2.begin(),std::find_if(ts2.begin(),ts2.end(),std::bind2nd(std::less<double>(),1e-14)));
     }
   //2nd chance
-  if(zeTimeId==(int)ts.size())
+  if(zeTimeId==ts.size())
     zeTimeId=std::distance(ts.begin(),std::find(ts.begin(),ts.end(),timeReq));
-  if(zeTimeId==(int)ts.size())
+  if(zeTimeId==ts.size())
     {//OK the time requested does not fit time series given to ParaView. It is typically the case if more than one MEDReader instance are created or TimeInspector in real time mode.
       //In this case the default behaviour is taken. Keep the highest time step in this lower than timeReq.
       int pos(-1);
@@ -1378,7 +1401,7 @@ vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, d
             {
               if(ts[i]>valAttachedToPos)
                 {
-                  pos=i;
+                  pos=(int)i;
                   valAttachedToPos=ts[i];
                 }
             }
@@ -1390,7 +1413,7 @@ vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, d
             {
               if(ts[i]<valAttachedToPos)
                 {
-                  pos=i;
+                  pos=(int)i;
                   valAttachedToPos=ts[i];
                 }
             }

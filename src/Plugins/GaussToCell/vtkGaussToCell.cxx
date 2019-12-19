@@ -76,7 +76,8 @@
 #include <sstream>
 
 using MEDCoupling::DataArray;
-using MEDCoupling::DataArrayInt;
+using MEDCoupling::DataArrayInt32;
+using MEDCoupling::DataArrayInt64;
 using MEDCoupling::DataArrayDouble;
 using MEDCoupling::MEDCouplingMesh;
 using MEDCoupling::MEDCouplingUMesh;

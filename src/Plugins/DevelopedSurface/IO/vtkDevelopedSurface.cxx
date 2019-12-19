@@ -23,6 +23,7 @@
 
 #include "vtkAdjacentVertexIterator.h"
 #include "vtkIntArray.h"
+#include "vtkLongArray.h"
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 #include "vtkCylinder.h"
@@ -177,9 +178,9 @@ int vtkDevelopedSurface::RequestInformation(vtkInformation *request, vtkInformat
   return 1;
 }
 
-std::vector<int> UnWrapByDuplicatingNodes(vtkCellArray *ca, vtkIdType& offset, const MEDCoupling::DataArrayDouble *thetas)
+std::vector<mcIdType> UnWrapByDuplicatingNodes(vtkCellArray *ca, vtkIdType& offset, const MEDCoupling::DataArrayDouble *thetas)
 {
-  std::vector<int> ret;
+  std::vector<mcIdType> ret;
   vtkIdType nbCells(ca->GetNumberOfCells());
   vtkIdType *conn(ca->GetPointer());
   const double *tptr(thetas->begin());
@@ -298,11 +299,11 @@ void dealWith(vtkPolyData *outdata, const double center[3], const double axis[3]
       throw MZCException("Expecting unstructured one !");
     MEDCoupling::MCAuto<MEDCoupling::MEDCouplingUMesh> m0(mmu->getMeshAtLevel(0));
     {
-      int v(0);
-      MEDCoupling::MCAuto<MEDCoupling::DataArrayInt> c0s(m0->getCellIdsLyingOnNodes(&v,&v+1,false));
+      mcIdType v(0);
+      MEDCoupling::MCAuto<MEDCoupling::DataArrayIdType> c0s(m0->getCellIdsLyingOnNodes(&v,&v+1,false));
       if(c0s->empty())
         throw MZCException("Orphan node 0 !");
-      std::vector<int> nodes0;
+      std::vector<mcIdType> nodes0;
       m0->getNodeIdsOfCell(c0s->getIJ(0,0),nodes0);
       MEDCoupling::MCAuto<MEDCoupling::DataArrayDouble> tmp0(c_cyl->selectByTupleIdSafe(nodes0.data(),nodes0.data()+nodes0.size()));
       tmp0=tmp0->keepSelectedComponents({1});
@@ -343,7 +344,7 @@ void dealWith(vtkPolyData *outdata, const double center[3], const double axis[3]
   {
     MEDCoupling::MCAuto<MEDCoupling::DataArrayDouble> c_cyl_2(c_cyl->keepSelectedComponents({1}));
     c_cyl_2->abs();
-    MEDCoupling::MCAuto<MEDCoupling::DataArrayInt> poses(c_cyl_2->findIdsInRange(0.,eps));
+    MEDCoupling::MCAuto<MEDCoupling::DataArrayIdType> poses(c_cyl_2->findIdsInRange(0.,eps));
     c_cyl->setPartOfValuesSimple3(0.,poses->begin(),poses->end(),1,2,1);
   }
   //
@@ -365,7 +366,7 @@ void dealWith(vtkPolyData *outdata, const double center[3], const double axis[3]
   }
   vtkCellArray *cb(outdata->GetPolys());
   vtkIdType offset(nbNodes);
-  std::vector<int> dupNodes(UnWrapByDuplicatingNodes(cb,offset,c_cyl_post));
+  std::vector<mcIdType> dupNodes(UnWrapByDuplicatingNodes(cb,offset,c_cyl_post));
   //
   MEDCoupling::MCAuto<MEDCoupling::DataArrayDouble> c_cyl_post2(c_cyl_post->selectByTupleId(dupNodes.data(),dupNodes.data()+dupNodes.size()));
   c_cyl_post2->applyLin(1.,2*M_PI);
