@@ -111,11 +111,11 @@ Fam::Fam(const std::string& name)
 std::map<int,int> ComputeMapOfType()
 {
   std::map<int,int> ret;
-  int nbOfTypesInMC(sizeof(MEDCouplingUMesh::MEDCOUPLING2VTKTYPETRADUCER)/sizeof(int));
+  int nbOfTypesInMC(sizeof(MEDCOUPLING2VTKTYPETRADUCER)/sizeof( decltype(MEDCOUPLING2VTKTYPETRADUCER[0]) ));
   for(int i=0;i<nbOfTypesInMC;i++)
     {
-      int vtkId(MEDCouplingUMesh::MEDCOUPLING2VTKTYPETRADUCER[i]);
-      if(vtkId!=-1)
+      auto vtkId(MEDCOUPLING2VTKTYPETRADUCER[i]);
+      if(vtkId!=MEDCOUPLING2VTKTYPETRADUCER_NONE)
         ret[vtkId]=i;
     }
   return ret;
