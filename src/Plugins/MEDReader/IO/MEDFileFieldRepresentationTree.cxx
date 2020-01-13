@@ -48,6 +48,9 @@
 #include "vtkDoubleArray.h"
 #include "vtkIntArray.h"
 #include "vtkLongArray.h"
+#ifdef WIN32
+#include "vtkLongLongArray.h"
+#endif
 #include "vtkFloatArray.h"
 #include "vtkCellArray.h"
 #include "vtkPointData.h"
@@ -222,10 +225,18 @@ public:
 };
 
 template<>
+#ifdef WIN32
+class MEDFileVTKTraits<long long>
+#else
 class MEDFileVTKTraits<long>
+#endif
 {
 public:
+#ifdef WIN32
+  typedef vtkLongLongArray VtkType;
+#else
   typedef vtkLongArray VtkType;
+#endif
   typedef MEDCoupling::DataArrayInt64 MCType;
 };
 

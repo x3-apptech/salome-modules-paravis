@@ -23,6 +23,9 @@
 
 class vtkIntArray;
 class vtkLongArray;
+#ifdef WIN32
+class vtkLongLongArray;
+#endif
 class vtkFloatArray;
 class vtkDoubleArray;
 
@@ -43,10 +46,19 @@ public:
 };
 
 template<>
+#ifdef WIN32
+class MEDFileVTKTraits<long long>
+#else 
 class MEDFileVTKTraits<long>
+#endif
+#
 {
 public:
+#ifdef WIN32
+  typedef vtkLongLongArray VtkType;
+#else
   typedef vtkLongArray VtkType;
+#endif
   typedef MEDCoupling::DataArrayInt64 MCType;
 };
 

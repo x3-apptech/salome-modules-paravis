@@ -27,6 +27,9 @@
 #include "vtkDataArrayTemplate.h"
 #include "vtkIntArray.h"
 #include "vtkLongArray.h"
+#ifdef WIN32
+#include "vtkLongLongArray.h"
+#endif
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 
