@@ -205,7 +205,7 @@ DataArrayIdType *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
   vtkIdTypeArray *d2(vtkIdTypeArray::SafeDownCast(data));
   if(d2)
     {
-      const int *pt(d2->GetPointer(0));
+      const vtkIdType *pt(d2->GetPointer(0));
       std::copy(pt,pt+nbElts,ptOut);
       return ret.retn();
     }
@@ -378,7 +378,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
     {
     case 3:
       {
-        int *cPtr(nullptr),*dPtr(nullptr);
+        vtkIdType *cPtr(nullptr),*dPtr(nullptr);
         unsigned char *aPtr(nullptr);
         vtkSmartPointer<vtkUnsignedCharArray> cellTypes(vtkSmartPointer<vtkUnsignedCharArray>::New());
         {
@@ -460,7 +460,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
           unsigned char *ptr(cellTypes->GetPointer(0));
           std::fill(ptr,ptr+nbCells,zeMapRev[(int)INTERP_KERNEL::NORM_POLYGON]);
         }
-        int *cPtr(0),*dPtr(0);
+        vtkIdType *cPtr(0),*dPtr(0);
         vtkSmartPointer<vtkIdTypeArray> cellLocations(vtkSmartPointer<vtkIdTypeArray>::New());
         {
           cellLocations->SetNumberOfComponents(1);
@@ -495,7 +495,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
           unsigned char *ptr(cellTypes->GetPointer(0));
           std::fill(ptr,ptr+nbCells,zeMapRev[(int)INTERP_KERNEL::NORM_SEG2]);
         }
-        int *cPtr(0),*dPtr(0);
+        vtkIdType *cPtr(0),*dPtr(0);
         vtkSmartPointer<vtkIdTypeArray> cellLocations(vtkSmartPointer<vtkIdTypeArray>::New());
         {
           cellLocations->SetNumberOfComponents(1);
@@ -698,7 +698,7 @@ vtkSmartPointer<vtkUnstructuredGrid> Voronize(const MEDCouplingUMesh *m, const D
         }
       if(elt4)
         {
-          vtkSmartPointer<vtkIdTypeArray> arr(ExtractFieldFieldArr<vtkIdTypeArray,int>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,myOffsetsPtr,nbPtsPerCellArrPtr));
+          vtkSmartPointer<vtkIdTypeArray> arr(ExtractFieldFieldArr<vtkIdTypeArray,vtkIdType>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,myOffsetsPtr,nbPtsPerCellArrPtr));
           ret->GetCellData()->AddArray(arr);
           continue;
         }
@@ -723,7 +723,7 @@ vtkSmartPointer<vtkUnstructuredGrid> Voronize(const MEDCouplingUMesh *m, const D
         }
       if(elt4)
         {
-          vtkSmartPointer<vtkIdTypeArray> arr(ExtractCellFieldArr<vtkIdTypeArray,int>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,ids->begin(),nbPtsPerCellArrPtr));
+          vtkSmartPointer<vtkIdTypeArray> arr(ExtractCellFieldArr<vtkIdTypeArray,vtkIdType>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,ids->begin(),nbPtsPerCellArrPtr));
           ret->GetCellData()->AddArray(arr);
           continue;
         }
