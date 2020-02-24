@@ -168,11 +168,11 @@ vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *glo
     }
   //
   vtkIdType ncell(ds->GetNumberOfCells());
-  int *pt(new int[ncell]),offset(0);
+  vtkIdType *pt(new vtkIdType[ncell]),offset(0);
   for(vtkIdType cellId=0;cellId<ncell;cellId++)
     {
       vtkCell *cell(ds->GetCell(cellId));
-      int delta(m[(unsigned char)cell->GetCellType()]);
+      vtkIdType delta(m[(unsigned char)cell->GetCellType()]);
       pt[cellId]=offset;
       offset+=delta;
     }
@@ -312,12 +312,12 @@ void AssignToFieldData(DataArray *vPtr, const MEDTimeReq *tr, vtkFieldData *att,
       vtkIdTypeArray *elno(vtkIdTypeArray::New());
       elno->SetNumberOfComponents(1);
       vtkIdType ncell(ds->GetNumberOfCells());
-      int *pt(new int[ncell]),offset(0);
+      vtkIdType *pt(new vtkIdType[ncell]),offset(0);
       std::set<int> cellTypes;
       for(vtkIdType cellId=0;cellId<ncell;cellId++)
         {
           vtkCell *cell(ds->GetCell(cellId));
-          int delta(cell->GetNumberOfPoints());
+          vtkIdType delta(cell->GetNumberOfPoints());
           cellTypes.insert(cell->GetCellType());
           pt[cellId]=offset;
           offset+=delta;
