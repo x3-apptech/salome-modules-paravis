@@ -205,7 +205,7 @@ DataArrayIdType *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
   vtkIdTypeArray *d2(vtkIdTypeArray::SafeDownCast(data));
   if(d2)
     {
-      const int *pt(d2->GetPointer(0));
+      const vtkIdType *pt(d2->GetPointer(0));
       std::copy(pt,pt+nbElts,ptOut);
       return ret.retn();
     }
@@ -323,32 +323,31 @@ void ConvertFromUnstructuredGrid(vtkUnstructuredGrid *ds, std::vector< MCAuto<ME
       MCAuto<DataArrayIdType> cellIdsCurLev(lev->findIdsEqual(*curLev));
       for(const mcIdType *cellId=cellIdsCurLev->begin();cellId!=cellIdsCurLev->end();cellId++)
         {
-          std::map<int,int>::iterator it(m.find(ctPtr[*cellId]));
-          vtkIdType offset(claPtr[*cellId]);
-          vtkIdType sz(caPtr[offset]);
+          std::map<int,int>::iterator it(m.find(ds->GetCellType(*cellId)));
           INTERP_KERNEL::NormalizedCellType ct((INTERP_KERNEL::NormalizedCellType)(*it).second);
           if(ct!=INTERP_KERNEL::NORM_POLYHED)
             {
-              std::vector<mcIdType> conn2(sz);
-              for(int kk=0;kk<sz;kk++)
-                conn2[kk]=caPtr[offset+1+kk];
-              m0->insertNextCell(ct,sz,&conn2[0]);
+              vtkIdType szzz(0);
+              const vtkIdType *ptszz(nullptr);
+              ds->GetCellPoints(*cellId, szzz, ptszz);
+              std::vector<mcIdType> conn(ptszz,ptszz+szzz);
+              m0->insertNextCell(ct,szzz,conn.data());
             }
           else
             {
-              if(!faces || !faceLoc)
-                throw INTERP_KERNEL::Exception("ConvertFromUnstructuredGrid : faces are expected when there are polyhedra !");
-              const vtkIdType *facPtr(faces->GetPointer(0)),*facLocPtr(faceLoc->GetPointer(0));
+              // # de faces du polyèdre
+              vtkIdType nbOfFaces(0);
+              // connectivé des faces (numFace0Pts, id1, id2, id3, numFace1Pts,id1, id2, id3, ...)
+              const vtkIdType *facPtr(nullptr);
+              ds->GetFaceStream(*cellId, nbOfFaces, facPtr);
               std::vector<mcIdType> conn;
-              int off0(facLocPtr[*cellId]);
-              int nbOfFaces(facPtr[off0++]);
-              for(int k=0;k<nbOfFaces;k++)
+              for(vtkIdType k=0;k<nbOfFaces;k++)
                 {
-                  int nbOfNodesInFace(facPtr[off0++]);
-                  std::copy(facPtr+off0,facPtr+off0+nbOfNodesInFace,std::back_inserter(conn));
-                  off0+=nbOfNodesInFace;
+                  vtkIdType nbOfNodesInFace(*facPtr++);
+                  std::copy(facPtr,facPtr+nbOfNodesInFace,std::back_inserter(conn));
                   if(k<nbOfFaces-1)
                     conn.push_back(-1);
+                  facPtr+=nbOfNodesInFace;
                 }
               m0->insertNextCell(ct,ToIdType(conn.size()),&conn[0]);
             }
@@ -378,7 +377,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
     {
     case 3:
       {
-        int *cPtr(nullptr),*dPtr(nullptr);
+        vtkIdType *cPtr(nullptr),*dPtr(nullptr);
         unsigned char *aPtr(nullptr);
         vtkSmartPointer<vtkUnsignedCharArray> cellTypes(vtkSmartPointer<vtkUnsignedCharArray>::New());
         {
@@ -460,7 +459,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
           unsigned char *ptr(cellTypes->GetPointer(0));
           std::fill(ptr,ptr+nbCells,zeMapRev[(int)INTERP_KERNEL::NORM_POLYGON]);
         }
-        int *cPtr(0),*dPtr(0);
+        vtkIdType *cPtr(nullptr),*dPtr(nullptr);
         vtkSmartPointer<vtkIdTypeArray> cellLocations(vtkSmartPointer<vtkIdTypeArray>::New());
         {
           cellLocations->SetNumberOfComponents(1);
@@ -495,7 +494,7 @@ vtkSmartPointer<vtkUnstructuredGrid> ConvertUMeshFromMCToVTK(const MEDCouplingUM
           unsigned char *ptr(cellTypes->GetPointer(0));
           std::fill(ptr,ptr+nbCells,zeMapRev[(int)INTERP_KERNEL::NORM_SEG2]);
         }
-        int *cPtr(0),*dPtr(0);
+        vtkIdType *cPtr(nullptr),*dPtr(nullptr);
         vtkSmartPointer<vtkIdTypeArray> cellLocations(vtkSmartPointer<vtkIdTypeArray>::New());
         {
           cellLocations->SetNumberOfComponents(1);
@@ -698,7 +697,7 @@ vtkSmartPointer<vtkUnstructuredGrid> Voronize(const MEDCouplingUMesh *m, const D
         }
       if(elt4)
         {
-          vtkSmartPointer<vtkIdTypeArray> arr(ExtractFieldFieldArr<vtkIdTypeArray,int>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,myOffsetsPtr,nbPtsPerCellArrPtr));
+          vtkSmartPointer<vtkIdTypeArray> arr(ExtractFieldFieldArr<vtkIdTypeArray,vtkIdType>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,myOffsetsPtr,nbPtsPerCellArrPtr));
           ret->GetCellData()->AddArray(arr);
           continue;
         }
@@ -723,7 +722,7 @@ vtkSmartPointer<vtkUnstructuredGrid> Voronize(const MEDCouplingUMesh *m, const D
         }
       if(elt4)
         {
-          vtkSmartPointer<vtkIdTypeArray> arr(ExtractCellFieldArr<vtkIdTypeArray,int>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,ids->begin(),nbPtsPerCellArrPtr));
+          vtkSmartPointer<vtkIdTypeArray> arr(ExtractCellFieldArr<vtkIdTypeArray,vtkIdType>(elt4,zeSizeOfOutCellArr,nbOfCellsOfInput,ids->begin(),nbPtsPerCellArrPtr));
           ret->GetCellData()->AddArray(arr);
           continue;
         }

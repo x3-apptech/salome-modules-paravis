@@ -161,6 +161,13 @@ DataArrayIdType *ConvertVTKArrayToMCArrayInt(vtkDataArray *data)
       std::copy(pt,pt+nbElts,ptOut);
       return ret.retn();
     }
+  vtkIdTypeArray *d3(vtkIdTypeArray::SafeDownCast(data));
+  if(d3)
+    {
+      const vtkIdType *pt(d3->GetPointer(0));
+      std::copy(pt,pt+nbElts,ptOut);
+      return ret.retn();
+    }
   vtkUnsignedCharArray *d2(vtkUnsignedCharArray::SafeDownCast(data));
   if(d2)
     {
@@ -241,7 +248,8 @@ DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
   vtkIntArray *d2(vtkIntArray::SafeDownCast(data));
   vtkLongArray *d3(vtkLongArray::SafeDownCast(data));
   vtkUnsignedCharArray *d4(vtkUnsignedCharArray::SafeDownCast(data));
-  if(d2 || d3 || d4)
+  vtkIdTypeArray *d5(vtkIdTypeArray::SafeDownCast(data));
+  if(d2 || d3 || d4 || d5)
     return ConvertVTKArrayToMCArrayInt(data);
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArray : unrecognized array \"" << typeid(*data).name() << "\" type !";
@@ -781,41 +789,43 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
       MCAuto<DataArrayIdType> cellIdsCurLev(lev->findIdsEqual(*curLev));
       for(const mcIdType *cellId=cellIdsCurLev->begin();cellId!=cellIdsCurLev->end();cellId++)
         {
-          int vtkType(ctPtr[*cellId]);
+          int vtkType(ds->GetCellType(*cellId));
           std::map<int,int>::iterator it(m.find(vtkType));
-          vtkIdType offset(claPtr[*cellId]);
-          vtkIdType sz(caPtr[offset]);
           INTERP_KERNEL::NormalizedCellType ct=it!=m.end()?(INTERP_KERNEL::NormalizedCellType)((*it).second):INTERP_KERNEL::NORM_POINT1;
           if(ct!=INTERP_KERNEL::NORM_POLYHED && vtkType!=VTK_POLY_VERTEX)
             {
-              std::vector<mcIdType> conn2(sz);
-              for(int kk=0;kk<sz;kk++)
-                conn2[kk]=caPtr[offset+1+kk];
-              m0->insertNextCell(ct,sz,&conn2[0]);
+              vtkIdType sz(0);
+              const vtkIdType *pts(nullptr);
+              ds->GetCellPoints(*cellId, sz, pts);
+              std::vector<mcIdType> conn2(pts,pts+sz);
+              m0->insertNextCell(ct,sz,conn2.data());
             }
           else if(ct==INTERP_KERNEL::NORM_POLYHED)
             {
-              if(!faces || !faceLoc)
-                throw MZCException("ConvertFromUnstructuredGrid : faces are expected when there are polyhedra !");
-              const vtkIdType *facPtr(faces->GetPointer(0)),*facLocPtr(faceLoc->GetPointer(0));
+              // # de faces du polyèdre
+              vtkIdType nbOfFaces(0);
+              // connectivé des faces (numFace0Pts, id1, id2, id3, numFace1Pts,id1, id2, id3, ...)
+              const vtkIdType *facPtr(nullptr);
+              ds->GetFaceStream(*cellId, nbOfFaces, facPtr);
               std::vector<mcIdType> conn;
-              int off0(facLocPtr[*cellId]);
-              int nbOfFaces(facPtr[off0++]);
-              for(int k=0;k<nbOfFaces;k++)
+              for(vtkIdType k=0;k<nbOfFaces;k++)
                 {
-                  int nbOfNodesInFace(facPtr[off0++]);
-                  std::copy(facPtr+off0,facPtr+off0+nbOfNodesInFace,std::back_inserter(conn));
-                  off0+=nbOfNodesInFace;
+                  vtkIdType nbOfNodesInFace(*facPtr++);
+                  std::copy(facPtr,facPtr+nbOfNodesInFace,std::back_inserter(conn));
                   if(k<nbOfFaces-1)
                     conn.push_back(-1);
+                  facPtr+=nbOfNodesInFace;
                 }
               m0->insertNextCell(ct,ToIdType(conn.size()),&conn[0]);
             }
           else
             {
+              vtkIdType sz(0);
+              const vtkIdType *pts(nullptr);
+              ds->GetCellPoints(*cellId, sz, pts);
               if(sz!=1)
                 throw MZCException("ConvertFromUnstructuredGrid : non single poly vertex not managed by MED !");
-              m0->insertNextCell(ct,1,(const mcIdType*)(caPtr+offset+1));
+              m0->insertNextCell(ct,1,(const mcIdType*)pts);
             }
         }
       std::vector<MCAuto<DataArray> > cellFs(AddPartFields(cellIdsCurLev,ds->GetCellData()));
