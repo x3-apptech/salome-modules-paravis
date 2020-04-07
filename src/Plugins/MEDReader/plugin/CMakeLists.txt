@@ -53,7 +53,10 @@ SALOME_ACCUMULATE_ENVIRONMENT(PV_PLUGIN_PATH NOCHECK ${CMAKE_INSTALL_PREFIX}/lib
 add_subdirectory(MEDLoaderForPV)
 add_subdirectory(ParaViewPlugin)
 
-option(BUILD_TESTING "Build Plugin Testing" OFF)
-if (BUILD_TESTING)
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  # option to build tests in a standalone mode
+  option(BUILD_TESTING "Build Plugin Testing" OFF)
+endif()
+if (SALOME_BUILD_TESTS OR BUILD_TESTING)
   add_subdirectory(Test)
 endif()
