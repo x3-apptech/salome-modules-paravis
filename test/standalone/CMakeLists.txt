@@ -20,7 +20,10 @@
 
 PROJECT(LightPARAVIS)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.10)
-
+CMAKE_POLICY(SET CMP0053 NEW) # for correct Qt 5 detection procedure
+IF(WIN32)
+  CMAKE_POLICY(SET CMP0020 OLD) # disable automatic linking to qtmain.lib 
+ENDIF(WIN32)
 SET(CMAKE_BUILD_TYPE "Debug")
 
 OPTION(LIGHTPARAVIS_WITH_GUI "Build GUI test app" ON)
