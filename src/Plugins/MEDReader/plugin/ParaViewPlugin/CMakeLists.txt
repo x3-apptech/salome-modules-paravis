@@ -21,6 +21,8 @@ set(interfaces)
 set(ui_files)
 set(sources)
 
+cmake_policy(SET CMP0071 OLD) # bug in ParaViewPlugin.cmake?
+
 if(PARAVIEW_USE_QT)
   set(ui_files
     MEDReaderVectorsWidget.ui
