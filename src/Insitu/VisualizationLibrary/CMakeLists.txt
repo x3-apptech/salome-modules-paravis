@@ -36,8 +36,7 @@ SET(_link_LIBRARIES
   ${PARAVIS_MEDLoaderForPV}
   ${MEDCoupling_medloader}
   ${MEDFILE_C_LIBRARIES}
-  vtkPVCatalyst
-  vtkPVPythonCatalyst
+  ParaView::PythonCatalyst
 )
 
 SET(_lib_HEADERS
