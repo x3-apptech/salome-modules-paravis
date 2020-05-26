@@ -23,12 +23,12 @@ set(private_classes
   vtkStaticEnSight6Reader
   vtkStaticEnSightGoldBinaryReader
   vtkStaticEnSightGoldReader
-  vtkStaticMeshObjectFactory
   vtkStaticPlaneCutter
 )
 
 set(classes
   vtkTemporalUGWavelet
+  vtkStaticMeshObjectFactory
 )
 
 if (PARAVIEW_USE_MPI)
