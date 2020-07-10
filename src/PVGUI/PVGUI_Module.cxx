@@ -125,6 +125,7 @@
 #include <pqAnimationTimeToolbar.h>
 #include <pqPipelineBrowserWidget.h>
 #include <pqCoreUtilities.h>
+#include <pqLoadStateReaction.h>
 
 #if PY_VERSION_HEX < 0x03050000
 static char*
@@ -877,6 +878,7 @@ void PVGUI_Module::clearParaviewState()
 void PVGUI_Module::loadParaviewState( const QString& theFileName )
 {
   pqApplicationCore::instance()->loadState( theFileName.toStdString().c_str(), getActiveServer() );
+  pqLoadStateReaction::activateView();
 }
 
 /*!
