@@ -26,6 +26,8 @@ set(classes
   vtkMEDQuadraturePointsGenerator
   vtkMEDReader
   vtkPVMetaDataInformation
+  vtkGroupAsMultiBlock
+  vtkUgSelectCellIds
 )
 
 vtk_module_add_module(MEDReaderIO

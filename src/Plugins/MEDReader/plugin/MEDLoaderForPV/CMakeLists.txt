@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-add_library(MEDLoaderForPV SHARED MEDFileFieldRepresentationTree.cxx  MEDTimeReq.cxx  MEDUtilities.cxx  vtkGenerateVectors.cxx)
+add_library(MEDLoaderForPV SHARED MEDFileFieldRepresentationTree.cxx  MEDTimeReq.cxx  MEDUtilities.cxx  vtkGenerateVectors.cxx ExtractGroupHelper.cxx)
 target_include_directories(MEDLoaderForPV PRIVATE . ${MEDCOUPLING_INCLUDE_DIRS})
 
 target_link_libraries(MEDLoaderForPV VTK::CommonCore VTK::CommonDataModel VTK::IOXML ${MEDFILE_C_LIBRARIES})
