@@ -70,6 +70,16 @@ def test():
     reader.AllArrays = ['TS0/mesh/ComSup0/field@@][@@P0','TS0/mesh/ComSup0/field2@@][@@P1','TS0/mesh/ComSup0/mesh@@][@@P0']
     reader.AllTimeSteps = ['0000']
 
+    groupsNames = GroupsNames(Input=reader)
+    groupsNames.UpdatePipeline()
+    MyAssert( servermanager.Fetch(groupsNames).GetNumberOfBlocks() == 1 )
+    gn = servermanager.Fetch(groupsNames).GetBlock(0)
+    blockIDS = numpy_support.vtk_to_numpy(gn.GetColumnByName("Block ID"))
+    MyAssert(np.all(blockIDS==np.array([0,1,2,3],dtype=np.int32)))
+    grpNames = gn.GetColumnByName("Group Name")
+    MyAssert(grpNames.GetNumberOfTuples()==4)
+    MyAssert([grpNames.GetValue(i) for i in range(4)] == ['BottomLeft','BottomRight','TopLeft','TopRight'])
+    
     groupsAsMultiBlocks = GroupsAsMultiBlocks(Input=reader)
     groupsAsMultiBlocks.UpdatePipeline()
     blocks = servermanager.Fetch(groupsAsMultiBlocks)

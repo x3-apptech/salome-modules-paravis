@@ -27,6 +27,7 @@ set(classes
   vtkMEDReader
   vtkPVMetaDataInformation
   vtkGroupAsMultiBlock
+  vtkGroupsNames
   vtkUgSelectCellIds
 )
 
