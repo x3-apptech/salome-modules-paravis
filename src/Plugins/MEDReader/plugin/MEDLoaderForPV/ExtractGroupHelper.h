@@ -25,8 +25,9 @@
 #include <set>
 #include <map>
 
+#include "MEDLoaderForPV.h"
 
-class ExtractGroupStatus
+class MEDLOADERFORPV_EXPORT ExtractGroupStatus
 {
 public:
   ExtractGroupStatus():_status(false) { }
@@ -45,7 +46,7 @@ std::string _name;
 std::string _ze_key_name;
 };
 
-class ExtractGroupGrp : public ExtractGroupStatus
+class MEDLOADERFORPV_EXPORT ExtractGroupGrp : public ExtractGroupStatus
 {
 public:
   ExtractGroupGrp(const char *name):ExtractGroupStatus(name) { std::ostringstream oss; oss << START << name; _ze_key_name=oss.str(); }
@@ -57,7 +58,7 @@ public:
   std::vector<std::string> _fams;
 };
 
-class ExtractGroupFam : public ExtractGroupStatus
+class MEDLOADERFORPV_EXPORT ExtractGroupFam : public ExtractGroupStatus
 {
 public:
   ExtractGroupFam(const char *name);
@@ -75,7 +76,7 @@ class vtkInformationDataObjectMetaDataKey;
 class vtkMutableDirectedGraph;
 class vtkInformation;
 
-class ExtractGroupInternal
+class MEDLOADERFORPV_EXPORT ExtractGroupInternal
 {
 public:
   void loadFrom(vtkMutableDirectedGraph *sil);
