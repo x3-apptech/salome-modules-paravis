@@ -42,7 +42,7 @@ protected:
   vtkMEDWriter();
   ~vtkMEDWriter();
 
-  int RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
+  int RequestInformation(vtkInformation * request, vtkInformationVector **inputVector, vtkInformationVector * outputVector);
   int RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
   int RequestUpdateExtent(vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector);
 private:

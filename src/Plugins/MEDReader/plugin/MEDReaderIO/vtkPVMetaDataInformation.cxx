@@ -33,8 +33,8 @@
 
 #include "vtkMEDReader.h"
 
-vtkStandardNewMacro(vtkPVMetaDataInformation);
-vtkCxxSetObjectMacro(vtkPVMetaDataInformation, InformationData, vtkDataObject);
+vtkStandardNewMacro(vtkPVMetaDataInformation)
+vtkCxxSetObjectMacro(vtkPVMetaDataInformation, InformationData, vtkDataObject)
 
 //----------------------------------------------------------------------------
 vtkPVMetaDataInformation::vtkPVMetaDataInformation()

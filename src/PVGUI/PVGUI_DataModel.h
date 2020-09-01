@@ -42,7 +42,7 @@ public:
   virtual bool dumpPython( const QString&,  CAM_Study*, bool, QStringList& );
   virtual bool open( const QString&, CAM_Study*, QStringList );
   virtual bool save( QStringList& );
-  virtual bool saveAs( const QString&, CAM_Study*, QStringList& );
+  virtual bool saveAs( const QString& url, CAM_Study* study, QStringList& theListOfFiles );
   virtual bool create( CAM_Study* );
 
 private:

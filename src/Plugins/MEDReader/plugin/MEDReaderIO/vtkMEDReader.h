@@ -39,7 +39,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   void operator=(const vtkMEDReader&); // Not implemented.
  public:
   static vtkMEDReader *New();
-  vtkTypeMacro(vtkMEDReader, vtkMultiBlockDataSetAlgorithm);
+  vtkTypeMacro(vtkMEDReader, vtkMultiBlockDataSetAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent);
   virtual void SetFileName(const char*);
   virtual char *GetFileName();
@@ -80,7 +80,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   virtual int RequestInformation(vtkInformation*, vtkInformationVector**, vtkInformationVector*);
   virtual int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*);
  private:
-  void UpdateSIL(vtkInformation *request, vtkInformation *info);
+  void UpdateSIL(vtkInformation * request, vtkInformation * info);
   virtual double PublishTimeStepsIfNeeded(vtkInformation*, bool& isUpdated);
   virtual void FillMultiBlockDataSetInstance(vtkMultiBlockDataSet *output, double reqTS, ExportedTinyInfo *internalInfo=0);
   vtkDataSet *RetrieveDataSetAtTime(double reqTS, ExportedTinyInfo *internalInfo);

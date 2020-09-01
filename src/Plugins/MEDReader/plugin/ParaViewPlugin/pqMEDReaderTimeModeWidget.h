@@ -51,7 +51,7 @@ signals:
   void modeEnabled(bool enable);
 
 private:
-  Q_DISABLE_COPY(pqMEDReaderTimeModeWidget);
+  Q_DISABLE_COPY(pqMEDReaderTimeModeWidget)
 
   // Description
   // Qt property value

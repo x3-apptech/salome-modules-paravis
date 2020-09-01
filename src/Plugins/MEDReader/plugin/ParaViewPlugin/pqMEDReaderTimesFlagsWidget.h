@@ -85,7 +85,7 @@ protected:
   vtkIdType CachedTsId;
 
 private:
-  Q_DISABLE_COPY(pqMEDReaderTimesFlagsWidget);
+  Q_DISABLE_COPY(pqMEDReaderTimesFlagsWidget)
 };
 
 #endif

@@ -93,12 +93,12 @@ vtkJSONException::vtkJSONException(const char* reason)
 }
 
 //---------------------------------------------------
-vtkJSONException::~vtkJSONException() throw()
+vtkJSONException::~vtkJSONException() noexcept
 {
 }
 
 //---------------------------------------------------
-const char* vtkJSONException::what() const throw()
+const char* vtkJSONException::what() const noexcept
 {
   return Reason.c_str();
 }

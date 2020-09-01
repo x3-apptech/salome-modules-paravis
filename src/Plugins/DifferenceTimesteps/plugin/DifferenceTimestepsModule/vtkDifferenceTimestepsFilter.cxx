@@ -53,7 +53,7 @@ vtkDataArray* DataTempDiffArray(
 
 // Templated difference function
 template <class T>
-void vtkTemporalDataDifference(vtkDifferenceTimestepsFilter* theDTF, vtkDataArray* theOutput,
+void vtkTemporalDataDifference(vtkDifferenceTimestepsFilter* /*theDTF*/, vtkDataArray* theOutput,
   vtkDataArray** theArrays, vtkIdType theNumComp, T*)
 {
   T* anOutputData = static_cast<T*>(theOutput->GetVoidPointer(0));
@@ -79,7 +79,7 @@ void vtkTemporalDataDifference(vtkDifferenceTimestepsFilter* theDTF, vtkDataArra
   theOutput->SetNumberOfTuples(N);
 }
 
-vtkStandardNewMacro(vtkDifferenceTimestepsFilter);
+vtkStandardNewMacro(vtkDifferenceTimestepsFilter)
 
 //--------------------------------------------------------------------------------------------------
 vtkDifferenceTimestepsFilter::vtkDifferenceTimestepsFilter()
@@ -171,11 +171,11 @@ int vtkDifferenceTimestepsFilter::RequestDataObject(vtkInformation* vtkNotUsed(t
 
 //--------------------------------------------------------------------------------------------------
 int vtkDifferenceTimestepsFilter::RequestInformation(vtkInformation* vtkNotUsed(theRequest),
-  vtkInformationVector** theInputVector, vtkInformationVector* theOutputVector)
+  vtkInformationVector** theInputVector, vtkInformationVector* /*theOutputVector*/)
 {
   // Get input and output information objects
   vtkInformation* anInInfo = theInputVector[0]->GetInformationObject(0);
-  vtkInformation* anOutInfo = theOutputVector->GetInformationObject(0);
+  //vtkInformation* anOutInfo = theOutputVector->GetInformationObject(0); // todo: unused
 
   // Check for presence more than one time step
   if (anInInfo->Has(vtkStreamingDemandDrivenPipeline::TIME_STEPS()))
@@ -227,7 +227,7 @@ int vtkDifferenceTimestepsFilter::RequestInformation(vtkInformation* vtkNotUsed(
 }
 
 //--------------------------------------------------------------------------------------------------
-int vtkDifferenceTimestepsFilter::RequestUpdateExtent(vtkInformation* theRequest,
+int vtkDifferenceTimestepsFilter::RequestUpdateExtent(vtkInformation* /*theRequest*/,
   vtkInformationVector** theInputVector, vtkInformationVector* theOutputVector)
 {
   // Get the information objects

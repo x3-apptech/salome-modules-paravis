@@ -27,7 +27,7 @@
 class vtkParaSMESHCorbaSource: public vtkAlgorithm {
  public:
   static vtkParaSMESHCorbaSource* New();
-  vtkTypeMacro(vtkParaSMESHCorbaSource, vtkAlgorithm);
+  vtkTypeMacro(vtkParaSMESHCorbaSource, vtkAlgorithm)
   
   
   const char *GetIORCorba();

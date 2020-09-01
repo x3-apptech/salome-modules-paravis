@@ -54,7 +54,7 @@ void ParaMEDMEM2VTK::FillMEDCouplingCurveLinearMeshInstanceFrom(SALOME_MED::MEDC
   SALOME_TYPES::ListOfDouble *bigD;
   meshPtr->getSerialisationData(tinyI,bigD);
   delete tinyI;
-  if(bigD->length()!=nbOfNodes*spaceDim)
+  if((int)bigD->length()!=nbOfNodes*spaceDim)
     vtkErrorWithObjectMacro(ret,"Internal error in ParaMEDCorba plugin : distant curvilinear mesh, mismatch between informations ! Internal error !");
   for(int i=0;i<nbOfNodes;i++)
     {

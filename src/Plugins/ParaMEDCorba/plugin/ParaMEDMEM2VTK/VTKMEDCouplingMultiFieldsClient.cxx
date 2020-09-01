@@ -327,7 +327,7 @@ int ParaMEDMEM2VTK::MEDCouplingMultiFieldsFetcher::getPosGivenTimeLabel(double t
       return i;
   //2nd chance
   std::vector<double>::iterator it=std::find_if(_time_label_per_field.begin(),_time_label_per_field.end(),
-      std::bind2nd(std::greater<double>(),t));
+      std::bind(std::greater<double>(),std::placeholders::_1,t));
   if(it!=_time_label_per_field.end() && it!=_time_label_per_field.end())
     return std::distance(_time_label_per_field.begin(),it);
   //

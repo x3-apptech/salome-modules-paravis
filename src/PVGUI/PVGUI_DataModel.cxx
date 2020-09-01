@@ -325,7 +325,7 @@ bool PVGUI_DataModel::createAndCheckRestoreFlag(const QString& tmpdir, QStringLi
 
 /*!
   \brief Save data model (write ParaView pipeline to the files).
-  \param listOfFiles returning list of the (temporary) files with saved data
+  \param theListOfFiles returning list of the (temporary) files with saved data
   \return operation status (\c true on success and \c false on error)
 */
 bool PVGUI_DataModel::save( QStringList& theListOfFiles)
@@ -407,10 +407,10 @@ bool PVGUI_DataModel::save( QStringList& theListOfFiles)
   \brief Save data model (write ParaView pipeline state to the files).
   \param url study file path
   \param study study pointer
-  \param listOfFiles returning list of the (temporary) files with saved data
+  \param theListOfFiles returning list of the (temporary) files with saved data
   \return operation status (\c true on success and \c false on error)
 */
-bool PVGUI_DataModel::saveAs( const QString& url, CAM_Study* study, QStringList& theListOfFiles)
+bool PVGUI_DataModel::saveAs( const QString& url, CAM_Study* /*study*/, QStringList& theListOfFiles)
 {
   myStudyURL = url;
   return save( theListOfFiles );

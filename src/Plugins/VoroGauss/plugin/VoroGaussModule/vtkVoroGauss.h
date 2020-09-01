@@ -29,7 +29,7 @@ class VTK_EXPORT vtkVoroGauss : public vtkUnstructuredGridAlgorithm
 {
 public:
   static vtkVoroGauss* New();
-  vtkTypeMacro(vtkVoroGauss, vtkUnstructuredGridAlgorithm);
+  vtkTypeMacro(vtkVoroGauss, vtkUnstructuredGridAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
 protected:

@@ -48,7 +48,7 @@ class vtkGroupAsMultiBlockInternal : public ExtractGroupInternal
 {
 };
 
-vtkStandardNewMacro(vtkGroupAsMultiBlock);
+vtkStandardNewMacro(vtkGroupAsMultiBlock)
 
 vtkGroupAsMultiBlock::vtkGroupAsMultiBlock():Internal(new ExtractGroupInternal)
 {
@@ -59,9 +59,9 @@ vtkGroupAsMultiBlock::~vtkGroupAsMultiBlock()
   delete this->Internal;
 }
 
-int vtkGroupAsMultiBlock::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkGroupAsMultiBlock::RequestInformation(vtkInformation */*request*/, vtkInformationVector **inputVector, vtkInformationVector */*outputVector*/)
 {
-  vtkInformation *outInfo(outputVector->GetInformationObject(0));
+  //vtkInformation *outInfo(outputVector->GetInformationObject(0)); // todo: unused
   vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));
   if(!ExtractGroupInternal::IndependantIsInformationOK(vtkMEDReader::META_DATA(),inputInfo))
   {
@@ -83,7 +83,7 @@ int vtkGroupAsMultiBlock::RequestData(vtkInformation *vtkNotUsed(request), vtkIn
     return 0;
   }
   vtkDataSet *input(vtkDataSet::SafeDownCast(inputMB->GetBlock(0)));
-  vtkInformation *info(input->GetInformation());
+  //vtkInformation *info(input->GetInformation()); // todo: unused
   vtkInformation *outInfo(outputVector->GetInformationObject(0));
   vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
   if(!output)

@@ -31,7 +31,7 @@
 using namespace std;
 
 // vtkCxxRevisionMacro(vtkScaleVectorFilter, "$Revision$");
-vtkStandardNewMacro(vtkScaleVectorFilter);
+vtkStandardNewMacro(vtkScaleVectorFilter)
 
 vtkScaleVectorFilter::vtkScaleVectorFilter()
 {

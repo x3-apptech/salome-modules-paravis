@@ -217,7 +217,7 @@ void PVGUI_ParaViewSettingsPane::hideEvent(QHideEvent * ev)
 }
 
 //-----------------------------------------------------------------------------
-void PVGUI_ParaViewSettingsPane::clicked(QAbstractButton *button)
+void PVGUI_ParaViewSettingsPane::clicked(QAbstractButton * /*button*/)
 {
 //  Ui::CustomSettingsWidget &ui = this->Internals->Ui;
 //  QDialogButtonBox::ButtonRole role = ui.buttonBox->buttonRole(button);

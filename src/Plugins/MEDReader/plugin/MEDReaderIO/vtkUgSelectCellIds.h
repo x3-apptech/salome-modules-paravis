@@ -33,7 +33,7 @@ class vtkUgSelectCellIds : public vtkUnstructuredGridAlgorithm
 {
 public:
     static vtkUgSelectCellIds* New();
-    vtkTypeMacro(vtkUgSelectCellIds, vtkUnstructuredGridAlgorithm);
+    vtkTypeMacro(vtkUgSelectCellIds, vtkUnstructuredGridAlgorithm)
     void SetIds(vtkIdTypeArray *ids);
     vtkUgSelectCellIds() = default;
     ~vtkUgSelectCellIds() override = default;

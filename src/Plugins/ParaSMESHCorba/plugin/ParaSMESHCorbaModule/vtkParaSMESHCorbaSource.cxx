@@ -33,7 +33,7 @@
 
 #include <algorithm>
 
-vtkStandardNewMacro(vtkParaSMESHCorbaSource);
+vtkStandardNewMacro(vtkParaSMESHCorbaSource)
 
 void *vtkParaSMESHCorbaSource::Orb=0;
 
@@ -90,13 +90,14 @@ int vtkParaSMESHCorbaSource::FillOutputPortInformation(int vtkNotUsed(port), vtk
 }
 
 //----------------------------------------------
-int vtkParaSMESHCorbaSource::RequestData(vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outputVector) {
+int vtkParaSMESHCorbaSource::RequestData(vtkInformation* /*request*/, vtkInformationVector** /*inInfo*/, vtkInformationVector* outputVector) {
   vtkInformation *outInfo=outputVector->GetInformationObject(0);
   vtkMultiBlockDataSet *ret0=vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
+  /* todo: unused
   double reqTS = 0;
   if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
     reqTS = outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
-
+  */
   try {
     CORBA::ORB_var *OrbC=(CORBA::ORB_var *)this->Orb;
     CORBA::Object_var obj=(*OrbC)->string_to_object(&IOR[0]);

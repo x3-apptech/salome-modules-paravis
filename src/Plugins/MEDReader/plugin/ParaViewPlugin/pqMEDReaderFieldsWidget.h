@@ -64,7 +64,7 @@ protected slots:
   void updateChecks();
 
 private:
-  Q_DISABLE_COPY(pqMEDReaderFieldsWidget);
+  Q_DISABLE_COPY(pqMEDReaderFieldsWidget)
 };
 
 #endif

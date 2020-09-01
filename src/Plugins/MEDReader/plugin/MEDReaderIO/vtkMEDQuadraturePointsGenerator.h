@@ -30,7 +30,7 @@ class vtkInformationVector;
 class VTK_EXPORT vtkMEDQuadraturePointsGenerator : public vtkQuadraturePointsGenerator
 {
 public:
-  vtkTypeMacro(vtkMEDQuadraturePointsGenerator,vtkQuadraturePointsGenerator);
+  vtkTypeMacro(vtkMEDQuadraturePointsGenerator,vtkQuadraturePointsGenerator)
   static vtkMEDQuadraturePointsGenerator *New();
 
 protected:

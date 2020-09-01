@@ -29,8 +29,8 @@ class VTK_EXPORT vtkJSONException : public std::exception
 {
 public:
   vtkJSONException(const char* reason);
-  ~vtkJSONException() throw();
-  const char* what() const throw();
+  ~vtkJSONException() noexcept;
+  const char* what() const noexcept;
 
 protected:
   std::string Reason;
@@ -42,7 +42,7 @@ class VTK_EXPORT vtkJSONReader : public vtkTableAlgorithm
 {
 public:
   static vtkJSONReader* New();
-  vtkTypeMacro(vtkJSONReader, vtkTableAlgorithm);
+  vtkTypeMacro(vtkJSONReader, vtkTableAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   // Specifies the name of the file

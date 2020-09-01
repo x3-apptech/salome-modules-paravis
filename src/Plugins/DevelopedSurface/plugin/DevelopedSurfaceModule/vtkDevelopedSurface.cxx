@@ -73,7 +73,7 @@
 #include <sstream>
 #include <algorithm>
 
-vtkStandardNewMacro(vtkDevelopedSurface);
+vtkStandardNewMacro(vtkDevelopedSurface)
 
 ///////////////////
 
@@ -156,7 +156,7 @@ void vtkDevelopedSurface::SetThetaOffset(double offsetInDegrees)
   this->Modified();
 }
 
-int vtkDevelopedSurface::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkDevelopedSurface::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector * /*outputVector*/)
 { 
   //std::cerr << "########################################## vtkDevelopedSurface::RequestInformation ##########################################" << std::endl;
   try
@@ -212,7 +212,7 @@ std::vector<mcIdType> UnWrapByDuplicatingNodes(vtkCellArray *ca, vtkIdType& offs
 }
 
 template<class T>
-void DealArray(vtkDataSetAttributes *pd, int pos, typename MEDFileVTKTraits<T>::VtkType *arr, std::vector<int>& nodeSel)
+void DealArray(vtkDataSetAttributes * /*pd*/, int /*pos*/, typename MEDFileVTKTraits<T>::VtkType *arr, std::vector<int>& nodeSel)
 {
   int nbc(arr->GetNumberOfComponents());
   std::size_t nbt(nodeSel.size());
@@ -431,7 +431,7 @@ void dealWith(vtkPolyData *outdata, const double center[3], const double axis[3]
     }
 }
 
-int vtkDevelopedSurface::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkDevelopedSurface::RequestData(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   //std::cerr << "########################################## vtkDevelopedSurface::RequestData        ##########################################" << std::endl;
   try

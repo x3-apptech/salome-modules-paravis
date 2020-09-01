@@ -28,11 +28,11 @@ class vtkGroupsNames : public vtkTableAlgorithm
 {
 public:
     static vtkGroupsNames *New();
-    vtkTypeMacro(vtkGroupsNames, vtkTableAlgorithm);
+    vtkTypeMacro(vtkGroupsNames, vtkTableAlgorithm)
 protected:
     vtkGroupsNames();
     ~vtkGroupsNames();
-    int RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
+    int RequestInformation(vtkInformation * request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
     int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 private:
     ExtractGroupInternal *Internal;

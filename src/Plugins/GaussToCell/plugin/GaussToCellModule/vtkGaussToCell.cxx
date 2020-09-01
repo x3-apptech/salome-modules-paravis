@@ -86,7 +86,7 @@ using MEDCoupling::MEDCouplingFieldDouble;
 using MEDCoupling::ON_GAUSS_PT;
 using MEDCoupling::MCAuto;
 
-vtkStandardNewMacro(vtkGaussToCell);
+vtkStandardNewMacro(vtkGaussToCell)
 
 vtkInformationDoubleVectorKey *GetMEDReaderMetaDataIfAny()
 {
@@ -180,7 +180,7 @@ void vtkGaussToCell::SetMinFlag(bool minStatus)
     }
 }
 
-int vtkGaussToCell::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkGaussToCell::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector * /*outputVector*/)
 { 
   //std::cerr << "########################################## vtkGaussToCell::RequestInformation ##########################################" << std::endl;
   try
@@ -262,7 +262,7 @@ void DealWith(const char *postName, vtkDoubleArray *zearray, vtkIdTypeArray *off
   dc(inData,offData,nbgPerCell,zeNbCompo,outNbCells,outData);
 }
 
-int vtkGaussToCell::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkGaussToCell::RequestData(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   //std::cerr << "########################################## vtkGaussToCell::RequestData        ##########################################" << std::endl;
   try

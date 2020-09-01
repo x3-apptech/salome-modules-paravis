@@ -38,7 +38,7 @@
 #include <math.h>
 
 //vtkCxxRevisionMacro(vtkElevationSurfaceFilter, "$Revision$");
-vtkStandardNewMacro(vtkElevationSurfaceFilter);
+vtkStandardNewMacro(vtkElevationSurfaceFilter)
 
 vtkElevationSurfaceFilter::vtkElevationSurfaceFilter()
 {
@@ -117,13 +117,13 @@ int vtkElevationSurfaceFilter::RequestUpdateExtent(
   return 1;
 }
 
-int vtkElevationSurfaceFilter::RequestInformation(vtkInformation *request,
-    vtkInformationVector **input, vtkInformationVector *output)
+int vtkElevationSurfaceFilter::RequestInformation(vtkInformation * /*request*/,
+	  vtkInformationVector ** /*input*/, vtkInformationVector * /*output*/)
 {
   return 1;
 }
 
-int vtkElevationSurfaceFilter::RequestData(vtkInformation *request,
+int vtkElevationSurfaceFilter::RequestData(vtkInformation * /*request*/,
     vtkInformationVector **input, vtkInformationVector *output)
 {
   vtkPolyData *pdIn = vtkPolyData::SafeDownCast(

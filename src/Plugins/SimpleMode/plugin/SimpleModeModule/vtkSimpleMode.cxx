@@ -64,7 +64,7 @@
 #include <map>
 #include <sstream>
 
-vtkStandardNewMacro(vtkSimpleMode);
+vtkStandardNewMacro(vtkSimpleMode)
 
 static const char ZE_DISPLACEMENT_NAME1[] = "@@ForReal?@@";
 
@@ -83,8 +83,8 @@ public:
     : _reason(s)
   {
   }
-  virtual const char* what() const throw() { return _reason.c_str(); }
-  virtual ~MZCException() throw() {}
+  virtual const char* what() const noexcept { return _reason.c_str(); }
+  virtual ~MZCException() noexcept {}
 
 private:
   std::string _reason;
@@ -406,7 +406,7 @@ int vtkSimpleMode::FillOutputPortInformation(int vtkNotUsed(port), vtkInformatio
 }
 
 int vtkSimpleMode::RequestInformation(
-  vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector)
+      vtkInformation* /*request*/, vtkInformationVector** /*inputVector*/, vtkInformationVector* /*outputVector*/)
 {
   // std::cerr << "########################################## vtkSimpleMode::RequestInformation
   // ##########################################" << std::endl;
@@ -441,7 +441,7 @@ int vtkSimpleMode::RequestInformation(
 }
 
 int vtkSimpleMode::RequestData(
-  vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector)
+    vtkInformation* /*request*/, vtkInformationVector** inputVector, vtkInformationVector* outputVector)
 {
   // std::cerr << "########################################## vtkSimpleMode::RequestData
   // ##########################################" << std::endl;
@@ -497,7 +497,7 @@ int vtkSimpleMode::RequestData(
         continue;
       double* arrPtr(arr2->GetPointer(0));
       std::transform(arrPtr, arrPtr + nbCompo * nbTuples, arrPtr,
-        std::bind2nd(std::multiplies<double>(), cos(AnimationTime * 2 * M_PI)));
+        std::bind(std::multiplies<double>(),std::placeholders::_1, cos(AnimationTime * 2 * M_PI)));
     }
     //
     vtkDataArray* array = output->GetPointData()->GetArray(idx2);

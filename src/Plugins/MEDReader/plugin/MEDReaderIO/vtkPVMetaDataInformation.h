@@ -30,7 +30,7 @@ class vtkPVMetaDataInformation : public vtkPVInformation
 {
 public:
   static vtkPVMetaDataInformation* New();
-  vtkTypeMacro(vtkPVMetaDataInformation, vtkPVInformation);
+  vtkTypeMacro(vtkPVMetaDataInformation, vtkPVInformation)
   void PrintSelf(ostream& os, vtkIndent indent);
 
   // Description:

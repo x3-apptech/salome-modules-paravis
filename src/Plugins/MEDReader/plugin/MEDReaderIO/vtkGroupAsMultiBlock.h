@@ -28,11 +28,11 @@ class vtkGroupAsMultiBlock : public vtkMultiBlockDataSetAlgorithm
 {
 public:
     static vtkGroupAsMultiBlock *New();
-    vtkTypeMacro(vtkGroupAsMultiBlock, vtkMultiBlockDataSetAlgorithm);
+    vtkTypeMacro(vtkGroupAsMultiBlock, vtkMultiBlockDataSetAlgorithm)
 protected:
     vtkGroupAsMultiBlock();
     ~vtkGroupAsMultiBlock();
-    int RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
+    int RequestInformation(vtkInformation * request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
     int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 private:
     ExtractGroupInternal *Internal;

@@ -27,7 +27,7 @@
 class vtkParaGEOMCorbaSource : public vtkAlgorithm {
  public:
   static vtkParaGEOMCorbaSource* New();
-  vtkTypeMacro(vtkParaGEOMCorbaSource, vtkAlgorithm);
+  vtkTypeMacro(vtkParaGEOMCorbaSource, vtkAlgorithm)
   virtual void PrintSelf( ostream& os, vtkIndent indent );
   const char *GetIORCorba();
   void SetIORCorba(char *ior);

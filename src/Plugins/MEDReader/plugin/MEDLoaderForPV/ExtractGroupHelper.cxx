@@ -147,7 +147,6 @@ void ExtractGroupInternal::loadFrom(vtkMutableDirectedGraph *sil)
     throw INTERP_KERNEL::Exception("There is an internal error ! The tree on server side has not the expected look !");
   vtkAdjacentVertexIterator *it0(vtkAdjacentVertexIterator::New());
   sil->GetAdjacentVertices(id0,it0);
-  int kk(0),ll(0);
   while(it0->HasNext())
     {
       vtkIdType id1(it0->Next());

@@ -25,8 +25,8 @@
 
 #include <algorithm>
 
-vtkInformationKeyMacro(MEDUtilities,ELGA,Integer);
-vtkInformationKeyMacro(MEDUtilities,ELNO,Integer);
+vtkInformationKeyMacro(MEDUtilities,ELGA,Integer)
+vtkInformationKeyMacro(MEDUtilities,ELNO,Integer)
 
 void ExportedTinyInfo::pushGaussAdditionnalInfo(int ct, int dim, const std::vector<double>& refCoo, const std::vector<double>& posInRefCoo)
 {

@@ -264,7 +264,7 @@ MEDCouplingUMesh *BuildMeshFromCellArray(vtkCellArray *ca, DataArrayDouble *coor
   int nbCells(ca->GetNumberOfCells());
   if(nbCells==0)
     return 0;
-  vtkIdType nbEntries(ca->GetNumberOfConnectivityEntries());
+  //vtkIdType nbEntries(ca->GetNumberOfConnectivityEntries()); // todo: unused
   const vtkIdType *conn(ca->GetData()->GetPointer(0));
   for(int i=0;i<nbCells;i++)
     {
@@ -285,7 +285,7 @@ MEDCouplingUMesh *BuildMeshFromCellArrayTriangleStrip(vtkCellArray *ca, DataArra
   int nbCells(ca->GetNumberOfCells());
   if(nbCells==0)
     return 0;
-  vtkIdType nbEntries(ca->GetNumberOfConnectivityEntries());
+  //vtkIdType nbEntries(ca->GetNumberOfConnectivityEntries()); // todo: unused
   const vtkIdType *conn(ca->GetData()->GetPointer(0));
   ids=DataArrayIdType::New() ; ids->alloc(0,1);
   for(int i=0;i<nbCells;i++)
@@ -457,7 +457,7 @@ void PutAtLevelDealOrder(MEDFileData *mfd, int meshDimRel, const MicroField& mf,
   MCAuto<MEDCouplingUMesh> mesh(mf.getMesh());
   mesh->setName(mfd->getMeshes()->getMeshAtPos(0)->getName());
   MCAuto<DataArrayIdType> o2n(mesh->sortCellsInMEDFileFrmt());
-  const DataArrayIdType *o2nPtr(o2n);
+  //const DataArrayIdType *o2nPtr(o2n); // todo: unused
   MCAuto<DataArrayIdType> n2o;
   mmu->setMeshAtLevel(meshDimRel,mesh);
   const DataArrayIdType *n2oPtr(0);
@@ -570,8 +570,8 @@ std::vector<MCAuto<DataArray> > AddPartFields(const DataArrayIdType *part, vtkDa
       if(!arr)
         continue;
       const char *name(arr->GetName());
-      int nbCompo(arr->GetNumberOfComponents());
-      vtkIdType nbTuples(arr->GetNumberOfTuples());
+      //int nbCompo(arr->GetNumberOfComponents()); // todo: unused
+      //vtkIdType nbTuples(arr->GetNumberOfTuples()); // todo: unused
       MCAuto<DataArray> mcarr(ConvertVTKArrayToMCArray(arr));
       if(part)
         mcarr=mcarr->selectByTupleId(part->begin(),part->end());
@@ -593,8 +593,8 @@ std::vector<MCAuto<DataArray> > AddPartFields2(int bg, int end, vtkDataSetAttrib
       if(!arr)
         continue;
       const char *name(arr->GetName());
-      int nbCompo(arr->GetNumberOfComponents());
-      vtkIdType nbTuples(arr->GetNumberOfTuples());
+      //int nbCompo(arr->GetNumberOfComponents()); // todo: unused
+      //vtkIdType nbTuples(arr->GetNumberOfTuples()); // todo: unused
       MCAuto<DataArray> mcarr(ConvertVTKArrayToMCArray(arr));
       mcarr=mcarr->selectByTupleIdSafeSlice(bg,end,1);
       mcarr->setName(name);
@@ -744,13 +744,13 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
   vtkCellArray *ca(ds->GetCells());
   if(!ca)
     return ;
-  vtkIdType nbEnt(ca->GetNumberOfConnectivityEntries());
-  vtkIdType *caPtr(ca->GetData()->GetPointer(0));
+  //vtkIdType nbEnt(ca->GetNumberOfConnectivityEntries()); // todo: unused
+  //vtkIdType *caPtr(ca->GetData()->GetPointer(0)); // todo: unused
   vtkUnsignedCharArray *ct(ds->GetCellTypesArray());
   if(!ct)
     throw MZCException("ConvertFromUnstructuredGrid : internal error");
   vtkIdTypeArray *cla(ds->GetCellLocationsArray());
-  const vtkIdType *claPtr(cla->GetPointer(0));
+  //const vtkIdType *claPtr(cla->GetPointer(0)); // todo: unused
   if(!cla)
     throw MZCException("ConvertFromUnstructuredGrid : internal error 2");
   const unsigned char *ctPtr(ct->GetPointer(0));
@@ -779,10 +779,9 @@ void ConvertFromUnstructuredGrid(MEDFileData *ret, vtkUnstructuredGrid *ds, cons
             }
         }
     }
-  int dummy(0);
   MCAuto<DataArrayInt> levs(lev->getDifferentValues());
   std::vector< MicroField > ms;
-  vtkIdTypeArray *faces(ds->GetFaces()),*faceLoc(ds->GetFaceLocations());
+  //vtkIdTypeArray *faces(ds->GetFaces()),*faceLoc(ds->GetFaceLocations()); // todo: unused
   for(const int *curLev=levs->begin();curLev!=levs->end();curLev++)
     {
       MCAuto<MEDCouplingUMesh> m0(MEDCouplingUMesh::New("",*curLev));

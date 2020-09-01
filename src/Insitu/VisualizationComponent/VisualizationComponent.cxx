@@ -115,7 +115,7 @@ void VisualizationComponent_i::Visualize(SALOME_MED::ParaMEDCouplingFieldDoubleC
 {
   beginService("VisualizationComponent_i::Visualize");
   void *ret_th;
-  pthread_t *th;
+  pthread_t *th = 0;
   exception_st *est;
 
   try

@@ -50,7 +50,7 @@ class vtkGroupsNamesInternal : public ExtractGroupInternal
 {
 };
 
-vtkStandardNewMacro(vtkGroupsNames);
+vtkStandardNewMacro(vtkGroupsNames)
 
 vtkGroupsNames::vtkGroupsNames():Internal(new ExtractGroupInternal)
 {
@@ -61,9 +61,9 @@ vtkGroupsNames::~vtkGroupsNames()
   delete this->Internal;
 }
 
-int vtkGroupsNames::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkGroupsNames::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector */*outputVector*/)
 {
-  vtkInformation *outInfo(outputVector->GetInformationObject(0));
+  //vtkInformation *outInfo(outputVector->GetInformationObject(0)); // todo: unused
   vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));
   if(!ExtractGroupInternal::IndependantIsInformationOK(vtkMEDReader::META_DATA(),inputInfo))
   {
@@ -98,7 +98,7 @@ int vtkGroupsNames::RequestData(vtkInformation *vtkNotUsed(request), vtkInformat
     vtkErrorMacro("vtkGroupsNames::RequestData : input is neither a DataSet nor a MultiblockDataSet !");
     return 0;
   }
-  vtkInformation *info(input->GetInformation());
+  //vtkInformation *info(input->GetInformation()); // todo: unused
   vtkInformation *outInfo(outputVector->GetInformationObject(0));
   vtkTable *output(vtkTable::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
   if(!output)

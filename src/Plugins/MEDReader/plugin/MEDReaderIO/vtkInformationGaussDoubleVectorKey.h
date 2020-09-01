@@ -25,8 +25,8 @@
 class VTK_EXPORT vtkInformationGaussDoubleVectorKey : public vtkInformationDoubleVectorKey
 {
 public:
-  vtkTypeMacro(vtkInformationGaussDoubleVectorKey, vtkInformationDoubleVectorKey);
-  void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE{}
+  vtkTypeMacro(vtkInformationGaussDoubleVectorKey, vtkInformationDoubleVectorKey)
+  void PrintSelf(ostream& /*os*/, vtkIndent /*indent*/) VTK_OVERRIDE{}
 
   vtkInformationGaussDoubleVectorKey(const char* name, const char* location,
     int length = -1) : vtkInformationDoubleVectorKey(name, location, length) { }
@@ -46,7 +46,7 @@ public:
   * Simply shallow copies the key from fromInfo to toInfo.
   * This is used by the pipeline to propagate this key downstream.
   */
-  void CopyDefaultInformation(vtkInformation* request,
+  void CopyDefaultInformation(vtkInformation* /*request*/,
     vtkInformation* fromInfo,
     vtkInformation* toInfo) VTK_OVERRIDE
   {

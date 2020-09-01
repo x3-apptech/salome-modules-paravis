@@ -36,7 +36,7 @@ class LightApp_Application;
 
 /**!
  * This class is (almost) a copy/paste of what is found in
- *    *<PARAVIEW>/Qt/Components/pqSettingsDialog.h*
+ *    *[PARAVIEW]/Qt/Components/pqSettingsDialog.h*
  * This is (almost) the same, except for the inheritance to QtxUserDefinedContent providing the link
  * to SALOME preference mechanism.
  * The UI content of pqSettingsDialog is put in a (PARAVIS) widget called pqCustomSettingsWidget.
@@ -80,7 +80,7 @@ protected:
     void saveInQSettings(const char* key, vtkSMProperty* smproperty);
 
   private:
-    Q_DISABLE_COPY(PVGUI_ParaViewSettingsPane);
+    Q_DISABLE_COPY(PVGUI_ParaViewSettingsPane)
     class pqInternals;
     pqInternals* Internals;
 

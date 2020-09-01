@@ -50,7 +50,7 @@ void KERNEL_PYTHON::init_python(int argc, char **argv)
   // set stdout to line buffering (aka C++ std::cout)
   setvbuf(stdout, (char *)NULL, _IOLBF, BUFSIZ);
   char* salome_python=getenv("SALOME_PYTHON");
-  size_t size_salome_python = sizeof(salome_python) / sizeof(salome_python[0]);
+  //size_t size_salome_python = sizeof(salome_python) / sizeof(salome_python[0]); // unused
   if(salome_python != 0)
 	  Py_SetProgramName(Py_DecodeLocale(salome_python, NULL));
 

@@ -42,7 +42,7 @@ protected:
   void loadTreeWidgetItems();
 
 private:
-  Q_DISABLE_COPY(pqExtractGroupFieldsWidget);
+  Q_DISABLE_COPY(pqExtractGroupFieldsWidget)
 };
 
 #endif

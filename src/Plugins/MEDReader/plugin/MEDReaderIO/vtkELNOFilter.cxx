@@ -36,7 +36,7 @@
 #include "InterpKernelAutoPtr.hxx"
 
 //vtkCxxRevisionMacro(vtkELNOFilter, "$Revision: 1.2.2.2 $");
-vtkStandardNewMacro(vtkELNOFilter);
+vtkStandardNewMacro(vtkELNOFilter)
 
 vtkELNOFilter::vtkELNOFilter()
 {
@@ -52,7 +52,7 @@ int vtkELNOFilter::RequestData(vtkInformation *request, vtkInformationVector **i
   vtkUnstructuredGrid *usgIn(vtkUnstructuredGrid::SafeDownCast( input[0]->GetInformationObject(0)->Get(vtkDataObject::DATA_OBJECT())));
   vtkPolyData *pdOut(vtkPolyData::SafeDownCast(output->GetInformationObject(0)->Get(vtkDataObject::DATA_OBJECT())));
 
-  vtkDataArray *array(this->GetInputArrayToProcess(0, input));
+  //vtkDataArray *array(this->GetInputArrayToProcess(0, input)); // todo: unused
   vtkIdTypeArray* offsets(vtkIdTypeArray::SafeDownCast(this->GetInputArrayToProcess(0, input)));
 
   if(usgIn == NULL || offsets == NULL || pdOut == NULL)
@@ -82,7 +82,7 @@ int vtkELNOFilter::RequestData(vtkInformation *request, vtkInformationVector **i
   vtkIdType start(0);
   for(vtkIdType cellId = 0; cellId < ncell; cellId++)
     {
-      vtkIdType offset(offsets->GetValue(cellId));
+      //vtkIdType offset(offsets->GetValue(cellId)); // todo: unused
       int cellType(usgIn->GetCellType(cellId));
       // a simple check to see if a scheme really exists for this cell type.
       // should not happen if the cell type has not been modified.
@@ -152,7 +152,7 @@ int vtkELNOFilter::RequestData(vtkInformation *request, vtkInformationVector **i
               for(vtkIdType cellId=0;cellId<nbCellsInput;cellId++)
                 {
                   vtkCell *cell(usgIn->GetCell(cellId));
-                  vtkIdType nbPoints(cell->GetNumberOfPoints()),offset(offsetPtr[cellId]);
+                  vtkIdType nbPoints(cell->GetNumberOfPoints())/*,offset(offsetPtr[cellId])*/; // todo: offset is unused
                   for(vtkIdType j=0;j<nbPoints;j++,zeId++)
                     newArray->SetTuple(zeId,offsetPtr[cellId]+j,data);
                 }

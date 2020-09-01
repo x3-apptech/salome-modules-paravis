@@ -444,7 +444,7 @@ bool MEDFileFieldRepresentationLeavesArrays::setStatus(bool status) const
 
 void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, const MEDCoupling::MEDFileFieldGlobsReal *globs, const MEDCoupling::MEDMeshMultiLev *mml, const MEDCoupling::MEDFileMeshStruct *mst, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
-  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  //const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE; // todo: unused
   tr->setNumberOfTS((operator->())->getNumberOfTS());
   tr->initIterator();
   for(int timeStepId=0;timeStepId<tr->size();timeStepId++,++(*tr))
@@ -580,6 +580,11 @@ void MEDFileFieldRepresentationLeaves::computeFullNameInLeaves(const std::string
 
 /*!
  * \param [in] ms is the meshes pointer. It can be used only for information of geometric types. No special processing will be requested on ms.
+ * \param [in] meshName
+ * \param [in] sil
+ * \param [in] root
+ * \param [in] edge
+ * \param [out] names
  */
 void MEDFileFieldRepresentationLeaves::feedSIL(const MEDCoupling::MEDFileMeshes *ms, const std::string& meshName, vtkMutableDirectedGraph* sil, vtkIdType root, vtkVariantArray *edge, std::vector<std::string>& names) const
 {
@@ -1194,7 +1199,6 @@ void MEDFileFieldRepresentationTree::loadInMemory(MEDCoupling::MEDFileFields *fi
       fields_per_mesh[i]=_fields->partOfThisLyingOnSpecifiedMeshName(meshNames[i].c_str());
     }
   std::vector< MCAuto<MEDFileAnyTypeFieldMultiTS > > allFMTSLeavesToDisplaySafe;
-  std::size_t k(0);
   for(std::vector< MCAuto<MEDFileFields> >::const_iterator fields=fields_per_mesh.begin();fields!=fields_per_mesh.end();fields++)
     {
       for(int j=0;j<(*fields)->getNumberOfFields();j++)
@@ -1401,9 +1405,9 @@ vtkDataSet *MEDFileFieldRepresentationTree::buildVTKInstance(bool isStdOrMode, d
   if(ts.size()!=1)
     {
       std::vector<double> ts2(ts.size());
-      std::transform(ts.begin(),ts.end(),ts2.begin(),std::bind2nd(std::plus<double>(),-timeReq));
-      std::transform(ts2.begin(),ts2.end(),ts2.begin(),std::ptr_fun<double,double>(fabs));
-      zeTimeId=std::distance(ts2.begin(),std::find_if(ts2.begin(),ts2.end(),std::bind2nd(std::less<double>(),1e-14)));
+      std::transform(ts.begin(),ts.end(),ts2.begin(),std::bind(std::plus<double>(),std::placeholders::_1,-timeReq));
+      std::transform(ts2.begin(),ts2.end(),ts2.begin(),[](double c) {return fabs(c);});
+      zeTimeId=std::distance(ts2.begin(),std::find_if(ts2.begin(),ts2.end(),std::bind(std::less<double>(),std::placeholders::_1,1e-14)));
     }
   //2nd chance
   if(zeTimeId==ts.size())

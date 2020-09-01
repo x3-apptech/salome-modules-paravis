@@ -31,7 +31,7 @@ class vtkDevelopedSurface : public vtkDataSetAlgorithm
 {
 public:
   static vtkDevelopedSurface* New();
-  vtkTypeMacro(vtkDevelopedSurface, vtkDataSetAlgorithm);
+  vtkTypeMacro(vtkDevelopedSurface, vtkDataSetAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   void SetCutFunction(vtkImplicitFunction* func);

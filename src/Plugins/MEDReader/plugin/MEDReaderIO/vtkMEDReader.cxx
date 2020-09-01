@@ -215,7 +215,7 @@ private:
   unsigned char FirstCall0;
 };
 
-vtkStandardNewMacro(vtkMEDReader);
+vtkStandardNewMacro(vtkMEDReader)
 
 // vtkInformationKeyMacro(vtkMEDReader, META_DATA, DataObjectMetaData); // Here we need to customize vtkMEDReader::META_DATA method
 // start of overload of vtkInformationKeyMacro
@@ -389,7 +389,7 @@ char *vtkMEDReader::GetFileName()
   return const_cast<char *>(this->Internal->FileName.c_str());
 }
 
-int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVector ** /*inputVector*/, vtkInformationVector *outputVector)
 {
 //  std::cout << "########################################## vtkMEDReader::RequestInformation ##########################################" << std::endl;
   if(!this->Internal)
@@ -422,7 +422,7 @@ int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVect
   return 1;
 }
 
-int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector ** /*inputVector*/, vtkInformationVector *outputVector)
 {
 //  std::cout << "########################################## vtkMEDReader::RequestData ##########################################" << std::endl;
   if(!this->Internal)
@@ -432,7 +432,7 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector **in
 //      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
-      bool isUpdated(false);
+      //bool isUpdated(false); // todo: unused
       double reqTS(0.);
       if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
         reqTS=outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
@@ -582,7 +582,7 @@ int vtkMEDReader::GetTimesFlagsArrayStatus(const char *name)
   return (int)this->Internal->TK.getTimesFlagArray()[pos].first;
 }
 
-void vtkMEDReader::UpdateSIL(vtkInformation* request, vtkInformation *info)
+void vtkMEDReader::UpdateSIL(vtkInformation* /*request*/, vtkInformation * /*info*/)
 {
   if(!this->Internal)
       return;

@@ -43,7 +43,7 @@ class pqAbstractFieldsWidget : public pqPropertyWidget
   Q_PROPERTY(QList< QList< QVariant> > fieldsDomain READ getFields WRITE setFieldsDomain)
 public:
   pqAbstractFieldsWidget(
-    vtkSMProxy *smproxy, vtkSMProperty *smproperty, QWidget *parentObject = 0);
+  vtkSMProxy *smproxy, vtkSMProperty * smproperty, QWidget *parentObject = 0);
   virtual ~pqAbstractFieldsWidget();
 
   // Description
@@ -97,7 +97,7 @@ protected slots:
   virtual void onItemChanged(QTreeWidgetItem* itemOrig, int column) const;
 
 private:
-  Q_DISABLE_COPY(pqAbstractFieldsWidget);
+  Q_DISABLE_COPY(pqAbstractFieldsWidget)
 };
 
 #endif

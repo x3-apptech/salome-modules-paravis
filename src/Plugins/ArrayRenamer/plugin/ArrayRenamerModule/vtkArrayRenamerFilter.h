@@ -33,7 +33,7 @@ public:
   /// Returns pointer on a new instance of the class
   static vtkArrayRenamerFilter* New();
 
-  vtkTypeMacro(vtkArrayRenamerFilter, vtkDataSetAlgorithm);
+  vtkTypeMacro(vtkArrayRenamerFilter, vtkDataSetAlgorithm)
 
   void SetArrayInfo(const char* originarrayname, const char* newarrayname, bool copy);
   void ClearArrayInfo();

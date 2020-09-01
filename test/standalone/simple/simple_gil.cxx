@@ -37,9 +37,9 @@ int main(int argc, char ** argv)
 
     // Nothing important, just a bunch of calls to some Py* functions!
     PyRun_SimpleString("import base64");
-    PyObject * sysmod = PyImport_AddModule("sys");
-    PyObject* sysdict = PyModule_GetDict(sysmod);
-    PyObject* tmp = PyDict_GetItemString(sysdict, "modules");
+    /*PyObject * sysmod = */PyImport_AddModule("sys"); // todo: unused
+    //PyObject* sysdict = PyModule_GetDict(sysmod); // todo: unused
+    //PyObject* tmp = PyDict_GetItemString(sysdict, "modules"); // todo: unused
   }
   std::cout << "Done with Py call" << std::endl;
 

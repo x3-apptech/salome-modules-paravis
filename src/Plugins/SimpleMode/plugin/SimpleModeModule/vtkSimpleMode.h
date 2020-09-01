@@ -29,7 +29,7 @@ class VTK_EXPORT vtkSimpleMode : public vtkDataSetAlgorithm
 {
 public:
   static vtkSimpleMode* New();
-  vtkTypeMacro(vtkSimpleMode, vtkDataSetAlgorithm);
+  vtkTypeMacro(vtkSimpleMode, vtkDataSetAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   void SetInputArrayToProcess(

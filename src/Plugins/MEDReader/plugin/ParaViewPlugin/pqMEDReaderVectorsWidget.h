@@ -33,7 +33,7 @@ public:
   virtual ~pqMEDReaderVectorsWidget();
 
 private:
-  Q_DISABLE_COPY(pqMEDReaderVectorsWidget);
+  Q_DISABLE_COPY(pqMEDReaderVectorsWidget)
 
   class pqInternals;
   pqInternals* Internals;

@@ -29,7 +29,7 @@ class VTK_EXPORT vtkGaussToCell : public vtkUnstructuredGridAlgorithm
 {
 public:
   static vtkGaussToCell* New();
-  vtkTypeMacro(vtkGaussToCell, vtkUnstructuredGridAlgorithm);
+  vtkTypeMacro(vtkGaussToCell, vtkUnstructuredGridAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   void SetAvgFlag(bool avgStatus);

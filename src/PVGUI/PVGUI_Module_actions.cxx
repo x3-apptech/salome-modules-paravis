@@ -409,7 +409,7 @@ void PVGUI_Module::pvCreateMenus()
   // Recent Files
    myRecentMenuId = createMenu( tr( "MEN_RECENT_FILES" ), aPVMnu, -1, 5 );
    QMenu* aMenu = menuMgr()->findMenu( myRecentMenuId );
-   pqRecentFilesMenu* aRecentFilesMenu = new pqRecentFilesMenu( *aMenu, getApp()->desktop() );
+   /*pqRecentFilesMenu* aRecentFilesMenu = */new pqRecentFilesMenu( *aMenu, getApp()->desktop() );
    QList<QAction*> anActns = aMenu->actions();
    for (int i = 0; i < anActns.size(); ++i)
      createMenu( anActns.at(i), myRecentMenuId );

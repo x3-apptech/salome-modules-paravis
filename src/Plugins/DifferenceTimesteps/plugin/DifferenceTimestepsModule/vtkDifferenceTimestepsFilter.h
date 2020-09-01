@@ -38,7 +38,7 @@ public:
   /// Returns pointer on a new instance of the class
   static vtkDifferenceTimestepsFilter* New();
 
-  vtkTypeMacro(vtkDifferenceTimestepsFilter, vtkMultiTimeStepAlgorithm);
+  vtkTypeMacro(vtkDifferenceTimestepsFilter, vtkMultiTimeStepAlgorithm)
 
   /// Prints current state of the objects
   void PrintSelf(ostream&, vtkIndent) override;

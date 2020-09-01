@@ -96,7 +96,7 @@ pqTabbedMultiViewWidget * PVViewer_GUIElements::getTabbedMultiViewWidget()
       // Create a new view proxy on the server
       pqObjectBuilder* builder = pqApplicationCore::instance()->getObjectBuilder();
       pqServer* active_serv = pqActiveObjects::instance().activeServer();
-      pqView * pqview = builder->createView(QString("RenderView"), active_serv);
+      /*pqView * pqview = */builder->createView(QString("RenderView"), active_serv); // todo: unused
     }
 
   return multiv;

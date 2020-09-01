@@ -43,9 +43,9 @@ void ParaMEDMEM2VTK::FillMEDCouplingUMeshInstanceFrom(SALOME_MED::MEDCouplingUMe
   //
   int spaceDim=(*tinyI)[1];
   int nbOfNodes=(*tinyI)[2];
-  int meshDim=(*tinyI)[5];
+  //int meshDim=(*tinyI)[5]; // todo: unused
   int nbOfCells=(*tinyI)[6];
-  int meshLength=(*tinyI)[7];
+  //int meshLength=(*tinyI)[7]; // todo: unused
   std::string name((*tinyS)[0]);
   //std::vector<std::string> compoNames(spaceDim);
   //for(int i=0;i<spaceDim;i++)

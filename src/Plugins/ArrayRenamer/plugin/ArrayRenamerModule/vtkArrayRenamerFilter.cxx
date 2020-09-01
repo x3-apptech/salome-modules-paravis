@@ -64,7 +64,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-vtkStandardNewMacro(vtkArrayRenamerFilter);
+vtkStandardNewMacro(vtkArrayRenamerFilter)
 
 //--------------------------------------------------------------------------------------------------
 vtkArrayRenamerFilter::vtkArrayRenamerFilter()
@@ -85,8 +85,8 @@ int vtkArrayRenamerFilter::RequestData(vtkInformation* theRequest,
   // std::cout<<"vtkArrayRenamerFilter::RequestData  !!! "<<std::endl;
 
   // Get the information
-  vtkInformation* anInputInfo = theInputVector[0]->GetInformationObject(0);
-  vtkInformation* anOutputInfo = theOutputVector->GetInformationObject(0);
+  //vtkInformation* anInputInfo = theInputVector[0]->GetInformationObject(0); // todo: unused
+  //vtkInformation* anOutputInfo = theOutputVector->GetInformationObject(0); // todo: unused
 
   vtkDataSet* anInput = vtkDataSet::GetData(theInputVector[0], 0);
   vtkDataSet* anOutput = vtkDataSet::GetData(theOutputVector, 0);

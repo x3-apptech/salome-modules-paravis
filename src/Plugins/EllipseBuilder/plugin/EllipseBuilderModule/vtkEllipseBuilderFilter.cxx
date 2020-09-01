@@ -107,7 +107,7 @@ list<std::string> GetListOfFields(vtkDataObject* theObject)
 }
 
 //------------------------------------------------------------------------------
-vtkStandardNewMacro(vtkEllipseBuilderFilter);
+vtkStandardNewMacro(vtkEllipseBuilderFilter)
 
 //------------------------------------------------------------------------------
 vtkEllipseBuilderFilter::vtkEllipseBuilderFilter() : vtkMultiBlockDataSetAlgorithm()

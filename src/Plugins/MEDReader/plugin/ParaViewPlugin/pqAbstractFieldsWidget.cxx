@@ -28,7 +28,7 @@
 #include <QHeaderView>
 //-----------------------------------------------------------------------------
 pqAbstractFieldsWidget::pqAbstractFieldsWidget(
-  vtkSMProxy *smproxy, vtkSMProperty *smproperty, QWidget *parentObject)
+  vtkSMProxy *smproxy, vtkSMProperty * /*smproperty*/, QWidget *parentObject)
 : Superclass(smproxy, parentObject)
 {
   this->NItems = 0;
@@ -86,7 +86,7 @@ QSize pqAbstractFieldsWidget::sizeHint() const
 }
 
 //-----------------------------------------------------------------------------
-void pqAbstractFieldsWidget::onItemChanged(QTreeWidgetItem* item, int column) const
+void pqAbstractFieldsWidget::onItemChanged(QTreeWidgetItem* /*item*/, int column) const
 {
   if (column != 0)
     {

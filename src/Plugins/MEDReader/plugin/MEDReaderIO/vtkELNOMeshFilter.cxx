@@ -39,7 +39,7 @@
 
 #include <map>
 
-vtkStandardNewMacro(vtkELNOMeshFilter);
+vtkStandardNewMacro(vtkELNOMeshFilter)
 
 vtkELNOMeshFilter::vtkELNOMeshFilter():ShrinkFactor(0.9999)
 {
@@ -49,7 +49,7 @@ vtkELNOMeshFilter::~vtkELNOMeshFilter()
 {
 }
 
-int vtkELNOMeshFilter::RequestData(vtkInformation *request,
+int vtkELNOMeshFilter::RequestData(vtkInformation * /*request*/,
     vtkInformationVector **input, vtkInformationVector *output)
 {
   vtkUnstructuredGrid *usgIn = vtkUnstructuredGrid::SafeDownCast(
@@ -80,7 +80,7 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
 
   // now copy ELNO data. Start by verifying if it is possible to
   // shallow copy the array.
-  vtkInformation *info(usgIn->GetInformation());
+  //vtkInformation *info(usgIn->GetInformation()); // todo: unused
   //
   vtkIdType nVerts(shrinked->GetNumberOfPoints()),ncell(usgIn->GetNumberOfCells());
   // first loop through all cells to check if a shallow copy is possible
@@ -190,7 +190,7 @@ int vtkELNOMeshFilter::RequestData(vtkInformation *request,
               for(vtkIdType cellId=0;cellId<ncell;cellId++)
                 {
                   vtkCell *cell(shrinked->GetCell(cellId));
-                  vtkIdType nbPoints(cell->GetNumberOfPoints()),offset(offsetPtr[cellId]);
+                  vtkIdType nbPoints(cell->GetNumberOfPoints())/*,offset(offsetPtr[cellId])*/; // todo: offset is unused
                   for(vtkIdType j=0;j<nbPoints;j++,zeId++)
                     newArray->SetTuple(zeId,offsetPtr[cellId]+j,data);
                 }

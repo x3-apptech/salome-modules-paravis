@@ -38,7 +38,7 @@
 #include <algorithm>
 
 //----------------------------------------------
-vtkStandardNewMacro(vtkParaGEOMCorbaSource);
+vtkStandardNewMacro(vtkParaGEOMCorbaSource)
 
 void *vtkParaGEOMCorbaSource::Orb=0;
 
@@ -95,12 +95,13 @@ int vtkParaGEOMCorbaSource::FillOutputPortInformation(int vtkNotUsed(port), vtkI
 }
 
 //----------------------------------------------
-int vtkParaGEOMCorbaSource::RequestData(vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outputVector) {
+int vtkParaGEOMCorbaSource::RequestData(vtkInformation* /*request*/, vtkInformationVector** /*inInfo*/, vtkInformationVector* outputVector) {
   vtkInformation *outInfo=outputVector->GetInformationObject(0);
   vtkMultiBlockDataSet *ret0=vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
-  double reqTS = 0;
+  /*double reqTS = 0; // todo: unused
   if(outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
     reqTS = outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
+  */
   try {
     //Client request on ORB.
     CORBA::ORB_var *OrbC=(CORBA::ORB_var *)this->Orb;

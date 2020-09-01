@@ -48,7 +48,7 @@
 #include "ParaMEDCouplingCorbaServant.hh"
 //
 
-vtkStandardNewMacro(vtkParaMEDCorbaSource);
+vtkStandardNewMacro(vtkParaMEDCorbaSource)
 //vtkCxxRevisionMacro(vtkParaMEDCorbaSource,"$Revision$");
 
 void *vtkParaMEDCorbaSource::Orb=0;
@@ -137,7 +137,7 @@ int vtkParaMEDCorbaSource::FillOutputPortInformation(int vtkNotUsed(port), vtkIn
   return 1;
 }
 
-int vtkParaMEDCorbaSource::RequestInformation(vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outInfo)
+int vtkParaMEDCorbaSource::RequestInformation(vtkInformation* /*request*/, vtkInformationVector** /*inInfo*/, vtkInformationVector* outInfo)
 {
   vtkInformation* myInfo=outInfo->GetInformationObject(0);
   //myInfo->Set(vtkDataObject::DATA_TYPE_NAME(),"vtkUnstructuredGrid");
@@ -188,7 +188,7 @@ int vtkParaMEDCorbaSource::RequestInformation(vtkInformation* request, vtkInform
   return 1;
 }
 
-int vtkParaMEDCorbaSource::RequestData(vtkInformation* request, vtkInformationVector** inInfo, vtkInformationVector* outputVector)
+int vtkParaMEDCorbaSource::RequestData(vtkInformation* /*request*/, vtkInformationVector** /*inInfo*/, vtkInformationVector* outputVector)
 {
   vtkInformation *outInfo=outputVector->GetInformationObject(0);
   //
@@ -273,6 +273,7 @@ int vtkParaMEDCorbaSource::RequestData(vtkInformation* request, vtkInformationVe
   catch(CORBA::Exception&) {
     vtkErrorMacro("On fetching object error occurs");
   }
+  return 0;
 }
 
 void vtkParaMEDCorbaSource::PrintSelf(ostream& os, vtkIndent indent)

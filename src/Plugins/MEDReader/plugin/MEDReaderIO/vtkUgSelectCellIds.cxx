@@ -28,7 +28,7 @@
 #include "vtkCellData.h"
 #include "vtkPointData.h"
 
-vtkStandardNewMacro(vtkUgSelectCellIds);
+vtkStandardNewMacro(vtkUgSelectCellIds)
 
 void vtkUgSelectCellIds::SetIds(vtkIdTypeArray *ids)
 {

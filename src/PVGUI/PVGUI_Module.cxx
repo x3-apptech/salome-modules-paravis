@@ -1000,7 +1000,7 @@ void PVGUI_Module::onViewManagerRemoved( SUIT_ViewManager* vm )
 /*!
   \brief Show toolbars at \a vw PV view window creating when PARAVIS is active.
 */
-void PVGUI_Module::onPVViewCreated( SUIT_ViewWindow* vw )
+void PVGUI_Module::onPVViewCreated( SUIT_ViewWindow* /*vw*/ )
 {
   myGuiElements->setToolBarVisible( true );
   restoreDockWidgetsState();

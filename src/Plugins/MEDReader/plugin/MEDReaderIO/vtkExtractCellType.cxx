@@ -58,12 +58,13 @@
 #include <map>
 #include <deque>
 
-vtkStandardNewMacro(vtkExtractCellType);
+vtkStandardNewMacro(vtkExtractCellType)
 
-vtkCxxSetObjectMacro(vtkExtractCellType, SIL, vtkMutableDirectedGraph);
+vtkCxxSetObjectMacro(vtkExtractCellType, SIL, vtkMutableDirectedGraph)
 
 ///////////////////
 
+/// \cond PRIVATE
 class ExtractCellTypeStatus
 {
 public:
@@ -216,7 +217,7 @@ bool vtkExtractCellType::vtkExtractCellTypeInternal::getStatusOfEntryStr(const c
       const ExtractCellTypeStatus& elt(getEntry(entry));
       return elt.getStatus();
     }  
-  catch (INTERP_KERNEL::Exception e)
+  catch (INTERP_KERNEL::Exception& /*e*/)
     {      
       //std::cerr << vtkDebugMacro"Exception has been thrown in vtkExtractCellType::vtkExtractCellTypeInternal::getStatusOfEntryStr : " << e.what() << std::endl;
       return false;
@@ -230,7 +231,7 @@ void vtkExtractCellType::vtkExtractCellTypeInternal::setStatusOfEntryStr(const c
       const ExtractCellTypeStatus& elt(getEntry(entry));
       elt.setStatus(status);
     }
-  catch (INTERP_KERNEL::Exception e)
+  catch (INTERP_KERNEL::Exception& /*e*/)
     {      
       //std::cerr << "Exception has been thrown in vtkExtractCellType::vtkExtractCellTypeInternal::setStatusOfEntryStr : " << e.what() << std::endl;
     }
@@ -267,10 +268,11 @@ void ExtractCellTypeStatus::feedSIL(vtkMutableDirectedGraph *sil, vtkIdType root
 {
   vtkIdType InfoGeoType(sil->AddChild(root,childEdge));
   names.push_back(_type_str);
-  vtkIdType InfoVTKID(sil->AddChild(InfoGeoType,childEdge));
+  /*vtkIdType InfoVTKID(*/sil->AddChild(InfoGeoType,childEdge)/*)*/; // todo: unused
   std::ostringstream oss; oss << _vtkt;
   names.push_back(oss.str());
 }
+/// \endcond PRIVATE
 
 ////////////////////
 
@@ -294,7 +296,7 @@ void vtkExtractCellType::SetInsideOut(int val)
     }
 }
 
-int vtkExtractCellType::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkExtractCellType::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   try
     {
@@ -375,8 +377,8 @@ vtkDataSet *FilterFamilies(vtkDataSet *input, const std::vector<int>& idsToKeep,
   output->ShallowCopy(input);
   vtkSmartPointer<vtkThreshold> thres(vtkSmartPointer<vtkThreshold>::New());
   thres->SetInputData(output);
-  vtkDataSetAttributes *dscIn(input->GetCellData()),*dscIn2(input->GetPointData());
-  vtkDataSetAttributes *dscOut(output->GetCellData()),*dscOut2(output->GetPointData());
+  //vtkDataSetAttributes *dscIn(input->GetCellData()),*dscIn2(input->GetPointData()); // todo: unused
+  //vtkDataSetAttributes *dscOut(output->GetCellData()),*dscOut2(output->GetPointData()); // todo: unused
   //
   double vMin(insideOut==0?1.:0.),vMax(insideOut==0?2.:1.);
   thres->ThresholdBetween(vMin,vMax);
@@ -414,14 +416,14 @@ vtkDataSet *FilterFamilies(vtkDataSet *input, const std::vector<int>& idsToKeep,
   return zeComputedOutput;
 }
 
-int vtkExtractCellType::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkExtractCellType::RequestData(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   try
     {
       //std::cerr << "########################################## vtkExtractCellType::RequestData        ##########################################" << std::endl;
       vtkInformation* inputInfo=inputVector[0]->GetInformationObject(0);
       vtkDataSet *input(vtkDataSet::SafeDownCast(inputInfo->Get(vtkDataObject::DATA_OBJECT())));
-      vtkInformation *info(input->GetInformation());
+      //vtkInformation *info(input->GetInformation()); // todo: unused
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkDataSet *output(vtkDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       std::vector<int> idsToKeep(this->Internal->getIdsToKeep());

@@ -87,7 +87,7 @@ using MEDCoupling::MEDCouplingFieldDouble;
 using MEDCoupling::ON_GAUSS_PT;
 using MEDCoupling::MCAuto;
 
-vtkStandardNewMacro(vtkVoroGauss);
+vtkStandardNewMacro(vtkVoroGauss)
 ///////////////////
 
 std::map<int,int> ComputeMapOfType()
@@ -287,13 +287,13 @@ void ConvertFromUnstructuredGrid(vtkUnstructuredGrid *ds, std::vector< MCAuto<ME
   vtkCellArray *ca(ds->GetCells());
   if(!ca)
     return ;
-  vtkIdType nbEnt(ca->GetNumberOfConnectivityEntries());
-  vtkIdType *caPtr(ca->GetData()->GetPointer(0));
+  //vtkIdType nbEnt(ca->GetNumberOfConnectivityEntries()); // todo: unused
+  //vtkIdType *caPtr(ca->GetData()->GetPointer(0)); // todo: unused
   vtkUnsignedCharArray *ct(ds->GetCellTypesArray());
   if(!ct)
     throw INTERP_KERNEL::Exception("ConvertFromUnstructuredGrid : internal error");
   vtkIdTypeArray *cla(ds->GetCellLocationsArray());
-  const vtkIdType *claPtr(cla->GetPointer(0));
+  //const vtkIdType *claPtr(cla->GetPointer(0)); // todo: unused
   if(!cla)
     throw INTERP_KERNEL::Exception("ConvertFromUnstructuredGrid : internal error 2");
   const unsigned char *ctPtr(ct->GetPointer(0));
@@ -315,7 +315,7 @@ void ConvertFromUnstructuredGrid(vtkUnstructuredGrid *ds, std::vector< MCAuto<ME
         }
     }
   MCAuto<DataArrayInt> levs(lev->getDifferentValues());
-  vtkIdTypeArray *faces(ds->GetFaces()),*faceLoc(ds->GetFaceLocations());
+  //vtkIdTypeArray *faces(ds->GetFaces()),*faceLoc(ds->GetFaceLocations()); // todo: unused
   for(const int *curLev=levs->begin();curLev!=levs->end();curLev++)
     {
       MCAuto<MEDCouplingUMesh> m0(MEDCouplingUMesh::New("",*curLev));
@@ -660,7 +660,7 @@ vtkSmartPointer<vtkUnstructuredGrid> Voronize(const MEDCouplingUMesh *m, const D
           throw INTERP_KERNEL::Exception(oss.str());
         }
       int np(gaussLoc->GetNumberOfQuadraturePoints()),nbPtsPerCell((int)cm.getNumberOfNodes());
-      const double *sfw(gaussLoc->GetShapeFunctionWeights()),*w(gaussLoc->GetQuadratureWeights());;
+      const double /**sfw(gaussLoc->GetShapeFunctionWeights()),*/*w(gaussLoc->GetQuadratureWeights());; // todo: sfw is unused
       std::vector<double> refCoo,posInRefCoo,wCpp(w,w+np);
       FillAdvInfoFrom((*it2).second,GaussAdvData,np,nbPtsPerCell,refCoo,posInRefCoo);
       field->setGaussLocalizationOnType(*it,refCoo,posInRefCoo,wCpp);
@@ -838,7 +838,7 @@ vtkVoroGauss::~vtkVoroGauss()
 {
 }
 
-int vtkVoroGauss::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkVoroGauss::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector * /*outputVector*/)
 { 
   //std::cerr << "########################################## vtkVoroGauss::RequestInformation ##########################################" << std::endl;
   try
@@ -860,7 +860,7 @@ int vtkVoroGauss::RequestInformation(vtkInformation *request, vtkInformationVect
   return 1;
 }
 
-int vtkVoroGauss::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkVoroGauss::RequestData(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   //std::cerr << "########################################## vtkVoroGauss::RequestData        ##########################################" << std::endl;
   try
@@ -874,7 +874,7 @@ int vtkVoroGauss::RequestData(vtkInformation *request, vtkInformationVector **in
       ExtractInfo(inputVector[0],usgIn);
       //
       vtkSmartPointer<vtkUnstructuredGrid> ret(ComputeVoroGauss(usgIn,GaussAdvData));
-      vtkInformation *inInfo(inputVector[0]->GetInformationObject(0));
+      //vtkInformation *inInfo(inputVector[0]->GetInformationObject(0)); // todo: unused
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkUnstructuredGrid *output(vtkUnstructuredGrid::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       output->ShallowCopy(ret);

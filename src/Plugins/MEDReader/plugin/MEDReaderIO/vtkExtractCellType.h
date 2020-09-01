@@ -44,10 +44,10 @@ protected:
   vtkExtractCellType();
   ~vtkExtractCellType();
 
-  int RequestInformation(vtkInformation *request,
+  int RequestInformation(vtkInformation * request,
       vtkInformationVector **inputVector, vtkInformationVector *outputVector);
 
-  int RequestData(vtkInformation *request, vtkInformationVector **inputVector,
+  int RequestData(vtkInformation * request, vtkInformationVector **inputVector,
       vtkInformationVector *outputVector);
   // Description:
   // This SIL stores the structure of the mesh/groups/cell types

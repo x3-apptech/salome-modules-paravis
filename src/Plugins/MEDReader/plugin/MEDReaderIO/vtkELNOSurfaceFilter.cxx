@@ -37,7 +37,6 @@
 //vtkCxxRevisionMacro(vtkELNOSurfaceFilter, "$Revision$")
 //;
 vtkStandardNewMacro(vtkELNOSurfaceFilter)
-;
 
 vtkELNOSurfaceFilter::vtkELNOSurfaceFilter()
 {
@@ -47,7 +46,7 @@ vtkELNOSurfaceFilter::~vtkELNOSurfaceFilter()
 {
 }
 
-int vtkELNOSurfaceFilter::RequestData(vtkInformation *request, vtkInformationVector **input, vtkInformationVector *output)
+int vtkELNOSurfaceFilter::RequestData(vtkInformation * /*request*/, vtkInformationVector **input, vtkInformationVector *output)
 {
   vtkUnstructuredGrid *usgIn=vtkUnstructuredGrid::SafeDownCast(
       input[0]->GetInformationObject(0)->Get(vtkDataObject::DATA_OBJECT()));

@@ -33,7 +33,7 @@
 #include <vtkQuadratureSchemeDefinition.h>
 
 //-----------------------------------------------------------------------------
-vtkStandardNewMacro(vtkMEDQuadraturePointsGenerator);
+vtkStandardNewMacro(vtkMEDQuadraturePointsGenerator)
 
 //-----------------------------------------------------------------------------
 vtkMEDQuadraturePointsGenerator::vtkMEDQuadraturePointsGenerator()

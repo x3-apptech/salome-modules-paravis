@@ -46,10 +46,10 @@ protected:
   vtkExtractGroup();
   ~vtkExtractGroup();
 
-  int RequestInformation(vtkInformation *request,
+  int RequestInformation(vtkInformation * request,
       vtkInformationVector **inputVector, vtkInformationVector *outputVector);
 
-  int RequestData(vtkInformation *request, vtkInformationVector **inputVector,
+  int RequestData(vtkInformation * request, vtkInformationVector **inputVector,
       vtkInformationVector *outputVector);
 
   // Description:

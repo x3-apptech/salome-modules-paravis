@@ -54,11 +54,11 @@ vtkJSONException::vtkJSONException(const char *reason) : Reason(reason) {
 }
 
 //---------------------------------------------------
-vtkJSONException::~vtkJSONException() throw () {
+vtkJSONException::~vtkJSONException() noexcept {
 }
 
 //---------------------------------------------------
-const char* vtkJSONException::what() const throw() {
+const char* vtkJSONException::what() const noexcept {
   return Reason.c_str();
 }
 
@@ -69,7 +69,7 @@ public:
   typedef std::vector<std::pair<std::string,std::vector<double> > > DataType;
   Container(){}
   void initKeys(std::vector<std::string> &keys, std::string &err) {
-    for(int i = 0; i < keys.size(); i++) {
+    for(int i = 0; i < (int)keys.size(); i++) {
       if( !checkVar(keys[i].c_str()) ) {
 	std::ostringstream oss;
 	oss<<"Bad key value '"<<keys[i].c_str()<<"'";
@@ -88,7 +88,7 @@ public:
       return;
     }
     bool found = false;
-    for(int i = 0; i < _data.size(); i++) {
+    for(int i = 0; i < (int)_data.size(); i++) {
       if(_data[i].first == key) {
 	_data[i].second.push_back(value);
 	found = true;
@@ -114,7 +114,7 @@ private:
   DataType _data;
 };
 
-vtkStandardNewMacro(vtkJSONReader);
+vtkStandardNewMacro(vtkJSONReader)
 
 //---------------------------------------------------
 vtkJSONReader::vtkJSONReader() {
@@ -159,7 +159,7 @@ int vtkJSONReader::RequestData(vtkInformation*,
     this->Parse(root, output_table);
     return 1;
   } 
-  catch(vtkJSONException e)  {
+  catch(vtkJSONException& e)  {
     std::ostringstream oss;
     oss<<e.what();
     if(this->HasObserver("ErrorEvent") )
@@ -251,10 +251,10 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
       jSONListOfNames = jSONMetaData.get(SHT, Json::Value::null);
       std::ostringstream oss;
       oss<< "Short Names : [ ";
-      for (int i = 0; i < jSONListOfNames.size(); i++) {
+      for (int i = 0; i < (int)jSONListOfNames.size(); i++) {
         oss << "'" << jSONListOfNames[i].asString() << "'";
 	short_names.push_back(jSONListOfNames[i].asString());
-        if ( i != jSONListOfNames.size() - 1 ) {
+        if ( i != (int)jSONListOfNames.size() - 1 ) {
           oss << ", ";
         }
       }
@@ -267,9 +267,9 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
       jSONListOfLongName = jSONMetaData.get(LNG, Json::Value::null);
       std::ostringstream oss;
       oss << "Long Names : [ ";
-      for (int i = 0; i < jSONListOfLongName.size(); ++i) {
+      for (int i = 0; i < (int)jSONListOfLongName.size(); ++i) {
         oss << "'" << jSONListOfLongName[i].asString() << "'";
-        if ( i != jSONListOfLongName.size()-1 ) {
+        if ( i != (int)jSONListOfLongName.size()-1 ) {
           oss << ", ";
         }
       }
@@ -281,9 +281,9 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
       hasUnits = true;
       std::ostringstream oss;
       oss << "Units : [ ";
-      for (int i = 0; i < jSONListOfUnits.size(); ++i) {
+      for (int i = 0; i < (int)jSONListOfUnits.size(); ++i) {
         oss << "'" << jSONListOfUnits[i].asString() << "'";
-        if ( i != jSONListOfUnits.size()-1 ) {
+        if ( i != (int)jSONListOfUnits.size()-1 ) {
           oss << ", ";
         }
       }
@@ -333,7 +333,7 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
       }
       initContainer = true;
     }
-    for(int i=0; i < members.size(); i++) { 
+    for(int i=0; i < (int)members.size(); i++) { 
       Json::Value val = (*it).get(members[i],Json::Value::null);
       double value = 0.0;
       switch (val.type()) {	
@@ -374,7 +374,7 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
   if(data.size() > 0)
     nbRows = data[0].second.size();
 
-  for(int i = 0; i < data.size(); i++) {
+  for(int i = 0; i < (int)data.size(); i++) {
     vtkDoubleArray* newCol = vtkDoubleArray::New();
     newCol->SetNumberOfValues(nbRows);
     std::string name = data[i].first;
@@ -386,7 +386,7 @@ void vtkJSONReader::Parse(Json::Value& root, vtkTable *table) {
     }
     name += "]";
     newCol->SetName(name.c_str());
-    for(int j = 0; j < data[i].second.size(); j++) {
+    for(int j = 0; j < (int)data[i].second.size(); j++) {
       newCol->SetValue(j, data[i].second[j]);
     }
     table->AddColumn(newCol);

@@ -34,7 +34,7 @@ public:
   /// Returns pointer on a new instance of the class
   static vtkEllipseBuilderFilter* New();
 
-  vtkTypeMacro(vtkEllipseBuilderFilter, vtkMultiBlockDataSetAlgorithm);
+  vtkTypeMacro(vtkEllipseBuilderFilter, vtkMultiBlockDataSetAlgorithm)
 
   /// Prints current state of the objects
   void PrintSelf(ostream& os, vtkIndent indent) override;

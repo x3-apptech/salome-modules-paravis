@@ -67,7 +67,7 @@
 #include <map>
 #include <deque>
 
-vtkStandardNewMacro(vtkExtractGroup);
+vtkStandardNewMacro(vtkExtractGroup)
 
 class vtkExtractGroup::vtkExtractGroupInternal : public ExtractGroupInternal
 {
@@ -93,14 +93,14 @@ void vtkExtractGroup::SetInsideOut(int val)
     }
 }
 
-int vtkExtractGroup::RequestInformation(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkExtractGroup::RequestInformation(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector */*outputVector*/)
 {
 //  vtkUnstructuredGridAlgorithm::RequestInformation(request,inputVector,outputVector);
   try
     {
 //      std::cerr << "########################################## vtkExtractGroup::RequestInformation ##########################################" << std::endl;
 //      request->Print(cout);
-      vtkInformation *outInfo(outputVector->GetInformationObject(0));
+      //vtkInformation *outInfo(outputVector->GetInformationObject(0)); // todo: unused
       vtkInformation *inputInfo(inputVector[0]->GetInformationObject(0));
       if(!ExtractGroupInternal::IndependantIsInformationOK(vtkMEDReader::META_DATA(),inputInfo))
         {
@@ -140,8 +140,8 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   vtkDataSet *output(input->NewInstance());
   output->ShallowCopy(input);
   thres->SetInputData(output);
-  vtkDataSetAttributes *dscIn(input->GetCellData()),*dscIn2(input->GetPointData());
-  vtkDataSetAttributes *dscOut(output->GetCellData()),*dscOut2(output->GetPointData());
+  //vtkDataSetAttributes *dscIn(input->GetCellData()),*dscIn2(input->GetPointData()); // todo: unused
+  //vtkDataSetAttributes *dscOut(output->GetCellData()),*dscOut2(output->GetPointData()); // todo: unused
   //
   double vMin(insideOut==0?1.:0.),vMax(insideOut==0?2.:1.);
   thres->ThresholdBetween(vMin,vMax);
@@ -214,7 +214,7 @@ public:
 private:
   vtkDataSet *_ds;
 };
-int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
+int vtkExtractGroup::RequestData(vtkInformation * /*request*/, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   try
     {
@@ -233,7 +233,7 @@ int vtkExtractGroup::RequestData(vtkInformation *request, vtkInformationVector *
           return 0;
         }
       vtkDataSet *input(vtkDataSet::SafeDownCast(inputMB->GetBlock(0)));
-      vtkInformation *info(input->GetInformation());
+      //vtkInformation *info(input->GetInformation()); // todo: unused
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
       std::set<int> idsToKeep(this->Internal->getIdsToKeep());

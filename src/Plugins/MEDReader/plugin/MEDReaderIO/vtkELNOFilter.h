@@ -26,7 +26,7 @@ class VTK_EXPORT vtkELNOFilter: public vtkQuadraturePointsGenerator
 {
 public:
   static vtkELNOFilter *New();
-  vtkTypeMacro(vtkELNOFilter,vtkQuadraturePointsGenerator);
+  vtkTypeMacro(vtkELNOFilter,vtkQuadraturePointsGenerator)
   void PrintSelf(ostream& os, vtkIndent indent);
 
   // Description :

@@ -44,8 +44,8 @@ class VTK_EXPORT MZCException : public std::exception
 {
 public:
   MZCException(const std::string& s):_reason(s) { }
-  virtual const char *what() const throw() { return _reason.c_str(); }
-  virtual ~MZCException() throw() { }
+  virtual const char *what() const noexcept { return _reason.c_str(); }
+  virtual ~MZCException() noexcept { }
 private:
   std::string _reason;
 };

@@ -37,8 +37,8 @@ class VTK_EXPORT vtkJSONException : public std::exception
 {
 public:
   vtkJSONException(const char* reason);
-  ~vtkJSONException() throw();
-  const char* what() const throw();
+  ~vtkJSONException() noexcept;
+  const char* what() const noexcept;
 
 protected:
   std::string Reason;

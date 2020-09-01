@@ -28,7 +28,7 @@ class VTK_EXPORT vtkElevationSurfaceFilter : public vtkAlgorithm
 {
 public:
   static vtkElevationSurfaceFilter* New();
-  vtkTypeMacro(vtkElevationSurfaceFilter, vtkAlgorithm);
+  vtkTypeMacro(vtkElevationSurfaceFilter, vtkAlgorithm)
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   // Description :

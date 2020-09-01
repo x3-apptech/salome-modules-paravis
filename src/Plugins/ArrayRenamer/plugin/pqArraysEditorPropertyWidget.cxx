@@ -168,6 +168,7 @@ public:
         {
           if (myComponentsInfoVector[idx.row()].second == myComponentsInfoVector[idx.row()].first)
             return QApplication::palette().color(QPalette::Disabled, QPalette::Text);
+          break;
         }
         case Qt::FontRole:
         {
@@ -247,7 +248,7 @@ public:
   const ComponentsInfoType& componentsInfo() const { return myComponentsInfoVector; }
 
 private:
-  Q_DISABLE_COPY(pqComponentsModel);
+  Q_DISABLE_COPY(pqComponentsModel)
 };
 
 /// Table model for the array's table
@@ -265,10 +266,10 @@ public:
 
   public:
     //------------------------------------------------------------------
-    const int nbComps() const { return myComponentsInfo.size(); }
+    int nbComps() const { return myComponentsInfo.size(); }
 
     //------------------------------------------------------------------
-    const bool isCompomentsModified() const
+    bool isCompomentsModified() const
     {
       foreach (pqComponentsModel::SingleComponentInfoType item, myComponentsInfo)
       {
@@ -376,6 +377,7 @@ public:
         {
           if (myArraysInfo[idx.row()].second.newName == myArraysInfo[idx.row()].first)
             return QApplication::palette().color(QPalette::Disabled, QPalette::Text);
+          break;
         }
         case Qt::FontRole:
         {
@@ -480,11 +482,11 @@ public:
   ArraysInfoType& editArraysInfo() { return myArraysInfo; }
 
 private:
-  Q_DISABLE_COPY(pqArraysModel);
+  Q_DISABLE_COPY(pqArraysModel)
 };
 
 //-----------------------------------------------------------------------------
-pqEditComponents::pqEditComponents(pqComponentsModel* model, QWidget* parent)
+pqEditComponents::pqEditComponents(pqComponentsModel* model, QWidget* /*parent*/)
 {
 
   myComponentsModel = model;
@@ -673,7 +675,7 @@ QList<QVariant> pqArraysEditorPropertyWidget::componentsInfo() const
 
 //-----------------------------------------------------------------------------
 void pqArraysEditorPropertyWidget::onDataChanged(
-  const QModelIndex& topleft, const QModelIndex& btmright)
+  const QModelIndex& topleft, const QModelIndex& /*btmright*/)
 {
   if (topleft.column() == pqArraysModel::PROCESSING || topleft.column() == pqArraysModel::NEW_NAME)
   {

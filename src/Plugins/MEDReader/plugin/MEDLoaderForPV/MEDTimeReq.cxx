@@ -39,7 +39,7 @@ MEDStdTimeReq::MEDStdTimeReq(int timeReq):_time_req(timeReq)
 /*!
  * Does nothing ! It is not a bug
  */
-void MEDStdTimeReq::setNumberOfTS(int nbOfTS) const
+void MEDStdTimeReq::setNumberOfTS(int /*nbOfTS*/) const
 {
 }
 

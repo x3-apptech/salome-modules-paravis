@@ -70,7 +70,7 @@
 #include <map>
 #include <sstream>
 
-vtkStandardNewMacro(vtkMEDWriter);
+vtkStandardNewMacro(vtkMEDWriter)
 
 using MEDCoupling::MCAuto;
 using MEDCoupling::MEDFileData;
@@ -140,7 +140,6 @@ void LoadFamGrpMapInfo(vtkMutableDirectedGraph* sil, std::string& meshName,
       "There is an internal error ! The tree on server side has not the expected look !");
   vtkAdjacentVertexIterator* it0(vtkAdjacentVertexIterator::New());
   sil->GetAdjacentVertices(id0, it0);
-  int kk(0), ll(0);
   while (it0->HasNext())
   {
     vtkIdType id1(it0->Next());
@@ -194,7 +193,7 @@ vtkMEDWriter::vtkMEDWriter()
 vtkMEDWriter::~vtkMEDWriter() {}
 
 int vtkMEDWriter::RequestInformation(
-  vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector)
+  vtkInformation* /*request*/, vtkInformationVector** inputVector, vtkInformationVector* /*outputVector*/)
 {
   // std::cerr << "########################################## vtkMEDWriter::RequestInformation
   // ########################################## " << (const char *) this->FileName << std::endl;
