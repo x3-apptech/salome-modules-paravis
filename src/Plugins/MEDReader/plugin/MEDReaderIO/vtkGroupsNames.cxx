@@ -23,6 +23,7 @@
 #include "vtkMEDReader.h"
 #include "vtkUgSelectCellIds.h"
 #include "MEDFileFieldRepresentationTree.hxx"
+#include "vtkLongArray.h"
 #include "VTKMEDTraits.hxx"
 
 #include <vtkCellArray.h>
