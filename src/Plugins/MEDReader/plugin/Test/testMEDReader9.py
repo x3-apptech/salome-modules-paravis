@@ -49,14 +49,12 @@ def test():
     ################### MED write is done -> Go to MEDReader
     myMedReader=MEDReader(FileName=fname)
     myMedReader.AllArrays=['TS0/m1/ComSup0/f1@@][@@P0']
-    #myMedReader.UpdatePipelineInformation()
     ExtractGroup1=ExtractGroup(Input=myMedReader)
-    #ExtractGroup1.UpdatePipelineInformation()
+    ExtractGroup1.UpdatePipeline()
     assert(ExtractGroup1.GetProperty("MeshName")[0]=="m1")
     myMedReader.AllArrays=['TS0/m2/ComSup0/f2@@][@@P0']
-    #myMedReader.UpdatePipeline()
     ExtractGroup2=ExtractGroup(Input=myMedReader)
-    #ExtractGroup2.UpdatePipelineInformation()
+    ExtractGroup2.UpdatePipeline()
     assert(ExtractGroup2.GetProperty("MeshName")[0]=="m2")
     
 if __name__ == "__main__":

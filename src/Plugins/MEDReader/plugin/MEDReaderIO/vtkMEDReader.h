@@ -62,8 +62,6 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   // Reload will delete the internal reader and recreate it with default properties
   virtual void Reload();
 
-  virtual int GetServerModifTime();
-  //
   virtual void GenerateVectors(int);
   virtual void ChangeMode(int);
   virtual void GhostCellGeneratorCallForPara(int);

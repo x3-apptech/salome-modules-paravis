@@ -22,31 +22,31 @@
 #include "vtkGenerateVectors.h"
 #include "MEDUtilities.hxx"
 
-#include "vtkMultiBlockDataSet.h"
-#include "vtkInformation.h"
-#include "vtkDataSetAttributes.h"
-#include "vtkStringArray.h"
-#include "vtkMutableDirectedGraph.h"
-#include "vtkInformationStringKey.h"
-//
-#include "vtkUnsignedCharArray.h"
-#include "vtkInformationVector.h"
-#include "vtkSmartPointer.h"
-#include "vtkVariantArray.h"
-#include "vtkExecutive.h"
-#include "vtkStreamingDemandDrivenPipeline.h"
-#include "vtkMultiTimeStepAlgorithm.h"
-#include "vtkUnstructuredGrid.h"
-#include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
-#include "vtkInformationDoubleVectorKey.h"
-#include "vtkQuadratureSchemeDefinition.h"
-#include "vtkPointData.h"
+#include "vtkCellArray.h"
 #include "vtkCellData.h"
 #include "vtkCellType.h"
-#include "vtkCellArray.h"
+#include "vtkDataSetAttributes.h"
+#include "vtkDataArraySelection.h"
 #include "vtkDoubleArray.h"
-#include "vtkObjectFactory.h"
+#include "vtkExecutive.h"
+#include "vtkInformation.h"
 #include "vtkInformationDataObjectMetaDataKey.h"
+#include "vtkInformationDoubleVectorKey.h"
+#include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
+#include "vtkInformationStringKey.h"
+#include "vtkInformationVector.h"
+#include "vtkMultiBlockDataSet.h"
+#include "vtkMultiTimeStepAlgorithm.h"
+#include "vtkMutableDirectedGraph.h"
+#include "vtkObjectFactory.h"
+#include "vtkPointData.h"
+#include "vtkQuadratureSchemeDefinition.h"
+#include "vtkSmartPointer.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
+#include "vtkStringArray.h"
+#include "vtkUnsignedCharArray.h"
+#include "vtkUnstructuredGrid.h"
+#include "vtkVariantArray.h"
 
 #ifdef MEDREADER_USE_MPI
 #include "vtkMultiProcessController.h"
@@ -61,127 +61,12 @@
 #include <sstream>
 #include <algorithm>
 
-/*!
- * This class stores properties in loading state mode (pvsm) when the MED file has not been read yet.
- * The file is not read beacause FileName has not been informed yet ! So this class stores properties of vtkMEDReader instance that
- * owns it and wait the vtkMEDReader::SetFileName to apply properties afterwards.
- */
-class PropertyKeeper
-{
-public:
-  PropertyKeeper(vtkMEDReader *master):IsGVActivated(false),GVValue(0),IsCMActivated(false),CMValue(0),IsGhostActivated(false),GCGCP(1),_master(master) { }
-  void assignPropertiesIfNeeded();
-  bool arePropertiesOnTreeToSetAfter() const;
-  //
-  void pushFieldStatusEntry(const char* name, int status);
-  void pushGenerateVectorsValue(int value);
-  void pushChangeModeValue(int value);
-  void pushTimesFlagsStatusEntry(const char* name, int status);
-  void pushGhost(int value);
-protected:
-  // pool of pairs to assign in SetFieldsStatus if needed. The use case is the load using pvsm.
-  std::vector< std::pair<std::string,int> > SetFieldsStatusPairs;
-  // generate vector
-  bool IsGVActivated;
-  int GVValue;
-  // change mode
-  bool IsCMActivated;
-  int CMValue;
-  // ghost cells
-  bool IsGhostActivated;
-  int GCGCP;
-  //
-  std::vector< std::pair<std::string,int> > TimesFlagsStatusPairs;
-  vtkMEDReader *_master;
-};
-
-void PropertyKeeper::assignPropertiesIfNeeded()
-{
-  if(!this->SetFieldsStatusPairs.empty())
-    {
-      for(std::vector< std::pair<std::string,int> >::const_iterator it=this->SetFieldsStatusPairs.begin();it!=this->SetFieldsStatusPairs.end();it++)
-        _master->SetFieldsStatus((*it).first.c_str(),(*it).second);
-      this->SetFieldsStatusPairs.clear();
-    }
-  if(!this->TimesFlagsStatusPairs.empty())
-    {
-      for(std::vector< std::pair<std::string,int> >::const_iterator it=this->TimesFlagsStatusPairs.begin();it!=this->TimesFlagsStatusPairs.end();it++)
-        _master->SetTimesFlagsStatus((*it).first.c_str(),(*it).second);
-      this->TimesFlagsStatusPairs.clear();
-    }
-  if(this->IsGVActivated)
-    {
-      _master->GenerateVectors(this->GVValue);
-      this->IsGVActivated=false;
-    }
-  if(this->IsCMActivated)
-    {
-      _master->ChangeMode(this->CMValue);
-      this->IsCMActivated=false;
-    }
-  if(this->IsGhostActivated)
-    {
-      _master->GhostCellGeneratorCallForPara(this->GCGCP);
-      this->IsGhostActivated=false;
-    }
-}
-
-void PropertyKeeper::pushFieldStatusEntry(const char* name, int status)
-{
-  bool found(false);
-  for(std::vector< std::pair<std::string,int> >::const_iterator it=this->SetFieldsStatusPairs.begin();it!=this->SetFieldsStatusPairs.end() && !found;it++)
-    found=(*it).first==name;
-  if(!found)
-    this->SetFieldsStatusPairs.push_back(std::pair<std::string,int>(name,status));
-}
-
-void PropertyKeeper::pushTimesFlagsStatusEntry(const char* name, int status)
-{
-  bool found(false);
-  for(std::vector< std::pair<std::string,int> >::const_iterator it=this->TimesFlagsStatusPairs.begin();it!=this->TimesFlagsStatusPairs.end() && !found;it++)
-    found=(*it).first==name;
-  if(!found)
-    this->TimesFlagsStatusPairs.push_back(std::pair<std::string,int>(name,status));
-}
-
-void PropertyKeeper::pushGenerateVectorsValue(int value)
-{
-  this->IsGVActivated=true;
-  this->GVValue=value;
-}
-
-void PropertyKeeper::pushChangeModeValue(int value)
-{
-  this->IsCMActivated=true;
-  this->CMValue=value;
-}
-
-void PropertyKeeper::pushGhost(int value)
-{
-  this->IsGhostActivated=true;
-  this->GCGCP=value;
-}
-
-bool PropertyKeeper::arePropertiesOnTreeToSetAfter() const
-{
-  return !SetFieldsStatusPairs.empty();
-}
-
 class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),PK(master),MyMTime(0),GCGCP(true),FirstCall0(2)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),GCGCP(true)
   {
-  }
-
-  bool PluginStart0()
-  {
-    return false; // TODO Useless and buggy
-    if(FirstCall0==0)
-      return false;
-    FirstCall0--;
-    return true;
   }
 
   ~vtkMEDReaderInternal()
@@ -191,6 +76,9 @@ public:
   }
 public:
   MEDFileFieldRepresentationTree Tree;
+  vtkNew<vtkDataArraySelection> FieldSelection;
+  vtkNew<vtkDataArraySelection> TimeFlagSelection;
+
   TimeKeeper TK;
   std::string FileName;
   //when true the file is MED file. when false it is a Sauv file
@@ -204,15 +92,7 @@ public:
   vtkMutableDirectedGraph* SIL;
   // store the lev0 id in Tree corresponding to the TIME_STEPS in the pipeline.
   int LastLev0;
-  // The property keeper is usable only in pvsm mode.
-  PropertyKeeper PK;
-  int MyMTime;
-  std::set<std::string> _wonderful_set;// this set is used by SetFieldsStatus method to detect the fact that SetFieldsStatus has been called for all items ! Great Items are not sorted ! Why ?
-  std::map<std::string,bool> _wonderful_ref;// this map stores the state before a SetFieldsStatus status.
   bool GCGCP;
-
-private:
-  unsigned char FirstCall0;
 };
 
 vtkStandardNewMacro(vtkMEDReader)
@@ -271,24 +151,11 @@ void vtkMEDReader::Reload()
   this->SetFileName(fName.c_str());
 }
 
-int vtkMEDReader::GetServerModifTime()
-{
-  if( !this->Internal )
-    return -1;
-  return this->Internal->MyMTime;
-}
-
 void vtkMEDReader::GenerateVectors(int val)
 {
   if ( !this->Internal )
     return;
   
-  if(this->Internal->FileName.empty())
-    {//pvsm mode
-      this->Internal->PK.pushGenerateVectorsValue(val);
-      return ;
-    }
-  //not pvsm mode (general case)
   bool val2((bool)val);
   if(val2!=this->Internal->GenerateVect)
     {
@@ -302,12 +169,6 @@ void vtkMEDReader::ChangeMode(int newMode)
   if ( !this->Internal )
     return;
   
-  if(this->Internal->FileName.empty())
-    {//pvsm mode
-      this->Internal->PK.pushChangeModeValue(newMode);
-      return ;
-    }
-  //not pvsm mode (general case)
   this->Internal->IsStdOrMode=newMode!=0;
   this->Modified();
 }
@@ -317,11 +178,6 @@ void vtkMEDReader::GhostCellGeneratorCallForPara(int gcgcp)
   if ( !this->Internal )
     return;
   
-  if(this->Internal->FileName.empty())
-    {//pvsm mode
-      this->Internal->PK.pushGhost(gcgcp);
-      return ;
-    }
   bool newVal(gcgcp!=0);
   if(newVal!=this->Internal->GCGCP)
     {
@@ -342,31 +198,7 @@ void vtkMEDReader::SetFileName(const char *fname)
   try
     {
       this->Internal->FileName=fname;
-      std::size_t pos(this->Internal->FileName.find_last_of('.'));
-      if(pos!=std::string::npos)
-        {
-          std::string ext(this->Internal->FileName.substr(pos));
-          if(ext.find("sauv")!=std::string::npos)
-            this->Internal->IsMEDOrSauv=false;
-        }
-      if(this->Internal->Tree.getNumberOfLeavesArrays()==0)
-        {
-          int iPart(-1),nbOfParts(-1);
-#ifdef MEDREADER_USE_MPI
-          vtkMultiProcessController *vmpc(vtkMultiProcessController::GetGlobalController());
-          if(vmpc)
-            {
-              iPart=vmpc->GetLocalProcessId();
-              nbOfParts=vmpc->GetNumberOfProcesses();
-            }
-#endif
-          this->Internal->Tree.loadMainStructureOfFile(this->Internal->FileName.c_str(),this->Internal->IsMEDOrSauv,iPart,nbOfParts);
-          if(!this->Internal->PK.arePropertiesOnTreeToSetAfter())
-            this->Internal->Tree.activateTheFirst();//This line manually initialize the status of server (this) with the remote client.
-          this->Internal->TK.setMaxNumberOfTimeSteps(this->Internal->Tree.getMaxNumberOfTimeSteps());
-        }
       this->Modified();
-      this->Internal->PK.assignPropertiesIfNeeded();
     }
   catch(INTERP_KERNEL::Exception& e)
     {
@@ -396,6 +228,65 @@ int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVect
     return 0;
   try
     {
+      // Process file meta data
+      std::size_t pos(this->Internal->FileName.find_last_of('.'));
+      if(pos!=std::string::npos)
+        {
+          std::string ext(this->Internal->FileName.substr(pos));
+          if(ext.find("sauv")!=std::string::npos)
+            this->Internal->IsMEDOrSauv=false;
+        }
+      if(this->Internal->Tree.getNumberOfLeavesArrays()==0)
+        {
+          int iPart(-1),nbOfParts(-1);
+#ifdef MEDREADER_USE_MPI
+          vtkMultiProcessController *vmpc(vtkMultiProcessController::GetGlobalController());
+          if(vmpc)
+            {
+              iPart=vmpc->GetLocalProcessId();
+              nbOfParts=vmpc->GetNumberOfProcesses();
+            }
+#endif
+          this->Internal->Tree.loadMainStructureOfFile(this->Internal->FileName.c_str(),this->Internal->IsMEDOrSauv,iPart,nbOfParts);
+          
+          // Leaves
+          this->Internal->Tree.activateTheFirst();//This line manually initialize the status of server (this) with the remote client.
+          for (int idLeaveArray = 0; idLeaveArray < this->Internal->Tree.getNumberOfLeavesArrays(); idLeaveArray++)
+          {
+            std::string name = this->Internal->Tree.getNameOf(idLeaveArray);
+            bool status = this->Internal->Tree.getStatusOf(idLeaveArray);
+            this->Internal->FieldSelection->AddArray(name.c_str(), status);
+          }
+        }
+
+      // Time flags
+      this->Internal->TK.setMaxNumberOfTimeSteps(this->Internal->Tree.getMaxNumberOfTimeSteps());
+      auto timeFlagsArray = this->Internal->TK.getTimesFlagArray();
+      for (int idTimeFlag = 0; idTimeFlag < timeFlagsArray.size() ; idTimeFlag++)
+      {
+        std::string name = timeFlagsArray[idTimeFlag].second;
+        bool status = timeFlagsArray[idTimeFlag].first;
+        this->Internal->TimeFlagSelection->AddArray(name.c_str(), status);
+      }
+
+      // Make sure internal model are synchronized
+      /// So the SIL is up to date
+      int nArrays = this->Internal->FieldSelection->GetNumberOfArrays();
+      for(int i = nArrays - 1; i >= 0; i--)
+      {
+        try
+        {
+        this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(
+          this->Internal->Tree.getIdHavingZeName(this->Internal->FieldSelection->GetArrayName(i)),
+          this->Internal->FieldSelection->GetArraySetting(i));
+        }
+        catch(INTERP_KERNEL::Exception& e)
+        {
+          // Remove the incorrect array
+          this->Internal->FieldSelection->RemoveArrayByIndex(i);
+        }
+      }
+
 //      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       outInfo->Set(vtkDataObject::DATA_TYPE_NAME(),"vtkMultiBlockDataSet");
@@ -428,7 +319,25 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector ** /
   if(!this->Internal)
     return 0;
   try
-    {
+  {
+      for(int i = 0; i < this->Internal->FieldSelection->GetNumberOfArrays(); i++)
+      {
+        this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(
+          this->Internal->Tree.getIdHavingZeName(this->Internal->FieldSelection->GetArrayName(i)), 
+          this->Internal->FieldSelection->GetArraySetting(i));
+      }
+          
+      auto& timeFlagsArray = this->Internal->TK.getTimesFlagArray();
+      if (timeFlagsArray.size() != this->Internal->TimeFlagSelection->GetNumberOfArrays())
+      {
+        throw INTERP_KERNEL::Exception("Unexpected size of TimeFlagSelection");
+      }
+      for(int i = 0; i < this->Internal->TimeFlagSelection->GetNumberOfArrays(); i++)
+      {
+        timeFlagsArray[i] = std::make_pair(this->Internal->TimeFlagSelection->GetArraySetting(i), 
+          this->Internal->TimeFlagSelection->GetArrayName(i));
+      }
+
 //      request->Print(cout);
       vtkInformation *outInfo(outputVector->GetInformationObject(0));
       vtkMultiBlockDataSet *output(vtkMultiBlockDataSet::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT())));
@@ -474,112 +383,74 @@ int vtkMEDReader::RequestData(vtkInformation *request, vtkInformationVector ** /
   return 1;
 }
 
-void vtkMEDReader::SetFieldsStatus(const char* name, int status)
-{
-  if( !this->Internal )
-    return;
-
-  //this->Internal->_wonderful_set.insert(name);
-  if(this->Internal->FileName.empty())
-    {//pvsm mode
-      this->Internal->PK.pushFieldStatusEntry(name,status);
-      return ;
-    }
-  if(this->Internal->_wonderful_set.empty())
-    this->Internal->_wonderful_ref=this->Internal->Tree.dumpState();// start of SetFieldsStatus serie -> store ref to compare at the end of the SetFieldsStatus serie.
-  this->Internal->_wonderful_set.insert(name);
-  //not pvsm mode (general case)
-  try
-    {
-      this->Internal->Tree.changeStatusOfAndUpdateToHaveCoherentVTKDataSet(this->Internal->Tree.getIdHavingZeName(name),status);
-      if((int)this->Internal->_wonderful_set.size()==GetNumberOfFieldsTreeArrays())
-        {
-          if(this->Internal->_wonderful_ref!=this->Internal->Tree.dumpState())
-            {
-              if(!this->Internal->PluginStart0())
-                {
-                  this->Modified();
-                }
-              this->Internal->MyMTime++;
-            }
-          this->Internal->_wonderful_set.clear();
-        }
-    }
-  catch(INTERP_KERNEL::Exception& e)
-    {
-      if(!this->Internal->FileName.empty())
-        {
-          std::cerr << "vtkMEDReader::SetFieldsStatus error : " << e.what() << " *** WITH STATUS=" << status << endl;
-          return ;
-        }
-    }
-}
-
+//------------------------------------------------------------------------------
 int vtkMEDReader::GetNumberOfFieldsTreeArrays()
 {
-  if(!this->Internal)
-    return 0;
-  return this->Internal->Tree.getNumberOfLeavesArrays();
+  return this->Internal->FieldSelection->GetNumberOfArrays();
 }
 
-const char *vtkMEDReader::GetFieldsTreeArrayName(int index)
+//------------------------------------------------------------------------------
+const char* vtkMEDReader::GetFieldsTreeArrayName(int index)
 {
-  if(!this->Internal)
-    return 0;
-  return this->Internal->Tree.getNameOfC(index);
+  return this->Internal->FieldSelection->GetArrayName(index);
 }
 
-int vtkMEDReader::GetFieldsTreeArrayStatus(const char *name)
+//------------------------------------------------------------------------------
+int vtkMEDReader::GetFieldsTreeArrayStatus(const char* name)
 {
-  if(!this->Internal)
-    return -1;
-
-  int zeId(this->Internal->Tree.getIdHavingZeName(name));
-  int ret(this->Internal->Tree.getStatusOf(zeId));
-  return ret;
+  return this->Internal->FieldSelection->ArrayIsEnabled(name);
 }
 
-void vtkMEDReader::SetTimesFlagsStatus(const char *name, int status)
+//------------------------------------------------------------------------------
+void vtkMEDReader::SetFieldsStatus(const char* name, int status)
 {
-  if (!this->Internal)
-    return;
-  
-  if(this->Internal->FileName.empty())
-    {//pvsm mode
-      this->Internal->PK.pushTimesFlagsStatusEntry(name,status);
-      return ;
+  if (this->GetFieldsTreeArrayStatus(name) != status)
+  {
+    if (status)
+    {
+      this->Internal->FieldSelection->EnableArray(name);
     }
-  //not pvsm mode (general case)
-  int pos(0);
-  std::istringstream iss(name); iss >> pos;
-  this->Internal->TK.getTimesFlagArray()[pos].first=(bool)status;
-  if(pos==(int)this->Internal->TK.getTimesFlagArray().size()-1)
-    if(!this->Internal->PluginStart0())
-      {
-        this->Modified();
-        //this->Internal->TK.printSelf(std::cerr);
-      }
+    else
+    {
+      this->Internal->FieldSelection->DisableArray(name);
+    }
+    this->Modified();
+  }
 }
 
+//------------------------------------------------------------------------------
 int vtkMEDReader::GetNumberOfTimesFlagsArrays()
 {
-  if(!this->Internal)
-    return 0;
-  return (int)this->Internal->TK.getTimesFlagArray().size();
+  return this->Internal->TimeFlagSelection->GetNumberOfArrays();
 }
 
-const char *vtkMEDReader::GetTimesFlagsArrayName(int index)
+//------------------------------------------------------------------------------
+const char* vtkMEDReader::GetTimesFlagsArrayName(int index)
 {
-  return this->Internal->TK.getTimesFlagArray()[index].second.c_str();
+  return this->Internal->TimeFlagSelection->GetArrayName(index);
 }
 
-int vtkMEDReader::GetTimesFlagsArrayStatus(const char *name)
+//------------------------------------------------------------------------------
+int vtkMEDReader::GetTimesFlagsArrayStatus(const char* name)
 {
-  if(!this->Internal)
-    return -1;
-  int pos(0);
-  std::istringstream iss(name); iss >> pos;
-  return (int)this->Internal->TK.getTimesFlagArray()[pos].first;
+  return this->Internal->TimeFlagSelection->ArrayIsEnabled(name);
+}
+
+//------------------------------------------------------------------------------
+void vtkMEDReader::SetTimesFlagsStatus(const char* name, int status)
+{
+  if (this->GetTimesFlagsArrayStatus(name) != status)
+  {
+    if (status)
+    {
+      this->Internal->TimeFlagSelection->EnableArray(name);
+    }
+    else
+    {
+      this->Internal->TimeFlagSelection->DisableArray(name);
+    }
+    this->Modified();
+  }
 }
 
 void vtkMEDReader::UpdateSIL(vtkInformation* /*request*/, vtkInformation * /*info*/)

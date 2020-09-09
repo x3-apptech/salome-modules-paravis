@@ -89,6 +89,13 @@ def test0(baseline_file):
     ################### MED write is done -> Go to MEDReader
 
     myMedReader=MEDReader(FileName=fname)
+
+    myMedReader.AllArrays = ['TS0/mesh/ComSup0/SolutionDEPL@@][@@P1', 'NotAValidName']
+    myMedReader.UpdatePipeline()
+    myMedReader.AllArrays = ['TS0/mesh/ComSup0/SolutionDEPL@@][@@P1', 'TS0/mesh/ComSup0/SolutionSIEF_ELGA@@][@@GAUSS', 'TS0/mesh/ComSup0/SolutionSIEQ_ELNO@@][@@GSSNE', 'TS0/mesh/ComSup0/mesh@@][@@P0']
+    myMedReader.UpdatePipeline()
+    assert(myMedReader.CellData.GetNumberOfArrays()==4)
+
     keys=myMedReader.GetProperty("FieldsTreeInfo")[::2]
     # list all the names of arrays that can be seen (including their spatial discretization)
     arr_name_with_dis=[elt.split("/")[-1] for elt in keys]

@@ -24,10 +24,6 @@
         </Documentation>
       </StringVectorProperty>
 
-      <IntVectorProperty command="GetServerModifTime" information_only="1" name="ServerModifTime">
-        <SimpleIntInformationHelper />
-      </IntVectorProperty>
-
       <!-- retrieves using GetNumberOf[FieldsTree]Arrays and GetFieldsTreeArrayName the keys used by FieldsStatus -->
       <StringVectorProperty name="FieldsTreeInfo" information_only="1">
         <ArraySelectionInformationHelper attribute_name="FieldsTree" />

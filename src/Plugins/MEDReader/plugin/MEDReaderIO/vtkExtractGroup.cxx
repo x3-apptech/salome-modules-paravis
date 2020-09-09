@@ -152,7 +152,7 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   if(!da)
     return 0;
   std::string daName(da->GetName());
-  typedef MEDFileVTKTraits<mcIdType>::VtkType vtkMCIdTypeArray;
+  typedef MEDFileVTKTraits<MEDCoupling::mcIdType>::VtkType vtkMCIdTypeArray;
   vtkMCIdTypeArray *dai(vtkMCIdTypeArray::SafeDownCast(da));
   if(daName!=arrNameOfFamilyField || !dai)
     return 0;
@@ -163,7 +163,7 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
   zeSelection->SetNumberOfComponents(1);
   char *pt(new char[nbOfTuples]);
   zeSelection->SetArray(pt,nbOfTuples,0,VTK_DATA_ARRAY_DELETE);
-  const mcIdType *inPtr(dai->GetPointer(0));
+  const MEDCoupling::mcIdType *inPtr(dai->GetPointer(0));
   std::fill(pt,pt+nbOfTuples,0);
   catchAll=true; catchSmth=false;
   std::vector<bool> pt2(nbOfTuples,false);
