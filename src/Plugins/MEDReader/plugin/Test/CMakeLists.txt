@@ -17,23 +17,34 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-#salome_accumulate_environment(PARAVIEW_DATA_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/Data)
-salome_generate_tests_environment(tests_env)
-list(APPEND tests_env "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data")
+if(NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  salome_generate_tests_environment(tests_env)
+  list(APPEND tests_env "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data")
+endif()
 
 if (PARAVIEW_ENABLE_PYTHON)
   file(GLOB pythonTests *.py)
   list(FILTER pythonTests EXCLUDE REGEX ".*MEDReaderHelper.py$")
+  list(FILTER pythonTests EXCLUDE REGEX ".*medreadertestlauncher.py$")
   foreach(testFullPath ${pythonTests})
     get_filename_component(testFile ${testFullPath} NAME)
-    paraview_add_test_python(NO_RT DIRECT_DATA ${testFile})
     get_filename_component(testName ${testFile} NAME_WE)
-#   set_tests_properties(Python-${testName} PROPERTIES ENVIRONMENT "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data;LD_LIBRARY_PATH=${QT5_ROOT_DIR}/lib/:${MEDCOUPLING_ROOT_DIR}/lib/:${MEDFILE_ROOT_DIR}/lib/:${HDF5_ROOT_DIR}/lib:${PYTHON_ROOT_DIR}/lib;PYTHONPATH=${MEDCOUPLING_ROOT_DIR}/lib/python3.6/site-packages/;PV_PLUGIN_PATH=${CMAKE_BINARY_DIR}/lib/paraview-5.7/plugins/MEDReader;PARAVIEW_BIN_DIR=${ParaView_DIR}/bin/")
-    set_tests_properties(Python-${testName} PROPERTIES ENVIRONMENT "${tests_env}")
+    if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+      paraview_add_test_python(NO_RT DIRECT_DATA ${testFile})
+      set_tests_properties(Python-${testName} PROPERTIES ENVIRONMENT "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data;LD_LIBRARY_PATH=${QT5_ROOT_DIR}/lib/:${MEDCOUPLING_ROOT_DIR}/lib/:${MEDFILE_ROOT_DIR}/lib/:${HDF5_ROOT_DIR}/lib:${PYTHON_ROOT_DIR}/lib;PYTHONPATH=${MEDCOUPLING_ROOT_DIR}/lib/python3.6/site-packages/;PV_PLUGIN_PATH=${CMAKE_BINARY_DIR}/lib/paraview-5.7/plugins/MEDReader;PARAVIEW_BIN_DIR=${ParaView_DIR}/bin/")
+    else()
+      set(_helper_script ${CMAKE_CURRENT_SOURCE_DIR}/medreadertestlauncher.py)
+      set(_baseline_dir ${CMAKE_CURRENT_SOURCE_DIR}/Test/Data/Baseline)
+      add_test(Python-${testName}
+               ${PYTHON_EXECUTABLE}
+               ${CMAKE_CURRENT_SOURCE_DIR}/medreadertestlauncher.py ${CMAKE_CURRENT_SOURCE_DIR}/${testFile}
+               ${_baseline_dir})
+      set_tests_properties(Python-${testName} PROPERTIES ENVIRONMENT "${tests_env}")
+    endif()
   endforeach()
 endif()
 
-if (PARAVIEW_USE_QT)
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND PARAVIEW_USE_QT)
   file(GLOB xmlTests *.xml)
   foreach(testFullPath ${xmlTests})
     get_filename_component(testFile ${testFullPath} NAME)
@@ -44,7 +55,6 @@ if (PARAVIEW_USE_QT)
       PLUGIN_PATH $<TARGET_FILE_DIR:MEDReader>
       BASELINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Data/Baseline
       TEST_SCRIPTS ${testFile})
-#   set_tests_properties(pv.${testName} PROPERTIES ENVIRONMENT "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data;LD_LIBRARY_PATH=${QT5_ROOT_DIR}/lib/:${MEDCOUPLING_ROOT_DIR}/lib/:${MEDFILE_ROOT_DIR}/lib/:${HDF5_ROOT_DIR}/lib:${PYTHON_ROOT_DIR}/lib")
-    set_tests_properties(pv.${testName} PROPERTIES ENVIRONMENT "${tests_env}")
+      set_tests_properties(pv.${testName} PROPERTIES ENVIRONMENT "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data;LD_LIBRARY_PATH=${QT5_ROOT_DIR}/lib/:${MEDCOUPLING_ROOT_DIR}/lib/:${MEDFILE_ROOT_DIR}/lib/:${HDF5_ROOT_DIR}/lib:${PYTHON_ROOT_DIR}/lib")
   endforeach()
 endif()
