@@ -404,7 +404,7 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
   MCAuto<DataArrayIdType> daId(MEDCoupling::DynamicCast<DataArray,DataArrayIdType>(da));
   if(dai.isNotNull() || daId.isNotNull())
     {
-      std::string fieldName(dai->getName());
+      std::string fieldName(da->getName());
       if((fieldName!=FAMFIELD_FOR_CELLS || tf!=MEDCoupling::ON_CELLS) && (fieldName!=FAMFIELD_FOR_NODES || tf!=MEDCoupling::ON_NODES))
         {
           if(!dai)
