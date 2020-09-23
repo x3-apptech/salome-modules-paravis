@@ -22,6 +22,10 @@ project(MEDReader)
 
 find_package(ParaView REQUIRED)
 
+IF(SALOME_USE_MPI)
+  ADD_DEFINITIONS(-DMEDREADER_USE_MPI)
+ENDIF(SALOME_USE_MPI)
+
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 enable_testing()
 
