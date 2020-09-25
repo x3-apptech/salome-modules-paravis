@@ -452,13 +452,16 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
       MCAuto<MEDFileAnyTypeField1TS> f1ts((operator->())->getTimeStepAtPos(tr->getCurrent()));
       MEDFileAnyTypeField1TS *f1tsPtr(f1ts);
       MEDFileField1TS *f1tsPtrDbl(dynamic_cast<MEDFileField1TS *>(f1tsPtr));
-      MEDFileIntField1TS *f1tsPtrInt(dynamic_cast<MEDFileIntField1TS *>(f1tsPtr));
+      MEDFileInt32Field1TS *f1tsPtrInt(dynamic_cast<MEDFileInt32Field1TS *>(f1tsPtr));
+      MEDFileInt64Field1TS *f1tsPtrInt64(dynamic_cast<MEDFileInt64Field1TS *>(f1tsPtr));
       MEDFileFloatField1TS *f1tsPtrFloat(dynamic_cast<MEDFileFloatField1TS *>(f1tsPtr));
       DataArray *crudeArr(0),*postProcessedArr(0);
       if(f1tsPtrDbl)
         crudeArr=f1tsPtrDbl->getUndergroundDataArray();
       else if(f1tsPtrInt)
         crudeArr=f1tsPtrInt->getUndergroundDataArray();
+      else if(f1tsPtrInt64)
+        crudeArr=f1tsPtrInt64->getUndergroundDataArray();
       else if(f1tsPtrFloat)
         crudeArr=f1tsPtrFloat->getUndergroundDataArray();
       else

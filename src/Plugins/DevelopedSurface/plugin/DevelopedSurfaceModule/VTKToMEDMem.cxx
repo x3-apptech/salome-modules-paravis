@@ -72,7 +72,8 @@ using MEDCoupling::MEDFileUMesh;
 using MEDCoupling::MEDFileFields;
 using MEDCoupling::MEDFileMeshes;
 
-using MEDCoupling::MEDFileIntField1TS;
+using MEDCoupling::MEDFileInt32Field1TS;
+using MEDCoupling::MEDFileInt64Field1TS;
 using MEDCoupling::MEDFileField1TS;
 using MEDCoupling::MEDFileIntFieldMultiTS;
 using MEDCoupling::MEDFileFieldMultiTS;
@@ -404,7 +405,7 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
   MCAuto<DataArrayIdType> daId(MEDCoupling::DynamicCast<DataArray,DataArrayIdType>(da));
   if(dai.isNotNull() || daId.isNotNull())
     {
-      std::string fieldName(dai->getName());
+      std::string fieldName(da->getName());
       if((fieldName!=FAMFIELD_FOR_CELLS || tf!=MEDCoupling::ON_CELLS) && (fieldName!=FAMFIELD_FOR_NODES || tf!=MEDCoupling::ON_NODES))
         {
           if(!dai)

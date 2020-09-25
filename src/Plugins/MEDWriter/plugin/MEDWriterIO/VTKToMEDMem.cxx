@@ -72,7 +72,8 @@ using MEDCoupling::MEDFileUMesh;
 using MEDCoupling::MEDFileFields;
 using MEDCoupling::MEDFileMeshes;
 
-using MEDCoupling::MEDFileIntField1TS;
+using MEDCoupling::MEDFileInt32Field1TS;
+using MEDCoupling::MEDFileInt64Field1TS;
 using MEDCoupling::MEDFileField1TS;
 using MEDCoupling::MEDFileIntFieldMultiTS;
 using MEDCoupling::MEDFileFieldMultiTS;
