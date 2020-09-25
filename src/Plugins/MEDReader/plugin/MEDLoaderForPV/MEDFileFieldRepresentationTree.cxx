@@ -512,6 +512,10 @@ void MEDFileFieldRepresentationLeavesArrays::appendFields(const MEDTimeReq *tr, 
         {
           AssignToFieldData<float>(v,tr,att,f1ts->getName(),postProcessedArr==crudeArr,discs,_elga_cmp,globs,f1ts,ds,internalInfo);
         }
+      else if(f1tsPtrInt64)
+        {
+          AssignToFieldData<Int64>(v,tr,att,f1ts->getName(),postProcessedArr==crudeArr,discs,_elga_cmp,globs,f1ts,ds,internalInfo);
+        }
       else
         throw INTERP_KERNEL::Exception("MEDFileFieldRepresentationLeavesArrays::appendFields : only FLOAT64 and INT32 fields are dealt for the moment ! Internal Error !");
     }
