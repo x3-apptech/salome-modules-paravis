@@ -34,7 +34,7 @@ if (PARAVIEW_ENABLE_PYTHON)
       set_tests_properties(Python-${testName} PROPERTIES ENVIRONMENT "PARAVIEW_DATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/Data;LD_LIBRARY_PATH=${QT5_ROOT_DIR}/lib/:${MEDCOUPLING_ROOT_DIR}/lib/:${MEDFILE_ROOT_DIR}/lib/:${HDF5_ROOT_DIR}/lib:${PYTHON_ROOT_DIR}/lib;PYTHONPATH=${MEDCOUPLING_ROOT_DIR}/lib/python3.6/site-packages/;PV_PLUGIN_PATH=${CMAKE_BINARY_DIR}/lib/paraview-5.7/plugins/MEDReader;PARAVIEW_BIN_DIR=${ParaView_DIR}/bin/")
     else()
       set(_helper_script ${CMAKE_CURRENT_SOURCE_DIR}/medreadertestlauncher.py)
-      set(_baseline_dir ${CMAKE_CURRENT_SOURCE_DIR}/Test/Data/Baseline)
+      set(_baseline_dir ${CMAKE_CURRENT_SOURCE_DIR}/Data/Baseline)
       add_test(Python-${testName}
                ${PYTHON_EXECUTABLE}
                ${CMAKE_CURRENT_SOURCE_DIR}/medreadertestlauncher.py ${CMAKE_CURRENT_SOURCE_DIR}/${testFile}
