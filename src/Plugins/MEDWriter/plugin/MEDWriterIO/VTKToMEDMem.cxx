@@ -89,6 +89,7 @@ using MEDCoupling::MEDCouplingCMesh;
 using MEDCoupling::MEDCouplingFieldDouble;
 using MEDCoupling::MEDCouplingFieldFloat;
 using MEDCoupling::MEDCouplingFieldInt;
+using MEDCoupling::MEDCouplingFieldInt64;
 using MEDCoupling::MCAuto;
 using MEDCoupling::Traits;
 using MEDCoupling::MLFieldTraits;
@@ -409,8 +410,9 @@ void AppendMCFieldFrom(MEDCoupling::TypeOfField tf, MEDCouplingMesh *mesh, MEDFi
       if((fieldName!=FAMFIELD_FOR_CELLS || tf!=MEDCoupling::ON_CELLS) && (fieldName!=FAMFIELD_FOR_NODES || tf!=MEDCoupling::ON_NODES))
         {
           if(!dai)
-            throw MZCException("AppendMCFieldFrom : internal error 3 (not int32) !");
-          AppendToFields<int>(tf,mesh,n2oPtr,dai,fs,timeStep,tsId);
+            AppendToFields<mcIdType>(tf,mesh,n2oPtr,daId,fs,timeStep,tsId);
+          else
+            AppendToFields<int>(tf,mesh,n2oPtr,dai,fs,timeStep,tsId);
           return ;
         }
       else if(fieldName==FAMFIELD_FOR_CELLS && tf==MEDCoupling::ON_CELLS)
