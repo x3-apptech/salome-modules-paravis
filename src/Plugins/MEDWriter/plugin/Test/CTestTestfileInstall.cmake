@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2020  CEA/DEN, EDF R&D
+# Copyright (C) 2015-2019  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,5 +17,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SUBDIRS(MEDReader)
-SUBDIRS(MEDWriter)
+INCLUDE(tests.set)
+
+SET(COMPONENT_NAME MEDWRITER)
+SET(TIMEOUT        60)
+
+FOREACH(tfile ${TEST_NUMBERS})
+  SET(TEST_NAME MEDWRITER_${tfile})
+  ADD_TEST(${TEST_NAME} python TestMEDWriter${tfile}.py)
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}" TIMEOUT ${TIMEOUT})
+ENDFOREACH()

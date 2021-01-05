@@ -59,3 +59,7 @@ install(TARGETS MEDWriterPlugin
   LIBRARY DESTINATION lib/paraview
   ARCHIVE DESTINATION lib/paraview
   )
+
+if (SALOME_BUILD_TESTS OR BUILD_TESTING)
+  add_subdirectory(Test)
+endif()

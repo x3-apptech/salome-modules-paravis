@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2020  CEA/DEN, EDF R&D
+# Copyright (C) 2017-2020  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,5 +17,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SUBDIRS(MEDReader)
-SUBDIRS(MEDWriter)
+# This file declares a shared set of MEDWRITER tests, used by two test
+# approaches: "make test" and "salome test". The former is used just after
+# MEDWRITER build step, the latter is used from an installed SALOME application.
+#
+# We here initialize a cmake variable that is used, by file inclusion, in
+# CMakeLists.txt (for make test) and CTestTestfileInstall.cmake (for salome
+# test).
+# This variables is: TEST_NUMBERS.
+# Additional variables might be defined if necessary.
+
+SET(TEST_NUMBERS 0 1)
