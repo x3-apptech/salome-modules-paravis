@@ -48,16 +48,17 @@ plane1 = Sphere()
 SaveData(fname0,proxy=plane1,WriteAllTimeSteps=1)
 #
 totomed=MEDReader(FileName=fname0)
-totomed.AllArrays=['TS0/Mesh/ComSup0/Mesh@@][@@P0']
+totomed.AllArrays=['TS1/Mesh/ComSup0/Mesh@@][@@P0']
 totomed.AllTimeSteps=['0000']
 SaveData(fname1,proxy=totomed,WriteAllTimeSteps=1)
 # Sphere has been written. Try to check to write it in MED file !
 mfd=ml.MEDFileData(fname0)
 mm=mfd.getMeshes()[0] ; m0=mm[0]
-area=m0.getMeasureField(ml.ON_CELLS).accumulate()[0]
+area=m0.getMeasureField(True).accumulate()[0]
 assert(abs(sqrt(area/(4*pi))-0.975/2.)<0.01) # 4*pi*radius**2
 f=mfd.getFields()[0][0].getFieldOnMeshAtLevel(ml.ON_NODES,0,mm)
-assert(abs(ml.DataArrayDouble(f.accumulate(),1,3).magnitude()[0])<1e-12) # sum of all normal vector should be 0
+f_array_double = f.getArray().convertToDblArr() # f is MEDCouplingFieldFloat
+assert(abs(ml.DataArrayDouble(f_array_double.accumulate(),1,3).magnitude()[0])<1e-12) # sum of all normal vector should be 0
 
 
 ##### Build a MED file from scratch
@@ -94,6 +95,7 @@ f0.setMesh(m0) ; f0.setArray(ml.DataArrayDouble([8,7,6,5,4]))
 f1ts0.setFieldNoProfileSBT(f0)
 f0=ml.MEDCouplingFieldDouble(ml.ON_CELLS) ; f0.setName(fieldName0)
 f0.setMesh(m1) ; f0.setArray(ml.DataArrayDouble([3,2,1]))
+f0.setTime(0,0,0)
 f1ts0.setFieldNoProfileSBT(f0)
 f1ts0.write(fname2,0)
 #
@@ -102,6 +104,7 @@ f0=ml.MEDCouplingFieldDouble(ml.ON_NODES) ; f0.setName(fieldName1)
 arr=ml.DataArrayDouble([9,109,8,108,7,107,6,106,5,105,4,104,3,103,2,102,1,101],9,2)
 arr.setInfoOnComponents(["aa","bbb"])
 f0.setMesh(m0) ; f0.setArray(arr)
+f0.setTime(0,0,0)
 f1ts1.setFieldNoProfileSBT(f0)
 f1ts1.write(fname2,0)
 #
@@ -185,12 +188,13 @@ assert(f7.getMesh().isEqual(m7,1e-12))
 assert(m7.getCoords()[:,:2].isEqualWithoutConsideringStr(m6.getCoords(),1e-12))
 assert(m7.getNodalConnectivity().isEqual(ml.DataArrayInt([3,3,1,4,3,1,8,4,4,0,7,1,3,4,1,6,2,4,4,7,5,6,1]))) # there is a permutation of cells
 assert(m7.getNodalConnectivityIndex().isEqual(ml.DataArrayInt([0,4,8,13,18,23]))) # there is a permutation of cells
-assert(f7.getArray().isEqual(ml.DataArrayDouble([20,22,21,23,24]),1e-12)) # there is a permutation of cells
+assert(f7.getArray().isEqual(ml.DataArrayFloat([20,22,21,23,24]),1e-12)) # there is a permutation of cells
 
 ### test with polyhedron
 
 m8=ml.MEDCouplingCMesh() ; m8.setCoords(ml.DataArrayDouble([0,1,2,3]),ml.DataArrayDouble([0,1]),ml.DataArrayDouble([0,1]))
 m8=m8.buildUnstructured()
+m8.getCoords().setInfoOnComponents(['X', 'Y', 'Z'])
 m8_0=m8[0] ; m8_0.simplexize(ml.PLANAR_FACE_5)
 m8_1=m8[1:]
 m8_1.convertAllToPoly()
@@ -210,7 +214,8 @@ assert(m9.getCoords().isEqual(m8.getCoords(),1e-12))
 c9=ml.DataArrayInt([0,2,3,5,6,1,4])
 assert(m8[c9].isEqualWithoutConsideringStr(m9,1e-12))
 f9=mfd9.getFields()[0][0].getFieldOnMeshAtLevel(ml.ON_CELLS,0,mfd9.getMeshes()[0])
-assert(f9.getArray().isEqual(f8.getArray()[c9],1e-12))
+f9_array_double = f9.getArray().convertToDblArr() # f9 is MEDCouplingFieldFloat
+assert(f9_array_double.isEqual(f8.getArray()[c9],1e-12))
 
 ### test with cartesian
 
@@ -237,6 +242,8 @@ m11=mfd11.getMeshes()[0]
 assert(isinstance(m11,ml.MEDFileCMesh))
 f11=mfd11.getFields()[FieldName10][0].getFieldOnMeshAtLevel(ml.ON_CELLS,0,m11)
 f11_n=mfd11.getFields()[FieldName10_n][0].getFieldOnMeshAtLevel(ml.ON_NODES,0,m11)
-assert(f11.isEqualWithoutConsideringStr(f10,1e-12,1e-12))
-assert(f11_n.isEqualWithoutConsideringStr(f10_n,1e-12,1e-12))
+f11_array_double = f11.getArray().convertToDblArr() # f11 is MEDCouplingFieldFloat
+assert(f11_array_double.isEqualWithoutConsideringStr(f10.getArray(),1e-12))
+f11_n_array_double = f11_n.getArray().convertToDblArr() # f11_n is MEDCouplingFieldFloat
+assert(f11_n_array_double.isEqualWithoutConsideringStr(f10_n.getArray(),1e-12))
 
