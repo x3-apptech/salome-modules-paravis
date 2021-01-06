@@ -22,13 +22,15 @@ from paraview.simple import *
 import MEDLoader as ml
 import os
 from math import pi,sqrt
+import tempfile
 
 #### disable automatic camera reset on 'Show'
 paraview.simple._DisableFirstRenderCameraReset()
 
-#fname_int32='testMEDWriter_int32.med'
-fname_int64 = 'testMEDWriter_int64.med'
-fname_int64_exported = 'testMEDWriter_int64_exported.med'
+tmpdir = tempfile.TemporaryDirectory(prefix="MEDWriter_")
+
+fname_int64 = os.path.join(tmpdir.name, 'testMEDWriter_int64.med')
+fname_int64_exported = os.path.join(tmpdir.name, 'testMEDWriter_int64_exported.med')
 
 ### test with int array field
 
@@ -84,8 +86,6 @@ f1ts12n.setFieldNoProfileSBT(f1n)
 f1ts12n.write(fname_int64,0)
 
 test12=MEDReader(FileName=fname_int64)
-#test12.AllArrays=['TS0/%s/ComSup0/%s@@][@@P0'%(mName,fieldNameOnCells),'TS0/%s/ComSup0/%s@@][@@P1'%(mName,fieldNameOnNodes)]
-#test12.AllTimeSteps = ['0000']
 SaveData(fname_int64_exported, WriteAllTimeSteps=1)
 ### test content of fname_int64_exported
 mfd2=ml.MEDFileData(fname_int64_exported)

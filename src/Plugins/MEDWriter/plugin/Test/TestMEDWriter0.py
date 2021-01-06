@@ -23,11 +23,14 @@ from paraview.simple import *
 import MEDLoader as ml
 import os
 from math import pi,sqrt
+import tempfile
 
 #### disable automatic camera reset on 'Show'
 paraview.simple._DisableFirstRenderCameraReset()
 
-pat='testMEDWriter_%i.med'
+tmpdir = tempfile.TemporaryDirectory(prefix="MEDWriter_")
+
+pat=os.path.join(tmpdir.name, 'testMEDWriter_%i.med')
 fname0=pat%0
 fname1=pat%1
 fname2=pat%2
