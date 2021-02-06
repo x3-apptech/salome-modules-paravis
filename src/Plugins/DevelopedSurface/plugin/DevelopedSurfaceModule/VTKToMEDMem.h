@@ -28,6 +28,7 @@
 #include "MEDCouplingFieldDouble.hxx"
 #include "MEDCouplingFieldFloat.hxx"
 #include "MEDCouplingFieldInt.hxx"
+#include "MEDCouplingFieldInt64.hxx"
 #include "MEDFileData.hxx"
 #include "MEDFileField.hxx"
 #include "MEDFileMesh.hxx"
