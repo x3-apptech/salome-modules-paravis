@@ -19,7 +19,7 @@
 // Author : Anthony Geay
 
 #include "vtkGenerateVectors.h"
-#include "vtkDataArrayTemplate.h"
+#include "vtkAOSDataArrayTemplate.h"
 #include "vtkDoubleArray.h"
 #include "vtkInformation.h"
 #include "vtkUnstructuredGrid.h"
@@ -83,7 +83,7 @@ void vtkGenerateVectors::Operate(vtkFieldData *fd)
 
 vtkDoubleArray *vtkGenerateVectors::Operate2Compo(vtkDoubleArray *oldArr)
 {
-  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkAOSDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
   vtkIdType nbOfTuples(oldArr->GetNumberOfTuples());
   const double *inPt(oldArr->GetPointer(0));
@@ -106,7 +106,7 @@ vtkDoubleArray *vtkGenerateVectors::Operate2Compo(vtkDoubleArray *oldArr)
 
 vtkDoubleArray *vtkGenerateVectors::OperateMoreThan3Compo(vtkDoubleArray *oldArr)
 {
-  const int VTK_DATA_ARRAY_FREE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
+  const int VTK_DATA_ARRAY_FREE=vtkAOSDataArrayTemplate<double>::VTK_DATA_ARRAY_FREE;
   vtkDoubleArray *ret(vtkDoubleArray::New());
   int nbOfCompo(oldArr->GetNumberOfComponents());
   vtkIdType nbOfTuples(oldArr->GetNumberOfTuples());

@@ -43,7 +43,7 @@
 #include "vtkInformationQuadratureSchemeDefinitionVectorKey.h"
 #include "vtkInformationIntegerKey.h"
 #include "vtkInformation.h"
-#include "vtkDataArrayTemplate.h"
+#include "vtkAOSDataArrayTemplate.h"
 #include "vtkIdTypeArray.h"
 #include "vtkDoubleArray.h"
 #include "vtkIntArray.h"
@@ -118,7 +118,7 @@ vtkIdTypeArray *ELGACmp::isExisting(const std::vector<std::string>& locsReallyUs
 template<class T>
 vtkIdTypeArray *ELGACmp::createNew(const MEDCoupling::MEDFileFieldGlobsReal *globs, const std::vector<std::string>& locsReallyUsed, vtkDataArray *vtkd, vtkDataSet *ds, ExportedTinyInfo *internalInfo) const
 {
-  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_DELETE=vtkAOSDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
   std::vector< std::vector<std::string> > locNames(_loc_names);
   std::vector<vtkIdTypeArray *> elgas(_elgas);
   std::vector< std::pair< vtkQuadratureSchemeDefinition *, unsigned char > > defs;
@@ -263,9 +263,9 @@ template<class T>
 void AssignDataPointerToVTK(typename MEDFileVTKTraits<T>::VtkType *vtkTab, typename MEDFileVTKTraits<T>::MCType *mcTab, bool noCpyNumNodes)
 {
   if(noCpyNumNodes)
-    vtkTab->SetArray(mcTab->getPointer(),mcTab->getNbOfElems(),1,vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_FREE);
+    vtkTab->SetArray(mcTab->getPointer(),mcTab->getNbOfElems(),1,vtkAOSDataArrayTemplate<T>::VTK_DATA_ARRAY_FREE);
  else
-   { vtkTab->SetArray(mcTab->getPointer(),mcTab->getNbOfElems(),0,vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_FREE); mcTab->accessToMemArray().setSpecificDeallocator(0); }
+   { vtkTab->SetArray(mcTab->getPointer(),mcTab->getNbOfElems(),0,vtkAOSDataArrayTemplate<T>::VTK_DATA_ARRAY_FREE); mcTab->accessToMemArray().setSpecificDeallocator(0); }
 }
 
 // here copy is always assumed.
@@ -291,7 +291,7 @@ void AssignToFieldData(DataArray *vPtr, const MEDTimeReq *tr, vtkFieldData *att,
                        const std::vector<TypeOfField>& discs, const ELGACmp& elgaCmp, const MEDCoupling::MEDFileFieldGlobsReal *globs,
                        MEDFileAnyTypeField1TS *f1ts, vtkDataSet *ds, ExportedTinyInfo *internalInfo)
 {
-  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_DELETE=vtkAOSDataArrayTemplate<T>::VTK_DATA_ARRAY_DELETE;
   typename MEDFileVTKTraits<T>::MCType *vi(static_cast<typename MEDFileVTKTraits<T>::MCType *>(vPtr));
   typename MEDFileVTKTraits<T>::VtkType *vtkd(MEDFileVTKTraits<T>::VtkType::New());
   vtkd->SetNumberOfComponents((int)vi->getNumberOfComponents());

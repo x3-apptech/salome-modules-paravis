@@ -26,7 +26,7 @@ class VTK_EXPORT vtkInformationGaussDoubleVectorKey : public vtkInformationDoubl
 {
 public:
   vtkTypeMacro(vtkInformationGaussDoubleVectorKey, vtkInformationDoubleVectorKey)
-  void PrintSelf(ostream& /*os*/, vtkIndent /*indent*/) VTK_OVERRIDE{}
+  void PrintSelf(ostream& /*os*/, vtkIndent /*indent*/) override {};
 
   vtkInformationGaussDoubleVectorKey(const char* name, const char* location,
     int length = -1) : vtkInformationDoubleVectorKey(name, location, length) { }
@@ -48,7 +48,7 @@ public:
   */
   void CopyDefaultInformation(vtkInformation* /*request*/,
     vtkInformation* fromInfo,
-    vtkInformation* toInfo) VTK_OVERRIDE
+    vtkInformation* toInfo) override
   {
     this->ShallowCopy(fromInfo, toInfo);
   }

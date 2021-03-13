@@ -25,7 +25,7 @@
 #include "VTKMEDTraits.hxx"
 
 #include "vtkAdjacentVertexIterator.h"
-#include "vtkDataArrayTemplate.h"
+#include "vtkAOSDataArrayTemplate.h"
 #include "vtkIntArray.h"
 #include "vtkLongArray.h"
 #ifdef WIN32
@@ -135,7 +135,7 @@ vtkDataSet *FilterFamilies(vtkSmartPointer<vtkThreshold>& thres,
                            vtkDataSet *input, const std::set<int>& idsToKeep, bool insideOut, const char *arrNameOfFamilyField,
                            const char *associationForThreshold, bool& catchAll, bool& catchSmth)
 {
-  const int VTK_DATA_ARRAY_DELETE=vtkDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
+  const int VTK_DATA_ARRAY_DELETE=vtkAOSDataArrayTemplate<double>::VTK_DATA_ARRAY_DELETE;
   const char ZE_SELECTION_ARR_NAME[]="@@ZeSelection@@";
   vtkDataSet *output(input->NewInstance());
   output->ShallowCopy(input);

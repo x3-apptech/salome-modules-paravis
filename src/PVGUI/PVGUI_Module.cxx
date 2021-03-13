@@ -798,7 +798,7 @@ QString PVGUI_Module::getTraceString()
 
   vtkSMTrace* tracer = vtkSMTrace::GetActiveTracer();
   if ( tracer ) {
-    traceString = tracer->GetCurrentTrace();
+    traceString = tracer->GetCurrentTrace().c_str();
     // 'import pvsimple' is necessary to fix the first call to DisableFirstRenderCamera in the paraview trace
     // 'ShowParaviewView()' ensure there is an opened viewing window (otherwise SEGFAULT!)
     traceString = "import pvsimple" + end_line +

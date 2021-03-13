@@ -34,7 +34,7 @@
 
 #include <stdexcept>
 #include <sstream>
-
+#include <fstream>
 // Key words
 #define MD  "_metadata"
 #define CMT "_comment"
@@ -183,7 +183,7 @@ int vtkJSONReader::CanParseFile(const char *fname, Json::Value &root)
     return 0;
   }
 
-  ifstream file;
+  std::ifstream file;
   std::ostringstream oss;
   bool parsedSuccess = true;
   Json::Reader reader;
