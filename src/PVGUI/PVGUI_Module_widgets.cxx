@@ -68,7 +68,7 @@
 
 #include <vtkPVGeneralSettings.h>
 #include <vtkSMSettings.h>
-#include <vtkPVconfig.h>
+#include <vtkPVConfig.h>
 
 class ResizeHelper : public pqPVAnimationWidget
 {
