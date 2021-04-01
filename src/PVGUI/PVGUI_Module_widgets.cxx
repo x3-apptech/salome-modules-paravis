@@ -68,6 +68,7 @@
 
 #include <vtkPVGeneralSettings.h>
 #include <vtkSMSettings.h>
+#include <vtkPVconfig.h>
 
 class ResizeHelper : public pqPVAnimationWidget
 {
@@ -135,7 +136,11 @@ void PVGUI_Module::setupDockWidgets()
   //            hook delete to pqDeleteReaction.
   QAction* tempDeleteAction = new QAction(this);
   pqDeleteReaction* handler = new pqDeleteReaction(tempDeleteAction);
+#if PARAVIEW_VERSION_MAJOR==5 && PARAVIEW_VERSION_MINOR<9
   handler->connect(propertiesPanel, SIGNAL(deleteRequested(pqPipelineSource*)), SLOT(deleteSource(pqPipelineSource*)));
+#else
+  handler->connect(propertiesPanel, SIGNAL(deleteRequested(pqProxy*)), SLOT(deleteSource(pqProxy*)));
+#endif
   myDockWidgets[propertiesDock] = true;
   propertiesDock->hide();
 
