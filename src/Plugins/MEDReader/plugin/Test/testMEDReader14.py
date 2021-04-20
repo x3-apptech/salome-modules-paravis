@@ -141,7 +141,7 @@ def test(baseline_file):
             reader=MEDReader(FileName=fname)
             reader.AllArrays=entry
             gaussPoints=ELGAfieldToPointGaussian(Input=reader)
-            gaussPoints.SelectSourceArray="ELGA@0"
+            gaussPoints.SelectSourceArray=['CELLS', 'ELGA@0']
             Show(gaussPoints,renderView1)
             pass
 
