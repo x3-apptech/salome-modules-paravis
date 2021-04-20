@@ -60,7 +60,7 @@ def test():
     ExtractGroup1.AllGroups=["GRP_grp1"]
     ELNOfieldToSurface1=ELNOfieldToSurface(Input=ExtractGroup1)
     ELNOfieldToPointGaussian1=ELNOfieldToPointGaussian(Input=ExtractGroup1)
-    ELNOfieldToPointGaussian1.SelectSourceArray=['ELNO@MyField']
+    ELNOfieldToPointGaussian1.SelectSourceArray=['CELLS','ELNO@MyField']
     for elt in [ELNOfieldToSurface1,ELNOfieldToPointGaussian1]:
         elnoMesh=servermanager.Fetch(ELNOfieldToPointGaussian1,0)
         vtkArrToTest=elnoMesh.GetBlock(0).GetPointData().GetArray("MyField")
