@@ -259,7 +259,8 @@ DataArray *ConvertVTKArrayToMCArray(vtkDataArray *data)
   vtkLongArray *d3(vtkLongArray::SafeDownCast(data));
   vtkUnsignedCharArray *d4(vtkUnsignedCharArray::SafeDownCast(data));
   vtkIdTypeArray *d5(vtkIdTypeArray::SafeDownCast(data));
-  if(d2 || d3 || d4 || d5)
+  vtkLongLongArray *d6(vtkLongLongArray::SafeDownCast(data));
+  if(d2 || d3 || d4 || d5 || d6)
     return ConvertVTKArrayToMCArrayInt(data);
   std::ostringstream oss;
   oss << "ConvertVTKArrayToMCArray : unrecognized array \"" << typeid(*data).name() << "\" type !";
