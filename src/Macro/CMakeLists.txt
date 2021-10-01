@@ -20,6 +20,7 @@
 SET(_PYFILES_TO_INSTALL
   annotate_groups.py
   ShowSalomeObject.py
+  rosetteCustomViews.py
   )
 
 SALOME_INSTALL_SCRIPTS("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_SCRIPT_PYTHON}/Macro)
