@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2010-2021  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,21 +18,4 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(_PYFILES_TO_INSTALL)
-
-IF(SALOME_LIGHT_ONLY)
-  LIST(APPEND _PYFILES_TO_INSTALL
-    pvsimple.py
-  )
-ELSE(SALOME_LIGHT_ONLY)
-    # Use a set of Python files redirecting the API directly
-    # to the original ParaView modules.
-    LIST(APPEND _PYFILES_TO_INSTALL
-      pvserver.py
-      pvsimple.py
-      paravisSM.py
-    )
-ENDIF(SALOME_LIGHT_ONLY)
-
-SALOME_INSTALL_SCRIPTS("${_PYFILES_TO_INSTALL}" ${SALOME_INSTALL_PYTHON})
-SALOME_CONFIGURE_FILE(__init__.py __init__.py INSTALL ${SALOME_INSTALL_PYTHON}/salome/paravis)
+__version__ = "@SALOMEPARAVIS_GIT_SHA1@"
