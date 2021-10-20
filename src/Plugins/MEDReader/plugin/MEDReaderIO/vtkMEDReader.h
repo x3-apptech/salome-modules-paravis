@@ -43,7 +43,7 @@ class VTK_EXPORT vtkMEDReader : public vtkMultiBlockDataSetAlgorithm
   void PrintSelf(ostream& os, vtkIndent indent);
   virtual void SetFileName(const char*);
   virtual char *GetFileName();
-  virtual const char *GetFileExtensions() { return ".med .rmed .sauv .sauve"; }
+  virtual const char *GetFileExtensions() { return ".med .rmed"; }
   virtual const char *GetDescriptiveName() { return "MED file (Data Exchange Model)"; }
   //
   virtual void SetFieldsStatus(const char *name, int status);

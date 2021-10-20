@@ -26,7 +26,6 @@
 #include "MEDCouplingFieldDouble.hxx"
 #include "InterpKernelGaussCoords.hxx"
 #include "MEDFileData.hxx"
-#include "SauvReader.hxx"
 #include "MEDCouplingMemArray.txx"
 
 #ifdef MEDREADER_USE_MPI
@@ -1291,11 +1290,10 @@ void MEDFileFieldRepresentationTree::loadInMemory(MEDCoupling::MEDFileFields *fi
   this->computeFullNameInLeaves();
 }
 
-void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts)
+void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileName, int iPart, int nbOfParts)
 {
   MCAuto<MEDFileMeshes> ms;
   MCAuto<MEDFileFields> fields;
-  if(isMEDOrSauv)
     {
       if((iPart==-1 && nbOfParts==-1) || (iPart==0 && nbOfParts==1))
         {
@@ -1335,23 +1333,6 @@ void MEDFileFieldRepresentationTree::loadMainStructureOfFile(const char *fileNam
           throw INTERP_KERNEL::Exception(oss.str().c_str());
 #endif
         }
-    }
-  else
-    {
-      MCAuto<MEDCoupling::SauvReader> sr(MEDCoupling::SauvReader::New(fileName));
-      MCAuto<MEDCoupling::MEDFileData> mfd(sr->loadInMEDFileDS());
-      ms=mfd->getMeshes(); ms->incrRef();
-      int nbMeshes(ms->getNumberOfMeshes());
-      for(int i=0;i<nbMeshes;i++)
-        {
-          MEDCoupling::MEDFileMesh *tmp(ms->getMeshAtPos(i));
-          MEDCoupling::MEDFileUMesh *tmp2(dynamic_cast<MEDCoupling::MEDFileUMesh *>(tmp));
-          if(tmp2)
-            tmp2->forceComputationOfParts();
-        }
-      fields=mfd->getFields();
-      if(fields.isNotNull())
-        fields->incrRef();
     }
   loadInMemory(fields,ms);
 }

@@ -65,7 +65,7 @@ class vtkMEDReader::vtkMEDReaderInternal
 {
 
 public:
-  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsMEDOrSauv(true),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),GCGCP(true)
+  vtkMEDReaderInternal(vtkMEDReader *master):TK(0),IsStdOrMode(false),GenerateVect(false),SIL(0),LastLev0(-1),GCGCP(true)
   {
   }
 
@@ -81,8 +81,6 @@ public:
 
   TimeKeeper TK;
   std::string FileName;
-  //when true the file is MED file. when false it is a Sauv file
-  bool IsMEDOrSauv;
   //when false -> std, true -> mode. By default std (false).
   bool IsStdOrMode;
   //when false -> do nothing. When true cut off or extend to nbOfCompo=3 vector arrays.
@@ -229,13 +227,6 @@ int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVect
   try
     {
       // Process file meta data
-      std::size_t pos(this->Internal->FileName.find_last_of('.'));
-      if(pos!=std::string::npos)
-        {
-          std::string ext(this->Internal->FileName.substr(pos));
-          if(ext.find("sauv")!=std::string::npos)
-            this->Internal->IsMEDOrSauv=false;
-        }
       if(this->Internal->Tree.getNumberOfLeavesArrays()==0)
         {
           int iPart(-1),nbOfParts(-1);
@@ -247,7 +238,7 @@ int vtkMEDReader::RequestInformation(vtkInformation *request, vtkInformationVect
               nbOfParts=vmpc->GetNumberOfProcesses();
             }
 #endif
-          this->Internal->Tree.loadMainStructureOfFile(this->Internal->FileName.c_str(),this->Internal->IsMEDOrSauv,iPart,nbOfParts);
+          this->Internal->Tree.loadMainStructureOfFile(this->Internal->FileName.c_str(),iPart,nbOfParts);
           
           // Leaves
           this->Internal->Tree.activateTheFirst();//This line manually initialize the status of server (this) with the remote client.

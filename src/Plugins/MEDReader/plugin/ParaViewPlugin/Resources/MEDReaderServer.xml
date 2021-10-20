@@ -3,7 +3,7 @@
     <SourceProxy name="MEDReader" class="vtkMEDReader" label="MED Reader">
 
       <Hints>
-	<ReaderFactory extensions="med rmed sauv sauve"
+	<ReaderFactory extensions="med rmed"
 		       file_description="MED Files">
 	</ReaderFactory>
       </Hints>

@@ -158,7 +158,7 @@ public:
   void printMySelf(std::ostream& os) const;
   std::map<std::string,bool> dumpState() const;
   //non const methods
-  void loadMainStructureOfFile(const char *fileName, bool isMEDOrSauv, int iPart, int nbOfParts);
+  void loadMainStructureOfFile(const char *fileName, int iPart, int nbOfParts);
   void loadInMemory(MEDCoupling::MEDFileFields *fields, MEDCoupling::MEDFileMeshes *meshes);
   void removeEmptyLeaves();
   // static methods
