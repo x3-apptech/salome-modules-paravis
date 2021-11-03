@@ -28,6 +28,9 @@ from medcoupling import *
 import MEDLoader as ml
 from MEDLoader import *
 
+import inspect
+data_dir = os.path.dirname(inspect.getfile(lambda: None))
+
 #### disable automatic camera reset on 'Show'
 paraview.simple._DisableFirstRenderCameraReset()
 
@@ -51,7 +54,7 @@ def test_geom(result, ref_mass_center, ref_volumes):
     """
     Test center of mass and volumes of result from VoroGauss filter
     """
-    tmp_file = 'tmp_mesh.med'
+    tmp_file = os.path.join(data_dir, "tmp_mesh.med")
     if path.exists(tmp_file):
         remove(tmp_file)
 
@@ -74,7 +77,7 @@ def test_geom(result, ref_mass_center, ref_volumes):
 # Test of testMEDReader14
 ###
 # create a new 'MED Reader'
-file_name = 'testMEDReader14.med'
+file_name = os.path.join(data_dir, "testMEDReader14.med")
 testMEDReader14med = MEDReader(registrationName='testMEDReader14.med',
                                FileName=file_name)
 testMEDReader14med.AllTimeSteps = ['0000', '0001', '0002', '0003', '0004']
@@ -130,7 +133,7 @@ for field_names, field, refs, center_mass, volume in fields:
 # Test of PG_3D.med
 ###
 # create a new 'MED Reader'
-file_name = 'PG_3D.med'
+file_name = os.path.join(data_dir, "PG_3D.med")
 pG_3Dmed = MEDReader(registrationName='PG_3D.med', FileName=file_name)
 pG_3Dmed.AllArrays = ['TS0/Extruded/ComSup0/Extruded@@][@@P0',
                       'TS0/Extruded/ComSup0/MyFieldPG@@][@@GAUSS']
@@ -163,7 +166,7 @@ for field_name, ref in fields:
 # Test of VoroGauss1.med
 ###
 
-fname="VoroGauss1.med"
+fname = os.path.join(data_dir, "VoroGauss1.med")
 meshName="mesh"
 mm=MEDFileUMesh()
 coords=DataArrayDouble([0,0, 1,0, 2,0, 3,0, 4,0, 5,0, 0,1, 1,1, 2,1, 0,2, 1,2, 3,1, 4,1],13,2)
@@ -251,7 +254,7 @@ for field_name, ref in fields:
 ###
 
 #[     1 ] :        185        189        205        201        186        190        206        202
-file_name = "simple_mesh.med"
+file_name = os.path.join(data_dir, "simple_mesh.med")
 coords = [0.024000, 0.024000, 1.200000, #185:0
           0.024000, 0.048000, 1.200000, #186:1
           0.048000, 0.024000, 1.200000, #189:2
